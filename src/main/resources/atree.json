@@ -1,0 +1,3864 @@
+{
+  "Archer": {
+    "0": {
+      "children": [
+        1
+      ],
+      "parents": [],
+      "display_name": "Arrow Bomb"
+    },
+    "1": {
+      "children": [
+        2,
+        3
+      ],
+      "parents": [
+        0
+      ],
+      "display_name": "Bow Proficiency"
+    },
+    "2": {
+      "children": [],
+      "parents": [
+        1
+      ],
+      "display_name": "Cheaper Arrow Bomb"
+    },
+    "3": {
+      "children": [
+        5
+      ],
+      "parents": [
+        1
+      ],
+      "display_name": "Heart Shatter"
+    },
+    "4": {
+      "children": [
+        7
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Double Shots"
+    },
+    "5": {
+      "children": [
+        4,
+        6
+      ],
+      "parents": [
+        3
+      ],
+      "display_name": "Escape"
+    },
+    "6": {
+      "children": [
+        9
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Power Shots"
+    },
+    "7": {
+      "children": [
+        8,
+        10,
+        11,
+        12
+      ],
+      "parents": [
+        4,
+        8
+      ],
+      "display_name": "Arrow Storm"
+    },
+    "8": {
+      "children": [
+        7,
+        9,
+        12,
+        13,
+        15
+      ],
+      "parents": [
+        7,
+        9
+      ],
+      "display_name": "Cheaper Escape"
+    },
+    "9": {
+      "children": [
+        8,
+        13,
+        14
+      ],
+      "parents": [
+        6,
+        8
+      ],
+      "display_name": "Arrow Shield"
+    },
+    "10": {
+      "children": [],
+      "parents": [
+        7
+      ],
+      "display_name": "Windy Feet"
+    },
+    "11": {
+      "children": [
+        16
+      ],
+      "parents": [
+        7
+      ],
+      "display_name": "Air Mastery"
+    },
+    "12": {
+      "children": [
+        13,
+        15,
+        17
+      ],
+      "parents": [
+        7,
+        8,
+        13
+      ],
+      "display_name": "Thunder Mastery"
+    },
+    "13": {
+      "children": [
+        12,
+        15,
+        19
+      ],
+      "parents": [
+        8,
+        9,
+        12
+      ],
+      "display_name": "Fire Mastery"
+    },
+    "14": {
+      "children": [
+        20
+      ],
+      "parents": [
+        9
+      ],
+      "display_name": "Water Mastery"
+    },
+    "15": {
+      "children": [
+        18
+      ],
+      "parents": [
+        8,
+        12,
+        13
+      ],
+      "display_name": "Earth Mastery"
+    },
+    "16": {
+      "children": [
+        17,
+        21
+      ],
+      "parents": [
+        11,
+        17
+      ],
+      "display_name": "Nimble String"
+    },
+    "17": {
+      "children": [
+        16,
+        22
+      ],
+      "parents": [
+        12,
+        16
+      ],
+      "display_name": "Arrow Rain"
+    },
+    "18": {
+      "children": [
+        19,
+        24
+      ],
+      "parents": [
+        15,
+        19
+      ],
+      "display_name": "Bryophyte Roots"
+    },
+    "19": {
+      "children": [
+        18,
+        20
+      ],
+      "parents": [
+        13,
+        18,
+        20
+      ],
+      "display_name": "Fire Creep"
+    },
+    "20": {
+      "children": [
+        19,
+        25
+      ],
+      "parents": [
+        14,
+        19
+      ],
+      "display_name": "Phantom Ray"
+    },
+    "21": {
+      "children": [
+        22,
+        23
+      ],
+      "parents": [
+        16,
+        22
+      ],
+      "display_name": "Triple Shots"
+    },
+    "22": {
+      "children": [
+        21,
+        23
+      ],
+      "parents": [
+        17,
+        21
+      ],
+      "display_name": "Frenzy"
+    },
+    "23": {
+      "children": [
+        26
+      ],
+      "parents": [
+        21,
+        22
+      ],
+      "display_name": "Guardian Angels"
+    },
+    "24": {
+      "children": [
+        27,
+        28
+      ],
+      "parents": [
+        18
+      ],
+      "display_name": "Basaltic Trap"
+    },
+    "25": {
+      "children": [
+        29
+      ],
+      "parents": [
+        20
+      ],
+      "display_name": "Focus"
+    },
+    "26": {
+      "children": [
+        27,
+        33,
+        35
+      ],
+      "parents": [
+        23,
+        27
+      ],
+      "display_name": "Windstorm"
+    },
+    "27": {
+      "children": [
+        26,
+        28,
+        30
+      ],
+      "parents": [
+        24,
+        26,
+        28
+      ],
+      "display_name": "Cheaper Arrow Storm"
+    },
+    "28": {
+      "children": [
+        27,
+        29,
+        30,
+        31
+      ],
+      "parents": [
+        24,
+        27,
+        29
+      ],
+      "display_name": "Implosion"
+    },
+    "29": {
+      "children": [
+        28,
+        31,
+        32
+      ],
+      "parents": [
+        25,
+        28
+      ],
+      "display_name": "More Shields"
+    },
+    "30": {
+      "children": [
+        31,
+        34,
+        37
+      ],
+      "parents": [
+        27,
+        28,
+        31
+      ],
+      "display_name": "Patient Hunter"
+    },
+    "31": {
+      "children": [
+        30
+      ],
+      "parents": [
+        28,
+        29,
+        30
+      ],
+      "display_name": "Grappling Hook"
+    },
+    "32": {
+      "children": [
+        39
+      ],
+      "parents": [
+        29
+      ],
+      "display_name": "More Focus"
+    },
+    "33": {
+      "children": [],
+      "parents": [
+        26
+      ],
+      "display_name": "Stormy Feet"
+    },
+    "34": {
+      "children": [],
+      "parents": [
+        30
+      ],
+      "display_name": "Call of the Hound"
+    },
+    "35": {
+      "children": [
+        36,
+        43
+      ],
+      "parents": [
+        26,
+        36
+      ],
+      "display_name": "Leap"
+    },
+    "36": {
+      "children": [
+        35,
+        37,
+        42
+      ],
+      "parents": [
+        35,
+        37
+      ],
+      "display_name": "Traveler"
+    },
+    "37": {
+      "children": [
+        36,
+        38,
+        40,
+        42
+      ],
+      "parents": [
+        30,
+        36,
+        38
+      ],
+      "display_name": "Bouncing Bomb"
+    },
+    "38": {
+      "children": [
+        37,
+        39,
+        40,
+        41,
+        46
+      ],
+      "parents": [
+        37,
+        39
+      ],
+      "display_name": "Ivyroot Mamba"
+    },
+    "39": {
+      "children": [
+        38,
+        41,
+        47
+      ],
+      "parents": [
+        32,
+        38
+      ],
+      "display_name": "Twain's Arc"
+    },
+    "40": {
+      "children": [],
+      "parents": [
+        37,
+        38
+      ],
+      "display_name": "Rocket Jump"
+    },
+    "41": {
+      "children": [],
+      "parents": [
+        38,
+        39
+      ],
+      "display_name": "Scorched Earth"
+    },
+    "42": {
+      "children": [
+        45
+      ],
+      "parents": [
+        36,
+        37
+      ],
+      "display_name": "More Traps"
+    },
+    "43": {
+      "children": [
+        44,
+        48,
+        53
+      ],
+      "parents": [
+        35,
+        44
+      ],
+      "display_name": "Refined Gunpowder"
+    },
+    "44": {
+      "children": [
+        43,
+        45,
+        48,
+        50,
+        54
+      ],
+      "parents": [
+        43,
+        45
+      ],
+      "display_name": "Fierce Stomp"
+    },
+    "45": {
+      "children": [
+        44,
+        46,
+        49,
+        50
+      ],
+      "parents": [
+        42,
+        44,
+        46
+      ],
+      "display_name": "Cheaper Arrow Shield"
+    },
+    "46": {
+      "children": [
+        45,
+        47,
+        49,
+        52
+      ],
+      "parents": [
+        38,
+        45,
+        47
+      ],
+      "display_name": "Better Arrow Shield"
+    },
+    "47": {
+      "children": [
+        46,
+        52
+      ],
+      "parents": [
+        39,
+        46
+      ],
+      "display_name": "Shocking Bomb"
+    },
+    "48": {
+      "children": [],
+      "parents": [
+        43,
+        44
+      ],
+      "display_name": "Better Leap"
+    },
+    "49": {
+      "children": [],
+      "parents": [
+        45,
+        46
+      ],
+      "display_name": "Homing Shots"
+    },
+    "50": {
+      "children": [
+        51,
+        55
+      ],
+      "parents": [
+        44,
+        45,
+        51
+      ],
+      "display_name": "Mana Trap"
+    },
+    "51": {
+      "children": [
+        50,
+        52,
+        55,
+        56
+      ],
+      "parents": [
+        50,
+        52
+      ],
+      "display_name": "Cheaper Arrow Storm II"
+    },
+    "52": {
+      "children": [
+        51,
+        56,
+        57
+      ],
+      "parents": [
+        46,
+        47,
+        51
+      ],
+      "display_name": "Initiator"
+    },
+    "53": {
+      "children": [
+        54,
+        58
+      ],
+      "parents": [
+        43,
+        54
+      ],
+      "display_name": "Better Guardian Angels"
+    },
+    "54": {
+      "children": [
+        53,
+        55,
+        59
+      ],
+      "parents": [
+        44,
+        53,
+        55
+      ],
+      "display_name": "Escape Artist"
+    },
+    "55": {
+      "children": [
+        54,
+        60
+      ],
+      "parents": [
+        50,
+        51,
+        54
+      ],
+      "display_name": "Murder Flock"
+    },
+    "56": {
+      "children": [
+        57,
+        61
+      ],
+      "parents": [
+        51,
+        52,
+        57
+      ],
+      "display_name": "Decimator"
+    },
+    "57": {
+      "children": [
+        56,
+        61
+      ],
+      "parents": [
+        52,
+        56
+      ],
+      "display_name": "Phasing Beam"
+    },
+    "58": {
+      "children": [
+        59,
+        64
+      ],
+      "parents": [
+        53,
+        59
+      ],
+      "display_name": "Recycling"
+    },
+    "59": {
+      "children": [
+        58,
+        60,
+        64,
+        65
+      ],
+      "parents": [
+        54,
+        58,
+        60
+      ],
+      "display_name": "Shrapnel Bomb"
+    },
+    "60": {
+      "children": [
+        59,
+        61,
+        62,
+        65
+      ],
+      "parents": [
+        55,
+        59,
+        61
+      ],
+      "display_name": "Cheaper Escape II"
+    },
+    "61": {
+      "children": [
+        60,
+        62,
+        63,
+        67
+      ],
+      "parents": [
+        56,
+        57,
+        60
+      ],
+      "display_name": "Cheaper Arrow Shield II"
+    },
+    "62": {
+      "children": [],
+      "parents": [
+        60,
+        61
+      ],
+      "display_name": "Stronger Hook"
+    },
+    "63": {
+      "children": [],
+      "parents": [
+        61
+      ],
+      "display_name": "Coursing Restraints"
+    },
+    "64": {
+      "children": [
+        69,
+        73,
+        74
+      ],
+      "parents": [
+        58,
+        59
+      ],
+      "display_name": "Arrow Hurricane"
+    },
+    "65": {
+      "children": [
+        66,
+        68
+      ],
+      "parents": [
+        59,
+        60
+      ],
+      "display_name": "Tangled Traps"
+    },
+    "66": {
+      "children": [
+        68
+      ],
+      "parents": [
+        65
+      ],
+      "display_name": "Beast Lore"
+    },
+    "67": {
+      "children": [
+        72
+      ],
+      "parents": [
+        61
+      ],
+      "display_name": "Crepuscular Ray"
+    },
+    "68": {
+      "children": [
+        70,
+        71
+      ],
+      "parents": [
+        65,
+        66
+      ],
+      "display_name": "Minefield"
+    },
+    "69": {
+      "children": [],
+      "parents": [
+        64
+      ],
+      "display_name": "All-Seeing Panoptes"
+    },
+    "70": {
+      "children": [
+        75
+      ],
+      "parents": [
+        68
+      ],
+      "display_name": "Stronger Patient Hunter"
+    },
+    "71": {
+      "children": [
+        72,
+        76
+      ],
+      "parents": [
+        68,
+        72
+      ],
+      "display_name": "Grape Bomb"
+    },
+    "72": {
+      "children": [
+        71,
+        76
+      ],
+      "parents": [
+        67,
+        71
+      ],
+      "display_name": "More Focus II"
+    },
+    "73": {
+      "children": [],
+      "parents": [
+        64
+      ],
+      "display_name": "Elusive"
+    },
+    "74": {
+      "children": [
+        75
+      ],
+      "parents": [
+        64,
+        75
+      ],
+      "display_name": "Geyser Stomp"
+    },
+    "75": {
+      "children": [
+        74,
+        76
+      ],
+      "parents": [
+        70,
+        74,
+        76
+      ],
+      "display_name": "Snow Storm"
+    },
+    "76": {
+      "children": [
+        75
+      ],
+      "parents": [
+        71,
+        72,
+        75
+      ],
+      "display_name": "Cheaper Arrow Bomb II"
+    }
+  },
+  "Warrior": {
+    "0": {
+      "children": [
+        1
+      ],
+      "parents": [],
+      "display_name": "Bash"
+    },
+    "1": {
+      "children": [
+        2,
+        3
+      ],
+      "parents": [
+        0
+      ],
+      "display_name": "Spear Proficiency 1"
+    },
+    "2": {
+      "children": [],
+      "parents": [
+        1
+      ],
+      "display_name": "Cheaper Bash"
+    },
+    "3": {
+      "children": [
+        4
+      ],
+      "parents": [
+        1
+      ],
+      "display_name": "Double Bash"
+    },
+    "4": {
+      "children": [
+        6,
+        7
+      ],
+      "parents": [
+        3
+      ],
+      "display_name": "Charge"
+    },
+    "5": {
+      "children": [],
+      "parents": [
+        8
+      ],
+      "display_name": "Heavy Impact"
+    },
+    "6": {
+      "children": [
+        8
+      ],
+      "parents": [
+        4
+      ],
+      "display_name": "Vehement"
+    },
+    "7": {
+      "children": [
+        10
+      ],
+      "parents": [
+        4
+      ],
+      "display_name": "Tougher Skin"
+    },
+    "8": {
+      "children": [
+        5,
+        9,
+        11,
+        12
+      ],
+      "parents": [
+        6,
+        9
+      ],
+      "display_name": "Uppercut"
+    },
+    "9": {
+      "children": [
+        8,
+        10,
+        12,
+        13,
+        14
+      ],
+      "parents": [
+        8,
+        10
+      ],
+      "display_name": "Cheaper Charge"
+    },
+    "10": {
+      "children": [
+        9,
+        14,
+        15
+      ],
+      "parents": [
+        7,
+        9
+      ],
+      "display_name": "War Scream"
+    },
+    "11": {
+      "children": [
+        16
+      ],
+      "parents": [
+        8
+      ],
+      "display_name": "Earth Mastery"
+    },
+    "12": {
+      "children": [
+        13,
+        14,
+        17
+      ],
+      "parents": [
+        8,
+        9,
+        14
+      ],
+      "display_name": "Thunder Mastery"
+    },
+    "13": {
+      "children": [
+        18
+      ],
+      "parents": [
+        9,
+        12,
+        14
+      ],
+      "display_name": "Water Mastery"
+    },
+    "14": {
+      "children": [
+        12,
+        13,
+        19
+      ],
+      "parents": [
+        9,
+        10,
+        12
+      ],
+      "display_name": "Air Mastery"
+    },
+    "15": {
+      "children": [
+        20
+      ],
+      "parents": [
+        10
+      ],
+      "display_name": "Fire Mastery"
+    },
+    "16": {
+      "children": [
+        17,
+        25
+      ],
+      "parents": [
+        11,
+        17
+      ],
+      "display_name": "Quadruple Bash"
+    },
+    "17": {
+      "children": [
+        16,
+        25
+      ],
+      "parents": [
+        12,
+        16
+      ],
+      "display_name": "Fireworks"
+    },
+    "18": {
+      "children": [
+        23
+      ],
+      "parents": [
+        13
+      ],
+      "display_name": "Half-Moon Swipe"
+    },
+    "19": {
+      "children": [
+        20,
+        21
+      ],
+      "parents": [
+        14,
+        20
+      ],
+      "display_name": "Flyby Jab"
+    },
+    "20": {
+      "children": [
+        19,
+        21
+      ],
+      "parents": [
+        15,
+        19
+      ],
+      "display_name": "Flaming Uppercut"
+    },
+    "21": {
+      "children": [
+        24
+      ],
+      "parents": [
+        19,
+        20
+      ],
+      "display_name": "Iron Lungs"
+    },
+    "22": {
+      "children": [
+        27
+      ],
+      "parents": [
+        23
+      ],
+      "display_name": "Generalist"
+    },
+    "23": {
+      "children": [
+        22,
+        27
+      ],
+      "parents": [
+        18
+      ],
+      "display_name": "Air Shout"
+    },
+    "24": {
+      "children": [
+        29
+      ],
+      "parents": [
+        21
+      ],
+      "display_name": "Mantle of the Bovemists"
+    },
+    "25": {
+      "children": [
+        26
+      ],
+      "parents": [
+        16,
+        17
+      ],
+      "display_name": "Bak'al's Grasp"
+    },
+    "26": {
+      "children": [
+        27,
+        32,
+        38
+      ],
+      "parents": [
+        25,
+        27
+      ],
+      "display_name": "Spear Proficiency 2"
+    },
+    "27": {
+      "children": [
+        26,
+        28,
+        30,
+        33,
+        38
+      ],
+      "parents": [
+        22,
+        23,
+        26,
+        28
+      ],
+      "display_name": "Cheaper Uppercut"
+    },
+    "28": {
+      "children": [
+        27,
+        29,
+        30,
+        31
+      ],
+      "parents": [
+        27,
+        29
+      ],
+      "display_name": "Aerodynamics"
+    },
+    "29": {
+      "children": [
+        28,
+        31,
+        35
+      ],
+      "parents": [
+        24,
+        28
+      ],
+      "display_name": "Provoke"
+    },
+    "30": {
+      "children": [
+        31
+      ],
+      "parents": [
+        27,
+        28,
+        31
+      ],
+      "display_name": "Counter"
+    },
+    "31": {
+      "children": [
+        30
+      ],
+      "parents": [
+        28,
+        29,
+        30
+      ],
+      "display_name": "Manachism"
+    },
+    "32": {
+      "children": [
+        36,
+        41
+      ],
+      "parents": [
+        26
+      ],
+      "display_name": "Enraged Blow"
+    },
+    "33": {
+      "children": [
+        34,
+        37,
+        50,
+        60
+      ],
+      "parents": [
+        27,
+        34
+      ],
+      "display_name": "Flying Kick"
+    },
+    "34": {
+      "children": [
+        33,
+        35,
+        50,
+        60
+      ],
+      "parents": [
+        33,
+        35
+      ],
+      "display_name": "Stronger Mantle"
+    },
+    "35": {
+      "children": [
+        34,
+        40
+      ],
+      "parents": [
+        29,
+        34
+      ],
+      "display_name": "Sacred Surge"
+    },
+    "36": {
+      "children": [
+        37,
+        42,
+        45
+      ],
+      "parents": [
+        32,
+        37
+      ],
+      "display_name": "Boiling Blood"
+    },
+    "37": {
+      "children": [
+        36,
+        42
+      ],
+      "parents": [
+        33,
+        36,
+        60
+      ],
+      "display_name": "Ragnarokkr"
+    },
+    "38": {
+      "children": [],
+      "parents": [
+        26,
+        27
+      ],
+      "display_name": "Precise Strikes"
+    },
+    "39": {
+      "children": [
+        40,
+        43,
+        44,
+        60
+      ],
+      "parents": [
+        40,
+        60
+      ],
+      "display_name": "Cleansing Breeze"
+    },
+    "40": {
+      "children": [
+        39,
+        44
+      ],
+      "parents": [
+        35,
+        39
+      ],
+      "display_name": "Stronger Bash"
+    },
+    "41": {
+      "children": [],
+      "parents": [
+        32
+      ],
+      "display_name": "Intoxicating Blood"
+    },
+    "42": {
+      "children": [],
+      "parents": [
+        36,
+        37
+      ],
+      "display_name": "Comet"
+    },
+    "43": {
+      "children": [],
+      "parents": [
+        39,
+        60
+      ],
+      "display_name": "Collide"
+    },
+    "44": {
+      "children": [
+        48
+      ],
+      "parents": [
+        39,
+        40
+      ],
+      "display_name": "Rejuvenating Skin"
+    },
+    "45": {
+      "children": [
+        46,
+        49,
+        53
+      ],
+      "parents": [
+        36,
+        46
+      ],
+      "display_name": "Uncontainable Corruption"
+    },
+    "46": {
+      "children": [
+        45,
+        47,
+        49
+      ],
+      "parents": [
+        45,
+        47
+      ],
+      "display_name": "Radiant Devotee"
+    },
+    "47": {
+      "children": [
+        46,
+        55
+      ],
+      "parents": [
+        46,
+        60
+      ],
+      "display_name": "Whirlwind Strike"
+    },
+    "48": {
+      "children": [
+        51,
+        52
+      ],
+      "parents": [
+        44
+      ],
+      "display_name": "Mythril Skin"
+    },
+    "49": {
+      "children": [],
+      "parents": [
+        45,
+        46
+      ],
+      "display_name": "Armour Breaker"
+    },
+    "50": {
+      "children": [],
+      "parents": [
+        33,
+        34
+      ],
+      "display_name": "Riposte"
+    },
+    "51": {
+      "children": [
+        59
+      ],
+      "parents": [
+        48,
+        52
+      ],
+      "display_name": "Shield Strike"
+    },
+    "52": {
+      "children": [
+        51,
+        59
+      ],
+      "parents": [
+        48
+      ],
+      "display_name": "Sparkling Hope"
+    },
+    "53": {
+      "children": [
+        54,
+        56,
+        61
+      ],
+      "parents": [
+        45,
+        54
+      ],
+      "display_name": "Massive Bash"
+    },
+    "54": {
+      "children": [
+        53,
+        55,
+        56,
+        57
+      ],
+      "parents": [
+        53,
+        55
+      ],
+      "display_name": "Tempest"
+    },
+    "55": {
+      "children": [
+        54,
+        57,
+        58,
+        65
+      ],
+      "parents": [
+        47,
+        54
+      ],
+      "display_name": "Spirit of the Rabbit"
+    },
+    "56": {
+      "children": [],
+      "parents": [
+        53,
+        54
+      ],
+      "display_name": "Massacre"
+    },
+    "57": {
+      "children": [],
+      "parents": [
+        54,
+        55
+      ],
+      "display_name": "Axe Kick"
+    },
+    "58": {
+      "children": [
+        59
+      ],
+      "parents": [
+        55,
+        59
+      ],
+      "display_name": "Radiance"
+    },
+    "59": {
+      "children": [
+        58,
+        66
+      ],
+      "parents": [
+        51,
+        52,
+        58
+      ],
+      "display_name": "Cheaper Bash 2"
+    },
+    "60": {
+      "children": [
+        37,
+        39,
+        43,
+        47
+      ],
+      "parents": [
+        33,
+        34,
+        39
+      ],
+      "display_name": "Cheaper War Scream"
+    },
+    "61": {
+      "children": [
+        62,
+        68
+      ],
+      "parents": [
+        53
+      ],
+      "display_name": "Cheaper War Scream II"
+    },
+    "62": {
+      "children": [],
+      "parents": [
+        61
+      ],
+      "display_name": "Better Enraged Blow"
+    },
+    "63": {
+      "children": [],
+      "parents": [
+        65
+      ],
+      "display_name": "Discombobulate"
+    },
+    "64": {
+      "children": [],
+      "parents": [
+        65
+      ],
+      "display_name": "Thunderclap"
+    },
+    "65": {
+      "children": [
+        63,
+        64
+      ],
+      "parents": [
+        55
+      ],
+      "display_name": "Cyclone"
+    },
+    "66": {
+      "children": [
+        67
+      ],
+      "parents": [
+        59
+      ],
+      "display_name": "Stronger Sacred Surge"
+    },
+    "67": {
+      "children": [
+        70,
+        71
+      ],
+      "parents": [
+        66
+      ],
+      "display_name": "Second Chance"
+    },
+    "68": {
+      "children": [
+        69,
+        72
+      ],
+      "parents": [
+        61
+      ],
+      "display_name": "Blood Pact"
+    },
+    "69": {
+      "children": [
+        70
+      ],
+      "parents": [
+        68,
+        70
+      ],
+      "display_name": "Brink of Madness"
+    },
+    "70": {
+      "children": [
+        69
+      ],
+      "parents": [
+        67,
+        69
+      ],
+      "display_name": "Cheaper Uppercut 2"
+    },
+    "71": {
+      "children": [],
+      "parents": [
+        67
+      ],
+      "display_name": "Martyr"
+    },
+    "72": {
+      "children": [],
+      "parents": [
+        68
+      ],
+      "display_name": "Haemorrhage"
+    }
+  },
+  "Mage": {
+    "0": {
+      "children": [
+        1
+      ],
+      "parents": [],
+      "display_name": "Meteor"
+    },
+    "1": {
+      "children": [
+        2,
+        3
+      ],
+      "parents": [
+        0
+      ],
+      "display_name": "Wand Proficiency"
+    },
+    "2": {
+      "children": [],
+      "parents": [
+        1
+      ],
+      "display_name": "Cheaper Meteor"
+    },
+    "3": {
+      "children": [
+        5
+      ],
+      "parents": [
+        1
+      ],
+      "display_name": "Shooting Star"
+    },
+    "4": {
+      "children": [
+        7
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Wand Proficiency II"
+    },
+    "5": {
+      "children": [
+        4,
+        6
+      ],
+      "parents": [
+        3
+      ],
+      "display_name": "Teleport"
+    },
+    "6": {
+      "children": [
+        9
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Wisdom"
+    },
+    "7": {
+      "children": [
+        8,
+        10,
+        11
+      ],
+      "parents": [
+        4,
+        8
+      ],
+      "display_name": "Heal"
+    },
+    "8": {
+      "children": [
+        7,
+        9,
+        11,
+        12
+      ],
+      "parents": [
+        7,
+        9
+      ],
+      "display_name": "Cheaper Teleport"
+    },
+    "9": {
+      "children": [
+        8,
+        13,
+        14
+      ],
+      "parents": [
+        6,
+        8
+      ],
+      "display_name": "Ice Snake"
+    },
+    "10": {
+      "children": [
+        15
+      ],
+      "parents": [
+        7
+      ],
+      "display_name": "Air Mastery"
+    },
+    "11": {
+      "children": [
+        12,
+        16
+      ],
+      "parents": [
+        7,
+        8
+      ],
+      "display_name": "Thunder Mastery"
+    },
+    "12": {
+      "children": [
+        18
+      ],
+      "parents": [
+        8,
+        11
+      ],
+      "display_name": "Water Mastery"
+    },
+    "13": {
+      "children": [
+        17
+      ],
+      "parents": [
+        9
+      ],
+      "display_name": "Fire Mastery"
+    },
+    "14": {
+      "children": [
+        17
+      ],
+      "parents": [
+        9
+      ],
+      "display_name": "Earth Mastery"
+    },
+    "15": {
+      "children": [
+        16,
+        20
+      ],
+      "parents": [
+        10,
+        16
+      ],
+      "display_name": "Wind Slash"
+    },
+    "16": {
+      "children": [
+        15,
+        20
+      ],
+      "parents": [
+        11,
+        15
+      ],
+      "display_name": "Thunderstorm"
+    },
+    "17": {
+      "children": [
+        19,
+        22
+      ],
+      "parents": [
+        13,
+        14
+      ],
+      "display_name": "Burning Sigil"
+    },
+    "18": {
+      "children": [
+        21
+      ],
+      "parents": [
+        12
+      ],
+      "display_name": "Sunshower"
+    },
+    "19": {
+      "children": [],
+      "parents": [
+        17
+      ],
+      "display_name": "Stronger Meteor"
+    },
+    "20": {
+      "children": [
+        23
+      ],
+      "parents": [
+        15,
+        16
+      ],
+      "display_name": "Windsweeper"
+    },
+    "21": {
+      "children": [
+        24
+      ],
+      "parents": [
+        18
+      ],
+      "display_name": "Ophanim"
+    },
+    "22": {
+      "children": [
+        25
+      ],
+      "parents": [
+        17
+      ],
+      "display_name": "Arcane Transfer"
+    },
+    "23": {
+      "children": [
+        24,
+        26,
+        27
+      ],
+      "parents": [
+        20,
+        24
+      ],
+      "display_name": "Cheaper Heal"
+    },
+    "24": {
+      "children": [
+        23,
+        25,
+        27,
+        28,
+        32
+      ],
+      "parents": [
+        21,
+        23,
+        25
+      ],
+      "display_name": "Purification"
+    },
+    "25": {
+      "children": [
+        24,
+        28,
+        29,
+        33
+      ],
+      "parents": [
+        22,
+        24
+      ],
+      "display_name": "Sentient Snake"
+    },
+    "26": {
+      "children": [
+        30
+      ],
+      "parents": [
+        23
+      ],
+      "display_name": "Eye Piercer"
+    },
+    "27": {
+      "children": [],
+      "parents": [
+        23,
+        24
+      ],
+      "display_name": "Breathless"
+    },
+    "28": {
+      "children": [],
+      "parents": [
+        24,
+        25
+      ],
+      "display_name": "Larger Heal"
+    },
+    "29": {
+      "children": [],
+      "parents": [
+        25
+      ],
+      "display_name": "Larger Mana Bank"
+    },
+    "30": {
+      "children": [
+        31,
+        34,
+        38
+      ],
+      "parents": [
+        26,
+        31
+      ],
+      "display_name": "Cheaper Ice Snake"
+    },
+    "31": {
+      "children": [
+        30,
+        32,
+        34,
+        35
+      ],
+      "parents": [
+        30,
+        32
+      ],
+      "display_name": "Fortitude"
+    },
+    "32": {
+      "children": [
+        31,
+        35,
+        36
+      ],
+      "parents": [
+        24,
+        31
+      ],
+      "display_name": "Cheaper Teleport II"
+    },
+    "33": {
+      "children": [
+        37
+      ],
+      "parents": [
+        25
+      ],
+      "display_name": "Pyrokinesis"
+    },
+    "34": {
+      "children": [],
+      "parents": [
+        30,
+        31
+      ],
+      "display_name": "Blink"
+    },
+    "35": {
+      "children": [
+        36,
+        39,
+        40
+      ],
+      "parents": [
+        31,
+        32,
+        36
+      ],
+      "display_name": "Healthier Ophanim"
+    },
+    "36": {
+      "children": [
+        35,
+        37,
+        40,
+        41
+      ],
+      "parents": [
+        32,
+        35,
+        37
+      ],
+      "display_name": "Snake Nest"
+    },
+    "37": {
+      "children": [
+        36,
+        41,
+        46
+      ],
+      "parents": [
+        33,
+        36
+      ],
+      "display_name": "Seance"
+    },
+    "38": {
+      "children": [
+        39,
+        43
+      ],
+      "parents": [
+        30,
+        39
+      ],
+      "display_name": "Transonic Warp"
+    },
+    "39": {
+      "children": [
+        38,
+        40,
+        43
+      ],
+      "parents": [
+        35,
+        38,
+        40
+      ],
+      "display_name": "Fluid Healing"
+    },
+    "40": {
+      "children": [
+        39,
+        41,
+        42,
+        44
+      ],
+      "parents": [
+        35,
+        36,
+        39,
+        41
+      ],
+      "display_name": "Orphion's Pulse"
+    },
+    "41": {
+      "children": [
+        40,
+        42
+      ],
+      "parents": [
+        36,
+        37,
+        40
+      ],
+      "display_name": "Arcane Restoration"
+    },
+    "42": {
+      "children": [],
+      "parents": [
+        40,
+        41
+      ],
+      "display_name": "Stronger Ophanim"
+    },
+    "43": {
+      "children": [
+        47,
+        49
+      ],
+      "parents": [
+        38,
+        39
+      ],
+      "display_name": "Diffusion"
+    },
+    "44": {
+      "children": [
+        45,
+        51
+      ],
+      "parents": [
+        40
+      ],
+      "display_name": "Lightweaver"
+    },
+    "45": {
+      "children": [
+        46,
+        48,
+        51
+      ],
+      "parents": [
+        44,
+        46
+      ],
+      "display_name": "Arcane Speed"
+    },
+    "46": {
+      "children": [
+        45,
+        48,
+        52
+      ],
+      "parents": [
+        37,
+        45
+      ],
+      "display_name": "Larger Mana Bank II"
+    },
+    "47": {
+      "children": [],
+      "parents": [
+        43
+      ],
+      "display_name": "More Winded"
+    },
+    "48": {
+      "children": [],
+      "parents": [
+        45,
+        46
+      ],
+      "display_name": "Psychokinesis"
+    },
+    "49": {
+      "children": [
+        50,
+        53,
+        54
+      ],
+      "parents": [
+        43,
+        50
+      ],
+      "display_name": "Cheaper Ice Snake II"
+    },
+    "50": {
+      "children": [
+        49,
+        51,
+        54,
+        55
+      ],
+      "parents": [
+        49,
+        51
+      ],
+      "display_name": "Explosive Entrance"
+    },
+    "51": {
+      "children": [
+        50,
+        55
+      ],
+      "parents": [
+        44,
+        45,
+        50
+      ],
+      "display_name": "Cheaper Meteor II"
+    },
+    "52": {
+      "children": [
+        56
+      ],
+      "parents": [
+        46
+      ],
+      "display_name": "Chaos Explosion"
+    },
+    "53": {
+      "children": [
+        59
+      ],
+      "parents": [
+        49
+      ],
+      "display_name": "Time Dilation"
+    },
+    "54": {
+      "children": [
+        55,
+        57
+      ],
+      "parents": [
+        49,
+        50,
+        55
+      ],
+      "display_name": "Gust"
+    },
+    "55": {
+      "children": [
+        54,
+        57,
+        61
+      ],
+      "parents": [
+        50,
+        51,
+        54
+      ],
+      "display_name": "Better Ophanim"
+    },
+    "56": {
+      "children": [
+        58,
+        62
+      ],
+      "parents": [
+        52
+      ],
+      "display_name": "Arctic Snake"
+    },
+    "57": {
+      "children": [],
+      "parents": [
+        54,
+        55
+      ],
+      "display_name": "Stronger Sunshower"
+    },
+    "58": {
+      "children": [],
+      "parents": [
+        56
+      ],
+      "display_name": "Arcane Power"
+    },
+    "59": {
+      "children": [
+        60,
+        63,
+        68
+      ],
+      "parents": [
+        53,
+        60
+      ],
+      "display_name": "More Winded II"
+    },
+    "60": {
+      "children": [
+        59,
+        61,
+        63,
+        64
+      ],
+      "parents": [
+        59,
+        61
+      ],
+      "display_name": "Dynamic Faith"
+    },
+    "61": {
+      "children": [
+        60,
+        64,
+        65
+      ],
+      "parents": [
+        55,
+        60
+      ],
+      "display_name": "Healthier Ophanim II"
+    },
+    "62": {
+      "children": [
+        67
+      ],
+      "parents": [
+        56
+      ],
+      "display_name": "Larger Mana Bank III"
+    },
+    "63": {
+      "children": [],
+      "parents": [
+        59,
+        60
+      ],
+      "display_name": "Devitalize"
+    },
+    "64": {
+      "children": [],
+      "parents": [
+        60,
+        61
+      ],
+      "display_name": "Divination"
+    },
+    "65": {
+      "children": [
+        66,
+        70
+      ],
+      "parents": [
+        61
+      ],
+      "display_name": "Sunflare"
+    },
+    "66": {
+      "children": [],
+      "parents": [
+        65
+      ],
+      "display_name": "Better Lightweaver"
+    },
+    "67": {
+      "children": [
+        70,
+        71
+      ],
+      "parents": [
+        62
+      ],
+      "display_name": "Arcane Overflow"
+    },
+    "68": {
+      "children": [
+        69
+      ],
+      "parents": [
+        59
+      ],
+      "display_name": "Timelock"
+    },
+    "69": {
+      "children": [
+        70
+      ],
+      "parents": [
+        68,
+        70
+      ],
+      "display_name": "Cheaper Heal II"
+    },
+    "70": {
+      "children": [
+        69
+      ],
+      "parents": [
+        65,
+        67,
+        69
+      ],
+      "display_name": "Manastorm"
+    },
+    "71": {
+      "children": [],
+      "parents": [
+        67
+      ],
+      "display_name": "Memory Recollection"
+    }
+  },
+  "Assassin": {
+    "0": {
+      "children": [
+        1
+      ],
+      "parents": [],
+      "display_name": "Spin Attack"
+    },
+    "1": {
+      "children": [
+        2,
+        3
+      ],
+      "parents": [
+        0
+      ],
+      "display_name": "Dagger Proficiency"
+    },
+    "2": {
+      "children": [],
+      "parents": [
+        1
+      ],
+      "display_name": "Cheaper Spin Attack"
+    },
+    "3": {
+      "children": [
+        5
+      ],
+      "parents": [
+        1
+      ],
+      "display_name": "Double Spin"
+    },
+    "4": {
+      "children": [
+        7
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Poisoned Blade"
+    },
+    "5": {
+      "children": [
+        4,
+        6
+      ],
+      "parents": [
+        3
+      ],
+      "display_name": "Dash"
+    },
+    "6": {
+      "children": [
+        9
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Double Slice"
+    },
+    "7": {
+      "children": [
+        8,
+        10,
+        11
+      ],
+      "parents": [
+        4,
+        8
+      ],
+      "display_name": "Smoke Bomb"
+    },
+    "8": {
+      "children": [
+        7,
+        9,
+        12,
+        13
+      ],
+      "parents": [
+        7,
+        9
+      ],
+      "display_name": "Cheaper Dash"
+    },
+    "9": {
+      "children": [
+        8,
+        13,
+        14
+      ],
+      "parents": [
+        6,
+        8
+      ],
+      "display_name": "Multihit"
+    },
+    "10": {
+      "children": [
+        11,
+        15
+      ],
+      "parents": [
+        7,
+        11
+      ],
+      "display_name": "Earth Mastery"
+    },
+    "11": {
+      "children": [
+        10,
+        15
+      ],
+      "parents": [
+        7,
+        10
+      ],
+      "display_name": "Thunder Mastery"
+    },
+    "12": {
+      "children": [
+        18
+      ],
+      "parents": [
+        8,
+        13
+      ],
+      "display_name": "Fire Mastery"
+    },
+    "13": {
+      "children": [
+        12,
+        14,
+        16
+      ],
+      "parents": [
+        8,
+        9,
+        14
+      ],
+      "display_name": "Water Mastery"
+    },
+    "14": {
+      "children": [
+        13,
+        16
+      ],
+      "parents": [
+        9,
+        13
+      ],
+      "display_name": "Air Mastery"
+    },
+    "15": {
+      "children": [
+        17
+      ],
+      "parents": [
+        10,
+        11
+      ],
+      "display_name": "Backstab"
+    },
+    "16": {
+      "children": [
+        19,
+        22
+      ],
+      "parents": [
+        13,
+        14
+      ],
+      "display_name": "Fatality"
+    },
+    "17": {
+      "children": [
+        18,
+        20
+      ],
+      "parents": [
+        15,
+        18
+      ],
+      "display_name": "Vanish"
+    },
+    "18": {
+      "children": [
+        17,
+        21
+      ],
+      "parents": [
+        12,
+        17
+      ],
+      "display_name": "Sticky Bomb"
+    },
+    "19": {
+      "children": [],
+      "parents": [
+        16
+      ],
+      "display_name": "Righting Reflex"
+    },
+    "20": {
+      "children": [
+        23
+      ],
+      "parents": [
+        17
+      ],
+      "display_name": "Surprise Strike"
+    },
+    "21": {
+      "children": [
+        24,
+        30
+      ],
+      "parents": [
+        18
+      ],
+      "display_name": "Mirror Image"
+    },
+    "22": {
+      "children": [
+        25
+      ],
+      "parents": [
+        16
+      ],
+      "display_name": "Lacerate"
+    },
+    "23": {
+      "children": [
+        26,
+        27
+      ],
+      "parents": [
+        20
+      ],
+      "display_name": "Silent Killer"
+    },
+    "24": {
+      "children": [
+        28,
+        45
+      ],
+      "parents": [
+        21,
+        45
+      ],
+      "display_name": "Shenanigans"
+    },
+    "25": {
+      "children": [
+        29,
+        45
+      ],
+      "parents": [
+        22
+      ],
+      "display_name": "Wall of Smoke"
+    },
+    "26": {
+      "children": [
+        27,
+        31
+      ],
+      "parents": [
+        23,
+        27
+      ],
+      "display_name": "Better Smoke Bomb"
+    },
+    "27": {
+      "children": [
+        26,
+        28,
+        32,
+        71
+      ],
+      "parents": [
+        23,
+        26,
+        28
+      ],
+      "display_name": "Shadow Travel"
+    },
+    "28": {
+      "children": [
+        27,
+        29,
+        32,
+        33,
+        71,
+        72
+      ],
+      "parents": [
+        24,
+        27,
+        29,
+        45
+      ],
+      "display_name": "Cheaper Multihit"
+    },
+    "29": {
+      "children": [
+        28,
+        33,
+        72
+      ],
+      "parents": [
+        25,
+        28
+      ],
+      "display_name": "Dagger Proficiency II"
+    },
+    "30": {
+      "children": [],
+      "parents": [
+        21
+      ],
+      "display_name": "Last Laugh"
+    },
+    "31": {
+      "children": [
+        32,
+        34,
+        38
+      ],
+      "parents": [
+        26,
+        32
+      ],
+      "display_name": "Cheaper Smoke Bomb"
+    },
+    "32": {
+      "children": [
+        31,
+        34,
+        35
+      ],
+      "parents": [
+        27,
+        28,
+        31
+      ],
+      "display_name": "Blazing Powder"
+    },
+    "33": {
+      "children": [
+        36,
+        76
+      ],
+      "parents": [
+        28,
+        29
+      ],
+      "display_name": "Weightless"
+    },
+    "34": {
+      "children": [],
+      "parents": [
+        31,
+        32
+      ],
+      "display_name": "Black Hole"
+    },
+    "35": {
+      "children": [
+        36,
+        39,
+        40,
+        42
+      ],
+      "parents": [
+        32,
+        36
+      ],
+      "display_name": "Sandbagging"
+    },
+    "36": {
+      "children": [
+        35,
+        40
+      ],
+      "parents": [
+        33,
+        35
+      ],
+      "display_name": "Hop"
+    },
+    "37": {
+      "children": [],
+      "parents": [
+        43,
+        44
+      ],
+      "display_name": "Dancing Blade"
+    },
+    "38": {
+      "children": [
+        41
+      ],
+      "parents": [
+        31
+      ],
+      "display_name": "Violent Vortex"
+    },
+    "39": {
+      "children": [],
+      "parents": [
+        35
+      ],
+      "display_name": "Delirious Gas"
+    },
+    "40": {
+      "children": [],
+      "parents": [
+        35,
+        36
+      ],
+      "display_name": "Stronger Multihit"
+    },
+    "41": {
+      "children": [
+        46,
+        50
+      ],
+      "parents": [
+        38
+      ],
+      "display_name": "Marked"
+    },
+    "42": {
+      "children": [
+        43,
+        47
+      ],
+      "parents": [
+        35,
+        43
+      ],
+      "display_name": "Echo"
+    },
+    "43": {
+      "children": [
+        37,
+        42,
+        44
+      ],
+      "parents": [
+        42,
+        44
+      ],
+      "display_name": "Shurikens"
+    },
+    "44": {
+      "children": [
+        37,
+        43,
+        49
+      ],
+      "parents": [
+        43,
+        76
+      ],
+      "display_name": "Far Reach"
+    },
+    "45": {
+      "children": [
+        24,
+        28
+      ],
+      "parents": [
+        24,
+        25
+      ],
+      "display_name": "Psithurism"
+    },
+    "46": {
+      "children": [
+        73
+      ],
+      "parents": [
+        41
+      ],
+      "display_name": "Ambush"
+    },
+    "47": {
+      "children": [
+        50,
+        52
+      ],
+      "parents": [
+        42,
+        50
+      ],
+      "display_name": "Cheaper Dash II"
+    },
+    "48": {
+      "children": [
+        49,
+        53
+      ],
+      "parents": [
+        49
+      ],
+      "display_name": "Parry"
+    },
+    "49": {
+      "children": [
+        48,
+        54
+      ],
+      "parents": [
+        44,
+        48
+      ],
+      "display_name": "Cheaper Spin Attack 2"
+    },
+    "50": {
+      "children": [
+        47,
+        51
+      ],
+      "parents": [
+        41,
+        47
+      ],
+      "display_name": "Death Magnet"
+    },
+    "51": {
+      "children": [
+        52,
+        55,
+        73,
+        75
+      ],
+      "parents": [
+        50,
+        52,
+        73
+      ],
+      "display_name": "Cheaper Multihit II"
+    },
+    "52": {
+      "children": [
+        51,
+        53,
+        59,
+        74,
+        75
+      ],
+      "parents": [
+        47,
+        51,
+        53
+      ],
+      "display_name": "Hoodwink"
+    },
+    "53": {
+      "children": [
+        52,
+        54,
+        56,
+        74
+      ],
+      "parents": [
+        48,
+        52,
+        54
+      ],
+      "display_name": "Choke Bomb"
+    },
+    "54": {
+      "children": [
+        53,
+        56
+      ],
+      "parents": [
+        49,
+        53
+      ],
+      "display_name": "Wall Jump"
+    },
+    "55": {
+      "children": [
+        57,
+        58,
+        75
+      ],
+      "parents": [
+        51,
+        73,
+        75
+      ],
+      "display_name": "Fatal Spin"
+    },
+    "56": {
+      "children": [
+        60,
+        74
+      ],
+      "parents": [
+        53,
+        54
+      ],
+      "display_name": "Stronger Lacerate"
+    },
+    "57": {
+      "children": [],
+      "parents": [
+        55
+      ],
+      "display_name": "Stronger Vortex"
+    },
+    "58": {
+      "children": [
+        59,
+        61,
+        64
+      ],
+      "parents": [
+        55,
+        59
+      ],
+      "display_name": "Harvester"
+    },
+    "59": {
+      "children": [
+        58,
+        60,
+        61,
+        62,
+        65
+      ],
+      "parents": [
+        52,
+        58,
+        60
+      ],
+      "display_name": "Cheaper Smoke Bomb 2"
+    },
+    "60": {
+      "children": [
+        59,
+        62,
+        63,
+        67
+      ],
+      "parents": [
+        56,
+        59
+      ],
+      "display_name": "Blade Fury"
+    },
+    "61": {
+      "children": [],
+      "parents": [
+        58,
+        59
+      ],
+      "display_name": "More Marks"
+    },
+    "62": {
+      "children": [],
+      "parents": [
+        59,
+        60
+      ],
+      "display_name": "Stronger Clones"
+    },
+    "63": {
+      "children": [],
+      "parents": [
+        60
+      ],
+      "display_name": "Ricochets"
+    },
+    "64": {
+      "children": [
+        69,
+        70
+      ],
+      "parents": [
+        58
+      ],
+      "display_name": "Satsujin"
+    },
+    "65": {
+      "children": [
+        66
+      ],
+      "parents": [
+        59
+      ],
+      "display_name": "Forbidden Art"
+    },
+    "66": {
+      "children": [
+        77
+      ],
+      "parents": [
+        65
+      ],
+      "display_name": "Diversion"
+    },
+    "67": {
+      "children": [
+        68
+      ],
+      "parents": [
+        60
+      ],
+      "display_name": "Jasmine Bloom"
+    },
+    "68": {
+      "children": [],
+      "parents": [
+        67
+      ],
+      "display_name": "Better Weightless"
+    },
+    "69": {
+      "children": [],
+      "parents": [
+        64
+      ],
+      "display_name": "Devour"
+    },
+    "70": {
+      "children": [],
+      "parents": [
+        64
+      ],
+      "display_name": "Better Marked"
+    },
+    "71": {
+      "children": [],
+      "parents": [
+        27,
+        28
+      ],
+      "display_name": "Bamboozle"
+    },
+    "72": {
+      "children": [],
+      "parents": [
+        28,
+        29
+      ],
+      "display_name": "Distraction"
+    },
+    "73": {
+      "children": [
+        51,
+        55
+      ],
+      "parents": [
+        46,
+        51
+      ],
+      "display_name": "Nightcloak Knife"
+    },
+    "74": {
+      "children": [],
+      "parents": [
+        52,
+        53,
+        56
+      ],
+      "display_name": "Pirouette"
+    },
+    "75": {
+      "children": [
+        55
+      ],
+      "parents": [
+        51,
+        52,
+        55
+      ],
+      "display_name": "Dissolution"
+    },
+    "76": {
+      "children": [
+        44
+      ],
+      "parents": [
+        33
+      ],
+      "display_name": "Flow State"
+    },
+    "77": {
+      "children": [],
+      "parents": [
+        66
+      ],
+      "display_name": "Even Stronger Clones"
+    }
+  },
+  "Shaman": {
+    "0": {
+      "children": [
+        1
+      ],
+      "parents": [],
+      "display_name": "Totem"
+    },
+    "1": {
+      "children": [
+        2,
+        3
+      ],
+      "parents": [
+        0
+      ],
+      "display_name": "Relik Proficiency"
+    },
+    "2": {
+      "children": [],
+      "parents": [
+        1
+      ],
+      "display_name": "Cheaper Totem"
+    },
+    "3": {
+      "children": [
+        5
+      ],
+      "parents": [
+        1
+      ],
+      "display_name": "Totemic Smash"
+    },
+    "4": {
+      "children": [
+        7
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Distant Grasp"
+    },
+    "5": {
+      "children": [
+        4,
+        6
+      ],
+      "parents": [
+        3
+      ],
+      "display_name": "Haul"
+    },
+    "6": {
+      "children": [
+        9
+      ],
+      "parents": [
+        5
+      ],
+      "display_name": "Hand of the Shaman"
+    },
+    "7": {
+      "children": [
+        8,
+        10,
+        11
+      ],
+      "parents": [
+        4,
+        8
+      ],
+      "display_name": "Uproot"
+    },
+    "8": {
+      "children": [
+        7,
+        9,
+        11,
+        12,
+        13
+      ],
+      "parents": [
+        7,
+        9
+      ],
+      "display_name": "Cheaper Haul"
+    },
+    "9": {
+      "children": [
+        8,
+        13,
+        14
+      ],
+      "parents": [
+        6,
+        8
+      ],
+      "display_name": "Aura"
+    },
+    "10": {
+      "children": [
+        11,
+        15
+      ],
+      "parents": [
+        7
+      ],
+      "display_name": "Earth Mastery"
+    },
+    "11": {
+      "children": [
+        12,
+        13,
+        15
+      ],
+      "parents": [
+        7,
+        8,
+        10,
+        13
+      ],
+      "display_name": "Air Mastery"
+    },
+    "12": {
+      "children": [
+        17
+      ],
+      "parents": [
+        8,
+        11,
+        13
+      ],
+      "display_name": "Water Mastery"
+    },
+    "13": {
+      "children": [
+        11,
+        12,
+        18
+      ],
+      "parents": [
+        8,
+        9,
+        11
+      ],
+      "display_name": "Thunder Mastery"
+    },
+    "14": {
+      "children": [
+        19
+      ],
+      "parents": [
+        9
+      ],
+      "display_name": "Fire Mastery"
+    },
+    "15": {
+      "children": [
+        16
+      ],
+      "parents": [
+        10,
+        11
+      ],
+      "display_name": "Nature's Jolt"
+    },
+    "16": {
+      "children": [
+        20
+      ],
+      "parents": [
+        15
+      ],
+      "display_name": "Overseer"
+    },
+    "17": {
+      "children": [
+        21
+      ],
+      "parents": [
+        12
+      ],
+      "display_name": "Rain Dance"
+    },
+    "18": {
+      "children": [
+        19,
+        22
+      ],
+      "parents": [
+        13,
+        19
+      ],
+      "display_name": "Shocking Aura"
+    },
+    "19": {
+      "children": [
+        18,
+        22
+      ],
+      "parents": [
+        14,
+        18
+      ],
+      "display_name": "Flaming Tongue"
+    },
+    "20": {
+      "children": [
+        23
+      ],
+      "parents": [
+        16
+      ],
+      "display_name": "Puppet Master"
+    },
+    "21": {
+      "children": [
+        25
+      ],
+      "parents": [
+        17
+      ],
+      "display_name": "Mask of the Lunatic"
+    },
+    "22": {
+      "children": [
+        26
+      ],
+      "parents": [
+        18,
+        19
+      ],
+      "display_name": "Sacrificial Shrine"
+    },
+    "23": {
+      "children": [
+        24,
+        27
+      ],
+      "parents": [
+        20,
+        24
+      ],
+      "display_name": "Stagnation"
+    },
+    "24": {
+      "children": [
+        23,
+        25,
+        27,
+        28
+      ],
+      "parents": [
+        23,
+        25
+      ],
+      "display_name": "Cheaper Aura"
+    },
+    "25": {
+      "children": [
+        24,
+        26,
+        28,
+        29,
+        32
+      ],
+      "parents": [
+        21,
+        24,
+        26
+      ],
+      "display_name": "Cheaper Uproot"
+    },
+    "26": {
+      "children": [
+        25,
+        29,
+        30,
+        33
+      ],
+      "parents": [
+        22,
+        25
+      ],
+      "display_name": "Rebound"
+    },
+    "27": {
+      "children": [
+        31
+      ],
+      "parents": [
+        23,
+        24
+      ],
+      "display_name": "More Puppets"
+    },
+    "28": {
+      "children": [],
+      "parents": [
+        24,
+        25
+      ],
+      "display_name": "Haunting Memory"
+    },
+    "29": {
+      "children": [],
+      "parents": [
+        25,
+        26
+      ],
+      "display_name": "Better Totem"
+    },
+    "30": {
+      "children": [],
+      "parents": [
+        26
+      ],
+      "display_name": "Blood Connection"
+    },
+    "31": {
+      "children": [
+        34,
+        35
+      ],
+      "parents": [
+        27
+      ],
+      "display_name": "Exploding Puppets"
+    },
+    "32": {
+      "children": [
+        33,
+        36
+      ],
+      "parents": [
+        25,
+        33
+      ],
+      "display_name": "Hymn of Hate"
+    },
+    "33": {
+      "children": [
+        32,
+        36,
+        37
+      ],
+      "parents": [
+        26,
+        32
+      ],
+      "display_name": "Larger Blood Pool"
+    },
+    "34": {
+      "children": [
+        39
+      ],
+      "parents": [
+        31
+      ],
+      "display_name": "Bullwhip"
+    },
+    "35": {
+      "children": [
+        40
+      ],
+      "parents": [
+        31
+      ],
+      "display_name": "More Puppets II"
+    },
+    "36": {
+      "children": [
+        37,
+        38,
+        41
+      ],
+      "parents": [
+        32,
+        33,
+        37
+      ],
+      "display_name": "Mask of the Fanatic"
+    },
+    "37": {
+      "children": [
+        36,
+        42
+      ],
+      "parents": [
+        33,
+        36
+      ],
+      "display_name": "Vengeful Spirit"
+    },
+    "38": {
+      "children": [],
+      "parents": [
+        36
+      ],
+      "display_name": "Masquerade"
+    },
+    "39": {
+      "children": [
+        40,
+        45
+      ],
+      "parents": [
+        34,
+        40
+      ],
+      "display_name": "Double Totem"
+    },
+    "40": {
+      "children": [
+        39,
+        41,
+        43,
+        45,
+        46
+      ],
+      "parents": [
+        35,
+        39,
+        41
+      ],
+      "display_name": "Cheaper Totem II"
+    },
+    "41": {
+      "children": [
+        40,
+        42,
+        43,
+        44,
+        46,
+        47
+      ],
+      "parents": [
+        36,
+        40,
+        42
+      ],
+      "display_name": "Storm Dance"
+    },
+    "42": {
+      "children": [
+        41,
+        44,
+        47
+      ],
+      "parents": [
+        37,
+        41
+      ],
+      "display_name": "Blood Moon"
+    },
+    "43": {
+      "children": [],
+      "parents": [
+        40,
+        41
+      ],
+      "display_name": "Regeneration"
+    },
+    "44": {
+      "children": [],
+      "parents": [
+        41,
+        42
+      ],
+      "display_name": "Cheaper Haul II"
+    },
+    "45": {
+      "children": [
+        46,
+        48,
+        50
+      ],
+      "parents": [
+        39,
+        40,
+        46
+      ],
+      "display_name": "Cheaper Aura II"
+    },
+    "46": {
+      "children": [
+        45,
+        48,
+        49,
+        51
+      ],
+      "parents": [
+        40,
+        41,
+        45
+      ],
+      "display_name": "Stronger Totem"
+    },
+    "47": {
+      "children": [
+        52,
+        53
+      ],
+      "parents": [
+        41,
+        42
+      ],
+      "display_name": "Twisted Tether"
+    },
+    "48": {
+      "children": [],
+      "parents": [
+        45,
+        46
+      ],
+      "display_name": "Totemic Shatter"
+    },
+    "49": {
+      "children": [],
+      "parents": [
+        46
+      ],
+      "display_name": "Depersonalization"
+    },
+    "50": {
+      "children": [
+        51,
+        54
+      ],
+      "parents": [
+        45,
+        51
+      ],
+      "display_name": "Crimson Effigy"
+    },
+    "51": {
+      "children": [
+        50,
+        52,
+        55
+      ],
+      "parents": [
+        46,
+        50,
+        52
+      ],
+      "display_name": "Mask of the Coward"
+    },
+    "52": {
+      "children": [
+        51,
+        53,
+        55,
+        56
+      ],
+      "parents": [
+        47,
+        51,
+        53
+      ],
+      "display_name": "Fluid Healing"
+    },
+    "53": {
+      "children": [
+        52,
+        56
+      ],
+      "parents": [
+        47,
+        52
+      ],
+      "display_name": "Larger Blood Pool II"
+    },
+    "54": {
+      "children": [
+        57
+      ],
+      "parents": [
+        50
+      ],
+      "display_name": "Maddening Roots"
+    },
+    "55": {
+      "children": [
+        58
+      ],
+      "parents": [
+        51,
+        52
+      ],
+      "display_name": "Chant of the Coward"
+    },
+    "56": {
+      "children": [
+        59
+      ],
+      "parents": [
+        52,
+        53
+      ],
+      "display_name": "Blood Rite"
+    },
+    "57": {
+      "children": [
+        60,
+        61
+      ],
+      "parents": [
+        54
+      ],
+      "display_name": "More Effigies"
+    },
+    "58": {
+      "children": [
+        59,
+        62,
+        63
+      ],
+      "parents": [
+        55,
+        59
+      ],
+      "display_name": "Chant of the Fanatic"
+    },
+    "59": {
+      "children": [
+        58,
+        65
+      ],
+      "parents": [
+        56,
+        58
+      ],
+      "display_name": "Stronger Tether"
+    },
+    "60": {
+      "children": [
+        61,
+        66
+      ],
+      "parents": [
+        57,
+        61
+      ],
+      "display_name": "Triple Totem"
+    },
+    "61": {
+      "children": [
+        60,
+        62,
+        66
+      ],
+      "parents": [
+        57,
+        60,
+        62
+      ],
+      "display_name": "Invigorating Wave"
+    },
+    "62": {
+      "children": [
+        61
+      ],
+      "parents": [
+        58,
+        61
+      ],
+      "display_name": "Seeking Totem"
+    },
+    "63": {
+      "children": [
+        64,
+        67
+      ],
+      "parents": [
+        58
+      ],
+      "display_name": "Frog Dance"
+    },
+    "64": {
+      "children": [],
+      "parents": [
+        63
+      ],
+      "display_name": "Chant of the Lunatic"
+    },
+    "65": {
+      "children": [
+        68
+      ],
+      "parents": [
+        59
+      ],
+      "display_name": "Larger Blood Pool III"
+    },
+    "66": {
+      "children": [
+        69
+      ],
+      "parents": [
+        60,
+        61
+      ],
+      "display_name": "Shepherd"
+    },
+    "67": {
+      "children": [
+        69
+      ],
+      "parents": [
+        63,
+        69
+      ],
+      "display_name": "Awakened"
+    },
+    "68": {
+      "children": [],
+      "parents": [
+        65
+      ],
+      "display_name": "Blood Sorrow"
+    },
+    "69": {
+      "children": [
+        67
+      ],
+      "parents": [
+        66,
+        67
+      ],
+      "display_name": "Cheaper Uproot II"
+    }
+  }
+}
