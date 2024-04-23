@@ -1,9 +1,9 @@
 package com.gertoxq.quickbuild;
 
 import com.gertoxq.quickbuild.client.QuickBuildClient;
-import com.google.common.collect.Lists;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EncodeATree {
 
