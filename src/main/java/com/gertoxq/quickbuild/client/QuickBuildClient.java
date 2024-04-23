@@ -62,6 +62,7 @@ public class QuickBuildClient implements ClientModInitializer {
         InputStream atreeStream = QuickBuild.class.getResourceAsStream("/" + "atree.json");
 
         try {
+            assert atreeStream != null;
             fullatree = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();
         } catch (Exception ignored) {
