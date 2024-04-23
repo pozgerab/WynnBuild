@@ -49,8 +49,10 @@ public class QuickBuildClient implements ClientModInitializer {
         InputStream dupeStream = QuickBuild.class.getResourceAsStream("/" + "dupes.json");
 
         try {
+            assert inputStream != null;
             idMap = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(inputStream, StandardCharsets.UTF_8))).asMap();
+            assert dupeStream != null;
             dupeMap = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(dupeStream, StandardCharsets.UTF_8))).asMap();
         } catch (Exception ignored) {
@@ -70,15 +72,11 @@ public class QuickBuildClient implements ClientModInitializer {
             if (screen instanceof GenericContainerScreen containerScreen) {
                 String title = containerScreen.getTitle().getString();
                 if (title.equals("Character Info")) {
-                    Screens.getButtons(containerScreen).add(new ReadBtn(width/4-50, height/2-10, 100, 20, Text.literal("Read"), button -> {
-                        MinecraftClient.getInstance().execute(() -> this.saveCharInfo(containerScreen));
-                    }, Text.literal("Read Character Info data")));
+                    Screens.getButtons(containerScreen).add(new ReadBtn(width/4-50, height/2-10, 100, 20, Text.literal("Read"), button -> MinecraftClient.getInstance().execute(() -> this.saveCharInfo(containerScreen)), Text.literal("Read Character Info data")));
                     Screens.getButtons(containerScreen).add(new ReadBtn(width-100, height-20, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build(), Text.literal("Generate your build url")));
                 }
                 else if (title.contains(" Abilities")) {
-                    Screens.getButtons(containerScreen).add(new ReadBtn(width/4-50, height/2-10, 100, 20, Text.literal("Read"), button -> {
-                        this.saveATree(containerScreen);
-                    }, Text.literal("Read current ability tree page data")));
+                    Screens.getButtons(containerScreen).add(new ReadBtn(width/4-50, height/2-10, 100, 20, Text.literal("Read"), button -> this.saveATree(containerScreen), Text.literal("Read current ability tree page data")));
                 }
             }
         });
@@ -88,9 +86,9 @@ public class QuickBuildClient implements ClientModInitializer {
                     var p = context.getSource().getClient().player;
                     if (p == null) return 0;
                     p.sendMessage(Text.literal("Welcome to QuickBuild").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(
-                            Text.literal("\n\nThis is a mod for quickly exporting your build with the use of wynnbuilder." +
-                                    " As you run the '/build' command or click the build button on the right left side of your screen," +
-                                    " this mod will generate you a wynnbuilder link that you can copy or share")
+                            Text.literal("""
+
+                                    This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share""")
                                     ).styled(style -> style.withColor(Formatting.GOLD)));
                     return 1;
                 }))));
@@ -135,6 +133,7 @@ public class QuickBuildClient implements ClientModInitializer {
 
     private void saveATree(GenericContainerScreen handledScreen) {
         if (castTreeObj == null) {
+            assert MinecraftClient.getInstance().player != null;
             MinecraftClient.getInstance().player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
             return;
         }
@@ -211,7 +210,7 @@ public class QuickBuildClient implements ClientModInitializer {
         if (mainHandStack.isEmpty()) { // Can't build without weapon
             player.sendMessage(Text.literal("Hold your weapon!").styled(style -> style.withColor(Formatting.RED)));
             return 0;
-        };
+        }
 
         //  Fetches ids of full equipment and removes formatting, if not found -> id = -1
         List<Integer> ids = items.stream().map(itemStack -> idMap.containsKey(itemStack.getName().getString().replaceAll("§[0-9a-fA-Fklmnor]", "")) ? idMap.get(itemStack.getName().getString().replaceAll("§[0-9a-fA-Fklmnor]", "")).getAsInt() : -1).toList();
@@ -285,20 +284,7 @@ public class QuickBuildClient implements ClientModInitializer {
     private String removeFormat(String str) {
         return str.replaceAll("§[0-9a-fA-Fklmnor]", "");
     }
-    private String replaceRoman(String str) {
-        AtomicReference<String> news = new AtomicReference<>(str);
-        HashMap<String, Integer> replacement = new HashMap<>();
-        replacement.put(" I", 1);
-        replacement.put(" II", 2);
-        replacement.put(" III", 3);
-        replacement.put(" IV", 4);
-        replacement.forEach((s, integer) -> {
-            if (news.get().endsWith(s)) {
-                 news.set(news.get().replace(s, " "+ integer));
-            }
-        });
-        return news.get();
-    }
+
     private String removeNum(String str) {
         var rep = List.of(" 1"," 2"," 3"," III", " II", " I");
         AtomicReference<String> news = new AtomicReference<>(str);

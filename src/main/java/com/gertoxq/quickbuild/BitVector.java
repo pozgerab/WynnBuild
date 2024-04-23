@@ -10,10 +10,9 @@ public class BitVector {
     public BitVector(Object data, int length) {
         ArrayList<Integer> bitVector = new ArrayList<>();
 
-        if (data instanceof String) {
+        if (data instanceof String strData) {
             int intVal = 0;
             int bvIndex = 0;
-            String strData = (String) data;
             length = strData.length() * 6;
 
             for (int i = 0; i < strData.length(); i++) {
@@ -136,10 +135,9 @@ public class BitVector {
         for (int uint : this.bits) {
             bitVector.add(uint);
         }
-        if (data instanceof String) {
+        if (data instanceof String strData) {
             int intVal = bitVector.get(bitVector.size() - 1);
             int bvIndex = this.length;
-            String strData = (String) data;
             length = strData.length() * 6;
             boolean updatedCurr = false;
             for (int i = 0; i < strData.length(); i++) {
@@ -169,7 +167,7 @@ public class BitVector {
         } else if (data instanceof Integer) {
             int intData = (int) data;
 
-            if (intData > Math.pow(2, 32) - 1 || intData < -((int) Math.pow(2, 31))) {
+            if (intData < -((int) Math.pow(2, 31))) {
                 throw new IllegalArgumentException("Numerical data has to fit within a 32-bit integer range to instantiate a BitVector.");
             }
             bitVector.set(bitVector.size() - 1, bitVector.get(bitVector.size() - 1) | ((intData & ~((~0) << length)) << (this.length)));

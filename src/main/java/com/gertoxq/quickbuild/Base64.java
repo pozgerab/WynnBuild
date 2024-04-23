@@ -24,25 +24,19 @@ public class Base64 {
     }
     public static String fromInt2(int int32) {
         StringBuilder result = new StringBuilder();
-        while (true) {
+        do {
             result.insert(0, digits[int32 & 0x3f]);
             int32 >>= 6;
-            if (int32 == 0) {
-                break;
-            }
-        }
+        } while (int32 != 0);
         return result.toString().length() == 2 ? result.toString() : "0".repeat(2-result.length())+ result;
     }
 
     public static String fromInt3(int int32) {
         StringBuilder result = new StringBuilder();
-        while (true) {
+        do {
             result.insert(0, digits[int32 & 0x3f]);
             int32 >>= 6;
-            if (int32 == 0) {
-                break;
-            }
-        }
+        } while (int32 != 0);
         return result.toString().length() == 3 ? result.toString() : "0".repeat(3-result.length())+ result;
     }
 

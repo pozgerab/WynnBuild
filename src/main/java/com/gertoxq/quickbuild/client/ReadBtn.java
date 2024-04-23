@@ -5,10 +5,8 @@ import net.minecraft.text.Text;
 
 public class ReadBtn extends ButtonWidget {
 
-    private final Text toolTip;
     public ReadBtn(int x, int y, int width, int height, Text message, PressAction onPress, Text toolTip) {
         super(x, y, width, height, message, onPress, textSupplier -> Text.literal("idk"));
-        this.toolTip = toolTip;
     }
 
 }
