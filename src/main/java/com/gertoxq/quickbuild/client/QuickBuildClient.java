@@ -2,7 +2,8 @@ package com.gertoxq.quickbuild.client;
 
 import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.*;
-import com.gertoxq.quickbuild.util.ScreenClicker;
+import com.gertoxq.quickbuild.screens.AtreeScreen;
+import com.gertoxq.quickbuild.screens.CharacterInfoScreen;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,17 +12,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
@@ -33,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class QuickBuildClient implements ClientModInitializer {
     public static Map<String, JsonElement> idMap;
@@ -41,7 +39,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static Map<String, JsonElement> currentDupeMap;
     public static Map<String, JsonElement> fullatree;
     public static JsonObject castTreeObj;
-    public static String cast;
+    public static Cast cast;
     public static Set<Integer> unlockedAbilIds = new HashSet<>();
     public static Set<Integer> atreeState = new HashSet<>();
     Map<IDS, Integer> stats = IDS.createStatMap();
@@ -50,6 +48,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static MinecraftClient client;
     public final int ATREE_IDLE = 3;
     public boolean readAtree = false;
+    public final Integer WYNNBUILDER_VERSION = 8;
     public static QuickBuildClient getModClient() {
         return modClient;
     }
@@ -63,6 +62,7 @@ public class QuickBuildClient implements ClientModInitializer {
 
         InputStream inputStream = QuickBuild.class.getResourceAsStream("/" + "idMap.json");
         InputStream dupeStream = QuickBuild.class.getResourceAsStream("/" + "dupes.json");
+        InputStream atreeStream = QuickBuild.class.getResourceAsStream("/" + "atree.json");
 
         try {
             assert inputStream != null;
@@ -71,37 +71,31 @@ public class QuickBuildClient implements ClientModInitializer {
             assert dupeStream != null;
             dupeMap = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(dupeStream, StandardCharsets.UTF_8))).asMap();
-        } catch (Exception ignored) {
-
-        }
-
-        InputStream atreeStream = QuickBuild.class.getResourceAsStream("/" + "atree.json");
-
-        try {
             assert atreeStream != null;
             fullatree = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (screen instanceof GenericContainerScreen containerScreen) {
-                GenericContainerScreenHandler handler = containerScreen.getScreenHandler();
-                ScreenClicker guiClicker = new ScreenClicker(containerScreen);
                 String title = containerScreen.getTitle().getString();
                 if (title.equals("Character Info")) {
-                    Screens.getButtons(containerScreen).add(new ReadBtn(width - 100, height - 40, 100, 20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(containerScreen)), Text.literal("Read Character Info data")));
-                    Screens.getButtons(containerScreen).add(new ReadBtn(width-100, height-20, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build(), Text.literal("Generate your build url")));
+                    var charInfoScreen = new CharacterInfoScreen(containerScreen);
+                    new Task(() -> this.saveCharInfo(charInfoScreen), 2);
+                    ReadBtn.addToRightBottom(charInfoScreen.getScreen(), 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
+                    ReadBtn.addToRightBottom(charInfoScreen.getScreen(), 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
                 }
                 else if (title.contains(" Abilities")) {
+                    var atreeScreen = new AtreeScreen(containerScreen);
                     if (!readAtree) {
-                        this.startAtreead(guiClicker, handler);
+                        this.startAtreead(atreeScreen);
                     }
-                    Screens.getButtons(containerScreen).add(new ReadBtn(width - 100, height - 20, 100, 20, Text.literal("Read"), button -> {
-                        this.startAtreead(guiClicker, handler);
-                    }, Text.literal("Read ability tree data")));
+                    ReadBtn.addToRightBottom(atreeScreen.getScreen(), 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
                 }
+            } else if (screen instanceof InventoryScreen screen1) {
+                ReadBtn.addToRightBottom(screen1, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)),  button -> this.build());
             }
         });
 
@@ -113,7 +107,7 @@ public class QuickBuildClient implements ClientModInitializer {
                             Text.literal("""
 
                                     This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share""")
-                                    ).styled(style -> style.withColor(Formatting.GOLD)));
+                    ).styled(style -> style.withColor(Formatting.GOLD)));
                     return 1;
                 }))));
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("resetatreecache")
@@ -123,115 +117,48 @@ public class QuickBuildClient implements ClientModInitializer {
                 })));
     }
 
-    private void startAtreead(ScreenClicker guiClicker, ScreenHandler handler) {
+    private void startAtreead(AtreeScreen screen) {
         if (castTreeObj == null) {
             assert client.player != null;
             client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)));
             return;
         }
+        AtomicBoolean allowClick = new AtomicBoolean(false);
+        ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
         final int pages = 8;
-        guiClicker.scrollAtree(-pages);
+        var clicker = screen.getClicker();
+        clicker.scrollAtree(-pages);
         for (int i = 0; i < pages; i++) {
-            new Task(() -> guiClicker.scrollAtree(1), i*ATREE_IDLE+pages*2+4);
-            new Task(() -> saveATree(handler), i*ATREE_IDLE+ATREE_IDLE-1+pages*2+4);
+            new Task(() -> clicker.scrollAtree(1), i*ATREE_IDLE+pages*2+4);
+            new Task(() -> saveATree(screen), i*ATREE_IDLE+ATREE_IDLE-1+pages*2+4);
         }
-        new Task(() -> guiClicker.click(GuiSlot.ATREE_BACK.slot), pages*ATREE_IDLE+5+20);
+        new Task(() -> {
+            allowClick.set(true);
+        }, pages*ATREE_IDLE+5+pages*2);
         readAtree = true;
     }
 
-    private void saveCharInfo(GenericContainerScreen handledScreen) {
-        var slots = handledScreen.getScreenHandler().slots;
-        IDS.getStatContainerMap().forEach((slot, id) -> {
-            if (slots.get(slot).getStack() == null) return;
-            var idVal = getLoreFromItemStack(slots.get(slot).getStack());
-            if (idVal == null) return;
-            //System.out.println(Arrays.toString(idVal.toArray()));
-            int point = 0;
-            try {                                       //Bc lore is longer on intel
-                point = Integer.parseInt(removeFormat(idVal.get(id == IDS.INTELLIGENCE ? 4 : 3).getSiblings().get(1).getString().replace(" points", "")));
-            } catch (Exception ignored) {
-                //System.out.println("ERR while parsing stat point");
-            }
-            stats.put(id, point);
-        });
-        for (Slot slot: slots) {
-            if (slot.getIndex() == 7) {
-                var lore = getLoreFromItemStack(slot.getStack());
-                if (lore == null) continue;
-                //System.out.println(Arrays.toString(lore.toArray()));
-                String className = lore.get(4).getSiblings().get(1).getString();
-                //System.out.println("Class: "+className);
-                cast = className;
-                currentDupeMap = dupeMap.get(cast).getAsJsonObject().asMap();
-                castTreeObj = fullatree.get(cast).getAsJsonObject();
-            }
-            if (slot.getIndex() == 26) {
-                break;
-            }
-        }
+    private void saveCharInfo(CharacterInfoScreen infoScreen) {
+        stats = infoScreen.getStats();
+        cast = infoScreen.getCast();
+        currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
+        castTreeObj = fullatree.get(cast.name).getAsJsonObject();
     }
 
-    public void saveATree(ScreenHandler handledScreen) {
+    public void saveATree(AtreeScreen screen) {
         if (castTreeObj == null) {
-            assert MinecraftClient.getInstance().player != null;
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
+            assert client.player != null;
+            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
             return;
         }
-        var slots = handledScreen.slots;
-        var names = slots.stream().map(slot -> {
-            var name = removeFormat(slot.getStack().getName().getString());
-            name = name.replace("Unlock ", "");
-            name = name.replace(" ability", "");
-            name = removeNum(name);
-            return name;
-        }).toList();
-        AtomicBoolean stop = new AtomicBoolean(false);
-        var unlocked = slots.stream().filter(slot -> {
-            if (stop.get()) return false;
-            var lore = getLoreFromItemStack(slot.getStack());
-            if (lore == null) return false;
-            if (slot.getIndex() == 53) {
-                stop.set(true);
-            }
-            return removeFormat(lore.get(lore.size() - 1).getString()).equals("You already unlocked this ability");
-        }).toList();
-        var unlockedNames = unlocked.stream().map(slot -> removeNum(removeFormat(slot.getStack().getName().getString()))).toList();
-
         //unlockedNames.forEach(System.out::println);
-        var unlockedIds = unlockedNames.stream().map(name -> {
-            try {
-                return Integer.parseInt(castTreeObj.entrySet().stream().filter(entry -> Objects.equals(name, removeNum(entry.getValue().getAsJsonObject().get("display_name").getAsString()))).findAny().orElse(null).getKey());
-            } catch (NullPointerException e) {
-                return 0;
-            }
-        }).collect(Collectors.toSet());
-        var ids = names.stream().map(name -> {
-            try {
-                return Integer.parseInt(castTreeObj.entrySet().stream().filter(entry -> Objects.equals(name, removeNum(entry.getValue().getAsJsonObject().get("display_name").getAsString()))).findAny().orElse(null).getKey());
-            } catch (NullPointerException e) {
-                //System.out.println("ITEM NOT FOUND");
-                return 0;
-            }
-        }).collect(Collectors.toSet());
+        var unlockedIds = screen.getUpgradedIds();
         //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
-        for (int i = 0; i < 3; i++) { // So tier 2 abilities have a chance to upgrade to tier 3
-            Map<Integer, Integer> toReplace = new HashMap<>();
-            unlockedIds.forEach(id -> {
-                if (currentDupeMap.containsKey(id.toString()) && ids.contains(currentDupeMap.get(id.toString()).getAsJsonArray().get(0).getAsInt())) {
-                    toReplace.put(id, currentDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt());
-                }
-            });
-            toReplace.forEach((integer, integer2) -> {
-                unlockedIds.remove(integer);
-                unlockedIds.add(integer2);
-            });
-        }
         unlockedAbilIds.addAll(unlockedIds);
         atreeState.addAll(unlockedAbilIds);
         //System.out.println("Unlocked "+ Arrays.toString(unlockedAbilIds.toArray()));
     }
     private int build() {
-        MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return 0;
         ClientPlayerEntity player = client.player;
         //  WYNN == EXP level
@@ -270,13 +197,15 @@ public class QuickBuildClient implements ClientModInitializer {
         }
 
         //  Suffixes of empty equipment slots
-        var emptyEquipment = new String[]{"G","H","I","J","K","L","M","N"};
+        final var emptyEquipmentPrefix = new String[]{"G","H","I","J","K","L","M","N"};
 
         //  Base URL
-        StringBuilder url = new StringBuilder("https://wynnbuilder.github.io/builder/#8_");
+        StringBuilder url = new StringBuilder("https://wynnbuilder.github.io/builder/#")
+                .append(WYNNBUILDER_VERSION)
+                .append("_");
         // Adds equipment or empty value except for weapon (Each has to be 3 chars)
         for (int i = 0; i < 8; i++) {
-            url.append(ids.get(i) == -1 ? "2S"+emptyEquipment[i] : Base64.fromInt3(ids.get(i)));
+            url.append(ids.get(i) == -1 ? "2S"+emptyEquipmentPrefix[i] : Base64.fromInt3(ids.get(i)));
         }
         url.append(Base64.fromInt3(ids.get(8))); // Add main hand
         if (stats.values().stream().allMatch(i -> i == 0)) {
@@ -292,13 +221,13 @@ public class QuickBuildClient implements ClientModInitializer {
         //  Send copyable build to client
         player.sendMessage(Text.literal("\n    Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
                 .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
-                .withUnderline(true)))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
+                        .withUnderline(true)))
                 .append("  ")
                 .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
-                .withUnderline(true)
-                .withColor(Formatting.RED)))
+                        .withUnderline(true)
+                        .withColor(Formatting.RED)))
                 .append("\n").styled(style -> style.withBold(true)));
 
         return 1;
@@ -322,11 +251,11 @@ public class QuickBuildClient implements ClientModInitializer {
         return loreList;
     }
 
-    private String removeFormat(String str) {
+    public static String removeFormat(String str) {
         return str.replaceAll("§[0-9a-fA-Fklmnor]", "");
     }
 
-    private String removeNum(String str) {
+    public static String removeNum(String str) {
         var rep = List.of(" 1"," 2"," 3"," III", " II", " I");
         AtomicReference<String> news = new AtomicReference<>(str);
         rep.forEach(s -> news.set(news.get().replace(s, "")));
