@@ -3,7 +3,7 @@
   "id": "quickbuild",
   "version": "${version}",
   "name": "QuickBuild",
-  "description": "Mod for generating a wynnbuilder url with just one command",
+  "description": "Mod for generating a wynnbuilder url with just one command\nConfig is opened with /build config",
   "authors": [
     "Gertoxq"
   ],

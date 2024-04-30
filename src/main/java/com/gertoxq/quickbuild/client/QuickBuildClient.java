@@ -2,14 +2,16 @@ package com.gertoxq.quickbuild.client;
 
 import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.*;
+import com.gertoxq.quickbuild.config.ConfigScreen;
+import com.gertoxq.quickbuild.config.Manager;
 import com.gertoxq.quickbuild.screens.AtreeScreen;
 import com.gertoxq.quickbuild.screens.CharacterInfoScreen;
+import com.gertoxq.quickbuild.screens.ImportAtreeScreen;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -33,6 +35,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+
 public class QuickBuildClient implements ClientModInitializer {
     public static Map<String, JsonElement> idMap;
     public static Map<String, JsonElement> dupeMap;
@@ -52,6 +56,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static QuickBuildClient getModClient() {
         return modClient;
     }
+    private static Manager configManager;
 
     @Override
     public void onInitializeClient() {
@@ -78,6 +83,12 @@ public class QuickBuildClient implements ClientModInitializer {
             e.printStackTrace();
         }
 
+        configManager = new Manager();
+        configManager.loadConfig();
+        if (!configManager.getConfig().getAtreeEncoding().isEmpty()) {
+            readAtree = true;
+        }
+
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (screen instanceof GenericContainerScreen containerScreen) {
                 String title = containerScreen.getTitle().getString();
@@ -99,22 +110,28 @@ public class QuickBuildClient implements ClientModInitializer {
             }
         });
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("build")
-                .executes(context -> this.build()).then(ClientCommandManager.literal("help").executes(context -> {
-                    var p = context.getSource().getClient().player;
-                    if (p == null) return 0;
-                    p.sendMessage(Text.literal("Welcome to QuickBuild").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(
-                            Text.literal("""
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(literal("build")
+                    .executes(context -> this.build()).then(literal("help").executes(context -> {
+                        var p = context.getSource().getClient().player;
+                        if (p == null) return 0;
+                        p.sendMessage(Text.literal("Welcome to QuickBuild").styled(style -> style.withColor(Formatting.GOLD)).append(
+                                Text.literal("""
 
-                                    This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share""")
-                    ).styled(style -> style.withColor(Formatting.GOLD)));
-                    return 1;
-                }))));
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("resetatreecache")
-                .executes(context -> {
-                    unlockedAbilIds.clear();
-                    return 1;
-                })));
+                                        This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share.
+                                        You can configure the mod with /build config""")
+                        ).styled(style -> style.withColor(Formatting.GOLD)));
+                        return 1;
+                    })));
+            dispatcher.register(literal("build").then(literal("config").executes(context -> {
+                client.send(() -> client.setScreen(new ConfigScreen(client.currentScreen)));
+                return 1;
+            })));
+            dispatcher.register(literal("build").then(literal("importatree").executes(context -> {
+                client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
+                return 1;
+            })));
+        });
     }
 
     private void startAtreead(AtreeScreen screen) {
@@ -134,6 +151,10 @@ public class QuickBuildClient implements ClientModInitializer {
         }
         new Task(() -> {
             allowClick.set(true);
+            BitVector encodedTree = EncodeATree.encode_atree(atreeState);
+            atreeSuffix = encodedTree.toB64();
+            configManager.getConfig().setAtreeEncoding(atreeSuffix);
+            configManager.saveConfig();
         }, pages*ATREE_IDLE+5+pages*2);
         readAtree = true;
     }
@@ -141,6 +162,8 @@ public class QuickBuildClient implements ClientModInitializer {
     private void saveCharInfo(CharacterInfoScreen infoScreen) {
         stats = infoScreen.getStats();
         cast = infoScreen.getCast();
+        configManager.getConfig().setCast(cast.name);
+        configManager.saveConfig();
         currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
         castTreeObj = fullatree.get(cast.name).getAsJsonObject();
     }
@@ -188,8 +211,7 @@ public class QuickBuildClient implements ClientModInitializer {
         }
 
         try {
-            BitVector encodedTree = EncodeATree.encode_atree(atreeState);
-            atreeSuffix = encodedTree.toB64();
+            atreeSuffix = configManager.getConfig().getAtreeEncoding();
             //System.out.println("ENCODED  " + atreeSuffix);
         } catch (Exception exception) {
             player.sendMessage(Text.literal("Atree not configured correctly, try opening and reading your Ability Tree").styled(style -> style.withColor(Formatting.RED)));
@@ -232,6 +254,10 @@ public class QuickBuildClient implements ClientModInitializer {
 
         return 1;
 
+    }
+
+    public static Manager getConfigManager() {
+        return configManager;
     }
 
     public static List<Text> getLoreFromItemStack(ItemStack itemStack) {

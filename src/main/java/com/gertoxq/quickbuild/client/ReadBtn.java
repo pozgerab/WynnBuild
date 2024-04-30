@@ -11,10 +11,14 @@ public class ReadBtn extends ButtonWidget {
         super(x, y, width, height, message, onPress, textSupplier -> Text.literal("idk"));
     }
     public static void addToRightBottom(Screen screen, int width, int height, Text message, PressAction action) {
-        Screens.getButtons(screen).add(new ReadBtn(screen.width-width, screen.height-height, width, height, message, action));
+        if (QuickBuildClient.getConfigManager().getConfig().isShowButtons()) {
+            Screens.getButtons(screen).add(new ReadBtn(screen.width - width, screen.height - height, width, height, message, action));
+        }
     }
     public static void addToRightBottom(Screen screen, int width, int height, int xOffset, int yOffset, Text message, PressAction action) {
-        Screens.getButtons(screen).add(new ReadBtn(screen.width-width+xOffset, screen.height-height+yOffset, width, height, message, action));
+        if (QuickBuildClient.getConfigManager().getConfig().isShowButtons()) {
+            Screens.getButtons(screen).add(new ReadBtn(screen.width - width + xOffset, screen.height - height + yOffset, width, height, message, action));
+        }
     }
 }
 

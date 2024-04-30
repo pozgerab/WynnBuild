@@ -1,6 +1,7 @@
 package com.gertoxq.quickbuild;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BitVector {
 
@@ -108,6 +109,22 @@ public class BitVector {
         }
 
         return b64Str.toString();
+    }
+
+    public static List<Integer> fromB64(String b64Str) {
+        if (b64Str.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> bits = new ArrayList<>();
+        int i = 0;
+        while (i < b64Str.length()) {
+            int intVal = Base64.toInt(b64Str.substring(i, i + 1));
+            bits.add(intVal);
+            i++;
+        }
+
+        return bits;
     }
 
     public String toString() {
