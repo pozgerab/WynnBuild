@@ -1,21 +1,22 @@
 package com.gertoxq.quickbuild.screens;
 
 import com.gertoxq.quickbuild.util.ScreenClicker;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.screen.GenericContainerScreenHandler;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.screen.ScreenHandler;
 
-public abstract class BuilderScreen {
-    protected final GenericContainerScreen screen;
-    protected final GenericContainerScreenHandler handler;
-    public BuilderScreen(GenericContainerScreen screen) {
+public class BuilderScreen {
+    protected final HandledScreen<?> screen;
+    protected final ScreenHandler handler;
+    public BuilderScreen(HandledScreen<?> screen) {
         this.screen = screen;
         this.handler = screen.getScreenHandler();
     }
-    public GenericContainerScreen getScreen() {
+    public Screen getScreen() {
         return screen;
     }
 
-    public GenericContainerScreenHandler getHandler() {
+    public ScreenHandler getHandler() {
         return handler;
     }
     public ScreenClicker getClicker() {

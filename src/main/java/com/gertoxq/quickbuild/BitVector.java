@@ -1,31 +1,30 @@
 package com.gertoxq.quickbuild;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BitVector {
 
-    private int[] bits;
-    private int length;
+    public Uint32Array bits;
+    public int length;
 
     public BitVector(Object data, int length) {
         ArrayList<Integer> bitVector = new ArrayList<>();
-
+        int readLength = length;
         if (data instanceof String strData) {
             int intVal = 0;
-            int bvIndex = 0;
-            length = strData.length() * 6;
+            int bvIdx = 0;
+            readLength = strData.length() * 6;
 
             for (int i = 0; i < strData.length(); i++) {
-                char character = strData.charAt(i);
-                int charValue = Base64.toInt(String.valueOf(character));
-                int prePos = bvIndex % 32;
-                intVal |= (charValue << bvIndex);
-                bvIndex += 6;
-                int postPos = bvIndex % 32;
+                int charVal = Base64.toInt(String.valueOf(strData.charAt(i)));
+                int prePos = bvIdx % 32;
+                intVal |= (charVal << bvIdx);
+                bvIdx += 6;
+                int postPos = bvIdx % 32;
+
                 if (postPos < prePos) {
                     bitVector.add(intVal);
-                    intVal = (charValue >>> (6 - postPos));
+                    intVal = charVal >>> (6 - postPos);
                 }
 
                 if (i == strData.length() - 1 && postPos != 0) {
@@ -33,7 +32,7 @@ public class BitVector {
                 }
             }
         } else if (data instanceof Integer) {
-            if (length < 0) {
+            if (readLength < 0) {
                 throw new IllegalArgumentException("BitVector must have nonnegative length.");
             }
 
@@ -47,18 +46,17 @@ public class BitVector {
             throw new IllegalArgumentException("BitVector must be instantiated with a Number or a B64 String");
         }
 
-        this.length = length;
-        this.bits = new int[bitVector.size()];
-        for (int i = 0; i < bitVector.size(); i++) {
-            this.bits[i] = bitVector.get(i);
-        }
+        this.length = readLength;
+        this.bits = new Uint32Array(bitVector.stream().mapToInt(i -> i).toArray());
     }
 
     public int readBit(int idx) {
         if (idx < 0 || idx >= this.length) {
-            throw new IndexOutOfBoundsException("Cannot read bit outside the range of the BitVector. (" + idx + " > " + this.length + ")");
+            //throw new IndexOutOfBoundsException("Cannot read bit outside the range of the BitVector. (" + idx + " > " + this.length + ")");
+            System.out.println("Cannot read bit outside the range of the BitVector. (" + idx + " > " + this.length + ")");
+            return 0;
         }
-        return ((this.bits[idx / 32] & (1 << idx)) == 0 ? 0 : 1);
+        return ((this.bits.get(idx / 32) & (1 << idx)) == 0 ? 0 : 1);
     }
 
     public int slice(int start, int end) {
@@ -73,12 +71,12 @@ public class BitVector {
 
         int res;
         if ((end - 1) / 32 == start / 32) {
-            res = (this.bits[start / 32] & ~((((~0) << (end - 1)) << 1) | ~((~0) << start))) >>> (start % 32);
+            res = (this.bits.get(start / 32) & ~((((~0) << (end - 1)) << 1) | ~((~0) << start))) >>> (start % 32);
         } else {
             int start_pos = (start % 32);
             int int_idx = start / 32;
-            res = (this.bits[int_idx] & ((~0) << start)) >>> (start_pos);
-            res |= (this.bits[int_idx + 1] & ~((~0) << end)) << (32 - start_pos);
+            res = (this.bits.get(int_idx) & ((~0) << start)) >>> (start_pos);
+            res |= (this.bits.get(int_idx + 1) & ~((~0) << end)) << (32 - start_pos);
         }
 
         return res;
@@ -87,14 +85,18 @@ public class BitVector {
         if (idx < 0 || idx >= this.length) {
             throw new IndexOutOfBoundsException("Cannot set bit outside the range of the BitVector.");
         }
-        this.bits[idx / 32] |= (1 << idx % 32);
+        int n = this.bits.get(idx / 32);
+        n |= (1 << idx % 32);
+        this.bits.set(idx / 32, n);
     }
 
     public void clearBit(int idx) {
         if (idx < 0 || idx >= this.length) {
             throw new IndexOutOfBoundsException("Cannot clear bit outside the range of the BitVector.");
         }
-        this.bits[idx / 32] &= ~(1 << idx % 32);
+        int n = bits.get(idx / 32);
+        n &= ~(1 << idx % 32);
+        this.bits.set(idx / 32, n);
     }
 
     public String toB64() {
@@ -109,22 +111,6 @@ public class BitVector {
         }
 
         return b64Str.toString();
-    }
-
-    public static List<Integer> fromB64(String b64Str) {
-        if (b64Str.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<Integer> bits = new ArrayList<>();
-        int i = 0;
-        while (i < b64Str.length()) {
-            int intVal = Base64.toInt(b64Str.substring(i, i + 1));
-            bits.add(intVal);
-            i++;
-        }
-
-        return bits;
     }
 
     public String toString() {
@@ -149,7 +135,7 @@ public class BitVector {
         }
 
         ArrayList<Integer> bitVector = new ArrayList<>();
-        for (int uint : this.bits) {
+        for (int uint : this.bits.getArray()) {
             bitVector.add(uint);
         }
         if (data instanceof String strData) {
@@ -164,7 +150,7 @@ public class BitVector {
                 bvIndex += 6;
                 int postPos = bvIndex % 32;
                 if (postPos < prePos) {
-                    if (bitVector.size() == this.bits.length && !updatedCurr) {
+                    if (bitVector.size() == this.bits.length() && !updatedCurr) {
                         bitVector.set(bitVector.size() - 1, intVal);
                         updatedCurr = true;
                     } else {
@@ -174,7 +160,7 @@ public class BitVector {
                 }
 
                 if (i == strData.length() - 1) {
-                    if (bitVector.size() == this.bits.length && !updatedCurr) {
+                    if (bitVector.size() == this.bits.length() && !updatedCurr) {
                         bitVector.set(bitVector.size() - 1, intVal);
                     } else if (postPos != 0) {
                         bitVector.add(intVal);
@@ -195,10 +181,7 @@ public class BitVector {
             throw new IllegalArgumentException("BitVector must be appended with a Number or a B64 String");
         }
 
-        this.bits = new int[bitVector.size()];
-        for (int i = 0; i < bitVector.size(); i++) {
-            this.bits[i] = bitVector.get(i);
-        }
+        this.bits = new Uint32Array(bitVector.stream().mapToInt(i -> i).toArray());
         this.length += length;
     }
 }
