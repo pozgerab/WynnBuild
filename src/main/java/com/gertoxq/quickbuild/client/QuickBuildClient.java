@@ -48,14 +48,10 @@ public class QuickBuildClient implements ClientModInitializer {
     public static Set<Integer> atreeState = new HashSet<>();
     Map<IDS, Integer> stats = IDS.createStatMap();
     public static String atreeSuffix;
-    private static QuickBuildClient modClient;
     public static MinecraftClient client;
     public final int ATREE_IDLE = 3;
     public boolean readAtree = false;
     public final Integer WYNNBUILDER_VERSION = 8;
-    public static QuickBuildClient getModClient() {
-        return modClient;
-    }
     private static Manager configManager;
 
     @Override
@@ -63,7 +59,6 @@ public class QuickBuildClient implements ClientModInitializer {
 
         client = MinecraftClient.getInstance();
         Task.init();
-        modClient = this;
 
         InputStream inputStream = QuickBuild.class.getResourceAsStream("/" + "idMap.json");
         InputStream dupeStream = QuickBuild.class.getResourceAsStream("/" + "dupes.json");
@@ -95,18 +90,19 @@ public class QuickBuildClient implements ClientModInitializer {
                 if (title.equals("Character Info")) {
                     var charInfoScreen = new CharacterInfoScreen(containerScreen);
                     new Task(() -> this.saveCharInfo(charInfoScreen), 2);
-                    ReadBtn.addToRightBottom(charInfoScreen.getScreen(), 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
-                    ReadBtn.addToRightBottom(charInfoScreen.getScreen(), 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
+                    ClickButton.addToRightBottom(charInfoScreen.getScreen(), 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
+                    ClickButton.addToRightBottom(charInfoScreen.getScreen(), 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
                 }
                 else if (title.contains(" Abilities")) {
                     var atreeScreen = new AtreeScreen(containerScreen);
                     if (!readAtree) {
                         this.startAtreead(atreeScreen);
                     }
-                    ReadBtn.addToRightBottom(atreeScreen.getScreen(), 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
+                    ClickButton.addToRightBottom(atreeScreen.getScreen(), 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
+                    atreeScreen.renderSaveButtons();
                 }
             } else if (screen instanceof InventoryScreen screen1) {
-                ReadBtn.addToRightBottom(screen1, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)),  button -> this.build());
+                ClickButton.addToRightBottom(screen1, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
             }
         });
 
@@ -127,10 +123,14 @@ public class QuickBuildClient implements ClientModInitializer {
                 client.send(() -> client.setScreen(new ConfigScreen(client.currentScreen)));
                 return 1;
             })));
-            dispatcher.register(literal("build").then(literal("importatree").executes(context -> {
+            dispatcher.register(literal("build").then(literal("saveatree").executes(context -> {
                 client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
                 return 1;
             })));
+            dispatcher.register(literal("saveatree").executes(context -> {
+                client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
+                return 1;
+            }));
         });
     }
 
@@ -151,7 +151,7 @@ public class QuickBuildClient implements ClientModInitializer {
         }
         new Task(() -> {
             allowClick.set(true);
-            BitVector encodedTree = EncodeATree.encode_atree(atreeState);
+            BitVector encodedTree = AtreeCoder.encode_atree(atreeState);
             atreeSuffix = encodedTree.toB64();
             configManager.getConfig().setAtreeEncoding(atreeSuffix);
             configManager.saveConfig();
@@ -175,7 +175,7 @@ public class QuickBuildClient implements ClientModInitializer {
             return;
         }
         //unlockedNames.forEach(System.out::println);
-        var unlockedIds = screen.getUpgradedIds();
+        var unlockedIds = screen.getUpgradedUnlockedIds();
         //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
         unlockedAbilIds.addAll(unlockedIds);
         atreeState.addAll(unlockedAbilIds);

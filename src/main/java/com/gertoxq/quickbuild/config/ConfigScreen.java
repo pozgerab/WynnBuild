@@ -1,8 +1,7 @@
 package com.gertoxq.quickbuild.config;
 
-import com.gertoxq.quickbuild.EncodeATree;
+import com.gertoxq.quickbuild.client.ClickButton;
 import com.gertoxq.quickbuild.client.QuickBuildClient;
-import com.gertoxq.quickbuild.client.ReadBtn;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -25,30 +24,27 @@ public class ConfigScreen extends Screen {
         super.init();
         ConfigType config = QuickBuildClient.getConfigManager().getConfig();
 
-        addDrawableChild(new ReadBtn(this.width / 2 - 100, this.height / 4, 200, 20,
+        addDrawableChild(new ClickButton(this.width / 2 - 100, this.height / 4, 200, 20,
                 Text.literal("Buttons: ").append(config.isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
                 button -> {
                     config.setShowButtons(!config.isShowButtons());
                     button.setMessage(Text.literal("Buttons: ").append(config.isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
                     QuickBuildClient.getConfigManager().saveConfig();
                 }));
-        addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4+24, 100, 20, Text.literal("Atree code: "), textRenderer));
+        addDrawableChild(new ClickButton(this.width / 2 - 100, this.height / 4+24, 200, 20,
+                Text.literal("Atree Presets: ").append(config.isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
+                button -> {
+                    config.setShowTreeLoader(!config.isShowTreeLoader());
+                    button.setMessage(Text.literal("Atree Presets: ").append(config.isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
+                    QuickBuildClient.getConfigManager().saveConfig();
+                }));
+        addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4+48, 100, 20, Text.literal("Atree code: "), textRenderer));
 
-        var input = new TextFieldWidget( textRenderer, this.width / 2, this.height / 4 + 24, 100, 20, Text.literal(config.getAtreeEncoding()));
+        var input = new TextFieldWidget( textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(config.getAtreeEncoding()));
         input.setText(config.getAtreeEncoding());
         addDrawableChild(input);
-        addDrawableChild(new ReadBtn(this.width / 2 - 100, this.height / 4 + 44, 200, 20, Text.literal("Save atree code").styled(style -> style.withColor(Formatting.GREEN)), button -> {
-            try {
-                EncodeATree.decode_atree(input.getText());
-                config.setAtreeEncoding(input.getText());
-                QuickBuildClient.getConfigManager().saveConfig();
-            } catch (Exception e) {
-                client.player.sendMessage(Text.literal("Invalid code!").styled(style -> style.withColor(Formatting.RED)));
-            }
 
-        }));
-
-        addDrawableChild(new ReadBtn(this.width / 2 - 50, this.height / 4 + 64, 100, 20,
+        addDrawableChild(new ClickButton(this.width / 2 - 50, this.height / 4 + 72, 100, 20,
                 Text.literal("Close"),
                 button -> client.setScreen(parent)));
     }
