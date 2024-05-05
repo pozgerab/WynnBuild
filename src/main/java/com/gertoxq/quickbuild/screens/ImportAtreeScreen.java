@@ -33,7 +33,7 @@ public class ImportAtreeScreen extends Screen {
         codeInput.setPlaceholder(Text.literal("Wynnbuilder url"));
         addDrawableChild(codeInput);
         addDrawableChild(new ClickButton(width/2-100, height/4+44, 200, 20, Text.literal("Save Build"), button -> {
-            var codes = codeInput.getText().split("-");
+            var codes = codeInput.getText().split("0+0+0-");
             var code = codes[codes.length-1];
             if (code.isEmpty()) return;
             if (nameInput.getText().isEmpty()) return;
