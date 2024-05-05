@@ -25,7 +25,7 @@ public class ImportAtreeScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-
+        this.clearChildren();
         var nameInput = new TextFieldWidget(textRenderer, width/2-100,height/4+24, 98, 20, Text.empty());
         nameInput.setPlaceholder(Text.literal("Name"));
         addDrawableChild(nameInput);
