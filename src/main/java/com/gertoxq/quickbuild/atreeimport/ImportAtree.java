@@ -34,11 +34,9 @@ public class ImportAtree {
         if (counter.getAndIncrement() >= max) return () -> allowClick.set(true);
         return () -> {
             var idSlots = screen.getAllUpgradedIdsWithSlots();
-            System.out.println(Arrays.toString(idSlots.entrySet().toArray()));
             AtomicInteger j = new AtomicInteger(0);
             var unsorted = applyIds.stream().filter(idSlots::containsKey).toList();
-            var sortedAbils = new Atrouter(new HashSet<>(unsorted)).findRoute();
-            System.out.println(Arrays.toString(sortedAbils.toArray()));
+            var sortedAbils = new Atrouter(new HashSet<>(unsorted), castTreeObj).findRoute();
             sortedAbils.forEach(id -> {
                 new Task(() -> screen.getClicker().click(idSlots.get(id)),j.get() * 15 + 2);
                 j.addAndGet(1);
@@ -57,7 +55,6 @@ public class ImportAtree {
             return;
         }
         Set<Integer> applyIds = AtreeCoder.decode_atree(build.getValue());
-        System.out.println(Arrays.toString(applyIds.toArray()));
         allowClick.set(false);
         ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
         screen.getClicker().scrollAtree(-7); // Wait for scroll finish

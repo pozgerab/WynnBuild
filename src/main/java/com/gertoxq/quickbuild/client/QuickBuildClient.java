@@ -210,14 +210,6 @@ public class QuickBuildClient implements ClientModInitializer {
             return 0;
         }
 
-        try {
-            atreeSuffix = configManager.getConfig().getAtreeEncoding();
-            //System.out.println("ENCODED  " + atreeSuffix);
-        } catch (Exception exception) {
-            player.sendMessage(Text.literal("Atree not configured correctly, try opening and reading your Ability Tree").styled(style -> style.withColor(Formatting.RED)));
-            return 0;
-        }
-
         //  Suffixes of empty equipment slots
         final var emptyEquipmentPrefix = new String[]{"G","H","I","J","K","L","M","N"};
 
