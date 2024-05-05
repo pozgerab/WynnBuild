@@ -38,7 +38,7 @@ public class ImportAtreeScreen extends Screen {
             if (code.isEmpty()) return;
             if (nameInput.getText().isEmpty()) return;
             try {
-                AtreeCoder.decode_atree(code);
+                code = AtreeCoder.encode_atree(AtreeCoder.decode_atree(code)).toB64();
                 ImportAtree.addBuild(nameInput.getText(), code);
             } catch (Exception e) {
                 client.player.sendMessage(Text.literal("Invalid url").styled(style -> style.withColor(Formatting.RED)));
