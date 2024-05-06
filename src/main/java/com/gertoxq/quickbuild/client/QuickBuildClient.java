@@ -4,9 +4,7 @@ import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.*;
 import com.gertoxq.quickbuild.config.ConfigScreen;
 import com.gertoxq.quickbuild.config.Manager;
-import com.gertoxq.quickbuild.screens.AtreeScreen;
-import com.gertoxq.quickbuild.screens.CharacterInfoScreen;
-import com.gertoxq.quickbuild.screens.ImportAtreeScreen;
+import com.gertoxq.quickbuild.screens.*;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -53,6 +51,9 @@ public class QuickBuildClient implements ClientModInitializer {
     public boolean readAtree = false;
     public final Integer WYNNBUILDER_VERSION = 8;
     private static Manager configManager;
+    public static Clickable BUTTON;
+    public static Clickable PRESETBUTTON;
+    public static Clickable UI = new Clickable(() -> true);
 
     @Override
     public void onInitializeClient() {
@@ -83,6 +84,8 @@ public class QuickBuildClient implements ClientModInitializer {
         if (!configManager.getConfig().getAtreeEncoding().isEmpty()) {
             readAtree = true;
         }
+        BUTTON = new Clickable(() -> configManager.getConfig().isShowButtons());
+        PRESETBUTTON = new Clickable(() -> configManager.getConfig().isShowTreeLoader());
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (screen instanceof GenericContainerScreen containerScreen) {
@@ -90,19 +93,18 @@ public class QuickBuildClient implements ClientModInitializer {
                 if (title.equals("Character Info")) {
                     var charInfoScreen = new CharacterInfoScreen(containerScreen);
                     new Task(() -> this.saveCharInfo(charInfoScreen), 2);
-                    ClickButton.addToRightBottom(charInfoScreen.getScreen(), 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
-                    ClickButton.addToRightBottom(charInfoScreen.getScreen(), 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
+                    BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
+                    BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END,  100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
                 }
                 else if (title.contains(" Abilities")) {
                     var atreeScreen = new AtreeScreen(containerScreen);
                     if (!readAtree) {
                         this.startAtreead(atreeScreen);
                     }
-                    ClickButton.addToRightBottom(atreeScreen.getScreen(), 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
-                    atreeScreen.renderSaveButtons();
+                    BUTTON.addTo(atreeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
                 }
             } else if (screen instanceof InventoryScreen screen1) {
-                ClickButton.addToRightBottom(screen1, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
+                BUTTON.addTo(screen1, AXISPOS.END, AXISPOS.END,  100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
             }
         });
 

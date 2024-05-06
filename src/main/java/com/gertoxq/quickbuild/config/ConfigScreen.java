@@ -1,7 +1,7 @@
 package com.gertoxq.quickbuild.config;
 
-import com.gertoxq.quickbuild.client.ClickButton;
 import com.gertoxq.quickbuild.client.QuickBuildClient;
+import com.gertoxq.quickbuild.screens.Button;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -24,14 +24,14 @@ public class ConfigScreen extends Screen {
         super.init();
         ConfigType config = QuickBuildClient.getConfigManager().getConfig();
 
-        addDrawableChild(new ClickButton(this.width / 2 - 100, this.height / 4, 200, 20,
+        addDrawableChild(new Button(this.width / 2 - 100, this.height / 4, 200, 20,
                 Text.literal("Buttons: ").append(config.isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
                 button -> {
                     config.setShowButtons(!config.isShowButtons());
                     button.setMessage(Text.literal("Buttons: ").append(config.isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
                     QuickBuildClient.getConfigManager().saveConfig();
                 }));
-        addDrawableChild(new ClickButton(this.width / 2 - 100, this.height / 4+24, 200, 20,
+        addDrawableChild(new Button(this.width / 2 - 100, this.height / 4+24, 200, 20,
                 Text.literal("Atree Presets: ").append(config.isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
                 button -> {
                     config.setShowTreeLoader(!config.isShowTreeLoader());
@@ -44,7 +44,7 @@ public class ConfigScreen extends Screen {
         input.setText(config.getAtreeEncoding());
         addDrawableChild(input);
 
-        addDrawableChild(new ClickButton(this.width / 2 - 50, this.height / 4 + 72, 100, 20,
+        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 72, 100, 20,
                 Text.literal("Close"),
                 button -> client.setScreen(parent)));
     }

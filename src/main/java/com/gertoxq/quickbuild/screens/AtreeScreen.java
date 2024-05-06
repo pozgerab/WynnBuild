@@ -2,7 +2,6 @@ package com.gertoxq.quickbuild.screens;
 
 import com.gertoxq.quickbuild.Cast;
 import com.gertoxq.quickbuild.atreeimport.ImportAtree;
-import com.gertoxq.quickbuild.client.ClickButton;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
@@ -17,6 +16,7 @@ import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 public class AtreeScreen extends BuilderScreen {
     public AtreeScreen(GenericContainerScreen screen) {
         super(screen);
+        renderSaveButtons();
     }
     public List<String> getNames() {
         return handler.slots.stream().map(slot -> {
@@ -149,6 +149,6 @@ public class AtreeScreen extends BuilderScreen {
     public void renderSaveButtons() {
         AtomicInteger i = new AtomicInteger();
         ImportAtree.getBuilds().stream().filter(save -> save.getCast() == cast)
-                .forEach(build -> ClickButton.addToRightTop(getScreen(), 100, 20, 0, i.getAndAdd(20), Text.literal("Load ").append(build.getName()), button -> ImportAtree.applyBuild(build.getName(), this)));
+                .forEach(build -> PRESETBUTTON.addTo(getScreen(), AXISPOS.END, AXISPOS.START, 100, 20, 0, i.getAndAdd(20), Text.literal("Load ").append(build.getName()), button -> ImportAtree.applyBuild(build.getName(), this)));
     }
 }
