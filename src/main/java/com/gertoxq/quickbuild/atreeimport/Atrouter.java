@@ -10,9 +10,11 @@ public class Atrouter {
     private final Set<Integer> visited = new HashSet<>();
     private final List<Integer> route = new ArrayList<>();
     private final Set<Integer> nodesToVisit;
+    private final Set<Integer> nodesWithoutParents;
 
     public Atrouter(Set<Integer> nodesToVisit, JsonObject whole) {
         this.nodesToVisit = nodesToVisit;
+        this.nodesWithoutParents = new HashSet<>(nodesToVisit);
         graphSetup(whole);
     }
 
@@ -28,6 +30,7 @@ public class Atrouter {
                     int child = children.get(i).getAsInt();
                     if (nodesToVisit.contains(child)) {
                         adjacentNodes.add(child);
+                        nodesWithoutParents.remove(child);
                     }
                 }
 
@@ -37,25 +40,28 @@ public class Atrouter {
     }
 
     public List<Integer> findRoute() {
-        Integer startNode = startNode();
-        if (startNode != null) {
-            dfs(startNode);
+        for (Integer startNode : nodesWithoutParents) {
+            if (!visited.contains(startNode)) {
+                dfs(startNode);
+            }
         }
+
+        for (Integer node : nodesToVisit) {
+            if (!visited.contains(node)) {
+                route.add(node);
+            }
+        }
+
         return route;
     }
 
-    private Integer startNode() {
-        return nodesToVisit.stream().min(Integer::compare).orElse(null);
-    }
-
     private void dfs(Integer node) {
+        if (visited.contains(node)) return;
         visited.add(node);
         route.add(node);
         if (atreeGraph.containsKey(node)) {
             for (Integer child : atreeGraph.get(node)) {
-                if (!visited.contains(child)) {
-                    dfs(child);
-                }
+                dfs(child);
             }
         }
     }
