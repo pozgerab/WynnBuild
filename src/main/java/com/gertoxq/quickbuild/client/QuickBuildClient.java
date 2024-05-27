@@ -230,7 +230,7 @@ public class QuickBuildClient implements ClientModInitializer {
             return 0;
         }
         //  Add all stats to URL
-        stats.values().forEach(integer -> url.append(Base64.fromInt2(integer)));
+        List.of(IDS.values()).forEach(id -> url.append(Base64.fromInt2(stats.get(id))));
         //  IDK and then atree
         url.append(Base64.fromInt2(wynnLevel)).append("000000z0z0+0+0+0+0-").append(atreeSuffix);
 

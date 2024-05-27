@@ -21,6 +21,7 @@ public enum IDS {
     }
     public static Map<IDS, Integer> createStatMap() {
         Map<IDS, Integer> map = new HashMap<>();
+
         for (IDS id : IDS.values()) {
             map.put(id, 0);
         }
