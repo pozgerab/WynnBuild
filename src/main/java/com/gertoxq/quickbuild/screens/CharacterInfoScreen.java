@@ -38,6 +38,6 @@ public class CharacterInfoScreen extends BuilderScreen {
             System.out.println("Couldn't find cast value");
             return null;
         }
-        return Cast.valueOf(lore.get(4).getSiblings().get(1).getString().toUpperCase());
+        return Cast.find(lore.get(4).getSiblings().get(1).getString().toUpperCase());
     }
 }
