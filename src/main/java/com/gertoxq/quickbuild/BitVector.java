@@ -81,6 +81,7 @@ public class BitVector {
 
         return res;
     }
+
     public void setBit(int idx) {
         if (idx < 0 || idx >= this.length) {
             throw new IndexOutOfBoundsException("Cannot set bit outside the range of the BitVector.");

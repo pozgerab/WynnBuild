@@ -19,6 +19,7 @@ public enum IDS {
         map.put(15, AGILITY);
         return map;
     }
+
     public static Map<IDS, Integer> createStatMap() {
         Map<IDS, Integer> map = new HashMap<>();
 

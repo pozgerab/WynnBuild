@@ -10,7 +10,10 @@ import com.gertoxq.quickbuild.util.Task;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.text.Text;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,12 +23,14 @@ public class ImportAtree {
 
     private static final Manager configManager = QuickBuildClient.getConfigManager();
     private static final ConfigType config = configManager.getConfig();
+    static AtomicBoolean allowClick = new AtomicBoolean(true);
 
     public static void addBuild(String name, String code) {
 
         config.getSavedAtrees().add(new SavedBuildType(name, code, cast));
         configManager.saveConfig();
     }
+
     public static List<SavedBuildType> getBuilds() {
         return config.getSavedAtrees();
     }
@@ -38,15 +43,13 @@ public class ImportAtree {
             var unsorted = applyIds.stream().filter(idSlots::containsKey).toList();
             var sortedAbils = new Atrouter(new HashSet<>(unsorted), castTreeObj).findRoute();
             sortedAbils.forEach(id -> {
-                new Task(() -> screen.getClicker().click(idSlots.get(id)),j.get() * 15 + 2);
+                new Task(() -> screen.getClicker().click(idSlots.get(id)), j.get() * 15 + 2);
                 j.addAndGet(1);
             });
-            new Task(() -> screen.getClicker().scrollAtree(1), sortedAbils.size()*15+10)
-                    .then(traverse(screen, applyIds, counter, max),5);
+            new Task(() -> screen.getClicker().scrollAtree(1), sortedAbils.size() * 15 + 10)
+                    .then(traverse(screen, applyIds, counter, max), 5);
         };
     }
-
-    static AtomicBoolean allowClick = new AtomicBoolean(true);
 
     public static void applyBuild(String name, AtreeScreen screen) {
         SavedBuildType build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);

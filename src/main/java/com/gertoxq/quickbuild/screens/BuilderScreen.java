@@ -8,10 +8,12 @@ import net.minecraft.screen.ScreenHandler;
 public class BuilderScreen {
     protected final HandledScreen<?> screen;
     protected final ScreenHandler handler;
+
     public BuilderScreen(HandledScreen<?> screen) {
         this.screen = screen;
         this.handler = screen.getScreenHandler();
     }
+
     public Screen getScreen() {
         return screen;
     }
@@ -19,6 +21,7 @@ public class BuilderScreen {
     public ScreenHandler getHandler() {
         return handler;
     }
+
     public ScreenClicker getClicker() {
         return new ScreenClicker(screen);
     }

@@ -7,11 +7,6 @@ import java.util.Arrays;
 public class Uint32Array {
     private final int BYTES_PER_ELEMENT = 4;
     private final int[] array;
-
-    public int[] getArray() {
-        return array;
-    }
-
     private final ByteBuffer buffer;
 
     public Uint32Array(int length) {
@@ -34,6 +29,10 @@ public class Uint32Array {
         this.array = Arrays.copyOf(array.array, array.array.length);
         this.buffer = ByteBuffer.wrap(array.buffer.array());
         this.buffer.order(ByteOrder.nativeOrder());
+    }
+
+    public int[] getArray() {
+        return array;
     }
 
     public int get(int index) {

@@ -6,6 +6,7 @@ public enum GuiSlot {
     ATREE_BACK(63),
     CI_OPEN_ATREE(9);
     final public int slot;
+
     GuiSlot(int slot) {
         this.slot = slot;
     }

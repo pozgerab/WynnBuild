@@ -2,8 +2,8 @@ package com.gertoxq.quickbuild.screens;
 
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.ButtonWidget.PressAction;
+import net.minecraft.text.Text;
 
 import java.util.function.BooleanSupplier;
 

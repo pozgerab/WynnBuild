@@ -1,6 +1,8 @@
 package com.gertoxq.quickbuild.config;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ConfigType {
     private boolean showButtons = true;
@@ -8,6 +10,7 @@ public class ConfigType {
     private boolean showTreeLoader = true;
     private String cast = "Warrior";
     private List<SavedBuildType> savedAtrees = new ArrayList<>();
+    private List<Integer> tomeIds = new ArrayList<>();
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -21,16 +24,16 @@ public class ConfigType {
         return showButtons;
     }
 
+    public void setShowButtons(boolean showButtons) {
+        this.showButtons = showButtons;
+    }
+
     public List<SavedBuildType> getSavedAtrees() {
         return savedAtrees;
     }
 
     public void setSavedAtrees(List<SavedBuildType> savedAtrees) {
         this.savedAtrees = savedAtrees;
-    }
-
-    public void setShowButtons(boolean showButtons) {
-        this.showButtons = showButtons;
     }
 
     public String getCast() {
@@ -49,16 +52,29 @@ public class ConfigType {
         this.atreeEncoding = atreeEncoding;
     }
 
+    public List<Integer> getTomeIds() {
+        return tomeIds;
+    }
+
+    public void setTomeIds(List<Integer> tomeIds) {
+        this.tomeIds = tomeIds;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         ConfigType modConfig = (ConfigType) object;
-        return savedAtrees == modConfig.savedAtrees && showButtons == modConfig.showButtons && Objects.equals(atreeEncoding, modConfig.atreeEncoding) && Objects.equals(cast, modConfig.cast) && showTreeLoader == modConfig.showTreeLoader;
+        return savedAtrees == modConfig.savedAtrees
+                && showButtons == modConfig.showButtons
+                && Objects.equals(atreeEncoding, modConfig.atreeEncoding)
+                && Objects.equals(cast, modConfig.cast)
+                && showTreeLoader == modConfig.showTreeLoader
+                && tomeIds == modConfig.tomeIds;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, atreeEncoding, cast, savedAtrees, showTreeLoader);
+        return Objects.hash(showButtons, atreeEncoding, cast, savedAtrees, showTreeLoader, tomeIds);
     }
 }

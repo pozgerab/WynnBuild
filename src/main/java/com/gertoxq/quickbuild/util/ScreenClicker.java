@@ -11,7 +11,8 @@ import net.minecraft.screen.slot.SlotActionType;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.client;
 
 public class ScreenClicker {
-    private HandledScreen<?> screen;
+    private final HandledScreen<?> screen;
+
     public ScreenClicker(HandledScreen<?> screen) {
         this.screen = screen;
     }
@@ -25,9 +26,10 @@ public class ScreenClicker {
             e.printStackTrace();
         }
     }
+
     public void scrollAtree(int amount) {
         for (int i = 0; i < Math.abs(amount); i++) {
-            new Task(() -> client.execute(() -> this.click(amount > 0 ? GuiSlot.ATREE_UP.slot : GuiSlot.ATREE_DOWN.slot)), i*2);
+            new Task(() -> client.execute(() -> this.click(amount > 0 ? GuiSlot.ATREE_UP.slot : GuiSlot.ATREE_DOWN.slot)), i * 2);
         }
     }
 }

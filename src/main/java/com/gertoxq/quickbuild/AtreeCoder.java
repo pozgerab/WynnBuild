@@ -46,6 +46,7 @@ public class AtreeCoder {
         traverse(0, new HashSet<>(), ret, bits, i);
         return ret;
     }
+
     private static void traverse(int id, Set<Integer> visited, Set<Integer> ret, BitVector bits, AtomicInteger i) {
         if (QuickBuildClient.castTreeObj == null) {
             client.player.sendMessage(Text.literal("CastTree is null"));
@@ -57,7 +58,7 @@ public class AtreeCoder {
             visited.add(kidId);
             if (bits.readBit(i.getAndAdd(1)) != 0) {
                 ret.add(kidId);
-                traverse(kidId,visited, ret, bits, i);
+                traverse(kidId, visited, ret, bits, i);
             }
         }
     }

@@ -14,6 +14,7 @@ public enum Cast {
     SHAMAN("Shaman", "Skyseer");
     public final String name;
     public final List<String> aliases = new ArrayList<>();
+
     Cast(String name, String... aliases) {
         this.name = name;
         this.aliases.add(name);

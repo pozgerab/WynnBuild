@@ -32,6 +32,7 @@ public class CharacterInfoScreen extends BuilderScreen {
         });
         return stats;
     }
+
     public Cast getCast() {
         var lore = getLoreFromItemStack(handler.slots.get(7).getStack());
         if (lore == null) {

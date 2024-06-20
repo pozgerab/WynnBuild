@@ -33,6 +33,7 @@ public class Manager {
                 } catch (Exception e) {
                     System.out.println("Invalid Cast value");
                 }
+                tomeIds = config.getTomeIds();
                 atreeSuffix = config.getAtreeEncoding();
                 reader.close();
             }
