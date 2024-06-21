@@ -6,6 +6,9 @@ Opening your character info gui or ability tree will gather your info for your b
 
 Pressing the **BUILD** button in the bottom right side of your screen will generate and output your build url to the chat that you can copy and share.
 
+## Powders
+As it isn't possible to tell what tier is a powder on an item, you can set a default value for it in the config screen. For specifying each powder level, you'll need to do that in the actual builder.
+
 ## Config
 You can configure the mod with **/build config** command. You can disable all buttons or access the encoded value of your current atree.
 Ability tree presets are also configurable.
@@ -20,3 +23,5 @@ After saving your first preset, in the abilty tree menu, the names of your class
 You can disable the preset loader buttons in the main config screen (**/build config**).
 
 _Note: the mod is still under development, more features, easier usage and QoL changes are yet to come._
+
+_All the data (items, tomes) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_

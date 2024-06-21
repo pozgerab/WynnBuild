@@ -42,7 +42,25 @@ public class ConfigScreen extends Screen {
         input.setText(config.getAtreeEncoding());
         addDrawableChild(input);
 
-        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 72, 100, 20,
+        addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 72, 100, 20, Text.literal("Powder level: "), textRenderer));
+
+        var powderLevelInput = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 72, 30, 20, Text.literal(String.valueOf(config.getDefaultPowderLevel())));
+        powderLevelInput.setText(String.valueOf(config.getDefaultPowderLevel()));
+        addDrawableChild(powderLevelInput);
+
+        addDrawableChild(new Button(this.width / 2 + 32, this.height / 4 + 72, 68, 20, Text.literal("Save").styled(style -> style.withColor(Formatting.GREEN)), button -> {
+            try {
+                int powderLevel = Integer.parseInt(powderLevelInput.getText());
+                if (powderLevel < 1 || powderLevel > 6) throw new Exception("Not between 1 and 6");
+                config.setDefaultPowderLevel(powderLevel);
+                QuickBuildClient.getConfigManager().saveConfig();
+                client.player.sendMessage(Text.literal("Saved powder level"));
+            } catch (Exception e) {
+                client.player.sendMessage(Text.literal("Not a valid integer between 1 and 6"));
+            }
+        }));
+
+        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 96, 100, 20,
                 Text.literal("Close"),
                 button -> client.setScreen(parent)));
     }

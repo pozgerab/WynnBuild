@@ -244,11 +244,33 @@ public class QuickBuildClient implements ClientModInitializer {
         List<ItemStack> items = new ArrayList<>(player.getInventory().armor);
         //  Reverse: HELM -> BOOTS
         Collections.reverse(items);
+
+        List<ItemStack> powderable = new ArrayList<>(items); // item that can hold powders
+
         //  Add equipment: Slots 9 to 12
         for (int i = 9; i < 13; i++) {
             items.add(player.getInventory().main.get(i));
         }
+        powderable.add(mainHandStack); // powderable weapon
         items.add(mainHandStack); // Add weapon
+
+        List<List<Integer>> powders = new ArrayList<>();
+
+        powderable.forEach(itemStack -> {
+            List<Text> lore = getLoreFromItemStack(itemStack);
+            if (lore == null || lore.isEmpty()) {
+                powders.add(List.of());
+                return;
+            }
+            for (Text text : lore) {
+
+                List<Integer> powder = Powder.getPowderFromString(removeFormat(text.getString()));
+                if (powder == null || powder.isEmpty()) continue;
+                powders.add(powder);
+                return;
+            }
+            powders.add(List.of());
+        });
 
         if (mainHandStack.isEmpty()) { // Can't build without weapon
             player.sendMessage(Text.literal("Hold your weapon!").styled(style -> style.withColor(Formatting.RED)));
@@ -280,9 +302,10 @@ public class QuickBuildClient implements ClientModInitializer {
             return 0;
         }
         List.of(IDS.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
-        url.append(Base64.fromIntN(wynnLevel, 2)).append("00000"); // wynn level + powders ig, not implemented YET
+        url.append(Base64.fromIntN(wynnLevel, 2)) // wynn level
+                .append(Powder.getPowderString(powders)); // powders
         tomeIds.forEach(id -> url.append(Base64.fromIntN(id, 2))); // tomes
-        url.append(atreeSuffix);
+        url.append(atreeSuffix); // atree
 
         //  Send copyable build to client
         player.sendMessage(Text.literal("\n    Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))

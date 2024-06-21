@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.gertoxq.quickbuild.Powder.DEFAULT_POWDER_LEVEL;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 
 public class Manager {
@@ -35,6 +36,7 @@ public class Manager {
                 }
                 tomeIds = config.getTomeIds();
                 atreeSuffix = config.getAtreeEncoding();
+                DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
                 reader.close();
             }
         } catch (IOException e) {
@@ -53,6 +55,7 @@ public class Manager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        loadConfig();
     }
 
     public ConfigType getConfig() {

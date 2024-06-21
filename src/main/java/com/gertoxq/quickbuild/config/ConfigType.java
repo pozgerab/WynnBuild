@@ -11,6 +11,7 @@ public class ConfigType {
     private String cast = "Warrior";
     private List<SavedBuildType> savedAtrees = new ArrayList<>();
     private List<Integer> tomeIds = new ArrayList<>();
+    private int defaultPowderLevel = 6;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -60,6 +61,14 @@ public class ConfigType {
         this.tomeIds = tomeIds;
     }
 
+    public int getDefaultPowderLevel() {
+        return defaultPowderLevel;
+    }
+
+    public void setDefaultPowderLevel(int defaultPowderLevel) {
+        this.defaultPowderLevel = defaultPowderLevel;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -70,11 +79,12 @@ public class ConfigType {
                 && Objects.equals(atreeEncoding, modConfig.atreeEncoding)
                 && Objects.equals(cast, modConfig.cast)
                 && showTreeLoader == modConfig.showTreeLoader
-                && tomeIds == modConfig.tomeIds;
+                && tomeIds == modConfig.tomeIds
+                && defaultPowderLevel == modConfig.defaultPowderLevel;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, atreeEncoding, cast, savedAtrees, showTreeLoader, tomeIds);
+        return Objects.hash(showButtons, atreeEncoding, cast, savedAtrees, showTreeLoader, tomeIds, defaultPowderLevel);
     }
 }
