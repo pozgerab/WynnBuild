@@ -12,6 +12,8 @@ public class ConfigType {
     private List<SavedBuildType> savedAtrees = new ArrayList<>();
     private List<Integer> tomeIds = new ArrayList<>();
     private int defaultPowderLevel = 6;
+    private List<SavedItemType> savedItems = new ArrayList<>();
+    private int atreeIdleTime = 3;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -27,6 +29,14 @@ public class ConfigType {
 
     public void setShowButtons(boolean showButtons) {
         this.showButtons = showButtons;
+    }
+
+    public int getAtreeIdleTime() {
+        return atreeIdleTime;
+    }
+
+    public void setAtreeIdleTime(int atreeIdleTime) {
+        this.atreeIdleTime = atreeIdleTime;
     }
 
     public List<SavedBuildType> getSavedAtrees() {
@@ -61,6 +71,14 @@ public class ConfigType {
         this.tomeIds = tomeIds;
     }
 
+    public List<SavedItemType> getSavedItems() {
+        return savedItems;
+    }
+
+    public void setSavedItems(List<SavedItemType> savedItems) {
+        this.savedItems = savedItems;
+    }
+
     public int getDefaultPowderLevel() {
         return defaultPowderLevel;
     }
@@ -80,11 +98,15 @@ public class ConfigType {
                 && Objects.equals(cast, modConfig.cast)
                 && showTreeLoader == modConfig.showTreeLoader
                 && tomeIds == modConfig.tomeIds
-                && defaultPowderLevel == modConfig.defaultPowderLevel;
+                && defaultPowderLevel == modConfig.defaultPowderLevel
+                && savedItems == modConfig.savedItems
+                && atreeIdleTime == modConfig.atreeIdleTime;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, atreeEncoding, cast, savedAtrees, showTreeLoader, tomeIds, defaultPowderLevel);
+        return Objects.hash(showButtons, atreeEncoding,
+                cast, savedAtrees, showTreeLoader,
+                tomeIds, defaultPowderLevel, savedItems, atreeIdleTime);
     }
 }

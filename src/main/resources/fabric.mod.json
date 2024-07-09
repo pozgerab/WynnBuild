@@ -8,7 +8,17 @@
     "Gertoxq"
   ],
   "contact": {
-    "repo": "https://github.com/pozgerab/WynnBuild"
+    "homepage": "https://github.com/pozgerab/WynnBuild",
+    "sources": "https://github.com/pozgerab/WynnBuild",
+    "issues": "https://github.com/pozgerab/WynnBuild/issues"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.github_releases": "https://github.com/pozgerab/WynnBuild/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/wynnbuild"
+      }
+    }
   },
   "license": "All-Rights-Reserved",
   "icon": "assets/quickbuild/icon.png",

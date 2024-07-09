@@ -13,6 +13,9 @@ As it isn't possible to tell what tier is a powder on an item, you can set a def
 You can configure the mod with **/build config** command. You can disable all buttons or access the encoded value of your current atree.
 Ability tree presets are also configurable.
 
+## Custom / Crafted Items
+You can now use crafted (or custom if you're using the builder) items in your builds. The mod detects crafted items automatically and use them in the build. Custom item are only available in the [**Builder**](#Builder)
+
 ## Ability Tree Presets
 You can create or delete ability tree presets in the new menu opened by **/saveatrees** or **/build saveatrees**.
 Your current class will be assigned for the saved builds.
@@ -22,6 +25,12 @@ After saving your first preset, in the abilty tree menu, the names of your class
 
 You can disable the preset loader buttons in the main config screen (**/build config**).
 
+## Saving items
+You can save any item from your inventory or with the use of the [WynnCustom](https://hppeng-wynn.github.io/custom/) hash code (COPY HASH). You can use these items in the [**Builder**](#Builder). You can open this menu with ( **/build saveditems** ). _This feature is in beta, filters and QoL changes are currently in developement._
+
+## Builder
+You can configure your builds even more with the use of the in-game builder **(/build builder)**. You can provide your currently equipped equipment or any saved item. You can calibrate how precise your stats will be by specifying if the saved item will be passed to the builder as a custom item (precise stats) or as a default item. As default, this is set to always use the default item with average rolls. This builder ignores requirements for more customizability.
+
 _Note: the mod is still under development, more features, easier usage and QoL changes are yet to come._
 
-_All the data (items, tomes) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_
+_All the data (items, tomes, etc...) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_

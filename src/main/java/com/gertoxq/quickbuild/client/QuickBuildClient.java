@@ -4,7 +4,11 @@ import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.*;
 import com.gertoxq.quickbuild.config.ConfigScreen;
 import com.gertoxq.quickbuild.config.Manager;
+import com.gertoxq.quickbuild.custom.CustomItem;
+import com.gertoxq.quickbuild.custom.IDS;
 import com.gertoxq.quickbuild.screens.*;
+import com.gertoxq.quickbuild.screens.builder.BuildScreen;
+import com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -35,29 +39,42 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.gertoxq.quickbuild.custom.CustomItem.getItem;
+import static com.gertoxq.quickbuild.custom.CustomItem.removeTilFormat;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class QuickBuildClient implements ClientModInitializer {
+    public static final String DOMAIN = "https://hppeng-wynn.github.io/builder/#";
+    public static final Integer BUILDER_VERSION = 9;
+    public static final String WYNNCUSTOM_DOMAIN = "https://hppeng-wynn.github.io/custom/#";
+    public final static List<String> emptyEquipmentPrefix = List.of("G", "H", "I", "J", "K", "L", "M", "N");
     public static Map<String, Integer> idMap = new HashMap<>();
     public static Map<String, Integer> tomeMap = new HashMap<>();
     public static Map<String, JsonElement> dupeMap;
     public static Map<String, JsonElement> currentDupeMap;
     public static Map<String, JsonElement> fullatree;
     public static JsonObject castTreeObj;
-    public static Cast cast;
+    public static Cast cast = Cast.WARRIOR;
     public static Set<Integer> unlockedAbilIds = new HashSet<>();
     public static Set<Integer> atreeState = new HashSet<>();
-    public static Map<IDS, Integer> stats = IDS.createStatMap();
+    public static Map<SP, Integer> stats = SP.createStatMap();
     public static String atreeSuffix;
     public static MinecraftClient client;
     public static Clickable BUTTON;
     public static Clickable PRESETBUTTON;
     public static Clickable UI = new Clickable(() -> true);
     public static List<Integer> tomeIds = Collections.nCopies(8, null);
-    private static Manager configManager;
-    public final int ATREE_IDLE = 3; // How many ticks is elapsed before turning page while reading atree
-    public final Integer WYNNBUILDER_VERSION = 9;
+    public static List<IDS.ItemType> types = List.of(IDS.ItemType.Helmet, IDS.ItemType.Chestplate, IDS.ItemType.Leggings, IDS.ItemType.Boots, IDS.ItemType.Ring, IDS.ItemType.Ring, IDS.ItemType.Bracelet, IDS.ItemType.Necklace);
+    public static int REFETCH_DELAY = 40;
+    public static Manager configManager;
+    public static int ATREE_IDLE; // How many ticks is elapsed before turning page while reading atree
+    public static List<String> craftedHashes = new ArrayList<>(Collections.nCopies(9, ""));
+    public static List<Integer> ids = new ArrayList<>();
+    public static List<String> eqipmentNames = new ArrayList<>();
+    public static List<List<Integer>> powders = new ArrayList<>();
+    public static List<ItemStack> items;
     public boolean readAtree = false;
+    private int failures = 0;
 
     public static Manager getConfigManager() {
         return configManager;
@@ -89,6 +106,125 @@ public class QuickBuildClient implements ClientModInitializer {
         AtomicReference<String> news = new AtomicReference<>(str);
         rep.forEach(s -> news.set(news.get().replace(s, "")));
         return news.get();
+    }
+
+    public static IDS.ItemType getType(ItemStack stack) {
+        IDS.ItemType iType = null;
+        for (IDS.ItemType type : types) {
+            if (stack.getItem().toString().contains(type.name().toLowerCase())) {
+                iType = type;
+            }
+        }
+        if (iType == null) {
+            iType = getCastType();
+        }
+        return iType;
+    }
+
+    public static IDS.ItemType getCastType() {
+        return Arrays.stream(IDS.ItemType.values()).filter(type -> type.getCast() == cast).findAny().orElse(IDS.ItemType.Dagger);
+    }
+
+    public static void saveArmor() {
+        ClientPlayerEntity player = client.player;
+        ItemStack mainHandStack = player.getMainHandStack();
+        //  Armor list BOOTS -> HELM
+        items = new ArrayList<>(player.getInventory().armor);
+        //  Reverse: HELM -> BOOTS
+        Collections.reverse(items);
+
+        List<ItemStack> powderable = new ArrayList<>(items); // item that can hold powders
+
+        //  Add equipment: Slots 9 to 12
+        for (int i = 9; i < 13; i++) {
+            items.add(player.getInventory().main.get(i));
+        }
+        powderable.add(mainHandStack); // powderable weapon
+        items.add(mainHandStack); // Add weapon
+
+        powders = new ArrayList<>();
+
+        powderable.forEach(itemStack -> {
+            List<Text> lore = getLoreFromItemStack(itemStack);
+            if (lore == null || lore.isEmpty()) {
+                powders.add(List.of());
+                return;
+            }
+            for (Text text : lore) {
+
+                List<Integer> powder = Powder.getPowderFromString(removeFormat(text.getString()));
+                if (powder == null || powder.isEmpty()) continue;
+                powders.add(powder);
+                return;
+            }
+            powders.add(List.of());
+        });
+
+        //  Fetches armorIds of full equipment and removes formatting, if not found -> id = -1, if crafted = -2
+        craftedHashes = new ArrayList<>(Collections.nCopies(9, ""));
+        ids = new ArrayList<>();
+        eqipmentNames = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack itemStack = items.get(i);
+            String stackName = removeTilFormat(removeFormat(itemStack.getName().getString()));
+            eqipmentNames.add(stackName);
+            int id = idMap.getOrDefault(stackName, -1);
+            if (id != -1) {
+                ids.add(id);
+                continue;
+            }
+            if (itemStack.getName().getString().startsWith(IDS.Tier.Crafted.color)) {
+                craftedHashes.set(i, CustomItem.getItemHash(itemStack, types.get(i)));
+                ids.add(-2);
+            }
+        }
+    }
+
+    public static int buildWithArgs(List<String> ids, String atreeCode) {
+        if (client.player == null) return 0;
+        ClientPlayerEntity player = client.player;
+        //  WYNN == EXP level
+        int wynnLevel = client.player.experienceLevel;
+
+        //  Base URL
+        StringBuilder url = new StringBuilder(DOMAIN)
+                .append(BUILDER_VERSION)
+                .append("_");
+        // Adds equipment or empty value except for weapon (Each has to be 3 chars)
+        for (int i = 0; i < 9; i++) {
+            try {
+                int baseId = Integer.parseInt(ids.get(i));
+                url.append(Base64.fromIntN(baseId, 3));
+            } catch (Exception ignored) {
+                String craftedCode = "CI-" + ids.get(i);      //  Combine with hash
+                url.append(Base64.fromIntN(craftedCode.length(), 3)) //  Length of full hash encoded
+                        .append(craftedCode);                           //  full crafted hash
+            }
+        }
+        if (stats.values().stream().allMatch(i -> i == 0)) {
+            //  If all stats are 0, possibly the data isn't fetched
+            player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
+            return 0;
+        }
+        List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
+        url.append(Base64.fromIntN(wynnLevel, 2)) // wynn level
+                .append(Powder.getPowderString(powders)); // powders
+        tomeIds.forEach(id -> url.append(Base64.fromIntN(id, 2))); // tomes
+        url.append(atreeCode); // atree
+
+        //  Send copyable build to client
+        player.sendMessage(Text.literal("\n    Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
+                .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
+                        .withUnderline(true)))
+                .append("  ")
+                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
+                        .withUnderline(true)
+                        .withColor(Formatting.RED)))
+                .append("\n").styled(style -> style.withBold(true)));
+
+        return 1;
     }
 
     @Override
@@ -128,6 +264,7 @@ public class QuickBuildClient implements ClientModInitializer {
         PRESETBUTTON = new Clickable(() -> configManager.getConfig().isShowTreeLoader());
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
+            getConfigManager().loadConfig();
             if (screen instanceof GenericContainerScreen containerScreen) {
                 String title = containerScreen.getTitle().getString();
                 if (title.equals("Character Info")) {
@@ -176,7 +313,64 @@ public class QuickBuildClient implements ClientModInitializer {
                 client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
                 return 1;
             }));
+            dispatcher.register(literal("buildcustomitem").executes(context -> {
+                buildCrafted();
+                return 1;
+            }));
+            dispatcher.register(literal("build").then(literal("buildcustomitem").executes(context -> {
+                buildCrafted();
+                return 1;
+            })));
+            dispatcher.register(literal("build").then(literal("saveditems").executes(context -> {
+                client.send(() -> client.setScreen(new SavedItemsScreen(client.currentScreen)));
+                return 1;
+            })));
+            dispatcher.register(literal("build").then(literal("builder").executes(context -> {
+                client.send(() -> client.setScreen(new BuildScreen()));
+                return 1;
+            })));
         });
+    }
+
+    public CustomItem buildCraftedItem() {
+        ItemStack hand = client.player.getMainHandStack();
+        return getItem(hand);
+    }
+
+    private void buildCrafted() {
+
+        String customHash = buildCraftedItem() == null ? "" : buildCraftedItem().encodeCustom(true);
+        CustomItem item = buildCraftedItem();
+
+        if (customHash.isEmpty()) {
+            client.player.sendMessage(Text.literal("Couldn't encode this item"));
+            return;
+        }
+        StringBuilder url = new StringBuilder(WYNNCUSTOM_DOMAIN).append(customHash);
+        String fullHash = "CI-" + customHash;
+
+        client.player.sendMessage(Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
+                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getTier().format)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
+                        .withUnderline(true)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
+                        .withUnderline(true)
+                        .withColor(Formatting.RED)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("COPY HASH").styled(style -> style.withColor(Formatting.YELLOW)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(fullHash)))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullHash))
+                        .withUnderline(true)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("SAVE").styled(style -> style.withColor(Formatting.GOLD)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Clicking this will open a menu where you can save items allowing you to use it in later builds")))
+                        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems"))))
+                .append("\n").styled(style -> style.withBold(true)));
+
     }
 
     private void startAtreead(AtreeScreen screen) {
@@ -189,10 +383,10 @@ public class QuickBuildClient implements ClientModInitializer {
         ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
         final int pages = 8;
         var clicker = screen.getClicker();
-        clicker.scrollAtree(-pages);
+        clicker.scrollAtree(-pages);            // 16
         for (int i = 0; i < pages; i++) {
-            new Task(() -> clicker.scrollAtree(1), i * ATREE_IDLE + pages * 2 + 4);
-            new Task(() -> saveATree(screen), i * ATREE_IDLE + ATREE_IDLE - 1 + pages * 2 + 4);
+            new Task(() -> clicker.scrollAtree(1), i * ATREE_IDLE + pages * 2 + 4); //  20   23   26
+            new Task(() -> saveATree(screen), i * ATREE_IDLE + ATREE_IDLE / 2 + pages * 2 + 4); //  22  25  28
         }
         new Task(() -> {
             allowClick.set(true);
@@ -200,23 +394,46 @@ public class QuickBuildClient implements ClientModInitializer {
             atreeSuffix = encodedTree.toB64();
             configManager.getConfig().setAtreeEncoding(atreeSuffix);
             configManager.saveConfig();
-        }, pages * ATREE_IDLE + 5 + pages * 2);
+        }, pages * ATREE_IDLE + 5 + pages * 2);     // 45
         readAtree = true;
     }
 
     private void saveTomeInfo(@NotNull TomeScreen tomeScreen) {
-        tomeIds = tomeScreen.getIds();
-        configManager.getConfig().setTomeIds(tomeIds);
-        configManager.saveConfig();
+        catchNotLoaded(() -> {
+            tomeIds = tomeScreen.getIds();
+            configManager.getConfig().setTomeIds(tomeIds);
+            configManager.saveConfig();
+        });
     }
 
     private void saveCharInfo(@NotNull CharacterInfoScreen infoScreen) {
-        stats = infoScreen.getStats();
-        cast = infoScreen.getCast();
-        configManager.getConfig().setCast(cast.name);
-        configManager.saveConfig();
-        currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
-        castTreeObj = fullatree.get(cast.name).getAsJsonObject();
+        catchNotLoaded(() -> {
+            stats = infoScreen.getStats();
+            cast = infoScreen.getCast();
+            configManager.getConfig().setCast(cast.name);
+            configManager.saveConfig();
+            currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
+            castTreeObj = fullatree.get(cast.name).getAsJsonObject();
+        });
+    }
+
+    /**
+     * Wraps a method in a try block to catch errors at screen reading
+     *
+     * @param method
+     */
+    private void catchNotLoaded(Runnable method) {
+        try {
+            method.run();
+            failures = 0;
+        } catch (Exception e) {
+            failures++;
+            client.player.sendMessage(Text.literal("Fetching failed! Press the READ button to fetch manually")
+                    .styled(style -> style.withColor(Formatting.RED)));
+            if (failures < 2) {
+                new Task(() -> catchNotLoaded(method), REFETCH_DELAY);
+            }
+        }
     }
 
     public void saveATree(AtreeScreen screen) {
@@ -225,7 +442,7 @@ public class QuickBuildClient implements ClientModInitializer {
             client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
             return;
         }
-        //unlockedNames.forEach(System.out::println);
+        //screen.getUnlockedNames().forEach(System.out::println);
         var unlockedIds = screen.getUpgradedUnlockedIds();
         //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
         unlockedAbilIds.addAll(unlockedIds);
@@ -239,69 +456,35 @@ public class QuickBuildClient implements ClientModInitializer {
         //  WYNN == EXP level
         int wynnLevel = client.player.experienceLevel;
 
-        ItemStack mainHandStack = player.getMainHandStack();
-        //  Armor list BOOTS -> HELM
-        List<ItemStack> items = new ArrayList<>(player.getInventory().armor);
-        //  Reverse: HELM -> BOOTS
-        Collections.reverse(items);
+        saveArmor();
 
-        List<ItemStack> powderable = new ArrayList<>(items); // item that can hold powders
-
-        //  Add equipment: Slots 9 to 12
-        for (int i = 9; i < 13; i++) {
-            items.add(player.getInventory().main.get(i));
-        }
-        powderable.add(mainHandStack); // powderable weapon
-        items.add(mainHandStack); // Add weapon
-
-        List<List<Integer>> powders = new ArrayList<>();
-
-        powderable.forEach(itemStack -> {
-            List<Text> lore = getLoreFromItemStack(itemStack);
-            if (lore == null || lore.isEmpty()) {
-                powders.add(List.of());
-                return;
-            }
-            for (Text text : lore) {
-
-                List<Integer> powder = Powder.getPowderFromString(removeFormat(text.getString()));
-                if (powder == null || powder.isEmpty()) continue;
-                powders.add(powder);
-                return;
-            }
-            powders.add(List.of());
-        });
-
-        if (mainHandStack.isEmpty()) { // Can't build without weapon
-            player.sendMessage(Text.literal("Hold your weapon!").styled(style -> style.withColor(Formatting.RED)));
-            return 0;
-        }
-
-        //  Fetches ids of full equipment and removes formatting, if not found -> id = -1
-        List<Integer> ids = items.stream().map(itemStack -> idMap.getOrDefault(itemStack.getName().getString().replaceAll("§[0-9a-fA-Fklmnor]", ""), -1)).toList();
         if (ids.get(8) == -1) {
             player.sendMessage(Text.literal("Hold a weapon!").styled(style -> style.withColor(Formatting.RED)));
             return 0;
         }
 
-        //  Suffixes of empty equipment slots
-        final var emptyEquipmentPrefix = List.of("G", "H", "I", "J", "K", "L", "M", "N");
-
         //  Base URL
-        StringBuilder url = new StringBuilder("https://hppeng-wynn.github.io/builder/#")
-                .append(WYNNBUILDER_VERSION)
+        StringBuilder url = new StringBuilder(DOMAIN)
+                .append(BUILDER_VERSION)
                 .append("_");
         // Adds equipment or empty value except for weapon (Each has to be 3 chars)
-        for (int i = 0; i < 8; i++) {
-            url.append(ids.get(i) == -1 ? "2S" + emptyEquipmentPrefix.get(i) : Base64.fromIntN(ids.get(i), 3));
+        for (int i = 0; i < 9; i++) {
+            if (ids.get(i) == -2) {
+                String craftedCode = "CI-" + craftedHashes.get(i);      //  Combine with hash
+                url.append(Base64.fromIntN(craftedCode.length(), 3)) //  Length of full hash encoded
+                        .append(craftedCode);                           //  full crafted hash
+                continue;
+            }
+            if (i == 8) {
+                url.append(Base64.fromIntN(ids.get(8), 3)); // Add main hand
+            } else url.append(ids.get(i) == -1 ? "2S" + emptyEquipmentPrefix.get(i) : Base64.fromIntN(ids.get(i), 3));
         }
-        url.append(Base64.fromIntN(ids.get(8), 3)); // Add main hand
         if (stats.values().stream().allMatch(i -> i == 0)) {
             //  If all stats are 0, possibly the data isn't fetched
             player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
             return 0;
         }
-        List.of(IDS.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
+        List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
         url.append(Base64.fromIntN(wynnLevel, 2)) // wynn level
                 .append(Powder.getPowderString(powders)); // powders
         tomeIds.forEach(id -> url.append(Base64.fromIntN(id, 2))); // tomes

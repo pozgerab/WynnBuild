@@ -1,10 +1,12 @@
 package com.gertoxq.quickbuild;
 
+import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Powder {
 
@@ -73,15 +75,21 @@ public class Powder {
     }
 
     public enum Element {
-        EARTH("✤"),
-        THUNDER("✦"),
-        WATER("✽"),
-        FIRE("✹"),
-        AIR("❋");
+        EARTH("✤", Formatting.DARK_GREEN),
+        THUNDER("✦", Formatting.YELLOW),
+        WATER("✽", Formatting.AQUA),
+        FIRE("✹", Formatting.RED),
+        AIR("❋", Formatting.WHITE);
         public final String icon;
+        public final Formatting format;
 
-        Element(String icon) {
+        Element(String icon, Formatting format) {
             this.icon = icon;
+            this.format = format;
+        }
+
+        public static Element getInstance(String from) {
+            return Stream.of(Element.values()).filter(element -> element.name().equalsIgnoreCase(from)).findAny().orElse(null);
         }
     }
 

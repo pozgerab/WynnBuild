@@ -34,6 +34,7 @@ public class Manager {
                 } catch (Exception e) {
                     System.out.println("Invalid Cast value");
                 }
+                ATREE_IDLE = config.getAtreeIdleTime();
                 tomeIds = config.getTomeIds();
                 atreeSuffix = config.getAtreeEncoding();
                 DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
@@ -55,7 +56,6 @@ public class Manager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        loadConfig();
     }
 
     public ConfigType getConfig() {

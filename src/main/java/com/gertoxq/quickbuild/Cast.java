@@ -1,24 +1,37 @@
 package com.gertoxq.quickbuild;
 
+import com.gertoxq.quickbuild.custom.IDS;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.gertoxq.quickbuild.client.QuickBuildClient.cast;
+
 public enum Cast {
-    WARRIOR("Warrior", "Knight"),
-    ARCHER("Archer", "Hunter"),
-    ASSASSIN("Assassin", "Ninja"),
-    MAGE("Mage", "Dark Wizard"),
-    SHAMAN("Shaman", "Skyseer");
+    WARRIOR("Warrior", "Knight", List.of("Bash", "Charge", "Uppercut", "War Scream"), IDS.ItemType.Spear),
+    ARCHER("Archer", "Hunter", List.of("Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"), IDS.ItemType.Bow),
+    ASSASSIN("Assassin", "Ninja", List.of("Spin Attack", "Dash", "Multi Hit", "Smoke Bomb"), IDS.ItemType.Dagger),
+    MAGE("Mage", "Dark Wizard", List.of("Heal", "Teleport", "Meteor"), IDS.ItemType.Wand),
+    SHAMAN("Shaman", "Skyseer", List.of("Totem", "Haul", "Aura", "Uproot"), IDS.ItemType.Relik);
     public final String name;
     public final List<String> aliases = new ArrayList<>();
+    public final String alias;
+    public final List<String> abilities;
+    public final IDS.ItemType weapon;
 
-    Cast(String name, String... aliases) {
+    Cast(String name, String alias, List<String> abilityNames, IDS.ItemType weapon) {
         this.name = name;
+        this.abilities = abilityNames;
+        this.alias = alias;
+        this.weapon = weapon;
         this.aliases.add(name);
-        this.aliases.addAll(List.of(aliases));
+        this.aliases.add(alias);
+    }
+
+    public static Cast findByWeapon(IDS.ItemType weapon) {
+        return Arrays.stream(Cast.values()).filter(cast -> cast.weapon.equals(weapon)).findAny().orElse(cast);
     }
 
     @Nullable

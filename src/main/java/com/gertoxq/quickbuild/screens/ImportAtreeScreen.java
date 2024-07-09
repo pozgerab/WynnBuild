@@ -26,6 +26,7 @@ public class ImportAtreeScreen extends Screen {
     protected void init() {
         super.init();
         this.clearChildren();
+        getConfigManager().loadConfig();
         var nameInput = new TextFieldWidget(textRenderer, width / 2 - 100, height / 4 + 24, 58, 20, Text.empty());
         nameInput.setPlaceholder(Text.literal("Name"));
         addDrawableChild(nameInput);
@@ -52,7 +53,7 @@ public class ImportAtreeScreen extends Screen {
             addDrawableChild(new Button(80, i.getAndIncrement() * 35 + 5, 50, 15, Text.literal("DEL").styled(style -> style.withColor(Formatting.RED).withBold(true)), button -> {
                 getConfigManager().getConfig().getSavedAtrees().remove(build);
                 getConfigManager().saveConfig();
-                client.execute(this::init);
+                init();
             }));
         });
     }
