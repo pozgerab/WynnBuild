@@ -1,3864 +1,4262 @@
 {
   "Archer": {
     "0": {
+      "display_name": "Arrow Bomb",
+      "parents": [],
+      "id": 0,
       "children": [
         1
-      ],
-      "parents": [],
-      "display_name": "Arrow Bomb"
+      ]
     },
     "1": {
-      "children": [
-        2,
-        3
-      ],
+      "display_name": "Bow Proficiency",
       "parents": [
         0
       ],
-      "display_name": "Bow Proficiency"
+      "id": 1,
+      "children": [
+        2,
+        3
+      ]
     },
     "2": {
-      "children": [],
+      "display_name": "Cheaper Arrow Bomb",
       "parents": [
         1
       ],
-      "display_name": "Cheaper Arrow Bomb"
+      "id": 2,
+      "children": []
     },
     "3": {
-      "children": [
-        5
-      ],
+      "display_name": "Heart Shatter",
       "parents": [
         1
       ],
-      "display_name": "Heart Shatter"
+      "id": 3,
+      "children": [
+        5
+      ]
     },
     "4": {
-      "children": [
-        7
-      ],
+      "display_name": "Double Shots",
       "parents": [
         5
       ],
-      "display_name": "Double Shots"
+      "id": 4,
+      "children": [
+        7
+      ]
     },
     "5": {
-      "children": [
-        4,
-        6
-      ],
+      "display_name": "Escape",
       "parents": [
         3
       ],
-      "display_name": "Escape"
+      "id": 5,
+      "children": [
+        4,
+        6
+      ]
     },
     "6": {
-      "children": [
-        9
-      ],
+      "display_name": "Power Shots",
       "parents": [
         5
       ],
-      "display_name": "Power Shots"
+      "id": 6,
+      "children": [
+        9
+      ]
     },
     "7": {
+      "display_name": "Arrow Storm",
+      "parents": [
+        4,
+        8
+      ],
+      "id": 7,
       "children": [
         8,
         10,
         11,
         12
-      ],
-      "parents": [
-        4,
-        8
-      ],
-      "display_name": "Arrow Storm"
+      ]
     },
     "8": {
+      "display_name": "Cheaper Escape",
+      "parents": [
+        7,
+        9
+      ],
+      "id": 8,
       "children": [
         7,
         9,
         12,
         13,
         15
-      ],
-      "parents": [
-        7,
-        9
-      ],
-      "display_name": "Cheaper Escape"
+      ]
     },
     "9": {
-      "children": [
-        8,
-        13,
-        14
-      ],
+      "display_name": "Arrow Shield",
       "parents": [
         6,
         8
       ],
-      "display_name": "Arrow Shield"
+      "id": 9,
+      "children": [
+        8,
+        13,
+        14
+      ]
     },
     "10": {
-      "children": [],
+      "display_name": "Windy Feet",
       "parents": [
         7
       ],
-      "display_name": "Windy Feet"
+      "id": 10,
+      "children": []
     },
     "11": {
-      "children": [
-        16
-      ],
+      "display_name": "Air Mastery",
       "parents": [
         7
       ],
-      "display_name": "Air Mastery"
+      "id": 11,
+      "children": [
+        16
+      ]
     },
     "12": {
+      "display_name": "Thunder Mastery",
+      "parents": [
+        7,
+        13,
+        8
+      ],
+      "id": 12,
       "children": [
         13,
         15,
         17
-      ],
-      "parents": [
-        7,
-        8,
-        13
-      ],
-      "display_name": "Thunder Mastery"
+      ]
     },
     "13": {
+      "display_name": "Fire Mastery",
+      "parents": [
+        12,
+        9,
+        8
+      ],
+      "id": 13,
       "children": [
         12,
         15,
         19
-      ],
-      "parents": [
-        8,
-        9,
-        12
-      ],
-      "display_name": "Fire Mastery"
+      ]
     },
     "14": {
-      "children": [
-        20
-      ],
+      "display_name": "Water Mastery",
       "parents": [
         9
       ],
-      "display_name": "Water Mastery"
+      "id": 14,
+      "children": [
+        20
+      ]
     },
     "15": {
-      "children": [
-        18
-      ],
+      "display_name": "Earth Mastery",
       "parents": [
-        8,
         12,
+        8,
         13
       ],
-      "display_name": "Earth Mastery"
+      "id": 15,
+      "children": [
+        18
+      ]
     },
     "16": {
-      "children": [
-        17,
-        21
-      ],
+      "display_name": "Nimble String",
       "parents": [
         11,
         17
       ],
-      "display_name": "Nimble String"
+      "id": 16,
+      "children": [
+        17,
+        21
+      ]
     },
     "17": {
+      "display_name": "Arrow Rain",
+      "parents": [
+        16,
+        12
+      ],
+      "id": 17,
       "children": [
         16,
         22
-      ],
-      "parents": [
-        12,
-        16
-      ],
-      "display_name": "Arrow Rain"
+      ]
     },
     "18": {
+      "display_name": "Bryophyte Roots",
+      "parents": [
+        19,
+        15
+      ],
+      "id": 18,
       "children": [
         19,
         24
-      ],
-      "parents": [
-        15,
-        19
-      ],
-      "display_name": "Bryophyte Roots"
+      ]
     },
     "19": {
+      "display_name": "Fire Creep",
+      "parents": [
+        20,
+        13,
+        18
+      ],
+      "id": 19,
       "children": [
         18,
         20
-      ],
-      "parents": [
-        13,
-        18,
-        20
-      ],
-      "display_name": "Fire Creep"
+      ]
     },
     "20": {
-      "children": [
-        19,
-        25
-      ],
+      "display_name": "Phantom Ray",
       "parents": [
         14,
         19
       ],
-      "display_name": "Phantom Ray"
+      "id": 20,
+      "children": [
+        19,
+        25
+      ]
     },
     "21": {
-      "children": [
-        22,
-        23
-      ],
+      "display_name": "Triple Shots",
       "parents": [
         16,
         22
       ],
-      "display_name": "Triple Shots"
+      "id": 21,
+      "children": [
+        22,
+        23
+      ]
     },
     "22": {
+      "display_name": "Frenzy",
+      "parents": [
+        21,
+        17
+      ],
+      "id": 22,
       "children": [
         21,
         23
-      ],
-      "parents": [
-        17,
-        21
-      ],
-      "display_name": "Frenzy"
+      ]
     },
     "23": {
-      "children": [
-        26
-      ],
+      "display_name": "Guardian Angels",
       "parents": [
         21,
         22
       ],
-      "display_name": "Guardian Angels"
+      "id": 23,
+      "children": [
+        26
+      ]
     },
     "24": {
-      "children": [
-        27,
-        28
-      ],
+      "display_name": "Basaltic Trap",
       "parents": [
         18
       ],
-      "display_name": "Basaltic Trap"
+      "id": 24,
+      "children": [
+        27,
+        28
+      ]
     },
     "25": {
-      "children": [
-        29
-      ],
+      "display_name": "Focus",
       "parents": [
         20
       ],
-      "display_name": "Focus"
+      "id": 25,
+      "children": [
+        29
+      ]
     },
     "26": {
-      "children": [
-        27,
-        33,
-        35
-      ],
+      "display_name": "Windstorm",
       "parents": [
         23,
         27
       ],
-      "display_name": "Windstorm"
+      "id": 26,
+      "children": [
+        27,
+        33,
+        35
+      ]
     },
     "27": {
+      "display_name": "Cheaper Arrow Storm",
+      "parents": [
+        28,
+        26,
+        24
+      ],
+      "id": 27,
       "children": [
         26,
         28,
         30
-      ],
-      "parents": [
-        24,
-        26,
-        28
-      ],
-      "display_name": "Cheaper Arrow Storm"
+      ]
     },
     "28": {
+      "display_name": "Implosion",
+      "parents": [
+        27,
+        24,
+        29
+      ],
+      "id": 28,
       "children": [
         27,
         29,
         30,
         31
-      ],
-      "parents": [
-        24,
-        27,
-        29
-      ],
-      "display_name": "Implosion"
+      ]
     },
     "29": {
-      "children": [
-        28,
-        31,
-        32
-      ],
+      "display_name": "More Shields",
       "parents": [
         25,
         28
       ],
-      "display_name": "More Shields"
+      "id": 29,
+      "children": [
+        28,
+        31,
+        32
+      ]
     },
     "30": {
-      "children": [
-        31,
-        34,
-        37
-      ],
+      "display_name": "Patient Hunter",
       "parents": [
         27,
         28,
         31
       ],
-      "display_name": "Patient Hunter"
+      "id": 30,
+      "children": [
+        31,
+        34,
+        37
+      ]
     },
     "31": {
-      "children": [
-        30
-      ],
+      "display_name": "Grappling Hook",
       "parents": [
         28,
         29,
         30
       ],
-      "display_name": "Grappling Hook"
+      "id": 31,
+      "children": [
+        30
+      ]
     },
     "32": {
-      "children": [
-        39
-      ],
+      "display_name": "More Focus",
       "parents": [
         29
       ],
-      "display_name": "More Focus"
+      "id": 32,
+      "children": [
+        39
+      ]
     },
     "33": {
-      "children": [],
+      "display_name": "Stormy Feet",
       "parents": [
         26
       ],
-      "display_name": "Stormy Feet"
+      "id": 33,
+      "children": []
     },
     "34": {
-      "children": [],
+      "display_name": "Call of the Hound",
       "parents": [
         30
       ],
-      "display_name": "Call of the Hound"
+      "id": 34,
+      "children": []
     },
     "35": {
+      "display_name": "Leap",
+      "parents": [
+        36,
+        26
+      ],
+      "id": 35,
       "children": [
         36,
         43
-      ],
-      "parents": [
-        26,
-        36
-      ],
-      "display_name": "Leap"
+      ]
     },
     "36": {
-      "children": [
-        35,
-        37,
-        42
-      ],
+      "display_name": "Traveler",
       "parents": [
         35,
         37
       ],
-      "display_name": "Traveler"
+      "id": 36,
+      "children": [
+        35,
+        37,
+        42
+      ]
     },
     "37": {
-      "children": [
-        36,
-        38,
-        40,
-        42
-      ],
+      "display_name": "Bouncing Bomb",
       "parents": [
         30,
         36,
         38
       ],
-      "display_name": "Bouncing Bomb"
+      "id": 37,
+      "children": [
+        36,
+        38,
+        40,
+        42
+      ]
     },
     "38": {
+      "display_name": "Ivyroot Mamba",
+      "parents": [
+        37,
+        39
+      ],
+      "id": 38,
       "children": [
         37,
         39,
         40,
         41,
         46
-      ],
-      "parents": [
-        37,
-        39
-      ],
-      "display_name": "Ivyroot Mamba"
+      ]
     },
     "39": {
-      "children": [
-        38,
-        41,
-        47
-      ],
+      "display_name": "Twain's Arc",
       "parents": [
         32,
         38
       ],
-      "display_name": "Twain's Arc"
+      "id": 39,
+      "children": [
+        38,
+        41,
+        47
+      ]
     },
     "40": {
-      "children": [],
-      "parents": [
-        37,
-        38
-      ],
-      "display_name": "Rocket Jump"
-    },
-    "41": {
-      "children": [],
+      "display_name": "Rocket Jump",
       "parents": [
         38,
-        39
-      ],
-      "display_name": "Scorched Earth"
-    },
-    "42": {
-      "children": [
-        45
-      ],
-      "parents": [
-        36,
         37
       ],
-      "display_name": "More Traps"
+      "id": 40,
+      "children": []
+    },
+    "41": {
+      "display_name": "Scorched Earth",
+      "parents": [
+        39,
+        38
+      ],
+      "id": 41,
+      "children": []
+    },
+    "42": {
+      "display_name": "More Traps",
+      "parents": [
+        37,
+        36
+      ],
+      "id": 42,
+      "children": [
+        45
+      ]
     },
     "43": {
-      "children": [
-        44,
-        48,
-        53
-      ],
+      "display_name": "Refined Gunpowder",
       "parents": [
         35,
         44
       ],
-      "display_name": "Refined Gunpowder"
+      "id": 43,
+      "children": [
+        44,
+        48,
+        53
+      ]
     },
     "44": {
+      "display_name": "Fierce Stomp",
+      "parents": [
+        43,
+        45
+      ],
+      "id": 44,
       "children": [
         43,
         45,
         48,
         50,
         54
-      ],
-      "parents": [
-        43,
-        45
-      ],
-      "display_name": "Fierce Stomp"
+      ]
     },
     "45": {
+      "display_name": "Cheaper Arrow Shield",
+      "parents": [
+        44,
+        46,
+        42
+      ],
+      "id": 45,
       "children": [
         44,
         46,
         49,
         50
-      ],
-      "parents": [
-        42,
-        44,
-        46
-      ],
-      "display_name": "Cheaper Arrow Shield"
+      ]
     },
     "46": {
-      "children": [
-        45,
-        47,
-        49,
-        52
-      ],
+      "display_name": "Better Arrow Shield",
       "parents": [
         38,
         45,
         47
       ],
-      "display_name": "Better Arrow Shield"
+      "id": 46,
+      "children": [
+        45,
+        47,
+        49,
+        52
+      ]
     },
     "47": {
-      "children": [
-        46,
-        52
-      ],
+      "display_name": "Shocking Bomb",
       "parents": [
         39,
         46
       ],
-      "display_name": "Shocking Bomb"
+      "id": 47,
+      "children": [
+        46,
+        52
+      ]
     },
     "48": {
-      "children": [],
+      "display_name": "Better Leap",
       "parents": [
         43,
         44
       ],
-      "display_name": "Better Leap"
+      "id": 48,
+      "children": []
     },
     "49": {
-      "children": [],
+      "display_name": "Homing Shots",
       "parents": [
         45,
         46
       ],
-      "display_name": "Homing Shots"
+      "id": 49,
+      "children": []
     },
     "50": {
-      "children": [
-        51,
-        55
-      ],
+      "display_name": "Mana Trap",
       "parents": [
         44,
         45,
         51
       ],
-      "display_name": "Mana Trap"
+      "id": 50,
+      "children": [
+        51,
+        55
+      ]
     },
     "51": {
+      "display_name": "Cheaper Arrow Storm",
+      "parents": [
+        52,
+        50
+      ],
+      "id": 51,
       "children": [
         50,
         52,
         55,
         56
-      ],
-      "parents": [
-        50,
-        52
-      ],
-      "display_name": "Cheaper Arrow Storm II"
+      ]
     },
     "52": {
+      "display_name": "Initiator",
+      "parents": [
+        51,
+        46,
+        47
+      ],
+      "id": 52,
       "children": [
         51,
         56,
         57
-      ],
-      "parents": [
-        46,
-        47,
-        51
-      ],
-      "display_name": "Initiator"
+      ]
     },
     "53": {
+      "display_name": "Better Guardian Angels",
+      "parents": [
+        54,
+        43
+      ],
+      "id": 53,
       "children": [
         54,
         58
-      ],
-      "parents": [
-        43,
-        54
-      ],
-      "display_name": "Better Guardian Angels"
+      ]
     },
     "54": {
+      "display_name": "Escape Artist",
+      "parents": [
+        53,
+        44,
+        55
+      ],
+      "id": 54,
       "children": [
         53,
         55,
         59
-      ],
-      "parents": [
-        44,
-        53,
-        55
-      ],
-      "display_name": "Escape Artist"
+      ]
     },
     "55": {
-      "children": [
-        54,
-        60
-      ],
+      "display_name": "Murder Flock",
       "parents": [
         50,
         51,
         54
       ],
-      "display_name": "Murder Flock"
+      "id": 55,
+      "children": [
+        54,
+        60
+      ]
     },
     "56": {
+      "display_name": "Decimator",
+      "parents": [
+        52,
+        57,
+        51
+      ],
+      "id": 56,
       "children": [
         57,
         61
-      ],
-      "parents": [
-        51,
-        52,
-        57
-      ],
-      "display_name": "Decimator"
+      ]
     },
     "57": {
+      "display_name": "Phasing Beam",
+      "parents": [
+        56,
+        52
+      ],
+      "id": 57,
       "children": [
         56,
         61
-      ],
-      "parents": [
-        52,
-        56
-      ],
-      "display_name": "Phasing Beam"
+      ]
     },
     "58": {
-      "children": [
-        59,
-        64
-      ],
+      "display_name": "Recycling",
       "parents": [
         53,
         59
       ],
-      "display_name": "Recycling"
+      "id": 58,
+      "children": [
+        59,
+        64
+      ]
     },
     "59": {
+      "display_name": "Shrapnel Bomb",
+      "parents": [
+        58,
+        54,
+        60
+      ],
+      "id": 59,
       "children": [
         58,
         60,
         64,
         65
-      ],
-      "parents": [
-        54,
-        58,
-        60
-      ],
-      "display_name": "Shrapnel Bomb"
+      ]
     },
     "60": {
+      "display_name": "Cheaper Escape",
+      "parents": [
+        55,
+        59,
+        61
+      ],
+      "id": 60,
       "children": [
         59,
         61,
         62,
         65
-      ],
-      "parents": [
-        55,
-        59,
-        61
-      ],
-      "display_name": "Cheaper Escape II"
+      ]
     },
     "61": {
+      "display_name": "Cheaper Arrow Shield",
+      "parents": [
+        57,
+        60,
+        56
+      ],
+      "id": 61,
       "children": [
         60,
         62,
         63,
         67
-      ],
-      "parents": [
-        56,
-        57,
-        60
-      ],
-      "display_name": "Cheaper Arrow Shield II"
+      ]
     },
     "62": {
-      "children": [],
+      "display_name": "Stronger Hook",
       "parents": [
         60,
         61
       ],
-      "display_name": "Stronger Hook"
+      "id": 62,
+      "children": []
     },
     "63": {
-      "children": [],
+      "display_name": "Coursing Restraints",
       "parents": [
         61
       ],
-      "display_name": "Coursing Restraints"
+      "id": 63,
+      "children": []
     },
     "64": {
-      "children": [
-        69,
-        73,
-        74
-      ],
+      "display_name": "Arrow Hurricane",
       "parents": [
         58,
         59
       ],
-      "display_name": "Arrow Hurricane"
+      "id": 64,
+      "children": [
+        69,
+        73,
+        74
+      ]
     },
     "65": {
-      "children": [
-        66,
-        68
-      ],
+      "display_name": "Tangled Traps",
       "parents": [
         59,
         60
       ],
-      "display_name": "Tangled Traps"
+      "id": 65,
+      "children": [
+        66,
+        68
+      ]
     },
     "66": {
-      "children": [
-        68
-      ],
+      "display_name": "Beast Lore",
       "parents": [
         65
       ],
-      "display_name": "Beast Lore"
+      "id": 66,
+      "children": [
+        68
+      ]
     },
     "67": {
-      "children": [
-        72
-      ],
+      "display_name": "Crepuscular Ray",
       "parents": [
         61
       ],
-      "display_name": "Crepuscular Ray"
+      "id": 67,
+      "children": [
+        72
+      ]
     },
     "68": {
-      "children": [
-        70,
-        71
-      ],
+      "display_name": "Chilling Snare",
       "parents": [
         65,
         66
       ],
-      "display_name": "Minefield"
+      "id": 68,
+      "children": [
+        70,
+        71
+      ]
     },
     "69": {
-      "children": [],
+      "display_name": "All-Seeing Panoptes",
       "parents": [
         64
       ],
-      "display_name": "All-Seeing Panoptes"
+      "id": 69,
+      "children": []
     },
     "70": {
-      "children": [
-        75
-      ],
+      "display_name": "Stronger Patient Hunter",
       "parents": [
         68
       ],
-      "display_name": "Stronger Patient Hunter"
+      "id": 70,
+      "children": [
+        75
+      ]
     },
     "71": {
-      "children": [
-        72,
-        76
-      ],
+      "display_name": "Snow Storm",
       "parents": [
         68,
         72
       ],
-      "display_name": "Grape Bomb"
+      "id": 71,
+      "children": [
+        72,
+        76
+      ]
     },
     "72": {
-      "children": [
-        71,
-        76
-      ],
+      "display_name": "More Focus",
       "parents": [
         67,
         71
       ],
-      "display_name": "More Focus II"
+      "id": 72,
+      "children": [
+        71,
+        76
+      ]
     },
     "73": {
-      "children": [],
+      "display_name": "Elusive",
       "parents": [
         64
       ],
-      "display_name": "Elusive"
+      "id": 73,
+      "children": []
     },
     "74": {
-      "children": [
-        75
-      ],
+      "display_name": "Geyser Stomp",
       "parents": [
         64,
         75
       ],
-      "display_name": "Geyser Stomp"
+      "id": 74,
+      "children": [
+        75
+      ]
     },
     "75": {
+      "display_name": "Grape Bomb",
+      "parents": [
+        74,
+        70,
+        76
+      ],
+      "id": 75,
       "children": [
         74,
         76
-      ],
-      "parents": [
-        70,
-        74,
-        76
-      ],
-      "display_name": "Snow Storm"
+      ]
     },
     "76": {
+      "display_name": "Cheaper Arrow Bomb",
+      "parents": [
+        75,
+        72,
+        71
+      ],
+      "id": 76,
       "children": [
         75
-      ],
-      "parents": [
-        71,
-        72,
-        75
-      ],
-      "display_name": "Cheaper Arrow Bomb II"
+      ]
     }
   },
   "Warrior": {
     "0": {
+      "display_name": "Bash",
+      "parents": [],
+      "id": 0,
       "children": [
         1
-      ],
-      "parents": [],
-      "display_name": "Bash"
+      ]
     },
     "1": {
-      "children": [
-        2,
-        3
-      ],
+      "display_name": "Spear Proficiency",
       "parents": [
         0
       ],
-      "display_name": "Spear Proficiency 1"
+      "id": 1,
+      "children": [
+        2,
+        3
+      ]
     },
     "2": {
-      "children": [],
+      "display_name": "Cheaper Bash",
       "parents": [
         1
       ],
-      "display_name": "Cheaper Bash"
+      "id": 2,
+      "children": []
     },
     "3": {
-      "children": [
-        4
-      ],
+      "display_name": "Double Bash",
       "parents": [
         1
       ],
-      "display_name": "Double Bash"
+      "id": 3,
+      "children": [
+        4
+      ]
     },
     "4": {
-      "children": [
-        6,
-        7
-      ],
+      "display_name": "Charge",
       "parents": [
         3
       ],
-      "display_name": "Charge"
+      "id": 4,
+      "children": [
+        6,
+        7
+      ]
     },
     "5": {
-      "children": [],
+      "display_name": "Heavy Impact",
       "parents": [
         8
       ],
-      "display_name": "Heavy Impact"
+      "id": 5,
+      "children": []
     },
     "6": {
+      "display_name": "Vehement",
+      "parents": [
+        4
+      ],
+      "id": 6,
       "children": [
         8
-      ],
-      "parents": [
-        4
-      ],
-      "display_name": "Vehement"
+      ]
     },
     "7": {
-      "children": [
-        10
-      ],
+      "display_name": "Tougher Skin",
       "parents": [
         4
       ],
-      "display_name": "Tougher Skin"
+      "id": 7,
+      "children": [
+        10
+      ]
     },
     "8": {
+      "display_name": "Uppercut",
+      "parents": [
+        6,
+        9
+      ],
+      "id": 8,
       "children": [
         5,
         9,
         11,
         12
-      ],
-      "parents": [
-        6,
-        9
-      ],
-      "display_name": "Uppercut"
+      ]
     },
     "9": {
+      "display_name": "Cheaper Charge",
+      "parents": [
+        8,
+        10
+      ],
+      "id": 9,
       "children": [
         8,
         10,
         12,
         13,
         14
-      ],
-      "parents": [
-        8,
-        10
-      ],
-      "display_name": "Cheaper Charge"
+      ]
     },
     "10": {
-      "children": [
-        9,
-        14,
-        15
-      ],
+      "display_name": "War Scream",
       "parents": [
         7,
         9
       ],
-      "display_name": "War Scream"
+      "id": 10,
+      "children": [
+        9,
+        14,
+        15
+      ]
     },
     "11": {
-      "children": [
-        16
-      ],
+      "display_name": "Earth Mastery",
       "parents": [
         8
       ],
-      "display_name": "Earth Mastery"
+      "id": 11,
+      "children": [
+        16
+      ]
     },
     "12": {
+      "display_name": "Thunder Mastery",
+      "parents": [
+        8,
+        14,
+        9
+      ],
+      "id": 12,
       "children": [
         13,
         14,
         17
-      ],
-      "parents": [
-        8,
-        9,
-        14
-      ],
-      "display_name": "Thunder Mastery"
+      ]
     },
     "13": {
-      "children": [
-        18
-      ],
+      "display_name": "Water Mastery",
       "parents": [
         9,
         12,
         14
       ],
-      "display_name": "Water Mastery"
+      "id": 13,
+      "children": [
+        18
+      ]
     },
     "14": {
+      "display_name": "Air Mastery",
+      "parents": [
+        10,
+        12,
+        9
+      ],
+      "id": 14,
       "children": [
         12,
         13,
         19
-      ],
-      "parents": [
-        9,
-        10,
-        12
-      ],
-      "display_name": "Air Mastery"
+      ]
     },
     "15": {
-      "children": [
-        20
-      ],
+      "display_name": "Fire Mastery",
       "parents": [
         10
       ],
-      "display_name": "Fire Mastery"
+      "id": 15,
+      "children": [
+        20
+      ]
     },
     "16": {
-      "children": [
-        17,
-        25
-      ],
+      "display_name": "Quadruple Bash",
       "parents": [
         11,
         17
       ],
-      "display_name": "Quadruple Bash"
+      "id": 16,
+      "children": [
+        17,
+        25
+      ]
     },
     "17": {
-      "children": [
-        16,
-        25
-      ],
+      "display_name": "Fireworks",
       "parents": [
         12,
         16
       ],
-      "display_name": "Fireworks"
+      "id": 17,
+      "children": [
+        16,
+        25
+      ]
     },
     "18": {
-      "children": [
-        23
-      ],
+      "display_name": "Half-Moon Swipe",
       "parents": [
         13
       ],
-      "display_name": "Half-Moon Swipe"
+      "id": 18,
+      "children": [
+        23
+      ]
     },
     "19": {
-      "children": [
-        20,
-        21
-      ],
+      "display_name": "Flyby Jab",
       "parents": [
         14,
         20
       ],
-      "display_name": "Flyby Jab"
+      "id": 19,
+      "children": [
+        20,
+        21
+      ]
     },
     "20": {
-      "children": [
-        19,
-        21
-      ],
+      "display_name": "Flaming Uppercut",
       "parents": [
         15,
         19
       ],
-      "display_name": "Flaming Uppercut"
+      "id": 20,
+      "children": [
+        19,
+        21
+      ]
     },
     "21": {
-      "children": [
-        24
-      ],
+      "display_name": "Iron Lungs",
       "parents": [
         19,
         20
       ],
-      "display_name": "Iron Lungs"
+      "id": 21,
+      "children": [
+        24
+      ]
     },
     "22": {
-      "children": [
-        27
-      ],
+      "display_name": "Generalist",
       "parents": [
         23
       ],
-      "display_name": "Generalist"
+      "id": 22,
+      "children": [
+        27
+      ]
     },
     "23": {
-      "children": [
-        22,
-        27
-      ],
+      "display_name": "Air Shout",
       "parents": [
         18
       ],
-      "display_name": "Air Shout"
+      "id": 23,
+      "children": [
+        22,
+        27
+      ]
     },
     "24": {
-      "children": [
-        29
-      ],
+      "display_name": "Mantle of the Bovemists",
       "parents": [
         21
       ],
-      "display_name": "Mantle of the Bovemists"
+      "id": 24,
+      "children": [
+        29
+      ]
     },
     "25": {
-      "children": [
-        26
-      ],
+      "display_name": "Bak'al's Grasp",
       "parents": [
         16,
         17
       ],
-      "display_name": "Bak'al's Grasp"
+      "id": 25,
+      "children": [
+        26
+      ]
     },
     "26": {
-      "children": [
-        27,
-        32,
-        38
-      ],
+      "display_name": "Spear Proficiency",
       "parents": [
         25,
         27
       ],
-      "display_name": "Spear Proficiency 2"
+      "id": 26,
+      "children": [
+        27,
+        32,
+        44
+      ]
     },
     "27": {
+      "display_name": "Cheaper Uppercut",
+      "parents": [
+        26,
+        28,
+        23,
+        22
+      ],
+      "id": 27,
       "children": [
         26,
         28,
         30,
         33,
-        38
-      ],
-      "parents": [
-        22,
-        23,
-        26,
-        28
-      ],
-      "display_name": "Cheaper Uppercut"
+        44
+      ]
     },
     "28": {
-      "children": [
-        27,
-        29,
-        30,
-        31
-      ],
+      "display_name": "Aerodynamics",
       "parents": [
         27,
         29
       ],
-      "display_name": "Aerodynamics"
+      "id": 28,
+      "children": [
+        27,
+        29,
+        30,
+        31
+      ]
     },
     "29": {
+      "display_name": "Provoke",
+      "parents": [
+        28,
+        24
+      ],
+      "id": 29,
       "children": [
         28,
         31,
         35
-      ],
-      "parents": [
-        24,
-        28
-      ],
-      "display_name": "Provoke"
+      ]
     },
     "30": {
+      "display_name": "Counter",
+      "parents": [
+        28,
+        27,
+        31
+      ],
+      "id": 30,
       "children": [
         31
-      ],
-      "parents": [
-        27,
-        28,
-        31
-      ],
-      "display_name": "Counter"
+      ]
     },
     "31": {
-      "children": [
-        30
-      ],
+      "display_name": "Manachism",
       "parents": [
         28,
-        29,
-        30
+        30,
+        29
       ],
-      "display_name": "Manachism"
+      "id": 31,
+      "children": [
+        30
+      ]
     },
     "32": {
-      "children": [
-        36,
-        41
-      ],
+      "display_name": "Blood Pact",
       "parents": [
         26
       ],
-      "display_name": "Enraged Blow"
+      "id": 32,
+      "children": [
+        36,
+        38
+      ]
     },
     "33": {
-      "children": [
-        34,
-        37,
-        50,
-        60
-      ],
+      "display_name": "Flying Kick",
       "parents": [
         27,
         34
       ],
-      "display_name": "Flying Kick"
+      "id": 33,
+      "children": [
+        34,
+        37,
+        39,
+        43
+      ]
     },
     "34": {
+      "display_name": "Stronger Mantle",
+      "parents": [
+        35,
+        33
+      ],
+      "id": 34,
       "children": [
         33,
         35,
-        50,
-        60
-      ],
-      "parents": [
-        33,
-        35
-      ],
-      "display_name": "Stronger Mantle"
+        37,
+        39
+      ]
     },
     "35": {
+      "display_name": "Sacred Surge",
+      "parents": [
+        34,
+        29
+      ],
+      "id": 35,
       "children": [
         34,
-        40
-      ],
-      "parents": [
-        29,
-        34
-      ],
-      "display_name": "Sacred Surge"
+        41
+      ]
     },
     "36": {
-      "children": [
-        37,
-        42,
-        45
-      ],
+      "display_name": "Enraged Blow",
       "parents": [
-        32,
-        37
+        32
       ],
-      "display_name": "Boiling Blood"
+      "id": 36,
+      "children": [
+        42
+      ]
     },
     "37": {
-      "children": [
-        36,
-        42
-      ],
+      "display_name": "Riposte",
       "parents": [
-        33,
-        36,
-        60
+        34,
+        33
       ],
-      "display_name": "Ragnarokkr"
+      "id": 37,
+      "children": []
     },
     "38": {
-      "children": [],
+      "display_name": "Exhilarate",
+      "parents": [
+        32
+      ],
+      "id": 38,
+      "children": []
+    },
+    "39": {
+      "display_name": "Cheaper War Scream",
+      "parents": [
+        34,
+        33,
+        40
+      ],
+      "id": 39,
+      "children": [
+        40,
+        43,
+        46,
+        50
+      ]
+    },
+    "40": {
+      "display_name": "Cleansing Breeze",
+      "parents": [
+        39,
+        41
+      ],
+      "id": 40,
+      "children": [
+        39,
+        41,
+        46,
+        47
+      ]
+    },
+    "41": {
+      "display_name": "Stronger Bash",
+      "parents": [
+        40,
+        35
+      ],
+      "id": 41,
+      "children": [
+        40,
+        47
+      ]
+    },
+    "42": {
+      "display_name": "Boiling Blood",
+      "parents": [
+        36,
+        43
+      ],
+      "id": 42,
+      "children": [
+        43,
+        45,
+        48
+      ]
+    },
+    "43": {
+      "display_name": "Ragnarokkr",
+      "parents": [
+        42,
+        33,
+        39
+      ],
+      "id": 43,
+      "children": [
+        42,
+        45
+      ]
+    },
+    "44": {
+      "display_name": "Intoxicating Blood",
       "parents": [
         26,
         27
       ],
-      "display_name": "Precise Strikes"
+      "id": 44,
+      "children": []
     },
-    "39": {
-      "children": [
-        40,
-        43,
-        44,
-        60
-      ],
+    "45": {
+      "display_name": "Comet",
       "parents": [
-        40,
-        60
+        42,
+        43
       ],
-      "display_name": "Cleansing Breeze"
+      "id": 45,
+      "children": []
     },
-    "40": {
-      "children": [
-        39,
-        44
-      ],
-      "parents": [
-        35,
-        39
-      ],
-      "display_name": "Stronger Bash"
-    },
-    "41": {
-      "children": [],
-      "parents": [
-        32
-      ],
-      "display_name": "Intoxicating Blood"
-    },
-    "42": {
-      "children": [],
-      "parents": [
-        36,
-        37
-      ],
-      "display_name": "Comet"
-    },
-    "43": {
-      "children": [],
-      "parents": [
-        39,
-        60
-      ],
-      "display_name": "Collide"
-    },
-    "44": {
-      "children": [
-        48
-      ],
+    "46": {
+      "display_name": "Collide",
       "parents": [
         39,
         40
       ],
-      "display_name": "Rejuvenating Skin"
-    },
-    "45": {
-      "children": [
-        46,
-        49,
-        53
-      ],
-      "parents": [
-        36,
-        46
-      ],
-      "display_name": "Uncontainable Corruption"
-    },
-    "46": {
-      "children": [
-        45,
-        47,
-        49
-      ],
-      "parents": [
-        45,
-        47
-      ],
-      "display_name": "Radiant Devotee"
+      "id": 46,
+      "children": []
     },
     "47": {
-      "children": [
-        46,
-        55
-      ],
+      "display_name": "Rejuvenating Skin",
       "parents": [
-        46,
-        60
+        40,
+        41
       ],
-      "display_name": "Whirlwind Strike"
+      "id": 47,
+      "children": [
+        51
+      ]
     },
     "48": {
-      "children": [
-        51,
-        52
-      ],
+      "display_name": "Uncontainable Corruption",
       "parents": [
-        44
+        42,
+        49
       ],
-      "display_name": "Mythril Skin"
+      "id": 48,
+      "children": [
+        49,
+        52,
+        55
+      ]
     },
     "49": {
-      "children": [],
+      "display_name": "Radiant Devotee",
       "parents": [
-        45,
-        46
-      ],
-      "display_name": "Armour Breaker"
-    },
-    "50": {
-      "children": [],
-      "parents": [
-        33,
-        34
-      ],
-      "display_name": "Riposte"
-    },
-    "51": {
-      "children": [
-        59
-      ],
-      "parents": [
-        48,
-        52
-      ],
-      "display_name": "Shield Strike"
-    },
-    "52": {
-      "children": [
-        51,
-        59
-      ],
-      "parents": [
+        50,
         48
       ],
-      "display_name": "Sparkling Hope"
-    },
-    "53": {
+      "id": 49,
       "children": [
-        54,
-        56,
-        61
-      ],
-      "parents": [
-        45,
-        54
-      ],
-      "display_name": "Massive Bash"
+        48,
+        50,
+        52
+      ]
     },
-    "54": {
-      "children": [
-        53,
-        55,
-        56,
-        57
-      ],
+    "50": {
+      "display_name": "Whirlwind Strike",
       "parents": [
-        53,
-        55
-      ],
-      "display_name": "Tempest"
-    },
-    "55": {
-      "children": [
-        54,
-        57,
-        58,
-        65
-      ],
-      "parents": [
-        47,
-        54
-      ],
-      "display_name": "Spirit of the Rabbit"
-    },
-    "56": {
-      "children": [],
-      "parents": [
-        53,
-        54
-      ],
-      "display_name": "Massacre"
-    },
-    "57": {
-      "children": [],
-      "parents": [
-        54,
-        55
-      ],
-      "display_name": "Axe Kick"
-    },
-    "58": {
-      "children": [
-        59
-      ],
-      "parents": [
-        55,
-        59
-      ],
-      "display_name": "Radiance"
-    },
-    "59": {
-      "children": [
-        58,
-        66
-      ],
-      "parents": [
-        51,
-        52,
-        58
-      ],
-      "display_name": "Cheaper Bash 2"
-    },
-    "60": {
-      "children": [
-        37,
         39,
-        43,
+        49
+      ],
+      "id": 50,
+      "children": [
+        49,
+        57
+      ]
+    },
+    "51": {
+      "display_name": "Mythril Skin",
+      "parents": [
         47
       ],
-      "parents": [
-        33,
-        34,
-        39
-      ],
-      "display_name": "Cheaper War Scream"
-    },
-    "61": {
+      "id": 51,
       "children": [
-        62,
-        68
-      ],
-      "parents": [
-        53
-      ],
-      "display_name": "Cheaper War Scream II"
+        53,
+        54
+      ]
     },
-    "62": {
-      "children": [],
+    "52": {
+      "display_name": "Armour Breaker",
       "parents": [
+        48,
+        49
+      ],
+      "id": 52,
+      "children": []
+    },
+    "53": {
+      "display_name": "Shield Strike",
+      "parents": [
+        51,
+        54
+      ],
+      "id": 53,
+      "children": [
+        61
+      ]
+    },
+    "54": {
+      "display_name": "Sparkling Hope",
+      "parents": [
+        51
+      ],
+      "id": 54,
+      "children": [
+        53,
+        61
+      ]
+    },
+    "55": {
+      "display_name": "Massive Bash",
+      "parents": [
+        56,
+        48
+      ],
+      "id": 55,
+      "children": [
+        56,
+        58,
+        62
+      ]
+    },
+    "56": {
+      "display_name": "Tempest",
+      "parents": [
+        55,
+        57
+      ],
+      "id": 56,
+      "children": [
+        55,
+        57,
+        58,
+        59
+      ]
+    },
+    "57": {
+      "display_name": "Spirit of the Rabbit",
+      "parents": [
+        56,
+        50
+      ],
+      "id": 57,
+      "children": [
+        56,
+        59,
+        60,
+        66
+      ]
+    },
+    "58": {
+      "display_name": "Massacre",
+      "parents": [
+        56,
+        55,
+        59
+      ],
+      "id": 58,
+      "children": [
+        59
+      ]
+    },
+    "59": {
+      "display_name": "Axe Kick",
+      "parents": [
+        56,
+        57,
+        58
+      ],
+      "id": 59,
+      "children": [
+        58
+      ]
+    },
+    "60": {
+      "display_name": "Radiance",
+      "parents": [
+        57,
         61
       ],
-      "display_name": "Better Enraged Blow"
-    },
-    "63": {
-      "children": [],
-      "parents": [
-        65
-      ],
-      "display_name": "Discombobulate"
-    },
-    "64": {
-      "children": [],
-      "parents": [
-        65
-      ],
-      "display_name": "Thunderclap"
-    },
-    "65": {
+      "id": 60,
       "children": [
-        63,
-        64
+        61
+      ]
+    },
+    "61": {
+      "display_name": "Cheaper Bash",
+      "parents": [
+        60,
+        53,
+        54
       ],
+      "id": 61,
+      "children": [
+        60,
+        67
+      ]
+    },
+    "62": {
+      "display_name": "Cheaper War Scream",
       "parents": [
         55
       ],
-      "display_name": "Cyclone"
-    },
-    "66": {
+      "id": 62,
       "children": [
+        63,
+        70
+      ]
+    },
+    "63": {
+      "display_name": "Better Enraged Blow",
+      "parents": [
+        62
+      ],
+      "id": 63,
+      "children": []
+    },
+    "64": {
+      "display_name": "Discombobulate",
+      "parents": [
+        66
+      ],
+      "id": 64,
+      "children": []
+    },
+    "65": {
+      "display_name": "Thunderclap",
+      "parents": [
+        66,
         67
       ],
+      "id": 65,
+      "children": []
+    },
+    "66": {
+      "display_name": "Cyclone",
       "parents": [
-        59
+        57,
+        67
       ],
-      "display_name": "Stronger Sacred Surge"
+      "id": 66,
+      "children": [
+        64,
+        65,
+        67
+      ]
     },
     "67": {
+      "display_name": "Stronger Sacred Surge",
+      "parents": [
+        61,
+        66
+      ],
+      "id": 67,
       "children": [
+        65,
+        66,
+        68
+      ]
+    },
+    "68": {
+      "display_name": "Second Chance",
+      "parents": [
+        67
+      ],
+      "id": 68,
+      "children": [
+        71,
+        72
+      ]
+    },
+    "69": {
+      "display_name": "Brink of Madness",
+      "parents": [
         70,
         71
       ],
-      "parents": [
-        66
-      ],
-      "display_name": "Second Chance"
-    },
-    "68": {
+      "id": 69,
       "children": [
-        69,
-        72
-      ],
-      "parents": [
-        61
-      ],
-      "display_name": "Blood Pact"
-    },
-    "69": {
-      "children": [
-        70
-      ],
-      "parents": [
-        68,
-        70
-      ],
-      "display_name": "Brink of Madness"
+        71
+      ]
     },
     "70": {
-      "children": [
-        69
-      ],
+      "display_name": "Bloodlust",
       "parents": [
-        67,
-        69
+        62
       ],
-      "display_name": "Cheaper Uppercut 2"
+      "id": 70,
+      "children": [
+        69,
+        73
+      ]
     },
     "71": {
-      "children": [],
+      "display_name": "Cheaper Uppercut",
       "parents": [
-        67
+        68,
+        69
       ],
-      "display_name": "Martyr"
+      "id": 71,
+      "children": [
+        69
+      ]
     },
     "72": {
-      "children": [],
+      "display_name": "Martyr",
       "parents": [
         68
       ],
-      "display_name": "Haemorrhage"
+      "id": 72,
+      "children": []
+    },
+    "73": {
+      "display_name": "Haemorrhage",
+      "parents": [
+        70
+      ],
+      "id": 73,
+      "children": []
     }
   },
   "Mage": {
     "0": {
+      "display_name": "Meteor",
+      "parents": [],
+      "id": 0,
       "children": [
         1
-      ],
-      "parents": [],
-      "display_name": "Meteor"
+      ]
     },
     "1": {
-      "children": [
-        2,
-        3
-      ],
+      "display_name": "Wand Proficiency",
       "parents": [
         0
       ],
-      "display_name": "Wand Proficiency"
+      "id": 1,
+      "children": [
+        2,
+        3
+      ]
     },
     "2": {
-      "children": [],
+      "display_name": "Cheaper Meteor",
       "parents": [
         1
       ],
-      "display_name": "Cheaper Meteor"
+      "id": 2,
+      "children": []
     },
     "3": {
-      "children": [
-        5
-      ],
+      "display_name": "Shooting Star",
       "parents": [
         1
       ],
-      "display_name": "Shooting Star"
+      "id": 3,
+      "children": [
+        5
+      ]
     },
     "4": {
-      "children": [
-        7
-      ],
+      "display_name": "Wand Proficiency",
       "parents": [
         5
       ],
-      "display_name": "Wand Proficiency II"
+      "id": 4,
+      "children": [
+        7
+      ]
     },
     "5": {
-      "children": [
-        4,
-        6
-      ],
+      "display_name": "Teleport",
       "parents": [
         3
       ],
-      "display_name": "Teleport"
+      "id": 5,
+      "children": [
+        4,
+        6
+      ]
     },
     "6": {
-      "children": [
-        9
-      ],
+      "display_name": "Wisdom",
       "parents": [
         5
       ],
-      "display_name": "Wisdom"
+      "id": 6,
+      "children": [
+        9
+      ]
     },
     "7": {
-      "children": [
-        8,
-        10,
-        11
-      ],
+      "display_name": "Heal",
       "parents": [
         4,
         8
       ],
-      "display_name": "Heal"
+      "id": 7,
+      "children": [
+        8,
+        10,
+        11
+      ]
     },
     "8": {
+      "display_name": "Cheaper Teleport",
+      "parents": [
+        7,
+        9
+      ],
+      "id": 8,
       "children": [
         7,
         9,
         11,
         12
-      ],
-      "parents": [
-        7,
-        9
-      ],
-      "display_name": "Cheaper Teleport"
+      ]
     },
     "9": {
-      "children": [
-        8,
-        13,
-        14
-      ],
+      "display_name": "Ice Snake",
       "parents": [
         6,
         8
       ],
-      "display_name": "Ice Snake"
+      "id": 9,
+      "children": [
+        8,
+        13,
+        14
+      ]
     },
     "10": {
-      "children": [
-        15
-      ],
+      "display_name": "Air Mastery",
       "parents": [
         7
       ],
-      "display_name": "Air Mastery"
+      "id": 10,
+      "children": [
+        15
+      ]
     },
     "11": {
-      "children": [
-        12,
-        16
-      ],
+      "display_name": "Thunder Mastery",
       "parents": [
         7,
         8
       ],
-      "display_name": "Thunder Mastery"
+      "id": 11,
+      "children": [
+        12,
+        16
+      ]
     },
     "12": {
-      "children": [
-        18
-      ],
+      "display_name": "Water Mastery",
       "parents": [
         8,
         11
       ],
-      "display_name": "Water Mastery"
+      "id": 12,
+      "children": [
+        18
+      ]
     },
     "13": {
-      "children": [
-        17
-      ],
+      "display_name": "Fire Mastery",
       "parents": [
         9
       ],
-      "display_name": "Fire Mastery"
+      "id": 13,
+      "children": [
+        17
+      ]
     },
     "14": {
-      "children": [
-        17
-      ],
+      "display_name": "Earth Mastery",
       "parents": [
         9
       ],
-      "display_name": "Earth Mastery"
+      "id": 14,
+      "children": [
+        17
+      ]
     },
     "15": {
-      "children": [
-        16,
-        20
-      ],
+      "display_name": "Wind Slash",
       "parents": [
         10,
         16
       ],
-      "display_name": "Wind Slash"
+      "id": 15,
+      "children": [
+        16,
+        20
+      ]
     },
     "16": {
+      "display_name": "Thunderstorm",
+      "parents": [
+        15,
+        11
+      ],
+      "id": 16,
       "children": [
         15,
         20
-      ],
-      "parents": [
-        11,
-        15
-      ],
-      "display_name": "Thunderstorm"
+      ]
     },
     "17": {
-      "children": [
-        19,
-        22
-      ],
+      "display_name": "Burning Sigil",
       "parents": [
         13,
         14
       ],
-      "display_name": "Burning Sigil"
+      "id": 17,
+      "children": [
+        19,
+        22
+      ]
     },
     "18": {
-      "children": [
-        21
-      ],
+      "display_name": "Sunshower",
       "parents": [
         12
       ],
-      "display_name": "Sunshower"
+      "id": 18,
+      "children": [
+        21
+      ]
     },
     "19": {
-      "children": [],
+      "display_name": "Stronger Meteor",
       "parents": [
         17
       ],
-      "display_name": "Stronger Meteor"
+      "id": 19,
+      "children": []
     },
     "20": {
-      "children": [
-        23
-      ],
+      "display_name": "Windsweeper",
       "parents": [
         15,
         16
       ],
-      "display_name": "Windsweeper"
+      "id": 20,
+      "children": [
+        23
+      ]
     },
     "21": {
-      "children": [
-        24
-      ],
+      "display_name": "Ophanim",
       "parents": [
         18
       ],
-      "display_name": "Ophanim"
+      "id": 21,
+      "children": [
+        24
+      ]
     },
     "22": {
-      "children": [
-        25
-      ],
+      "display_name": "Arcane Transfer",
       "parents": [
         17
       ],
-      "display_name": "Arcane Transfer"
+      "id": 22,
+      "children": [
+        25
+      ]
     },
     "23": {
-      "children": [
-        24,
-        26,
-        27
-      ],
+      "display_name": "Cheaper Heal",
       "parents": [
         20,
         24
       ],
-      "display_name": "Cheaper Heal"
+      "id": 23,
+      "children": [
+        24,
+        26,
+        27
+      ]
     },
     "24": {
+      "display_name": "Purification",
+      "parents": [
+        21,
+        23,
+        25
+      ],
+      "id": 24,
       "children": [
         23,
         25,
         27,
         28,
         32
-      ],
-      "parents": [
-        21,
-        23,
-        25
-      ],
-      "display_name": "Purification"
+      ]
     },
     "25": {
+      "display_name": "Sentient Snake",
+      "parents": [
+        22,
+        24
+      ],
+      "id": 25,
       "children": [
         24,
         28,
         29,
         33
-      ],
-      "parents": [
-        22,
-        24
-      ],
-      "display_name": "Sentient Snake"
+      ]
     },
     "26": {
-      "children": [
-        30
-      ],
+      "display_name": "Eye Piercer",
       "parents": [
         23
       ],
-      "display_name": "Eye Piercer"
+      "id": 26,
+      "children": [
+        30
+      ]
     },
     "27": {
-      "children": [],
+      "display_name": "Breathless",
       "parents": [
         23,
         24
       ],
-      "display_name": "Breathless"
+      "id": 27,
+      "children": []
     },
     "28": {
-      "children": [],
+      "display_name": "Larger Heal",
       "parents": [
         24,
         25
       ],
-      "display_name": "Larger Heal"
+      "id": 28,
+      "children": []
     },
     "29": {
-      "children": [],
+      "display_name": "Larger Mana Bank",
       "parents": [
         25
       ],
-      "display_name": "Larger Mana Bank"
+      "id": 29,
+      "children": []
     },
     "30": {
-      "children": [
-        31,
-        34,
-        38
-      ],
+      "display_name": "Cheaper Ice Snake",
       "parents": [
         26,
         31
       ],
-      "display_name": "Cheaper Ice Snake"
+      "id": 30,
+      "children": [
+        31,
+        34,
+        39
+      ]
     },
     "31": {
-      "children": [
-        30,
-        32,
-        34,
-        35
-      ],
+      "display_name": "Fortitude",
       "parents": [
         30,
         32
       ],
-      "display_name": "Fortitude"
+      "id": 31,
+      "children": [
+        30,
+        32,
+        34,
+        36
+      ]
     },
     "32": {
+      "display_name": "Cheaper Teleport",
+      "parents": [
+        31,
+        24,
+        33
+      ],
+      "id": 32,
       "children": [
         31,
+        33,
         35,
-        36
-      ],
-      "parents": [
-        24,
-        31
-      ],
-      "display_name": "Cheaper Teleport II"
+        36,
+        37
+      ]
     },
     "33": {
-      "children": [
-        37
-      ],
+      "display_name": "Pyrokinesis",
       "parents": [
-        25
+        25,
+        32
       ],
-      "display_name": "Pyrokinesis"
+      "id": 33,
+      "children": [
+        32,
+        35,
+        38
+      ]
     },
     "34": {
-      "children": [],
+      "display_name": "Blink",
       "parents": [
-        30,
-        31
+        31,
+        30
       ],
-      "display_name": "Blink"
+      "id": 34,
+      "children": []
     },
     "35": {
-      "children": [
-        36,
-        39,
-        40
+      "display_name": "Freezing Sigil",
+      "parents": [
+        32,
+        33
       ],
+      "id": 35,
+      "children": []
+    },
+    "36": {
+      "display_name": "Healthier Ophanim",
       "parents": [
         31,
         32,
-        36
-      ],
-      "display_name": "Healthier Ophanim"
-    },
-    "36": {
-      "children": [
-        35,
-        37,
-        40,
-        41
-      ],
-      "parents": [
-        32,
-        35,
         37
       ],
-      "display_name": "Snake Nest"
+      "id": 36,
+      "children": [
+        37,
+        40,
+        41
+      ]
     },
     "37": {
-      "children": [
-        36,
-        41,
-        46
-      ],
+      "display_name": "Snake Nest",
       "parents": [
-        33,
+        38,
+        32,
         36
       ],
-      "display_name": "Seance"
+      "id": 37,
+      "children": [
+        36,
+        38,
+        41,
+        42
+      ]
     },
     "38": {
-      "children": [
-        39,
-        43
-      ],
+      "display_name": "Seance",
       "parents": [
-        30,
-        39
+        33,
+        37
       ],
-      "display_name": "Transonic Warp"
+      "id": 38,
+      "children": [
+        37,
+        42,
+        47
+      ]
     },
     "39": {
-      "children": [
-        38,
-        40,
-        43
-      ],
+      "display_name": "Transonic Warp",
       "parents": [
-        35,
-        38,
+        30,
         40
       ],
-      "display_name": "Fluid Healing"
+      "id": 39,
+      "children": [
+        40,
+        44
+      ]
     },
     "40": {
+      "display_name": "Fluid Healing",
+      "parents": [
+        36,
+        39,
+        41
+      ],
+      "id": 40,
       "children": [
         39,
         41,
-        42,
         44
-      ],
-      "parents": [
-        35,
-        36,
-        39,
-        41
-      ],
-      "display_name": "Orphion's Pulse"
+      ]
     },
     "41": {
-      "children": [
-        40,
-        42
-      ],
+      "display_name": "Orphion's Pulse",
       "parents": [
         36,
         37,
+        42,
         40
       ],
-      "display_name": "Arcane Restoration"
+      "id": 41,
+      "children": [
+        40,
+        42,
+        43,
+        45
+      ]
     },
     "42": {
-      "children": [],
-      "parents": [
-        40,
-        41
-      ],
-      "display_name": "Stronger Ophanim"
-    },
-    "43": {
-      "children": [
-        47,
-        49
-      ],
+      "display_name": "Arcane Restoration",
       "parents": [
         38,
-        39
+        37,
+        41
       ],
-      "display_name": "Diffusion"
+      "id": 42,
+      "children": [
+        41,
+        43
+      ]
+    },
+    "43": {
+      "display_name": "Stronger Ophanim",
+      "parents": [
+        41,
+        42
+      ],
+      "id": 43,
+      "children": []
     },
     "44": {
-      "children": [
-        45,
-        51
-      ],
+      "display_name": "Diffusion",
       "parents": [
+        39,
         40
       ],
-      "display_name": "Lightweaver"
+      "id": 44,
+      "children": [
+        48,
+        50
+      ]
     },
     "45": {
+      "display_name": "Lightweaver",
+      "parents": [
+        41,
+        46
+      ],
+      "id": 45,
       "children": [
         46,
-        48,
-        51
-      ],
-      "parents": [
-        44,
-        46
-      ],
-      "display_name": "Arcane Speed"
+        52
+      ]
     },
     "46": {
+      "display_name": "Arcane Speed",
+      "parents": [
+        45,
+        47
+      ],
+      "id": 46,
       "children": [
         45,
-        48,
+        47,
+        49,
         52
-      ],
-      "parents": [
-        37,
-        45
-      ],
-      "display_name": "Larger Mana Bank II"
+      ]
     },
     "47": {
-      "children": [],
+      "display_name": "Larger Mana Bank",
       "parents": [
-        43
+        38,
+        46
       ],
-      "display_name": "More Winded"
+      "id": 47,
+      "children": [
+        46,
+        49,
+        53
+      ]
     },
     "48": {
-      "children": [],
+      "display_name": "More Winded",
       "parents": [
-        45,
-        46
+        44
       ],
-      "display_name": "Psychokinesis"
+      "id": 48,
+      "children": []
     },
     "49": {
-      "children": [
-        50,
-        53,
-        54
-      ],
+      "display_name": "Psychokinesis",
       "parents": [
-        43,
-        50
-      ],
-      "display_name": "Cheaper Ice Snake II"
-    },
-    "50": {
-      "children": [
-        49,
-        51,
-        54,
-        55
-      ],
-      "parents": [
-        49,
-        51
-      ],
-      "display_name": "Explosive Entrance"
-    },
-    "51": {
-      "children": [
-        50,
-        55
-      ],
-      "parents": [
-        44,
-        45,
-        50
-      ],
-      "display_name": "Cheaper Meteor II"
-    },
-    "52": {
-      "children": [
-        56
-      ],
-      "parents": [
+        47,
         46
       ],
-      "display_name": "Chaos Explosion"
+      "id": 49,
+      "children": []
+    },
+    "50": {
+      "display_name": "Cheaper Ice Snake",
+      "parents": [
+        44,
+        51
+      ],
+      "id": 50,
+      "children": [
+        51,
+        54,
+        55
+      ]
+    },
+    "51": {
+      "display_name": "Explosive Entrance",
+      "parents": [
+        50,
+        52
+      ],
+      "id": 51,
+      "children": [
+        50,
+        52,
+        55,
+        56
+      ]
+    },
+    "52": {
+      "display_name": "Cheaper Meteor",
+      "parents": [
+        51,
+        45,
+        46
+      ],
+      "id": 52,
+      "children": [
+        51,
+        56
+      ]
     },
     "53": {
-      "children": [
-        59
-      ],
+      "display_name": "Chaos Explosion",
       "parents": [
-        49
+        47
       ],
-      "display_name": "Time Dilation"
+      "id": 53,
+      "children": [
+        57
+      ]
     },
     "54": {
-      "children": [
-        55,
-        57
-      ],
+      "display_name": "Time Dilation",
       "parents": [
-        49,
-        50,
-        55
+        50
       ],
-      "display_name": "Gust"
+      "id": 54,
+      "children": [
+        60
+      ]
     },
     "55": {
-      "children": [
-        54,
-        57,
-        61
-      ],
+      "display_name": "Gust",
       "parents": [
         50,
         51,
-        54
+        56
       ],
-      "display_name": "Better Ophanim"
+      "id": 55,
+      "children": [
+        56,
+        58
+      ]
     },
     "56": {
-      "children": [
-        58,
-        62
-      ],
+      "display_name": "Better Ophanim",
       "parents": [
-        52
-      ],
-      "display_name": "Arctic Snake"
-    },
-    "57": {
-      "children": [],
-      "parents": [
-        54,
+        51,
+        52,
         55
       ],
-      "display_name": "Stronger Sunshower"
+      "id": 56,
+      "children": [
+        55,
+        58,
+        62
+      ]
+    },
+    "57": {
+      "display_name": "Arctic Snake",
+      "parents": [
+        53
+      ],
+      "id": 57,
+      "children": [
+        59,
+        63
+      ]
     },
     "58": {
-      "children": [],
-      "parents": [
-        56
-      ],
-      "display_name": "Arcane Power"
-    },
-    "59": {
-      "children": [
-        60,
-        63,
-        68
-      ],
-      "parents": [
-        53,
-        60
-      ],
-      "display_name": "More Winded II"
-    },
-    "60": {
-      "children": [
-        59,
-        61,
-        63,
-        64
-      ],
-      "parents": [
-        59,
-        61
-      ],
-      "display_name": "Dynamic Faith"
-    },
-    "61": {
-      "children": [
-        60,
-        64,
-        65
-      ],
+      "display_name": "Stronger Sunshower",
       "parents": [
         55,
-        60
-      ],
-      "display_name": "Healthier Ophanim II"
-    },
-    "62": {
-      "children": [
-        67
-      ],
-      "parents": [
         56
       ],
-      "display_name": "Larger Mana Bank III"
+      "id": 58,
+      "children": []
     },
-    "63": {
-      "children": [],
+    "59": {
+      "display_name": "Arcane Power",
       "parents": [
-        59,
-        60
+        57
       ],
-      "display_name": "Devitalize"
+      "id": 59,
+      "children": []
     },
-    "64": {
-      "children": [],
+    "60": {
+      "display_name": "More Winded",
       "parents": [
-        60,
+        54,
         61
       ],
-      "display_name": "Divination"
+      "id": 60,
+      "children": [
+        61,
+        68
+      ]
+    },
+    "61": {
+      "display_name": "Devitalize",
+      "parents": [
+        60,
+        62
+      ],
+      "id": 61,
+      "children": [
+        60,
+        62,
+        64
+      ]
+    },
+    "62": {
+      "display_name": "Healthier Ophanim",
+      "parents": [
+        56,
+        61
+      ],
+      "id": 62,
+      "children": [
+        61,
+        64,
+        65
+      ]
+    },
+    "63": {
+      "display_name": "Larger Mana Bank",
+      "parents": [
+        57
+      ],
+      "id": 63,
+      "children": [
+        67
+      ]
+    },
+    "64": {
+      "display_name": "Divination",
+      "parents": [
+        61,
+        62
+      ],
+      "id": 64,
+      "children": []
     },
     "65": {
+      "display_name": "Sunflare",
+      "parents": [
+        62
+      ],
+      "id": 65,
       "children": [
         66,
         70
-      ],
-      "parents": [
-        61
-      ],
-      "display_name": "Sunflare"
+      ]
     },
     "66": {
-      "children": [],
+      "display_name": "Better Lightweaver",
       "parents": [
         65
       ],
-      "display_name": "Better Lightweaver"
+      "id": 66,
+      "children": []
     },
     "67": {
+      "display_name": "Arcane Overflow",
+      "parents": [
+        63
+      ],
+      "id": 67,
       "children": [
         70,
         71
-      ],
-      "parents": [
-        62
-      ],
-      "display_name": "Arcane Overflow"
+      ]
     },
     "68": {
+      "display_name": "Timelock",
+      "parents": [
+        60
+      ],
+      "id": 68,
       "children": [
         69
-      ],
-      "parents": [
-        59
-      ],
-      "display_name": "Timelock"
+      ]
     },
     "69": {
-      "children": [
-        70
-      ],
+      "display_name": "Cheaper Heal",
       "parents": [
         68,
         70
       ],
-      "display_name": "Cheaper Heal II"
+      "id": 69,
+      "children": [
+        70
+      ]
     },
     "70": {
+      "display_name": "Manastorm",
+      "parents": [
+        69,
+        67,
+        65
+      ],
+      "id": 70,
       "children": [
         69
-      ],
-      "parents": [
-        65,
-        67,
-        69
-      ],
-      "display_name": "Manastorm"
+      ]
     },
     "71": {
-      "children": [],
+      "display_name": "Memory Recollection",
       "parents": [
         67
       ],
-      "display_name": "Memory Recollection"
+      "id": 71,
+      "children": []
     }
   },
   "Assassin": {
     "0": {
+      "display_name": "Spin Attack",
+      "parents": [],
+      "id": 0,
       "children": [
         1
-      ],
-      "parents": [],
-      "display_name": "Spin Attack"
+      ]
     },
     "1": {
-      "children": [
-        2,
-        3
-      ],
+      "display_name": "Dagger Proficiency",
       "parents": [
         0
       ],
-      "display_name": "Dagger Proficiency"
+      "id": 1,
+      "children": [
+        2,
+        3
+      ]
     },
     "2": {
-      "children": [],
+      "display_name": "Cheaper Spin Attack",
       "parents": [
         1
       ],
-      "display_name": "Cheaper Spin Attack"
+      "id": 2,
+      "children": []
     },
     "3": {
-      "children": [
-        5
-      ],
+      "display_name": "Double Spin",
       "parents": [
         1
       ],
-      "display_name": "Double Spin"
+      "id": 3,
+      "children": [
+        5
+      ]
     },
     "4": {
-      "children": [
-        7
-      ],
+      "display_name": "Poisoned Blade",
       "parents": [
         5
       ],
-      "display_name": "Poisoned Blade"
+      "id": 4,
+      "children": [
+        7
+      ]
     },
     "5": {
-      "children": [
-        4,
-        6
-      ],
+      "display_name": "Dash",
       "parents": [
         3
       ],
-      "display_name": "Dash"
+      "id": 5,
+      "children": [
+        4,
+        6
+      ]
     },
     "6": {
-      "children": [
-        9
-      ],
+      "display_name": "Double Slice",
       "parents": [
         5
       ],
-      "display_name": "Double Slice"
+      "id": 6,
+      "children": [
+        9
+      ]
     },
     "7": {
-      "children": [
-        8,
-        10,
-        11
-      ],
+      "display_name": "Smoke Bomb",
       "parents": [
         4,
         8
       ],
-      "display_name": "Smoke Bomb"
+      "id": 7,
+      "children": [
+        8,
+        10,
+        11
+      ]
     },
     "8": {
+      "display_name": "Cheaper Dash",
+      "parents": [
+        7,
+        9
+      ],
+      "id": 8,
       "children": [
         7,
         9,
         12,
         13
-      ],
-      "parents": [
-        7,
-        9
-      ],
-      "display_name": "Cheaper Dash"
+      ]
     },
     "9": {
-      "children": [
-        8,
-        13,
-        14
-      ],
+      "display_name": "Multihit",
       "parents": [
         6,
         8
       ],
-      "display_name": "Multihit"
+      "id": 9,
+      "children": [
+        8,
+        13,
+        14
+      ]
     },
     "10": {
-      "children": [
-        11,
-        15
-      ],
+      "display_name": "Earth Mastery",
       "parents": [
         7,
         11
       ],
-      "display_name": "Earth Mastery"
+      "id": 10,
+      "children": [
+        11,
+        15
+      ]
     },
     "11": {
+      "display_name": "Thunder Mastery",
+      "parents": [
+        10,
+        7
+      ],
+      "id": 11,
       "children": [
         10,
         15
-      ],
-      "parents": [
-        7,
-        10
-      ],
-      "display_name": "Thunder Mastery"
+      ]
     },
     "12": {
-      "children": [
-        18
-      ],
+      "display_name": "Fire Mastery",
       "parents": [
         8,
         13
       ],
-      "display_name": "Fire Mastery"
+      "id": 12,
+      "children": [
+        18
+      ]
     },
     "13": {
+      "display_name": "Water Mastery",
+      "parents": [
+        8,
+        9,
+        14
+      ],
+      "id": 13,
       "children": [
         12,
         14,
         16
-      ],
-      "parents": [
-        8,
-        9,
-        14
-      ],
-      "display_name": "Water Mastery"
+      ]
     },
     "14": {
+      "display_name": "Air Mastery",
+      "parents": [
+        13,
+        9
+      ],
+      "id": 14,
       "children": [
         13,
         16
-      ],
-      "parents": [
-        9,
-        13
-      ],
-      "display_name": "Air Mastery"
+      ]
     },
     "15": {
-      "children": [
-        17
-      ],
+      "display_name": "Backstab",
       "parents": [
         10,
         11
       ],
-      "display_name": "Backstab"
+      "id": 15,
+      "children": [
+        17
+      ]
     },
     "16": {
-      "children": [
-        19,
-        22
-      ],
+      "display_name": "Fatality",
       "parents": [
         13,
         14
       ],
-      "display_name": "Fatality"
+      "id": 16,
+      "children": [
+        19,
+        22
+      ]
     },
     "17": {
-      "children": [
-        18,
-        20
-      ],
+      "display_name": "Vanish",
       "parents": [
         15,
         18
       ],
-      "display_name": "Vanish"
+      "id": 17,
+      "children": [
+        18,
+        20
+      ]
     },
     "18": {
+      "display_name": "Sticky Bomb",
+      "parents": [
+        17,
+        12
+      ],
+      "id": 18,
       "children": [
         17,
         21
-      ],
-      "parents": [
-        12,
-        17
-      ],
-      "display_name": "Sticky Bomb"
+      ]
     },
     "19": {
-      "children": [],
+      "display_name": "Righting Reflex",
       "parents": [
         16
       ],
-      "display_name": "Righting Reflex"
+      "id": 19,
+      "children": []
     },
     "20": {
-      "children": [
-        23
-      ],
+      "display_name": "Surprise Strike",
       "parents": [
         17
       ],
-      "display_name": "Surprise Strike"
+      "id": 20,
+      "children": [
+        23
+      ]
     },
     "21": {
-      "children": [
-        24,
-        30
-      ],
+      "display_name": "Mirror Image",
       "parents": [
         18
       ],
-      "display_name": "Mirror Image"
+      "id": 21,
+      "children": [
+        24,
+        31
+      ]
     },
     "22": {
-      "children": [
-        25
-      ],
+      "display_name": "Lacerate",
       "parents": [
         16
       ],
-      "display_name": "Lacerate"
+      "id": 22,
+      "children": [
+        25
+      ]
     },
     "23": {
-      "children": [
-        26,
-        27
-      ],
+      "display_name": "Silent Killer",
       "parents": [
         20
       ],
-      "display_name": "Silent Killer"
+      "id": 23,
+      "children": [
+        26,
+        27
+      ]
     },
     "24": {
-      "children": [
-        28,
-        45
-      ],
+      "display_name": "Shenanigans",
       "parents": [
         21,
-        45
+        46
       ],
-      "display_name": "Shenanigans"
+      "id": 24,
+      "children": [
+        28,
+        46
+      ]
     },
     "25": {
-      "children": [
-        29,
-        45
-      ],
+      "display_name": "Wall of Smoke",
       "parents": [
         22
       ],
-      "display_name": "Wall of Smoke"
+      "id": 25,
+      "children": [
+        29,
+        46
+      ]
     },
     "26": {
-      "children": [
-        27,
-        31
-      ],
+      "display_name": "Better Smoke Bomb",
       "parents": [
         23,
         27
       ],
-      "display_name": "Better Smoke Bomb"
+      "id": 26,
+      "children": [
+        27,
+        30,
+        32
+      ]
     },
     "27": {
+      "display_name": "Shadow Travel",
+      "parents": [
+        26,
+        23,
+        28
+      ],
+      "id": 27,
       "children": [
         26,
         28,
-        32,
-        71
-      ],
-      "parents": [
-        23,
-        26,
-        28
-      ],
-      "display_name": "Shadow Travel"
+        30,
+        33,
+        72
+      ]
     },
     "28": {
-      "children": [
-        27,
-        29,
-        32,
-        33,
-        71,
-        72
-      ],
+      "display_name": "Cheaper Multihit",
       "parents": [
         24,
         27,
         29,
-        45
+        46
       ],
-      "display_name": "Cheaper Multihit"
+      "id": 28,
+      "children": [
+        27,
+        29,
+        33,
+        34,
+        72,
+        73
+      ]
     },
     "29": {
+      "display_name": "Dagger Proficiency",
+      "parents": [
+        28,
+        25
+      ],
+      "id": 29,
       "children": [
         28,
-        33,
-        72
-      ],
-      "parents": [
-        25,
-        28
-      ],
-      "display_name": "Dagger Proficiency II"
+        34,
+        73
+      ]
     },
     "30": {
-      "children": [],
+      "display_name": "Shadow Siphon",
+      "parents": [
+        26,
+        27
+      ],
+      "id": 30,
+      "children": []
+    },
+    "31": {
+      "display_name": "Last Laugh",
       "parents": [
         21
       ],
-      "display_name": "Last Laugh"
-    },
-    "31": {
-      "children": [
-        32,
-        34,
-        38
-      ],
-      "parents": [
-        26,
-        32
-      ],
-      "display_name": "Cheaper Smoke Bomb"
+      "id": 31,
+      "children": []
     },
     "32": {
-      "children": [
-        31,
-        34,
-        35
-      ],
+      "display_name": "Cheaper Smoke Bomb",
       "parents": [
-        27,
-        28,
-        31
+        26,
+        33
       ],
-      "display_name": "Blazing Powder"
+      "id": 32,
+      "children": [
+        33,
+        35,
+        39
+      ]
     },
     "33": {
-      "children": [
-        36,
-        76
+      "display_name": "Blazing Powder",
+      "parents": [
+        32,
+        27,
+        28
       ],
+      "id": 33,
+      "children": [
+        32,
+        35,
+        36
+      ]
+    },
+    "34": {
+      "display_name": "Weightless",
       "parents": [
         28,
         29
       ],
-      "display_name": "Weightless"
-    },
-    "34": {
-      "children": [],
-      "parents": [
-        31,
-        32
-      ],
-      "display_name": "Black Hole"
+      "id": 34,
+      "children": [
+        37,
+        77
+      ]
     },
     "35": {
-      "children": [
-        36,
-        39,
-        40,
-        42
-      ],
+      "display_name": "Black Hole",
       "parents": [
         32,
-        36
+        33
       ],
-      "display_name": "Sandbagging"
+      "id": 35,
+      "children": []
     },
     "36": {
-      "children": [
-        35,
-        40
-      ],
+      "display_name": "Sandbagging",
       "parents": [
         33,
-        35
+        37
       ],
-      "display_name": "Hop"
+      "id": 36,
+      "children": [
+        37,
+        40,
+        41,
+        43
+      ]
     },
     "37": {
-      "children": [],
+      "display_name": "Hop",
       "parents": [
-        43,
-        44
+        36,
+        34
       ],
-      "display_name": "Dancing Blade"
+      "id": 37,
+      "children": [
+        36,
+        41
+      ]
     },
     "38": {
-      "children": [
-        41
-      ],
+      "display_name": "Dancing Blade",
       "parents": [
-        31
+        45,
+        44
       ],
-      "display_name": "Violent Vortex"
+      "id": 38,
+      "children": []
     },
     "39": {
-      "children": [],
+      "display_name": "Violent Vortex",
       "parents": [
-        35
+        32
       ],
-      "display_name": "Delirious Gas"
+      "id": 39,
+      "children": [
+        42
+      ]
     },
     "40": {
-      "children": [],
+      "display_name": "Delirious Gas",
       "parents": [
-        35,
         36
       ],
-      "display_name": "Stronger Multihit"
+      "id": 40,
+      "children": []
     },
     "41": {
-      "children": [
-        46,
-        50
-      ],
+      "display_name": "Stronger Multihit",
       "parents": [
-        38
+        36,
+        37
       ],
-      "display_name": "Marked"
+      "id": 41,
+      "children": []
     },
     "42": {
-      "children": [
-        43,
-        47
-      ],
+      "display_name": "Marked",
       "parents": [
-        35,
-        43
+        39
       ],
-      "display_name": "Echo"
-    },
-    "43": {
-      "children": [
-        37,
-        42,
-        44
-      ],
-      "parents": [
-        42,
-        44
-      ],
-      "display_name": "Shurikens"
-    },
-    "44": {
-      "children": [
-        37,
-        43,
-        49
-      ],
-      "parents": [
-        43,
-        76
-      ],
-      "display_name": "Far Reach"
-    },
-    "45": {
-      "children": [
-        24,
-        28
-      ],
-      "parents": [
-        24,
-        25
-      ],
-      "display_name": "Psithurism"
-    },
-    "46": {
-      "children": [
-        73
-      ],
-      "parents": [
-        41
-      ],
-      "display_name": "Ambush"
-    },
-    "47": {
-      "children": [
-        50,
-        52
-      ],
-      "parents": [
-        42,
-        50
-      ],
-      "display_name": "Cheaper Dash II"
-    },
-    "48": {
-      "children": [
-        49,
-        53
-      ],
-      "parents": [
-        49
-      ],
-      "display_name": "Parry"
-    },
-    "49": {
-      "children": [
-        48,
-        54
-      ],
-      "parents": [
-        44,
-        48
-      ],
-      "display_name": "Cheaper Spin Attack 2"
-    },
-    "50": {
+      "id": 42,
       "children": [
         47,
         51
-      ],
-      "parents": [
-        41,
-        47
-      ],
-      "display_name": "Death Magnet"
+      ]
     },
-    "51": {
-      "children": [
-        52,
-        55,
-        73,
-        75
-      ],
+    "43": {
+      "display_name": "Echo",
       "parents": [
-        50,
-        52,
-        73
+        36,
+        44
       ],
-      "display_name": "Cheaper Multihit II"
+      "id": 43,
+      "children": [
+        44,
+        48
+      ]
     },
-    "52": {
-      "children": [
-        51,
-        53,
-        59,
-        74,
-        75
-      ],
+    "44": {
+      "display_name": "Shurikens",
       "parents": [
-        47,
+        43,
+        45
+      ],
+      "id": 44,
+      "children": [
+        38,
+        43,
+        45
+      ]
+    },
+    "45": {
+      "display_name": "Far Reach",
+      "parents": [
+        77,
+        44
+      ],
+      "id": 45,
+      "children": [
+        38,
+        44,
+        50
+      ]
+    },
+    "46": {
+      "display_name": "Psithurism",
+      "parents": [
+        25,
+        24
+      ],
+      "id": 46,
+      "children": [
+        24,
+        28
+      ]
+    },
+    "47": {
+      "display_name": "Ambush",
+      "parents": [
+        42
+      ],
+      "id": 47,
+      "children": [
+        74
+      ]
+    },
+    "48": {
+      "display_name": "Cheaper Dash",
+      "parents": [
+        43,
+        51
+      ],
+      "id": 48,
+      "children": [
         51,
         53
+      ]
+    },
+    "49": {
+      "display_name": "Parry",
+      "parents": [
+        50
       ],
-      "display_name": "Hoodwink"
+      "id": 49,
+      "children": [
+        50,
+        54
+      ]
+    },
+    "50": {
+      "display_name": "Cheaper Spin Attack",
+      "parents": [
+        45,
+        49
+      ],
+      "id": 50,
+      "children": [
+        49,
+        55
+      ]
+    },
+    "51": {
+      "display_name": "Death Magnet",
+      "parents": [
+        42,
+        48
+      ],
+      "id": 51,
+      "children": [
+        48,
+        52
+      ]
+    },
+    "52": {
+      "display_name": "Cheaper Multihit",
+      "parents": [
+        51,
+        74,
+        53
+      ],
+      "id": 52,
+      "children": [
+        53,
+        56,
+        74,
+        76
+      ]
     },
     "53": {
+      "display_name": "Hoodwink",
+      "parents": [
+        52,
+        48,
+        54
+      ],
+      "id": 53,
       "children": [
         52,
         54,
-        56,
-        74
-      ],
-      "parents": [
-        48,
-        52,
-        54
-      ],
-      "display_name": "Choke Bomb"
+        60,
+        75,
+        76
+      ]
     },
     "54": {
+      "display_name": "Choke Bomb",
+      "parents": [
+        53,
+        55,
+        49
+      ],
+      "id": 54,
       "children": [
         53,
-        56
-      ],
-      "parents": [
-        49,
-        53
-      ],
-      "display_name": "Wall Jump"
+        55,
+        57,
+        75
+      ]
     },
     "55": {
-      "children": [
-        57,
-        58,
-        75
-      ],
+      "display_name": "Wall Jump",
       "parents": [
-        51,
-        73,
-        75
+        54,
+        50
       ],
-      "display_name": "Fatal Spin"
+      "id": 55,
+      "children": [
+        54,
+        57
+      ]
     },
     "56": {
-      "children": [
-        60,
-        74
-      ],
+      "display_name": "Fatal Spin",
       "parents": [
-        53,
-        54
+        74,
+        52,
+        76
       ],
-      "display_name": "Stronger Lacerate"
+      "id": 56,
+      "children": [
+        58,
+        59,
+        76
+      ]
     },
     "57": {
-      "children": [],
+      "display_name": "Stronger Lacerate",
       "parents": [
+        54,
         55
       ],
-      "display_name": "Stronger Vortex"
+      "id": 57,
+      "children": [
+        61,
+        75
+      ]
     },
     "58": {
-      "children": [
-        59,
-        61,
-        64
-      ],
+      "display_name": "Stronger Vortex",
       "parents": [
-        55,
-        59
+        56
       ],
-      "display_name": "Harvester"
+      "id": 58,
+      "children": []
     },
     "59": {
-      "children": [
-        58,
-        60,
-        61,
-        62,
-        65
-      ],
-      "parents": [
-        52,
-        58,
-        60
-      ],
-      "display_name": "Cheaper Smoke Bomb 2"
-    },
-    "60": {
-      "children": [
-        59,
-        62,
-        63,
-        67
-      ],
+      "display_name": "Harvester",
       "parents": [
         56,
-        59
+        60
       ],
-      "display_name": "Blade Fury"
+      "id": 59,
+      "children": [
+        60,
+        62,
+        65
+      ]
+    },
+    "60": {
+      "display_name": "Cheaper Smoke Bomb",
+      "parents": [
+        59,
+        53,
+        61
+      ],
+      "id": 60,
+      "children": [
+        59,
+        61,
+        62,
+        63,
+        66
+      ]
     },
     "61": {
-      "children": [],
+      "display_name": "Blade Fury",
       "parents": [
-        58,
-        59
+        57,
+        60
       ],
-      "display_name": "More Marks"
+      "id": 61,
+      "children": [
+        60,
+        63,
+        64,
+        68
+      ]
     },
     "62": {
-      "children": [],
+      "display_name": "More Marks",
       "parents": [
         59,
         60
       ],
-      "display_name": "Stronger Clones"
+      "id": 62,
+      "children": []
     },
     "63": {
-      "children": [],
+      "display_name": "Stronger Clones",
       "parents": [
-        60
+        60,
+        61
       ],
-      "display_name": "Ricochets"
+      "id": 63,
+      "children": []
     },
     "64": {
-      "children": [
-        69,
-        70
-      ],
+      "display_name": "Ricochets",
       "parents": [
-        58
+        61
       ],
-      "display_name": "Satsujin"
+      "id": 64,
+      "children": []
     },
     "65": {
-      "children": [
-        66
-      ],
+      "display_name": "Satsujin",
       "parents": [
         59
       ],
-      "display_name": "Forbidden Art"
+      "id": 65,
+      "children": [
+        70,
+        71
+      ]
     },
     "66": {
-      "children": [
-        77
-      ],
-      "parents": [
-        65
-      ],
-      "display_name": "Diversion"
-    },
-    "67": {
-      "children": [
-        68
-      ],
+      "display_name": "Forbidden Art",
       "parents": [
         60
       ],
-      "display_name": "Jasmine Bloom"
+      "id": 66,
+      "children": [
+        67
+      ]
+    },
+    "67": {
+      "display_name": "Diversion",
+      "parents": [
+        66
+      ],
+      "id": 67,
+      "children": [
+        78
+      ]
     },
     "68": {
-      "children": [],
+      "display_name": "Jasmine Bloom",
       "parents": [
-        67
+        61
       ],
-      "display_name": "Better Weightless"
+      "id": 68,
+      "children": [
+        69
+      ]
     },
     "69": {
-      "children": [],
+      "display_name": "Better Weightless",
       "parents": [
-        64
+        68
       ],
-      "display_name": "Devour"
+      "id": 69,
+      "children": []
     },
     "70": {
-      "children": [],
+      "display_name": "Devour",
       "parents": [
-        64
+        65
       ],
-      "display_name": "Better Marked"
+      "id": 70,
+      "children": []
     },
     "71": {
-      "children": [],
+      "display_name": "Better Marked",
       "parents": [
-        27,
-        28
+        65
       ],
-      "display_name": "Bamboozle"
+      "id": 71,
+      "children": []
     },
     "72": {
-      "children": [],
+      "display_name": "Bamboozle",
+      "parents": [
+        28,
+        27
+      ],
+      "id": 72,
+      "children": []
+    },
+    "73": {
+      "display_name": "Distraction",
       "parents": [
         28,
         29
       ],
-      "display_name": "Distraction"
-    },
-    "73": {
-      "children": [
-        51,
-        55
-      ],
-      "parents": [
-        46,
-        51
-      ],
-      "display_name": "Nightcloak Knife"
+      "id": 73,
+      "children": []
     },
     "74": {
-      "children": [],
+      "display_name": "Nightcloak Knife",
+      "parents": [
+        52,
+        47
+      ],
+      "id": 74,
+      "children": [
+        52,
+        56
+      ]
+    },
+    "75": {
+      "display_name": "Pirouette",
+      "parents": [
+        57,
+        54,
+        53
+      ],
+      "id": 75,
+      "children": []
+    },
+    "76": {
+      "display_name": "Dissolution",
       "parents": [
         52,
         53,
         56
       ],
-      "display_name": "Pirouette"
-    },
-    "75": {
+      "id": 76,
       "children": [
-        55
-      ],
-      "parents": [
-        51,
-        52,
-        55
-      ],
-      "display_name": "Dissolution"
-    },
-    "76": {
-      "children": [
-        44
-      ],
-      "parents": [
-        33
-      ],
-      "display_name": "Flow State"
+        56
+      ]
     },
     "77": {
-      "children": [],
+      "display_name": "Flow State",
       "parents": [
-        66
+        34
       ],
-      "display_name": "Even Stronger Clones"
+      "id": 77,
+      "children": [
+        45
+      ]
+    },
+    "78": {
+      "display_name": "Even Stronger Clones",
+      "parents": [
+        67
+      ],
+      "id": 78,
+      "children": []
     }
   },
   "Shaman": {
     "0": {
+      "display_name": "Totem",
+      "parents": [],
+      "id": 0,
       "children": [
         1
-      ],
-      "parents": [],
-      "display_name": "Totem"
+      ]
     },
     "1": {
-      "children": [
-        2,
-        3
-      ],
+      "display_name": "Relik Proficiency",
       "parents": [
         0
       ],
-      "display_name": "Relik Proficiency"
+      "id": 1,
+      "children": [
+        2,
+        3
+      ]
     },
     "2": {
-      "children": [],
+      "display_name": "Cheaper Totem",
       "parents": [
         1
       ],
-      "display_name": "Cheaper Totem"
+      "id": 2,
+      "children": []
     },
     "3": {
-      "children": [
-        5
-      ],
+      "display_name": "Totemic Smash",
       "parents": [
         1
       ],
-      "display_name": "Totemic Smash"
+      "id": 3,
+      "children": [
+        5
+      ]
     },
     "4": {
-      "children": [
-        7
-      ],
+      "display_name": "Distant Grasp",
       "parents": [
         5
       ],
-      "display_name": "Distant Grasp"
+      "id": 4,
+      "children": [
+        7
+      ]
     },
     "5": {
-      "children": [
-        4,
-        6
-      ],
+      "display_name": "Haul",
       "parents": [
         3
       ],
-      "display_name": "Haul"
+      "id": 5,
+      "children": [
+        4,
+        6
+      ]
     },
     "6": {
-      "children": [
-        9
-      ],
+      "display_name": "Hand of the Shaman",
       "parents": [
         5
       ],
-      "display_name": "Hand of the Shaman"
+      "id": 6,
+      "children": [
+        9
+      ]
     },
     "7": {
-      "children": [
-        8,
-        10,
-        11
-      ],
+      "display_name": "Uproot",
       "parents": [
         4,
         8
       ],
-      "display_name": "Uproot"
+      "id": 7,
+      "children": [
+        8,
+        10,
+        11
+      ]
     },
     "8": {
+      "display_name": "Cheaper Haul",
+      "parents": [
+        7,
+        9
+      ],
+      "id": 8,
       "children": [
         7,
         9,
         11,
         12,
         13
-      ],
-      "parents": [
-        7,
-        9
-      ],
-      "display_name": "Cheaper Haul"
+      ]
     },
     "9": {
-      "children": [
-        8,
-        13,
-        14
-      ],
+      "display_name": "Aura",
       "parents": [
         6,
         8
       ],
-      "display_name": "Aura"
+      "id": 9,
+      "children": [
+        8,
+        13,
+        14
+      ]
     },
     "10": {
-      "children": [
-        11,
-        15
-      ],
+      "display_name": "Earth Mastery",
       "parents": [
         7
       ],
-      "display_name": "Earth Mastery"
+      "id": 10,
+      "children": [
+        11,
+        15
+      ]
     },
     "11": {
+      "display_name": "Air Mastery",
+      "parents": [
+        10,
+        7,
+        8,
+        13
+      ],
+      "id": 11,
       "children": [
         12,
         13,
         15
-      ],
-      "parents": [
-        7,
-        8,
-        10,
-        13
-      ],
-      "display_name": "Air Mastery"
+      ]
     },
     "12": {
-      "children": [
-        17
-      ],
+      "display_name": "Water Mastery",
       "parents": [
         8,
         11,
         13
       ],
-      "display_name": "Water Mastery"
+      "id": 12,
+      "children": [
+        17
+      ]
     },
     "13": {
+      "display_name": "Thunder Mastery",
+      "parents": [
+        11,
+        8,
+        9
+      ],
+      "id": 13,
       "children": [
         11,
         12,
         18
-      ],
-      "parents": [
-        8,
-        9,
-        11
-      ],
-      "display_name": "Thunder Mastery"
+      ]
     },
     "14": {
-      "children": [
-        19
-      ],
+      "display_name": "Fire Mastery",
       "parents": [
         9
       ],
-      "display_name": "Fire Mastery"
+      "id": 14,
+      "children": [
+        19
+      ]
     },
     "15": {
+      "display_name": "Nature's Jolt",
+      "parents": [
+        11,
+        10
+      ],
+      "id": 15,
       "children": [
         16
-      ],
-      "parents": [
-        10,
-        11
-      ],
-      "display_name": "Nature's Jolt"
+      ]
     },
     "16": {
-      "children": [
-        20
-      ],
+      "display_name": "Overseer",
       "parents": [
         15
       ],
-      "display_name": "Overseer"
+      "id": 16,
+      "children": [
+        20
+      ]
     },
     "17": {
-      "children": [
-        21
-      ],
+      "display_name": "Rain Dance",
       "parents": [
         12
       ],
-      "display_name": "Rain Dance"
+      "id": 17,
+      "children": [
+        21
+      ]
     },
     "18": {
-      "children": [
-        19,
-        22
-      ],
+      "display_name": "Shocking Aura",
       "parents": [
         13,
         19
       ],
-      "display_name": "Shocking Aura"
+      "id": 18,
+      "children": [
+        19,
+        22
+      ]
     },
     "19": {
-      "children": [
-        18,
-        22
-      ],
+      "display_name": "Flaming Tongue",
       "parents": [
         14,
         18
       ],
-      "display_name": "Flaming Tongue"
+      "id": 19,
+      "children": [
+        18,
+        22
+      ]
     },
     "20": {
-      "children": [
-        23
-      ],
+      "display_name": "Puppet Master",
       "parents": [
         16
       ],
-      "display_name": "Puppet Master"
+      "id": 20,
+      "children": [
+        23
+      ]
     },
     "21": {
-      "children": [
-        25
-      ],
+      "display_name": "Mask of the Lunatic",
       "parents": [
         17
       ],
-      "display_name": "Mask of the Lunatic"
+      "id": 21,
+      "children": [
+        25
+      ]
     },
     "22": {
-      "children": [
-        26
-      ],
+      "display_name": "Sacrificial Shrine",
       "parents": [
         18,
         19
       ],
-      "display_name": "Sacrificial Shrine"
+      "id": 22,
+      "children": [
+        26
+      ]
     },
     "23": {
-      "children": [
-        24,
-        27
-      ],
+      "display_name": "Stagnation",
       "parents": [
         20,
         24
       ],
-      "display_name": "Stagnation"
+      "id": 23,
+      "children": [
+        24,
+        27
+      ]
     },
     "24": {
+      "display_name": "Cheaper Aura",
+      "parents": [
+        23,
+        25
+      ],
+      "id": 24,
       "children": [
         23,
         25,
         27,
         28
-      ],
-      "parents": [
-        23,
-        25
-      ],
-      "display_name": "Cheaper Aura"
+      ]
     },
     "25": {
+      "display_name": "Cheaper Uproot",
+      "parents": [
+        24,
+        21,
+        26
+      ],
+      "id": 25,
       "children": [
         24,
         26,
         28,
         29,
         32
-      ],
-      "parents": [
-        21,
-        24,
-        26
-      ],
-      "display_name": "Cheaper Uproot"
+      ]
     },
     "26": {
+      "display_name": "Rebound",
+      "parents": [
+        22,
+        25
+      ],
+      "id": 26,
       "children": [
         25,
         29,
         30,
         33
-      ],
-      "parents": [
-        22,
-        25
-      ],
-      "display_name": "Rebound"
+      ]
     },
     "27": {
-      "children": [
-        31
-      ],
+      "display_name": "More Puppets",
       "parents": [
         23,
         24
       ],
-      "display_name": "More Puppets"
+      "id": 27,
+      "children": [
+        31
+      ]
     },
     "28": {
-      "children": [],
+      "display_name": "Haunting Memory",
       "parents": [
         24,
         25
       ],
-      "display_name": "Haunting Memory"
+      "id": 28,
+      "children": []
     },
     "29": {
-      "children": [],
+      "display_name": "Better Totem",
       "parents": [
         25,
         26
       ],
-      "display_name": "Better Totem"
+      "id": 29,
+      "children": []
     },
     "30": {
-      "children": [],
+      "display_name": "Blood Connection",
       "parents": [
         26
       ],
-      "display_name": "Blood Connection"
+      "id": 30,
+      "children": []
     },
     "31": {
-      "children": [
-        34,
-        35
-      ],
+      "display_name": "Exploding Puppets",
       "parents": [
         27
       ],
-      "display_name": "Exploding Puppets"
+      "id": 31,
+      "children": [
+        34,
+        35
+      ]
     },
     "32": {
-      "children": [
-        33,
-        36
-      ],
+      "display_name": "Hymn of Hate",
       "parents": [
         25,
         33
       ],
-      "display_name": "Hymn of Hate"
+      "id": 32,
+      "children": [
+        33,
+        36
+      ]
     },
     "33": {
-      "children": [
-        32,
-        36,
-        37
-      ],
+      "display_name": "Larger Blood Pool",
       "parents": [
         26,
         32
       ],
-      "display_name": "Larger Blood Pool"
+      "id": 33,
+      "children": [
+        32,
+        36,
+        37
+      ]
     },
     "34": {
+      "display_name": "Bullwhip",
+      "parents": [
+        31
+      ],
+      "id": 34,
       "children": [
         39
-      ],
-      "parents": [
-        31
-      ],
-      "display_name": "Bullwhip"
+      ]
     },
     "35": {
-      "children": [
-        40
-      ],
+      "display_name": "More Puppets",
       "parents": [
         31
       ],
-      "display_name": "More Puppets II"
+      "id": 35,
+      "children": [
+        40
+      ]
     },
     "36": {
-      "children": [
-        37,
-        38,
-        41
-      ],
+      "display_name": "Mask of the Fanatic",
       "parents": [
         32,
         33,
         37
       ],
-      "display_name": "Mask of the Fanatic"
+      "id": 36,
+      "children": [
+        37,
+        38,
+        41
+      ]
     },
     "37": {
-      "children": [
-        36,
-        42
-      ],
+      "display_name": "Vengeful Spirit",
       "parents": [
         33,
         36
       ],
-      "display_name": "Vengeful Spirit"
+      "id": 37,
+      "children": [
+        36,
+        43
+      ]
     },
     "38": {
-      "children": [],
+      "display_name": "Masquerade",
       "parents": [
         36
       ],
-      "display_name": "Masquerade"
+      "id": 38,
+      "children": []
     },
     "39": {
-      "children": [
-        40,
-        45
-      ],
+      "display_name": "Double Totem",
       "parents": [
         34,
         40
       ],
-      "display_name": "Double Totem"
+      "id": 39,
+      "children": [
+        40,
+        44
+      ]
     },
     "40": {
-      "children": [
-        39,
-        41,
-        43,
-        45,
-        46
-      ],
+      "display_name": "Cheaper Totem",
       "parents": [
         35,
         39,
         41
       ],
-      "display_name": "Cheaper Totem II"
+      "id": 40,
+      "children": [
+        39,
+        41,
+        42,
+        44,
+        45
+      ]
     },
     "41": {
+      "display_name": "Storm Dance",
+      "parents": [
+        40,
+        36,
+        43
+      ],
+      "id": 41,
       "children": [
         40,
         42,
         43,
-        44,
-        46,
-        47
-      ],
-      "parents": [
-        36,
-        40,
-        42
-      ],
-      "display_name": "Storm Dance"
+        45,
+        46
+      ]
     },
     "42": {
-      "children": [
-        41,
-        44,
-        47
-      ],
-      "parents": [
-        37,
-        41
-      ],
-      "display_name": "Blood Moon"
-    },
-    "43": {
-      "children": [],
+      "display_name": "Regeneration",
       "parents": [
         40,
         41
       ],
-      "display_name": "Regeneration"
+      "id": 42,
+      "children": []
     },
-    "44": {
-      "children": [],
+    "43": {
+      "display_name": "Cheaper Haul",
       "parents": [
         41,
-        42
+        37
       ],
-      "display_name": "Cheaper Haul II"
-    },
-    "45": {
+      "id": 43,
       "children": [
-        46,
-        48,
-        50
-      ],
+        41,
+        46
+      ]
+    },
+    "44": {
+      "display_name": "Cheaper Aura",
       "parents": [
         39,
         40,
-        46
+        45
       ],
-      "display_name": "Cheaper Aura II"
-    },
-    "46": {
+      "id": 44,
       "children": [
         45,
+        47,
+        49
+      ]
+    },
+    "45": {
+      "display_name": "Stronger Totem",
+      "parents": [
+        44,
+        41,
+        40
+      ],
+      "id": 45,
+      "children": [
+        44,
+        47,
         48,
+        50
+      ]
+    },
+    "46": {
+      "display_name": "Twisted Tether",
+      "parents": [
+        41,
+        43
+      ],
+      "id": 46,
+      "children": [
+        51,
+        52
+      ]
+    },
+    "47": {
+      "display_name": "Totemic Shatter",
+      "parents": [
+        44,
+        45
+      ],
+      "id": 47,
+      "children": []
+    },
+    "48": {
+      "display_name": "Depersonalization",
+      "parents": [
+        45
+      ],
+      "id": 48,
+      "children": []
+    },
+    "49": {
+      "display_name": "Crimson Effigy",
+      "parents": [
+        44,
+        50
+      ],
+      "id": 49,
+      "children": [
+        50,
+        53
+      ]
+    },
+    "50": {
+      "display_name": "Mask of the Coward",
+      "parents": [
+        45,
         49,
         51
       ],
-      "parents": [
-        40,
-        41,
-        45
-      ],
-      "display_name": "Stronger Totem"
-    },
-    "47": {
+      "id": 50,
       "children": [
-        52,
-        53
-      ],
-      "parents": [
-        41,
-        42
-      ],
-      "display_name": "Twisted Tether"
-    },
-    "48": {
-      "children": [],
-      "parents": [
-        45,
-        46
-      ],
-      "display_name": "Totemic Shatter"
-    },
-    "49": {
-      "children": [],
-      "parents": [
-        46
-      ],
-      "display_name": "Depersonalization"
-    },
-    "50": {
-      "children": [
+        49,
         51,
         54
-      ],
-      "parents": [
-        45,
-        51
-      ],
-      "display_name": "Crimson Effigy"
+      ]
     },
     "51": {
-      "children": [
-        50,
-        52,
-        55
-      ],
+      "display_name": "Fluid Healing",
       "parents": [
         46,
         50,
         52
       ],
-      "display_name": "Mask of the Coward"
+      "id": 51,
+      "children": [
+        50,
+        52,
+        54,
+        55
+      ]
     },
     "52": {
+      "display_name": "Larger Blood Pool",
+      "parents": [
+        46,
+        51
+      ],
+      "id": 52,
       "children": [
         51,
-        53,
-        55,
-        56
-      ],
-      "parents": [
-        47,
-        51,
-        53
-      ],
-      "display_name": "Fluid Healing"
+        55
+      ]
     },
     "53": {
-      "children": [
-        52,
-        56
-      ],
+      "display_name": "Maddening Roots",
       "parents": [
-        47,
-        52
+        49
       ],
-      "display_name": "Larger Blood Pool II"
+      "id": 53,
+      "children": [
+        56
+      ]
     },
     "54": {
-      "children": [
-        57
-      ],
+      "display_name": "Chant of the Coward",
       "parents": [
+        51,
         50
       ],
-      "display_name": "Maddening Roots"
+      "id": 54,
+      "children": [
+        57
+      ]
     },
     "55": {
-      "children": [
-        58
-      ],
+      "display_name": "Blood Rite",
       "parents": [
         51,
         52
       ],
-      "display_name": "Chant of the Coward"
+      "id": 55,
+      "children": [
+        58
+      ]
     },
     "56": {
-      "children": [
-        59
-      ],
+      "display_name": "More Effigies",
       "parents": [
-        52,
         53
       ],
-      "display_name": "Blood Rite"
-    },
-    "57": {
-      "children": [
-        60,
-        61
-      ],
-      "parents": [
-        54
-      ],
-      "display_name": "More Effigies"
-    },
-    "58": {
+      "id": 56,
       "children": [
         59,
-        62,
-        63
+        60
+      ]
+    },
+    "57": {
+      "display_name": "Chant of the Fanatic",
+      "parents": [
+        54,
+        58
       ],
+      "id": 57,
+      "children": [
+        58,
+        61,
+        62
+      ]
+    },
+    "58": {
+      "display_name": "Stronger Tether",
       "parents": [
         55,
-        59
+        57
       ],
-      "display_name": "Chant of the Fanatic"
+      "id": 58,
+      "children": [
+        57,
+        64
+      ]
     },
     "59": {
-      "children": [
-        58,
-        65
-      ],
+      "display_name": "Triple Totem",
       "parents": [
         56,
-        58
+        60
       ],
-      "display_name": "Stronger Tether"
+      "id": 59,
+      "children": [
+        60,
+        65
+      ]
     },
     "60": {
-      "children": [
-        61,
-        66
-      ],
+      "display_name": "Invigorating Wave",
       "parents": [
-        57,
+        56,
+        59,
         61
       ],
-      "display_name": "Triple Totem"
+      "id": 60,
+      "children": [
+        59,
+        61,
+        65
+      ]
     },
     "61": {
-      "children": [
-        60,
-        62,
-        66
-      ],
+      "display_name": "Seeking Totem",
       "parents": [
         57,
-        60,
-        62
+        60
       ],
-      "display_name": "Invigorating Wave"
+      "id": 61,
+      "children": [
+        60
+      ]
     },
     "62": {
-      "children": [
-        61
-      ],
+      "display_name": "Frog Dance",
       "parents": [
-        58,
-        61
+        57
       ],
-      "display_name": "Seeking Totem"
+      "id": 62,
+      "children": [
+        63,
+        66
+      ]
     },
     "63": {
-      "children": [
-        64,
-        67
+      "display_name": "Chant of the Lunatic",
+      "parents": [
+        62
       ],
+      "id": 63,
+      "children": []
+    },
+    "64": {
+      "display_name": "Larger Blood Pool",
       "parents": [
         58
       ],
-      "display_name": "Frog Dance"
-    },
-    "64": {
-      "children": [],
-      "parents": [
-        63
-      ],
-      "display_name": "Chant of the Lunatic"
+      "id": 64,
+      "children": [
+        67
+      ]
     },
     "65": {
+      "display_name": "Shepherd",
+      "parents": [
+        59,
+        60
+      ],
+      "id": 65,
       "children": [
         68
-      ],
-      "parents": [
-        59
-      ],
-      "display_name": "Larger Blood Pool III"
+      ]
     },
     "66": {
-      "children": [
-        69
-      ],
+      "display_name": "Awakened",
       "parents": [
-        60,
-        61
+        62,
+        68
       ],
-      "display_name": "Shepherd"
+      "id": 66,
+      "children": [
+        68
+      ]
     },
     "67": {
-      "children": [
-        69
-      ],
+      "display_name": "Blood Sorrow",
       "parents": [
-        63,
-        69
+        64
       ],
-      "display_name": "Awakened"
+      "id": 67,
+      "children": []
     },
     "68": {
-      "children": [],
+      "display_name": "Cheaper Uproot",
       "parents": [
-        65
+        65,
+        66
       ],
-      "display_name": "Blood Sorrow"
-    },
-    "69": {
+      "id": 68,
       "children": [
-        67
-      ],
-      "parents": [
-        66,
-        67
-      ],
-      "display_name": "Cheaper Uproot II"
+        66
+      ]
     }
   }
 }

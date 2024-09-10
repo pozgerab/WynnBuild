@@ -7,8 +7,6 @@ import com.gertoxq.quickbuild.config.Manager;
 import com.gertoxq.quickbuild.custom.CustomItem;
 import com.gertoxq.quickbuild.custom.IDS;
 import com.gertoxq.quickbuild.screens.*;
-import com.gertoxq.quickbuild.screens.builder.BuildScreen;
-import com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,10 +19,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
@@ -73,6 +70,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static List<String> eqipmentNames = new ArrayList<>();
     public static List<List<Integer>> powders = new ArrayList<>();
     public static List<ItemStack> items;
+    private static int wynnLevel;
     public boolean readAtree = false;
     private int failures = 0;
 
@@ -81,20 +79,10 @@ public class QuickBuildClient implements ClientModInitializer {
     }
 
     public static @Nullable List<Text> getLoreFromItemStack(@NotNull ItemStack itemStack) {
-        List<Text> loreList = new ArrayList<>();
-        if (!itemStack.hasNbt()) return null;
-        NbtCompound tag = itemStack.getNbt();
-        if (tag == null || !tag.contains("display", NbtElement.COMPOUND_TYPE)) return null;
-        NbtCompound display = tag.getCompound("display");
-        if (!display.contains("Lore", NbtElement.LIST_TYPE)) return null;
-        NbtList lore = display.getList("Lore", NbtElement.STRING_TYPE);
-        for (int i = 0; i < lore.size(); i++) {
-            Text textComponent = Text.Serializer.fromJson(lore.getString(i));
-            if (textComponent != null) {
-                loreList.add(textComponent);
-            }
-        }
-        return loreList;
+        LoreComponent loreComp = itemStack.get(DataComponentTypes.LORE);
+        if (loreComp == null) return null;
+        //System.out.println(loreComp.lines());
+        return loreComp.lines();
     }
 
     public static String removeFormat(@NotNull String str) {
@@ -183,8 +171,6 @@ public class QuickBuildClient implements ClientModInitializer {
     public static int buildWithArgs(List<String> ids, String atreeCode) {
         if (client.player == null) return 0;
         ClientPlayerEntity player = client.player;
-        //  WYNN == EXP level
-        int wynnLevel = client.player.experienceLevel;
 
         //  Base URL
         StringBuilder url = new StringBuilder(DOMAIN)
@@ -267,18 +253,30 @@ public class QuickBuildClient implements ClientModInitializer {
             getConfigManager().loadConfig();
             if (screen instanceof GenericContainerScreen containerScreen) {
                 String title = containerScreen.getTitle().getString();
-                if (title.equals("Character Info")) {
+                List<String> titleCodes = new ArrayList<>();
+                for (int i = 0; i < title.length(); i++) {
+                    char ch = title.charAt(i);
+                    titleCodes.add(String.format("\\u%04x", (int) ch));
+                }
+                //System.out.println(titleCodes.getLast());
+                if (Objects.equals(titleCodes.getLast(), "\\ue003")) {
+                    //     \udaff \udfdc \ue003
+                    //System.out.println("charinfo");
                     var charInfoScreen = new CharacterInfoScreen(containerScreen);
                     new Task(() -> this.saveCharInfo(charInfoScreen), 2);
                     BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
                     BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
-                } else if (title.contains(" Abilities")) {
+                } else if (Objects.equals(titleCodes.getLast(), "\\ue000")) {
+                    //     \udaff \udfea \ue000
+                    //System.out.println("atreee");
                     var atreeScreen = new AtreeScreen(containerScreen);
                     if (!readAtree) {
                         this.startAtreead(atreeScreen);
                     }
                     BUTTON.addTo(atreeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
-                } else if (title.equals("Mastery Tomes")) {
+                } else if (Objects.equals(titleCodes.getLast(), "\\ue005")) {
+                    //System.out.println("tome");
+                    //     \udaff \udfdb \ue005
                     var tomeScreen = new TomeScreen(containerScreen);
                     new Task(() -> saveTomeInfo(tomeScreen), 2);
                     BUTTON.addTo(tomeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.saveTomeInfo(tomeScreen));
@@ -295,7 +293,7 @@ public class QuickBuildClient implements ClientModInitializer {
                         if (p == null) return 0;
                         p.sendMessage(Text.literal("Welcome to QuickBuild").styled(style -> style.withColor(Formatting.GOLD)).append(
                                 Text.literal("""
-
+                                        
                                         This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share.
                                         You can configure the mod with /build config""")
                         ).styled(style -> style.withColor(Formatting.GOLD)));
@@ -306,7 +304,10 @@ public class QuickBuildClient implements ClientModInitializer {
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("saveatree").executes(context -> {
-                client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
+                client.send(() -> {
+                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
+                    //client.setScreen(new ImportAtreeScreen(client.currentScreen));
+                });
                 return 1;
             })));
             dispatcher.register(literal("saveatree").executes(context -> {
@@ -322,11 +323,17 @@ public class QuickBuildClient implements ClientModInitializer {
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("saveditems").executes(context -> {
-                client.send(() -> client.setScreen(new SavedItemsScreen(client.currentScreen)));
+                client.send(() -> {
+                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
+                    //client.setScreen(new SavedItemsScreen(client.currentScreen));
+                });
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("builder").executes(context -> {
-                client.send(() -> client.setScreen(new BuildScreen()));
+                client.send(() -> {
+                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
+                    //client.setScreen(new BuildScreen());
+                });
                 return 1;
             })));
         });
@@ -339,8 +346,8 @@ public class QuickBuildClient implements ClientModInitializer {
 
     private void buildCrafted() {
 
-        String customHash = buildCraftedItem() == null ? "" : buildCraftedItem().encodeCustom(true);
         CustomItem item = buildCraftedItem();
+        String customHash = item == null ? "" : item.encodeCustom(true);
 
         if (customHash.isEmpty()) {
             client.player.sendMessage(Text.literal("Couldn't encode this item"));
@@ -381,12 +388,14 @@ public class QuickBuildClient implements ClientModInitializer {
         }
         AtomicBoolean allowClick = new AtomicBoolean(false);
         ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
-        final int pages = 8;
+        final int pages = 9;
         var clicker = screen.getClicker();
-        clicker.scrollAtree(-pages);            // 16
+        AtreeScreen.resetData();
+        clicker.scrollAtree(-pages);            // 21
+        new Task(() -> saveATree(screen), pages * 4 + 20);
         for (int i = 0; i < pages; i++) {
-            new Task(() -> clicker.scrollAtree(1), i * ATREE_IDLE + pages * 2 + 4); //  20   23   26
-            new Task(() -> saveATree(screen), i * ATREE_IDLE + ATREE_IDLE / 2 + pages * 2 + 4); //  22  25  28
+            new Task(() -> clicker.scrollAtree(1), i * ATREE_IDLE + pages * 4 + 24); //  28   38   34
+            new Task(() -> saveATree(screen), i * ATREE_IDLE + ATREE_IDLE / 2 + pages * 4 + 24); //  30  25  28... 51
         }
         new Task(() -> {
             allowClick.set(true);
@@ -394,7 +403,7 @@ public class QuickBuildClient implements ClientModInitializer {
             atreeSuffix = encodedTree.toB64();
             configManager.getConfig().setAtreeEncoding(atreeSuffix);
             configManager.saveConfig();
-        }, pages * ATREE_IDLE + 5 + pages * 2);     // 45
+        }, pages * ATREE_IDLE + 8 + pages * 4 + 20);     // 45
         readAtree = true;
     }
 
@@ -408,6 +417,7 @@ public class QuickBuildClient implements ClientModInitializer {
 
     private void saveCharInfo(@NotNull CharacterInfoScreen infoScreen) {
         catchNotLoaded(() -> {
+            wynnLevel = infoScreen.getLevel();
             stats = infoScreen.getStats();
             cast = infoScreen.getCast();
             configManager.getConfig().setCast(cast.name);
@@ -433,6 +443,7 @@ public class QuickBuildClient implements ClientModInitializer {
             if (failures < 2) {
                 new Task(() -> catchNotLoaded(method), REFETCH_DELAY);
             }
+            e.printStackTrace();
         }
     }
 
@@ -443,7 +454,7 @@ public class QuickBuildClient implements ClientModInitializer {
             return;
         }
         //screen.getUnlockedNames().forEach(System.out::println);
-        var unlockedIds = screen.getUpgradedUnlockedIds();
+        Set<Integer> unlockedIds = screen.getUnlockedIds();
         //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
         unlockedAbilIds.addAll(unlockedIds);
         atreeState.addAll(unlockedAbilIds);
@@ -453,8 +464,6 @@ public class QuickBuildClient implements ClientModInitializer {
     private int build() {
         if (client.player == null) return 0;
         ClientPlayerEntity player = client.player;
-        //  WYNN == EXP level
-        int wynnLevel = client.player.experienceLevel;
 
         saveArmor();
 

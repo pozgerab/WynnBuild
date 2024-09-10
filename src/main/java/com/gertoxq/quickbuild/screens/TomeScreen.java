@@ -26,7 +26,12 @@ public class TomeScreen extends BuilderScreen {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);
-            ids.add(tomeMap.getOrDefault(name, EMPTY_IDS.get(i)));
+            if (tomeMap.containsKey(name)) {
+                ids.add(tomeMap.getOrDefault(name, EMPTY_IDS.get(i)));
+            } else {
+                //  idk why some tomes have a symbol at the end but substring them then
+                ids.add(tomeMap.getOrDefault(name.substring(0, name.length() - 1), EMPTY_IDS.get(i)));
+            }
         }
         return ids;
     }

@@ -116,9 +116,8 @@ public class SavedItemsScreen extends Screen {
     public class SavedItemListWidget extends AlwaysSelectedEntryListWidget<SavedItemListWidget.Entry> {
 
         public SavedItemListWidget(int width, int height, int top, int left, int itemHeight) {
-            super(QuickBuildClient.client, width, height, top, top + height, itemHeight);
-            this.left = left;
-            this.right = left + width;
+            super(QuickBuildClient.client, width, height, top, itemHeight);
+            this.setX(left);
             getConfigManager().getConfig().getSavedItems().forEach(savedItemType -> {
                 addEntry(new Entry(savedItemType));
             });
@@ -157,8 +156,8 @@ public class SavedItemsScreen extends Screen {
         }
 
         @Override
-        protected int getScrollbarPositionX() {
-            return right;
+        protected int getDefaultScrollbarX() {
+            return getX() + getWidth();
         }
 
         @Override
@@ -167,9 +166,8 @@ public class SavedItemsScreen extends Screen {
         }
 
         @Override
-        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-            setRenderBackground(false);
-            super.render(context, mouseX, mouseY, delta);
+        public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+            super.renderWidget(context, mouseX, mouseY, delta);
         }
 
         public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
@@ -203,7 +201,7 @@ public class SavedItemsScreen extends Screen {
                 context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getName() + ": " + custom.statMap.get(IDS.NAME.name)), x + 2, y + 5, Formatting.WHITE.getColorValue());
                 context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format)), x + 2, y + 15, Formatting.WHITE.getColorValue());
                 if (getSelectedOrNull() != null)
-                    context.drawTooltip(textRenderer, getSelectedOrNull().custom.buildLore(), left + width, top + 17);
+                    context.drawTooltip(textRenderer, getSelectedOrNull().custom.buildLore(), x + width, y + 17);
             }
 
             @Override

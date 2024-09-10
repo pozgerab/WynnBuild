@@ -65,7 +65,7 @@ public class CustomItem {
         if (lore == null) return null;
 
         lore.forEach(text -> {
-            String textStr = removeTilFormat(text.getString());
+            String textStr = removeTilFormat(removeFormat(text.getString()));
             custom.setFromString(textStr);
         });
 
@@ -208,7 +208,7 @@ public class CustomItem {
                 } else val = "";
             }
 
-            if (val instanceof String sVal && !((String) val).isEmpty()) {
+            if (val instanceof String sVal && !sVal.isEmpty()) {
                 if (Data.damages.contains(id) && val.equals("0-0") ||
                         (!verbose && Arrays.asList("lore", "majorIds", "quest", "materials", "drop", "set").contains(id))) {
                     continue;

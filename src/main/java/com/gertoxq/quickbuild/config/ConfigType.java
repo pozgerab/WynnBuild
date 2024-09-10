@@ -13,7 +13,7 @@ public class ConfigType {
     private List<Integer> tomeIds = new ArrayList<>();
     private int defaultPowderLevel = 6;
     private List<SavedItemType> savedItems = new ArrayList<>();
-    private int atreeIdleTime = 3;
+    private int atreeIdleTime = 10;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;

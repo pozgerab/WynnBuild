@@ -4,6 +4,7 @@ import com.gertoxq.quickbuild.Cast;
 import com.gertoxq.quickbuild.SP;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.gertoxq.quickbuild.client.QuickBuildClient.getLoreFromItemStack;
@@ -25,8 +26,9 @@ public class CharacterInfoScreen extends BuilderScreen {
             int point = 0;
             try {                                       //Bc lore is longer on intel
                 point = Integer.parseInt(removeFormat(idVal.get(id == SP.INTELLIGENCE ? 4 : 3).getSiblings().get(1).getString().replace(" points", "")));
-            } catch (Exception ignored) {
-                //System.out.println("ERR while parsing stat point");
+            } catch (Exception e) {
+                System.out.println("ERR while parsing stat point");
+                e.printStackTrace();
             }
             stats.put(id, point);
         });
@@ -39,6 +41,21 @@ public class CharacterInfoScreen extends BuilderScreen {
             System.out.println("Couldn't find cast value");
             return null;
         }
-        return Cast.find(lore.get(4).getSiblings().get(1).getString().toUpperCase());
+        return Cast.find(removeFormat(lore.get(4).getString().replace("Class: ", "").strip()));
+    }
+
+    public int getLevel() {
+        var lore = getLoreFromItemStack(handler.slots.get(7).getStack());
+        if (lore == null) {
+            System.out.println("Couldn't find level");
+            return 1;
+        }
+        try {
+            return Integer.parseInt(Arrays.stream(removeFormat(lore.get(3).getString().strip()).split(": ")).toList().getLast().strip());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            System.out.println("Couldn't parse level");
+        }
+        return 1;
     }
 }

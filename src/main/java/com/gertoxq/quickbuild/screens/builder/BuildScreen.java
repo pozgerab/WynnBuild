@@ -40,6 +40,7 @@ public class BuildScreen extends Screen {
     private static List<String> buildHashes;
     private static List<Integer> preciseOptions;
     private List<CustomItem> hotbarWeapons = new ArrayList<>();
+
     public BuildScreen() {
         super(Text.literal("Builder"));
     }
@@ -257,16 +258,7 @@ public class BuildScreen extends Screen {
         }
 
         @Override
-        public void onClick(double mouseX, double mouseY) {
-            this.onClick.accept(this);
-        }
-
-        @Override
-        protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-        }
-
-        @Override
-        protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
             context.drawBorder(this.getX(), this.getY(), this.getWidth(), this.getHeight(), Formatting.WHITE.getColorValue());
             context.drawTexture(
                     this.texture,
@@ -282,6 +274,15 @@ public class BuildScreen extends Screen {
                     this.textureHeight
             );
         }
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            this.onClick.accept(this);
+        }
+
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+        }
     }
 
     public class ItemSelect extends SelectableListWidget<Custom> {
@@ -294,7 +295,7 @@ public class BuildScreen extends Screen {
         public ItemSelect(int width, int height, int x, int y, int itemHeight, List<Custom> listContent, int key) {
             super(width, height, x, y, itemHeight, listContent);
             this.key = key;
-            selectBtn = addDrawableChild(new Button(left, bottom, 60, 20, Text.literal("Select"), button -> {
+            selectBtn = addDrawableChild(new Button(x, y, 60, 20, Text.literal("Select"), button -> {
                 if (getSelectedOrNull() == null) {
                     return;
                 }
@@ -328,21 +329,21 @@ public class BuildScreen extends Screen {
                     }
                 }
             }));
-            currentBtn = addDrawableChild(new Button(left + 60, bottom, 60, 20, Text.literal("Current"), button -> {
+            currentBtn = addDrawableChild(new Button(x + 60, y, 60, 20, Text.literal("Current"), button -> {
                 this.children().stream().filter(entry -> entry.getValue().current).findAny().ifPresent(this::setSelected);
             }));
             preciseBtn = addDrawableChild(ButtonWidget.builder(Text.literal("Precise: ").append(options.get(preciseOptions.get(this.key))), button -> {
                 int option = (preciseOptions.get(this.key) + 1) % options.size();
                 preciseOptions.set(this.key, option);
                 button.setMessage(Text.literal("Precise: ").append(options.get(option)));
-            }).size(120, 20).position(left, bottom + 20).tooltip(Tooltip.of(Text.literal(
+            }).size(120, 20).position(x, y + 20).tooltip(Tooltip.of(Text.literal(
                     """
                             OFF - The item is passed to the builder as a default item (rolls apply)
-                                                        
+                            
                             NEVER - The item is passed as a default item always if possible unless it's crafted or custom (rolls always apply)
-                                                        
+                            
                             ON - The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)
-                                                        
+                            
                             ALWAYS - The item is always passed as a custom item (most precision)"""
             ))).build());
 
@@ -366,7 +367,7 @@ public class BuildScreen extends Screen {
             context.drawTextWithShadow(textRenderer, Text.literal((String) custom.statMap.get(IDS.NAME.name)).styled(style -> style.withColor(tier.format)), x + 2, y + 5, Formatting.WHITE.getColorValue());
             context.drawTextWithShadow(textRenderer, Text.literal(item.getName() + ": ").styled(style -> style.withColor(Formatting.WHITE)).append(Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format))), x + 2, y + 15, Formatting.WHITE.getColorValue());
             if (getSelectedOrNull() != null)
-                context.drawTooltip(textRenderer, getSelectedOrNull().getValue().item.buildLore(), left + width, top + 17);
+                context.drawTooltip(textRenderer, getSelectedOrNull().getValue().item.buildLore(), x + width, y + 17);
         }
     }
 
@@ -377,7 +378,7 @@ public class BuildScreen extends Screen {
 
         public AtreeSelect(int width, int height, int x, int y, int itemHeight, List<SavedBuildType> items) {
             super(width, height, x, y, itemHeight, items);
-            selectBtn = addDrawableChild(new Button(left, bottom, 120, 20, Text.literal("Select"), button -> {
+            selectBtn = addDrawableChild(new Button(x, y, 120, 20, Text.literal("Select"), button -> {
                 if (getSelectedOrNull() == null) return;
                 buildIds.set(key, getSelectedOrNull().getValue().getValue());
                 buildNames.set(key, getSelectedOrNull().getValue().getName());

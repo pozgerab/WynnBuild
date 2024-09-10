@@ -29,7 +29,7 @@ public class ScreenClicker {
 
     public void scrollAtree(int amount) {
         for (int i = 0; i < Math.abs(amount); i++) {
-            new Task(() -> client.execute(() -> this.click(amount > 0 ? GuiSlot.ATREE_UP.slot : GuiSlot.ATREE_DOWN.slot)), i * 2);
+            new Task(() -> client.execute(() -> this.click(amount > 0 ? GuiSlot.ATREE_UP.slot : GuiSlot.ATREE_DOWN.slot)), i * 4);
         }
     }
 }
