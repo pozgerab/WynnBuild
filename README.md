@@ -27,11 +27,11 @@ After saving your first preset, in the abilty tree menu, the names of your class
 
 You can disable the preset loader buttons in the main config screen (**/build config**).
 
-## Saving items (NOT AVAILABLEYET  ON LATEST WYNN VERSION)
+## Saving items
 You can save any item from your inventory or with the use of the [WynnCustom](https://hppeng-wynn.github.io/custom/) hash code (COPY HASH). You can use these items in the [**Builder**](#Builder). You can open this menu with ( **/build saveditems** ). _This feature is in beta, filters and QoL changes are currently in developement._
 ![Saved item menu](https://cdn.modrinth.com/data/cached_images/4b6dcc20e856104e46acbf62c9951f9f45e50235.png)
 
-## Builder (NOT AVAILABLE YET ON LATEST WYNN VERSION)
+## Builder
 You can configure your builds even more with the use of the in-game builder **(/build builder)**. You can provide your currently equipped equipment or any saved item. You can calibrate how precise your stats will be by specifying if the saved item will be passed to the builder as a custom item (precise stats) or as a default item. As default, this is set to always use the default item with average rolls. This builder ignores requirements for more customizability.
 ![Builder menu](https://cdn.modrinth.com/data/cached_images/9b5ae01f0888f1ea0836471d061de6139f5fdba0.png)
 
