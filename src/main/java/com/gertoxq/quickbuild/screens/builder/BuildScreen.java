@@ -33,12 +33,23 @@ import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 
 public class BuildScreen extends Screen {
     private static final List<String> options = List.of("OFF", "NEVER", "ON", "FORCE");
+    private static final String precisionTooltip = """
+            OFF - The item is passed to the builder as a default item (rolls apply)
+            
+            NEVER - The item is passed as a default item always if possible unless it's crafted or custom (rolls always apply)
+            
+            ON - The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)
+            
+            FORCE - The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)""";
     private static AtomicReference<SelectableListWidget<?>> currentSelect = new AtomicReference<>();
     private static List<String> buildIds = new ArrayList<>(Collections.nCopies(10, ""));
     private static List<String> buildNames;
     private static List<TextWidget> buildDisplays;
     private static List<String> buildHashes;
     private static List<Integer> preciseOptions;
+    private static int universalPrecision = 1;
+    private static boolean emptySafe = true;
+    private static boolean loaded = false;
     private List<CustomItem> hotbarWeapons = new ArrayList<>();
 
     public BuildScreen() {
@@ -84,7 +95,9 @@ public class BuildScreen extends Screen {
         super.init();
         clearChildren();
         saveArmor();
-        initState();
+        if (!loaded) initState();
+        loaded = true;
+        buildDisplays.forEach(this::addDrawableChild);
         ConfigType config = getConfigManager().getConfig();
         hotbarWeapons = client.player.getInventory().main.subList(0, 9).stream().map(CustomItem::getItem).filter(Objects::nonNull).toList();
 
@@ -107,10 +120,29 @@ public class BuildScreen extends Screen {
             addDrawableChild(icon);
         }
 
-        UI.addTo(this, AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("CLEAR BUILD"), button -> {
+        UI.addTo(this, AXISPOS.END, AXISPOS.END, 120, 20, Text.literal("CLEAR BUILD"), button -> {
             clearAndInit();
             initState();
         });
+        addDrawableChild(ButtonWidget.builder(Text.literal("All Precise: ").append(options.get(universalPrecision)), button -> {
+            int option = (universalPrecision + 1) % options.size();
+            universalPrecision = option;
+            preciseOptions = Collections.nCopies(9, option);
+            button.setMessage(Text.literal("All Precise: ").append(options.get(option)));
+        }).size(120, 20).position(width - 120, height - 40).tooltip(Tooltip.of(Text.literal(
+                """
+                        CLICK TO APPLY TO ALL SLOTS
+                        """ + precisionTooltip
+        ))).build());
+
+        addDrawableChild(ButtonWidget.builder(Text.literal("Empty Safe: ").append(String.valueOf(emptySafe)), button -> {
+                    emptySafe = !emptySafe;
+                    button.setMessage(Text.literal("Empty Safe: ").append(String.valueOf(emptySafe)));
+                }).size(120, 20)
+                .position(width - 120, height - 60)
+                .tooltip(Tooltip.of(Text.literal("Whether to use your currently equipped " +
+                        "equipment when building if you haven't set an item for the specified slot. Setting this to false excludes skill points from the build")))
+                .build());
 
         List<IDS.ItemType> weaponTypes = List.of(IDS.ItemType.Spear, IDS.ItemType.Bow, IDS.ItemType.Dagger, IDS.ItemType.Wand, IDS.ItemType.Relik);
         ClickableIcon weaponIcon = createTypeSelection(40, 230, weaponTypes, Identifier.of("minecraft", "textures/item/iron_sword.png"), 8, cast.weapon);
@@ -150,17 +182,28 @@ public class BuildScreen extends Screen {
             try {
                 for (int i = 0; i < 9; i++) {
                     final CustomItem item = CustomItem.getCustomFromHash(buildHashes.get(i));
+                    final int preciseCode = preciseOptions.get(i);
                     if (buildIds.get(i).isEmpty() || item == null) {
                         if (i == 8) {
                             var err = addDrawableChild(new TextWidget(20, height - 40, 200, 20, Text.literal("You need to provide a weapon").styled(style -> style.withColor(Formatting.RED)), textRenderer));
                             new Task(() -> remove(err), 100);
                             return;
                         } else {
-                            finalIds.set(i, String.valueOf(ids.get(i)));
+                            if (emptySafe) {
+                                if (preciseCode == 3) {
+                                    CustomItem customItem = CustomItem.getItem(items.get(i), types.size() > i ? types.get(i) : null);
+                                    if (customItem != null) {
+                                        finalIds.set(i, customItem.encodeCustom(true));
+                                        continue;
+                                    }
+                                }
+                                finalIds.set(i, String.valueOf(ids.get(i)));
+                                continue;
+                            }
+                            finalIds.set(i, "-1"); //   INDICATES EMPTY
                         }
                         continue;
                     }
-                    final int preciseCode = preciseOptions.get(i);
                     if (preciseCode == 0) {
                         if (buildIds.get(i).isEmpty()) {
                             finalIds.set(i, String.valueOf(ids.get(i)));
@@ -177,7 +220,7 @@ public class BuildScreen extends Screen {
                         finalIds.set(i, item.encodeCustom(true));
                     }
                 }
-                QuickBuildClient.buildWithArgs(finalIds, buildIds.get(9));
+                QuickBuildClient.buildWithArgs(finalIds, buildIds.get(9), emptySafe);
             } catch (Exception e) {
                 client.player.sendMessage(Text.literal("Something went wrong when trying to build"));
                 e.printStackTrace();
@@ -192,7 +235,7 @@ public class BuildScreen extends Screen {
     private ClickableIcon createTypeSelection(final int x, final int y, final List<IDS.ItemType> types, final Identifier identifier, final int key, IDS.ItemType currentType) {
         return new ClickableIcon(x, y, 40, 40, identifier, clickableIcon -> {
             final var select = createTypeSelect(types, 120, 200, width / 2 + 40, 20, key);
-            final CustomItem item = CustomItem.getItem(items.get(key));
+            final CustomItem item = CustomItem.getItem(items.get(key), currentType);
             if (item == null) return;
             var currentlyEq = select.addEntryToTop(new Custom(new SavedItemType("CURRENT", currentType, item.encodeCustom(true), ids.get(key)), item, true));
             final var currentEntry = select.children().stream().filter(entry -> entry.getValue().saved.getHash().equals(buildHashes.get(key))).findAny().orElse(null);
@@ -295,7 +338,7 @@ public class BuildScreen extends Screen {
         public ItemSelect(int width, int height, int x, int y, int itemHeight, List<Custom> listContent, int key) {
             super(width, height, x, y, itemHeight, listContent);
             this.key = key;
-            selectBtn = addDrawableChild(new Button(x, y, 60, 20, Text.literal("Select"), button -> {
+            selectBtn = addDrawableChild(new Button(x, y + 200, 60, 20, Text.literal("Select"), button -> {
                 if (getSelectedOrNull() == null) {
                     return;
                 }
@@ -321,7 +364,7 @@ public class BuildScreen extends Screen {
 
                 buildDisplays.get(this.key).setMessage(Text.literal(buildNames.get(this.key)).styled(style -> style.withColor(tier.format)));
                 if (this.key == 8) { // IF WEAPON TYPE CHANGES RESET ATREE VALUE
-                    if (Objects.equals(CustomItem.getCustomFromHash(buildHashes.get(this.key)).getType(), before.getValue().item.getType())) {
+                    if (!Objects.equals(CustomItem.getCustomFromHash(buildHashes.get(this.key)).getType(), before.getValue().item.getType())) {
                         buildDisplays.get(9).setMessage(Text.empty());
                         buildNames.set(9, "");
                         buildIds.set(9, "");
@@ -329,22 +372,20 @@ public class BuildScreen extends Screen {
                     }
                 }
             }));
-            currentBtn = addDrawableChild(new Button(x + 60, y, 60, 20, Text.literal("Current"), button -> {
-                this.children().stream().filter(entry -> entry.getValue().current).findAny().ifPresent(this::setSelected);
-            }));
+
+            currentBtn = addDrawableChild(ButtonWidget.builder(Text.literal("Current"), button -> {
+                        this.children().stream().filter(entry -> entry.getValue().current).findAny().ifPresent(this::setSelected);
+                    })
+                    .size(60, 20).position(x + 60, y + 200)
+                    .tooltip(Tooltip.of(Text.literal("Click to highlight currently equipped")))
+                    .build());
+
             preciseBtn = addDrawableChild(ButtonWidget.builder(Text.literal("Precise: ").append(options.get(preciseOptions.get(this.key))), button -> {
                 int option = (preciseOptions.get(this.key) + 1) % options.size();
                 preciseOptions.set(this.key, option);
                 button.setMessage(Text.literal("Precise: ").append(options.get(option)));
-            }).size(120, 20).position(x, y + 20).tooltip(Tooltip.of(Text.literal(
-                    """
-                            OFF - The item is passed to the builder as a default item (rolls apply)
-                            
-                            NEVER - The item is passed as a default item always if possible unless it's crafted or custom (rolls always apply)
-                            
-                            ON - The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)
-                            
-                            ALWAYS - The item is always passed as a custom item (most precision)"""
+            }).size(120, 20).position(x, y + 220).tooltip(Tooltip.of(Text.literal(
+                    precisionTooltip
             ))).build());
 
         }
@@ -367,7 +408,7 @@ public class BuildScreen extends Screen {
             context.drawTextWithShadow(textRenderer, Text.literal((String) custom.statMap.get(IDS.NAME.name)).styled(style -> style.withColor(tier.format)), x + 2, y + 5, Formatting.WHITE.getColorValue());
             context.drawTextWithShadow(textRenderer, Text.literal(item.getName() + ": ").styled(style -> style.withColor(Formatting.WHITE)).append(Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format))), x + 2, y + 15, Formatting.WHITE.getColorValue());
             if (getSelectedOrNull() != null)
-                context.drawTooltip(textRenderer, getSelectedOrNull().getValue().item.buildLore(), x + width, y + 17);
+                context.drawTooltip(textRenderer, getSelectedOrNull().getValue().item.buildLore(), x + width, ItemSelect.this.getY() + 17);
         }
     }
 
@@ -378,7 +419,7 @@ public class BuildScreen extends Screen {
 
         public AtreeSelect(int width, int height, int x, int y, int itemHeight, List<SavedBuildType> items) {
             super(width, height, x, y, itemHeight, items);
-            selectBtn = addDrawableChild(new Button(x, y, 120, 20, Text.literal("Select"), button -> {
+            selectBtn = addDrawableChild(new Button(x, y + 220, 120, 20, Text.literal("Select"), button -> {
                 if (getSelectedOrNull() == null) return;
                 buildIds.set(key, getSelectedOrNull().getValue().getValue());
                 buildNames.set(key, getSelectedOrNull().getValue().getName());

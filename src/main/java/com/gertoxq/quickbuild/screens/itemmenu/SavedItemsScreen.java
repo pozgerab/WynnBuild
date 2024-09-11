@@ -165,11 +165,6 @@ public class SavedItemsScreen extends Screen {
             return 200;
         }
 
-        @Override
-        public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-            super.renderWidget(context, mouseX, mouseY, delta);
-        }
-
         public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
             final SavedItemType item;
             final CustomItem custom;

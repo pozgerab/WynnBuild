@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,13 +50,17 @@ public class CustomItem {
     }
 
     public static @Nullable CustomItem getItem(@NotNull ItemStack item) {
+        return getItem(item, null);
+    }
+
+    public static @Nullable CustomItem getItem(@NotNull ItemStack item, IDS.ItemType defType) {
         CustomItem custom = new CustomItem();
 
-        String styledName = item.getName().getString();
-        String name = removeTilFormat(removeFormat(styledName));
+        TextColor nameColor = item.getName().getStyle().getColor();
+        String name = removeTilFormat(item.getName().getString());
 
         Item defItem = item.getItem();
-        IDS.Tier tier = Stream.of(IDS.Tier.values()).filter(t -> Objects.equals(t.color, styledName.substring(0, 2))).findAny().orElse(IDS.Tier.Normal);
+        IDS.Tier tier = Stream.of(IDS.Tier.values()).filter(t -> Objects.equals(TextColor.fromFormatting(t.format), nameColor)).findAny().orElse(IDS.Tier.Normal);
 
         custom.set(IDS.TIER, tier.name());
 
@@ -69,13 +74,17 @@ public class CustomItem {
             custom.setFromString(textStr);
         });
 
-        if (custom.getType() == IDS.TYPE.defaultValue) {
+
+        if (custom.getType().name() == IDS.TYPE.defaultValue) {
             for (IDS.ItemType type : types) {
                 if (defItem.toString().contains(type.name().toLowerCase())) {
-                    custom.set(IDS.TYPE, type);
+                    custom.set(IDS.TYPE, type.name());
                     break;
                 }
             }
+        }
+        if (defType != null && custom.getType().name() == IDS.TYPE.defaultValue) {
+            custom.set(IDS.TYPE, defType.name());
         }
 
         if (custom.statMap.get("lvl").equals(0)) {

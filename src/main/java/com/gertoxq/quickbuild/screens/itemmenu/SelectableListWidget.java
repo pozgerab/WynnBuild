@@ -12,7 +12,7 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
     private final int right;
 
     public SelectableListWidget(int width, int height, int x, int y, int itemHeight, List<T> items) {
-        super(QuickBuildClient.client, width, height, y + height, itemHeight);
+        super(QuickBuildClient.client, width, height, y, itemHeight);
         this.setX(x);
         this.right = x + width;
         items.forEach(t -> addEntry(new Entry(t)));
@@ -35,11 +35,6 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
     }
 
     public abstract void dispose();
-
-    @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-    }
 
     @Override
     protected int getDefaultScrollbarX() {

@@ -7,6 +7,8 @@ import com.gertoxq.quickbuild.config.Manager;
 import com.gertoxq.quickbuild.custom.CustomItem;
 import com.gertoxq.quickbuild.custom.IDS;
 import com.gertoxq.quickbuild.screens.*;
+import com.gertoxq.quickbuild.screens.builder.BuildScreen;
+import com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -161,15 +164,17 @@ public class QuickBuildClient implements ClientModInitializer {
                 ids.add(id);
                 continue;
             }
-            if (itemStack.getName().getString().startsWith(IDS.Tier.Crafted.color)) {
+            if (itemStack.getName().getStyle().getColor() == TextColor.fromFormatting(IDS.Tier.Crafted.format)) {
                 craftedHashes.set(i, CustomItem.getItemHash(itemStack, types.get(i)));
                 ids.add(-2);
+                continue;
             }
+            ids.add(id);
         }
     }
 
-    public static int buildWithArgs(List<String> ids, String atreeCode) {
-        if (client.player == null) return 0;
+    public static void buildWithArgs(List<String> ids, String atreeCode, boolean emptySafe) {
+        if (client.player == null) return;
         ClientPlayerEntity player = client.player;
 
         //  Base URL
@@ -177,8 +182,14 @@ public class QuickBuildClient implements ClientModInitializer {
                 .append(BUILDER_VERSION)
                 .append("_");
         // Adds equipment or empty value except for weapon (Each has to be 3 chars)
+        var tempPowders = new ArrayList<>(powders);
         for (int i = 0; i < 9; i++) {
             try {
+                if (Objects.equals(ids.get(i), "-1")) {
+                    url.append("2S").append(emptyEquipmentPrefix.get(i));
+                    tempPowders.set(i, List.of());
+                    continue;
+                }
                 int baseId = Integer.parseInt(ids.get(i));
                 url.append(Base64.fromIntN(baseId, 3));
             } catch (Exception ignored) {
@@ -190,11 +201,11 @@ public class QuickBuildClient implements ClientModInitializer {
         if (stats.values().stream().allMatch(i -> i == 0)) {
             //  If all stats are 0, possibly the data isn't fetched
             player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
-            return 0;
+            return;
         }
-        List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
+        List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(emptySafe ? stats.get(id) : 0, 2))); // sp
         url.append(Base64.fromIntN(wynnLevel, 2)) // wynn level
-                .append(Powder.getPowderString(powders)); // powders
+                .append(Powder.getPowderString(tempPowders)); // powders
         tomeIds.forEach(id -> url.append(Base64.fromIntN(id, 2))); // tomes
         url.append(atreeCode); // atree
 
@@ -209,8 +220,8 @@ public class QuickBuildClient implements ClientModInitializer {
                         .withUnderline(true)
                         .withColor(Formatting.RED)))
                 .append("\n").styled(style -> style.withBold(true)));
-
-        return 1;
+        if (!emptySafe)
+            client.player.sendMessage(Text.literal("Note that not using the EMPTY SAFE option generates urls without skill points").styled(style -> style.withColor(Formatting.RED)));
     }
 
     @Override
@@ -305,8 +316,8 @@ public class QuickBuildClient implements ClientModInitializer {
             })));
             dispatcher.register(literal("build").then(literal("saveatree").executes(context -> {
                 client.send(() -> {
-                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
-                    //client.setScreen(new ImportAtreeScreen(client.currentScreen));
+                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
+//                    client.setScreen(new ImportAtreeScreen(client.currentScreen));
                 });
                 return 1;
             })));
@@ -324,15 +335,15 @@ public class QuickBuildClient implements ClientModInitializer {
             })));
             dispatcher.register(literal("build").then(literal("saveditems").executes(context -> {
                 client.send(() -> {
-                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
-                    //client.setScreen(new SavedItemsScreen(client.currentScreen));
+                    //client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
+                    client.setScreen(new SavedItemsScreen(client.currentScreen));
                 });
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("builder").executes(context -> {
                 client.send(() -> {
-                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
-                    //client.setScreen(new BuildScreen());
+                    //client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
+                    client.setScreen(new BuildScreen());
                 });
                 return 1;
             })));

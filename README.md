@@ -1,5 +1,5 @@
 # WynnBuild
-_A mod for generating [WynnBuilder](https://wynnbuilder.github.io/builder/) urls in-game._
+_A mod for generating [WynnBuilder](https://hppeng-wynn.github.io/builder/) urls in-game._
 
 ## This mod just got updated to the latest wynncraft version, some features are not available yet
 

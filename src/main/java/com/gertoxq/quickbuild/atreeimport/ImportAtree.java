@@ -2,7 +2,6 @@ package com.gertoxq.quickbuild.atreeimport;
 
 import com.gertoxq.quickbuild.AtreeCoder;
 import com.gertoxq.quickbuild.client.QuickBuildClient;
-import com.gertoxq.quickbuild.config.ConfigType;
 import com.gertoxq.quickbuild.config.Manager;
 import com.gertoxq.quickbuild.config.SavedBuildType;
 import com.gertoxq.quickbuild.screens.AtreeScreen;
@@ -22,17 +21,16 @@ import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 public class ImportAtree {
 
     private static final Manager configManager = QuickBuildClient.getConfigManager();
-    private static final ConfigType config = configManager.getConfig();
     static AtomicBoolean allowClick = new AtomicBoolean(true);
 
     public static void addBuild(String name, String code) {
 
-        config.getSavedAtrees().add(new SavedBuildType(name, code, cast));
+        configManager.getConfig().getSavedAtrees().add(new SavedBuildType(name, code, cast));
         configManager.saveConfig();
     }
 
     public static List<SavedBuildType> getBuilds() {
-        return config.getSavedAtrees();
+        return configManager.getConfig().getSavedAtrees();
     }
 
     private static Runnable traverse(AtreeScreen screen, Set<Integer> applyIds, AtomicInteger counter, int max) {
