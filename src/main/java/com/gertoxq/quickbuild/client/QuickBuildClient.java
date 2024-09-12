@@ -2,19 +2,15 @@ package com.gertoxq.quickbuild.client;
 
 import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.*;
-import com.gertoxq.quickbuild.config.ConfigScreen;
 import com.gertoxq.quickbuild.config.Manager;
 import com.gertoxq.quickbuild.custom.CustomItem;
 import com.gertoxq.quickbuild.custom.IDS;
 import com.gertoxq.quickbuild.screens.*;
-import com.gertoxq.quickbuild.screens.builder.BuildScreen;
-import com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.quickbuild.util.Task;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
@@ -41,7 +37,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.gertoxq.quickbuild.custom.CustomItem.getItem;
 import static com.gertoxq.quickbuild.custom.CustomItem.removeTilFormat;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class QuickBuildClient implements ClientModInitializer {
     public static final String DOMAIN = "https://hppeng-wynn.github.io/builder/#";
@@ -224,6 +219,101 @@ public class QuickBuildClient implements ClientModInitializer {
             client.player.sendMessage(Text.literal("Note that not using the EMPTY SAFE option generates urls without skill points").styled(style -> style.withColor(Formatting.RED)));
     }
 
+    public static CustomItem buildCraftedItem() {
+        ItemStack hand = client.player.getMainHandStack();
+        return getItem(hand);
+    }
+
+    public static void buildCrafted() {
+
+        CustomItem item = buildCraftedItem();
+        String customHash = item == null ? "" : item.encodeCustom(true);
+
+        if (customHash.isEmpty()) {
+            client.player.sendMessage(Text.literal("Couldn't encode this item"));
+            return;
+        }
+        StringBuilder url = new StringBuilder(WYNNCUSTOM_DOMAIN).append(customHash);
+        String fullHash = "CI-" + customHash;
+
+        client.player.sendMessage(Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
+                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getTier().format)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
+                        .withUnderline(true)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
+                        .withUnderline(true)
+                        .withColor(Formatting.RED)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("COPY HASH").styled(style -> style.withColor(Formatting.YELLOW)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(fullHash)))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullHash))
+                        .withUnderline(true)))
+                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
+                .append(Text.literal("SAVE").styled(style -> style.withColor(Formatting.GOLD)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Clicking this will open a menu where you can save items allowing you to use it in later builds")))
+                        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems " + url))))
+                .append("\n").styled(style -> style.withBold(true)));
+
+    }
+
+    public static int build() {
+        if (client.player == null) return 0;
+        ClientPlayerEntity player = client.player;
+
+        saveArmor();
+
+        if (ids.get(8) == -1) {
+            player.sendMessage(Text.literal("Hold a weapon!").styled(style -> style.withColor(Formatting.RED)));
+            return 0;
+        }
+
+        //  Base URL
+        StringBuilder url = new StringBuilder(DOMAIN)
+                .append(BUILDER_VERSION)
+                .append("_");
+        // Adds equipment or empty value except for weapon (Each has to be 3 chars)
+        for (int i = 0; i < 9; i++) {
+            if (ids.get(i) == -2) {
+                String craftedCode = "CI-" + craftedHashes.get(i);      //  Combine with hash
+                url.append(Base64.fromIntN(craftedCode.length(), 3)) //  Length of full hash encoded
+                        .append(craftedCode);                           //  full crafted hash
+                continue;
+            }
+            if (i == 8) {
+                url.append(Base64.fromIntN(ids.get(8), 3)); // Add main hand
+            } else url.append(ids.get(i) == -1 ? "2S" + emptyEquipmentPrefix.get(i) : Base64.fromIntN(ids.get(i), 3));
+        }
+        if (stats.values().stream().allMatch(i -> i == 0)) {
+            //  If all stats are 0, possibly the data isn't fetched
+            player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
+            return 0;
+        }
+        List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
+        url.append(Base64.fromIntN(wynnLevel, 2)) // wynn level
+                .append(Powder.getPowderString(powders)); // powders
+        tomeIds.forEach(id -> url.append(Base64.fromIntN(id, 2))); // tomes
+        url.append(atreeSuffix); // atree
+
+        //  Send copyable build to client
+        player.sendMessage(Text.literal("\n    Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
+                .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
+                        .withUnderline(true)))
+                .append("  ")
+                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
+                        .withUnderline(true)
+                        .withColor(Formatting.RED)))
+                .append("\n").styled(style -> style.withBold(true)));
+
+        return 1;
+
+    }
+
     @Override
     public void onInitializeClient() {
 
@@ -276,7 +366,7 @@ public class QuickBuildClient implements ClientModInitializer {
                     var charInfoScreen = new CharacterInfoScreen(containerScreen);
                     new Task(() -> this.saveCharInfo(charInfoScreen), 2);
                     BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
-                    BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
+                    BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
                 } else if (Objects.equals(titleCodes.getLast(), "\\ue000")) {
                     //     \udaff \udfea \ue000
                     //System.out.println("atreee");
@@ -293,102 +383,11 @@ public class QuickBuildClient implements ClientModInitializer {
                     BUTTON.addTo(tomeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.saveTomeInfo(tomeScreen));
                 }
             } else if (screen instanceof InventoryScreen screen1) {
-                BUTTON.addTo(screen1, AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> this.build());
+                BUTTON.addTo(screen1, AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
             }
         });
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(literal("build")
-                    .executes(context -> this.build()).then(literal("help").executes(context -> {
-                        var p = context.getSource().getClient().player;
-                        if (p == null) return 0;
-                        p.sendMessage(Text.literal("Welcome to QuickBuild").styled(style -> style.withColor(Formatting.GOLD)).append(
-                                Text.literal("""
-                                        
-                                        This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share.
-                                        You can configure the mod with /build config""")
-                        ).styled(style -> style.withColor(Formatting.GOLD)));
-                        return 1;
-                    })));
-            dispatcher.register(literal("build").then(literal("config").executes(context -> {
-                client.send(() -> client.setScreen(new ConfigScreen(client.currentScreen)));
-                return 1;
-            })));
-            dispatcher.register(literal("build").then(literal("saveatree").executes(context -> {
-                client.send(() -> {
-                    client.player.sendMessage(Text.literal("NOT IMPLEMENTED YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
-//                    client.setScreen(new ImportAtreeScreen(client.currentScreen));
-                });
-                return 1;
-            })));
-            dispatcher.register(literal("saveatree").executes(context -> {
-                client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
-                return 1;
-            }));
-            dispatcher.register(literal("buildcustomitem").executes(context -> {
-                buildCrafted();
-                return 1;
-            }));
-            dispatcher.register(literal("build").then(literal("buildcustomitem").executes(context -> {
-                buildCrafted();
-                return 1;
-            })));
-            dispatcher.register(literal("build").then(literal("saveditems").executes(context -> {
-                client.send(() -> {
-                    //client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
-                    client.setScreen(new SavedItemsScreen(client.currentScreen));
-                });
-                return 1;
-            })));
-            dispatcher.register(literal("build").then(literal("builder").executes(context -> {
-                client.send(() -> {
-                    //client.player.sendMessage(Text.literal("NOT IMPLEMENTED IN 1.21 YET").styled(style -> style.withColor(Formatting.RED).withBold(true)));
-                    client.setScreen(new BuildScreen());
-                });
-                return 1;
-            })));
-        });
-    }
-
-    public CustomItem buildCraftedItem() {
-        ItemStack hand = client.player.getMainHandStack();
-        return getItem(hand);
-    }
-
-    private void buildCrafted() {
-
-        CustomItem item = buildCraftedItem();
-        String customHash = item == null ? "" : item.encodeCustom(true);
-
-        if (customHash.isEmpty()) {
-            client.player.sendMessage(Text.literal("Couldn't encode this item"));
-            return;
-        }
-        StringBuilder url = new StringBuilder(WYNNCUSTOM_DOMAIN).append(customHash);
-        String fullHash = "CI-" + customHash;
-
-        client.player.sendMessage(Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
-                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getTier().format)))
-                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
-                        .withUnderline(true)))
-                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
-                        .withUnderline(true)
-                        .withColor(Formatting.RED)))
-                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                .append(Text.literal("COPY HASH").styled(style -> style.withColor(Formatting.YELLOW)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(fullHash)))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullHash))
-                        .withUnderline(true)))
-                .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                .append(Text.literal("SAVE").styled(style -> style.withColor(Formatting.GOLD)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Clicking this will open a menu where you can save items allowing you to use it in later builds")))
-                        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems"))))
-                .append("\n").styled(style -> style.withBold(true)));
-
+        CommandReg.init(client);
     }
 
     private void startAtreead(AtreeScreen screen) {
@@ -470,59 +469,5 @@ public class QuickBuildClient implements ClientModInitializer {
         unlockedAbilIds.addAll(unlockedIds);
         atreeState.addAll(unlockedAbilIds);
         //System.out.println("Unlocked "+ Arrays.toString(unlockedAbilIds.toArray()));
-    }
-
-    private int build() {
-        if (client.player == null) return 0;
-        ClientPlayerEntity player = client.player;
-
-        saveArmor();
-
-        if (ids.get(8) == -1) {
-            player.sendMessage(Text.literal("Hold a weapon!").styled(style -> style.withColor(Formatting.RED)));
-            return 0;
-        }
-
-        //  Base URL
-        StringBuilder url = new StringBuilder(DOMAIN)
-                .append(BUILDER_VERSION)
-                .append("_");
-        // Adds equipment or empty value except for weapon (Each has to be 3 chars)
-        for (int i = 0; i < 9; i++) {
-            if (ids.get(i) == -2) {
-                String craftedCode = "CI-" + craftedHashes.get(i);      //  Combine with hash
-                url.append(Base64.fromIntN(craftedCode.length(), 3)) //  Length of full hash encoded
-                        .append(craftedCode);                           //  full crafted hash
-                continue;
-            }
-            if (i == 8) {
-                url.append(Base64.fromIntN(ids.get(8), 3)); // Add main hand
-            } else url.append(ids.get(i) == -1 ? "2S" + emptyEquipmentPrefix.get(i) : Base64.fromIntN(ids.get(i), 3));
-        }
-        if (stats.values().stream().allMatch(i -> i == 0)) {
-            //  If all stats are 0, possibly the data isn't fetched
-            player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
-            return 0;
-        }
-        List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp
-        url.append(Base64.fromIntN(wynnLevel, 2)) // wynn level
-                .append(Powder.getPowderString(powders)); // powders
-        tomeIds.forEach(id -> url.append(Base64.fromIntN(id, 2))); // tomes
-        url.append(atreeSuffix); // atree
-
-        //  Send copyable build to client
-        player.sendMessage(Text.literal("\n    Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
-                .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url.toString())))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url.toString()))
-                        .withUnderline(true)))
-                .append("  ")
-                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.toString()))
-                        .withUnderline(true)
-                        .withColor(Formatting.RED)))
-                .append("\n").styled(style -> style.withBold(true)));
-
-        return 1;
-
     }
 }

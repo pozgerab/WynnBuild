@@ -18,7 +18,7 @@ Ability tree presets are also configurable.
 ## Custom / Crafted Items
 You can now use crafted (or custom if you're using the builder) items in your builds. The mod detects crafted items automatically and use them in the build. Custom item are only available in the [**Builder**](#Builder)
 
-## Ability Tree Presets (NOT AVAILABLE YET ON LATEST WYNN VERSION)
+## Ability Tree Presets
 You can create or delete ability tree presets in the new menu opened by **/saveatrees** or **/build saveatrees**.
 Your current class will be assigned for the saved builds.
 You can also access the config in the `.minecraft/config/wynnbuild.json` file.
@@ -32,7 +32,16 @@ You can save any item from your inventory or with the use of the [WynnCustom](ht
 ![Saved item menu](https://cdn.modrinth.com/data/cached_images/4b6dcc20e856104e46acbf62c9951f9f45e50235.png)
 
 ## Builder
-You can configure your builds even more with the use of the in-game builder **(/build builder)**. You can provide your currently equipped equipment or any saved item. You can calibrate how precise your stats will be by specifying if the saved item will be passed to the builder as a custom item (precise stats) or as a default item. As default, this is set to always use the default item with average rolls. This builder ignores requirements for more customizability.
+You can configure your builds even more with the use of the in-game builder **(/build builder)**. You can provide your currently equipped equipment or any saved item.
+
+## Item Stat Precision
+You can calibrate how precise your stats will be by specifying if the saved item will be passed to the builder as a custom item (precise stats) or as a default item. As default, this is set to always use the default item with average rolls.
+- **Never**: Items are always passed to the builder as default items, tries to force custom items as default items (rolls always apply)
+- **Off**: Items are passed to the builder as default item unless it is custom.
+- **On**: Items are passed as custom items (precise stats) if the item is selected (doesn't include EMPTY SAFE)
+- **Force**: Forces items to be passed as custom items (even when not selecting items and only using EMPTY SAFE)
+
+This builder ignores requirements for more customizability.
 ![Builder menu](https://cdn.modrinth.com/data/cached_images/9b5ae01f0888f1ea0836471d061de6139f5fdba0.png)
 
 _Note: the mod is still under development, more features, easier usage and QoL changes are yet to come._

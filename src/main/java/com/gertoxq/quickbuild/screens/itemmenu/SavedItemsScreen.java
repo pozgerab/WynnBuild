@@ -1,7 +1,6 @@
 package com.gertoxq.quickbuild.screens.itemmenu;
 
 import com.gertoxq.quickbuild.client.QuickBuildClient;
-import com.gertoxq.quickbuild.config.ConfigType;
 import com.gertoxq.quickbuild.config.SavedItemType;
 import com.gertoxq.quickbuild.custom.CustomItem;
 import com.gertoxq.quickbuild.custom.IDS;
@@ -20,6 +19,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 import static com.gertoxq.quickbuild.client.QuickBuildClient.getConfigManager;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.idMap;
 import static com.gertoxq.quickbuild.custom.CustomItem.getItem;
@@ -27,10 +28,16 @@ import static com.gertoxq.quickbuild.custom.CustomItem.getItem;
 public class SavedItemsScreen extends Screen {
     private static TextWidget info;
     private final Screen parent;
+    private final String defHash;
 
     public SavedItemsScreen(Screen parent) {
+        this(parent, "");
+    }
+
+    public SavedItemsScreen(Screen parent, String defHash) {
         super(Text.literal("Saved Items"));
         this.parent = parent;
+        this.defHash = defHash;
     }
 
     @Override
@@ -44,6 +51,7 @@ public class SavedItemsScreen extends Screen {
         addDrawableChild(nameInput);
         var hashInput = new TextFieldWidget(textRenderer, width / 2 - 39, height - 75, 138, 20, Text.empty());
         hashInput.setPlaceholder(Text.literal("Custom hash"));
+        hashInput.setText(defHash);
         hashInput.setMaxLength(Integer.MAX_VALUE);
         addDrawableChild(hashInput);
 
@@ -136,9 +144,10 @@ public class SavedItemsScreen extends Screen {
                 try {
                     name = getSelectedOrNull().item.getName();
                     hash = getSelectedOrNull().item.getHash();
-                    ConfigType config = getConfigManager().getConfig();
-                    config.setSavedItems(getConfigManager().getConfig().getSavedItems().stream().filter(savedItemType -> savedItemType != getSelectedOrNull().item).toList());
-                    getConfigManager().setConfig(config);
+                    getConfigManager().getConfig().getSavedItems().removeIf(savedItemType ->
+                            Objects.equals(savedItemType.getHash(), getSelectedOrNull().item.getHash()) &&
+                                    Objects.equals(savedItemType.getName(), getSelectedOrNull().item.getName()));
+                    getConfigManager().saveConfig();
                     removeEntry(getSelectedOrNull());
                     client.player.sendMessage(Text.literal("Deleted ").append(Text.literal(name)
                             .styled(style -> style.withUnderline(true).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("CLICK TO COPY: ").append(hash)))
@@ -146,7 +155,6 @@ public class SavedItemsScreen extends Screen {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }));
         }
 

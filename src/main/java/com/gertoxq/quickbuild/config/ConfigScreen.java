@@ -13,46 +13,45 @@ public class ConfigScreen extends Screen {
     private final Screen parent;
 
     public ConfigScreen(Screen parent) {
-        super(Text.literal("Wynnbuild config"));
+        super(Text.literal("Wynnbuild Config"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
         super.init();
-        ConfigType config = QuickBuildClient.getConfigManager().getConfig();
 
         addDrawableChild(new Button(this.width / 2 - 100, this.height / 4, 200, 20,
-                Text.literal("Buttons: ").append(config.isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
+                Text.literal("Buttons: ").append(QuickBuildClient.getConfigManager().getConfig().isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
                 button -> {
-                    config.setShowButtons(!config.isShowButtons());
-                    button.setMessage(Text.literal("Buttons: ").append(config.isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
+                    QuickBuildClient.getConfigManager().getConfig().setShowButtons(!QuickBuildClient.getConfigManager().getConfig().isShowButtons());
+                    button.setMessage(Text.literal("Buttons: ").append(QuickBuildClient.getConfigManager().getConfig().isShowButtons() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
                     QuickBuildClient.getConfigManager().saveConfig();
                 }));
         addDrawableChild(new Button(this.width / 2 - 100, this.height / 4 + 24, 200, 20,
-                Text.literal("Atree Presets: ").append(config.isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
+                Text.literal("Atree Presets: ").append(QuickBuildClient.getConfigManager().getConfig().isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))),
                 button -> {
-                    config.setShowTreeLoader(!config.isShowTreeLoader());
-                    button.setMessage(Text.literal("Atree Presets: ").append(config.isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
+                    QuickBuildClient.getConfigManager().getConfig().setShowTreeLoader(!QuickBuildClient.getConfigManager().getConfig().isShowTreeLoader());
+                    button.setMessage(Text.literal("Atree Presets: ").append(QuickBuildClient.getConfigManager().getConfig().isShowTreeLoader() ? Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)) : Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED))));
                     QuickBuildClient.getConfigManager().saveConfig();
                 }));
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 48, 100, 20, Text.literal("Atree code: "), textRenderer));
 
-        var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(config.getAtreeEncoding()));
-        input.setText(config.getAtreeEncoding());
+        var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(QuickBuildClient.getConfigManager().getConfig().getAtreeEncoding()));
+        input.setText(QuickBuildClient.getConfigManager().getConfig().getAtreeEncoding());
         addDrawableChild(input);
 
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 72, 100, 20, Text.literal("Powder level: "), textRenderer));
 
-        var powderLevelInput = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 72, 30, 20, Text.literal(String.valueOf(config.getDefaultPowderLevel())));
-        powderLevelInput.setText(String.valueOf(config.getDefaultPowderLevel()));
+        var powderLevelInput = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 72, 30, 20, Text.literal(String.valueOf(QuickBuildClient.getConfigManager().getConfig().getDefaultPowderLevel())));
+        powderLevelInput.setText(String.valueOf(QuickBuildClient.getConfigManager().getConfig().getDefaultPowderLevel()));
         addDrawableChild(powderLevelInput);
 
         addDrawableChild(new Button(this.width / 2 + 32, this.height / 4 + 72, 68, 20, Text.literal("Save").styled(style -> style.withColor(Formatting.GREEN)), button -> {
             try {
                 int powderLevel = Integer.parseInt(powderLevelInput.getText());
                 if (powderLevel < 1 || powderLevel > 6) throw new Exception("Not between 1 and 6");
-                config.setDefaultPowderLevel(powderLevel);
+                QuickBuildClient.getConfigManager().getConfig().setDefaultPowderLevel(powderLevel);
                 QuickBuildClient.getConfigManager().saveConfig();
                 client.player.sendMessage(Text.literal("Saved powder level"));
             } catch (Exception e) {

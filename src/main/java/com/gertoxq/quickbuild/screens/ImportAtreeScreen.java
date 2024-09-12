@@ -2,6 +2,8 @@ package com.gertoxq.quickbuild.screens;
 
 import com.gertoxq.quickbuild.AtreeCoder;
 import com.gertoxq.quickbuild.atreeimport.ImportAtree;
+import com.gertoxq.quickbuild.client.QuickBuildClient;
+import com.gertoxq.quickbuild.config.Manager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -15,6 +17,7 @@ import static com.gertoxq.quickbuild.client.QuickBuildClient.cast;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.getConfigManager;
 
 public class ImportAtreeScreen extends Screen {
+    private static final Manager configManager = QuickBuildClient.getConfigManager();
     private final Screen parent;
 
     public ImportAtreeScreen(Screen parent) {

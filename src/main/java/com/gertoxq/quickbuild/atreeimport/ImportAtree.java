@@ -9,10 +9,7 @@ import com.gertoxq.quickbuild.util.Task;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.text.Text;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,7 +33,8 @@ public class ImportAtree {
     private static Runnable traverse(AtreeScreen screen, Set<Integer> applyIds, AtomicInteger counter, int max) {
         if (counter.getAndIncrement() >= max) return () -> allowClick.set(true);
         return () -> {
-            var idSlots = screen.getAllUpgradedIdsWithSlots();
+            Map<Integer, Integer> idSlots = new HashMap<>();
+            screen.getSlots().forEach(abilSlot -> idSlots.put(abilSlot.id(), abilSlot.slot().getIndex()));
             AtomicInteger j = new AtomicInteger(0);
             var unsorted = applyIds.stream().filter(idSlots::containsKey).toList();
             var sortedAbils = new Atrouter(new HashSet<>(unsorted), castTreeObj).findRoute();
@@ -59,7 +57,8 @@ public class ImportAtree {
         allowClick.set(false);
         ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
         screen.getClicker().scrollAtree(-7); // Wait for scroll finish
-        new Task(traverse(screen, applyIds, new AtomicInteger(0), 7), 16);
+        AtreeScreen.resetReader();
+        new Task(traverse(screen, applyIds, new AtomicInteger(0), 7), 7 * 4);
     }
 
 }

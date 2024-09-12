@@ -116,11 +116,11 @@ public class CustomItem {
         Map<String, Object> statMap = new HashMap<>();
 
         try {
-            char version = hash.charAt(0);
-            boolean fixID = Integer.parseInt(String.valueOf(hash.charAt(1))) != 0;
+            String version = hash.substring(0, 1);
+            boolean fixID = Boolean.parseBoolean(String.valueOf(Integer.parseInt(hash.substring(1, 2), 10)));
             String tag = hash.substring(2);
 
-            if (version == '1') {
+            if (version.equals("1")) {
                 if (fixID) {
                     statMap.put("fixID", true);
                 }
@@ -128,7 +128,7 @@ public class CustomItem {
                     String id = ci_save_order.get(Base64.toInt(tag.substring(0, 2)));
                     int len = Base64.toInt(tag.substring(2, 4));
                     if (rolledIDs.contains(id)) {
-                        int sign = Integer.parseInt(tag.substring(4, 5));
+                        int sign = Integer.parseInt(tag.substring(4, 5), 10);
                         int minRoll = Base64.toInt(tag.substring(5, 5 + len));
                         if (sign != 0) {
                             minRoll *= -1;
@@ -137,7 +137,7 @@ public class CustomItem {
                         tag = tag.substring(5 + len);
                     } else {
                         Object val;
-                        if (Data.nonRolled_strings.contains(id)) {
+                        if (nonRolled_strings.contains(id)) {
                             switch (id) {
                                 case "tier" -> {
                                     val = tiers.get(Base64.toInt(tag.substring(2, 3)));
@@ -152,6 +152,9 @@ public class CustomItem {
                                     len = -1;
                                 }
                                 case "classReq" -> {
+                                    System.out.println(tag
+                                    );
+                                    System.out.println(Base64.toInt(tag.substring(3, 4)));
                                     val = classes.get(Base64.toInt(tag.substring(2, 3)));
                                     len = -1;
                                 }
@@ -159,16 +162,16 @@ public class CustomItem {
                             }
                             tag = tag.substring(4 + len);
                         } else {
-                            int sign = Integer.parseInt(tag.substring(4, 5));
+                            int sign = Integer.parseInt(tag.substring(4, 5), 10);
                             val = Base64.toInt(tag.substring(5, 5 + len));
                             if (sign == 1) {
                                 val = (Integer) val * -1;
                             }
                             tag = tag.substring(5 + len);
                         }
+
                         if (id.equals("majorIds")) {
-                            val = new Object[]{val};
-                            System.out.println(Arrays.toString((Object[]) val));
+                            val = List.of(val);
                         }
                         statMap.put(id, val);
                     }

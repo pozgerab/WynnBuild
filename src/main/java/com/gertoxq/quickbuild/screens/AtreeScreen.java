@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 
 public class AtreeScreen extends BuilderScreen {
+    static final Set<Integer> allCache = new HashSet<>();
+    static final Set<Integer> readCache = new HashSet<>();
     static Set<Integer> unlockedCache = new HashSet<>(Set.of(0));
-    static Set<Integer> allCache = new HashSet<>();
     static Map<String, JsonElement> tempDupeMap;
     static List<Integer> prevIds = new ArrayList<>();
     static Map<String, Integer> nameToId = new HashMap<>();
@@ -48,26 +49,29 @@ public class AtreeScreen extends BuilderScreen {
         allCache.clear();
     }
 
-    public List<String> getNames() {
-        return handler.slots.stream().map(slot -> {
-            var name = removeFormat(slot.getStack().getName().getString());
-            name = name.replace("Unlock ", "");
-            name = name.replace(" ability", "");
-            name = removeNum(name);
-            return name;
-        }).toList();
+    public static void resetReader() {
+        readCache.clear();
     }
 
-    public Map<String, Integer> getNamesWSlots() {
-        Map<String, Integer> map = new HashMap<>();
+    public List<AbilSlot> getSlots() {
+        List<AbilSlot> slots = new ArrayList<>();
         handler.slots.forEach(slot -> {
-            var name = removeFormat(slot.getStack().getName().getString());
-            name = name.replace("Unlock ", "");
-            name = name.replace(" ability", "");
-            name = removeNum(name);
-            map.put(name, slot.getIndex());
+
+            String name = removeNum(removeFormat(slot.getStack().getName().getString()).replace("Unlock ", "").replace(" ability", ""));
+
+            Integer id = nameToId.getOrDefault(name, null);
+            if (id != null) {
+                if (readCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
+                    id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt(); //  IN CASE OF LEVEL III
+                    if (readCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
+                        id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt();
+                    }
+                }
+                readCache.add(id);
+                slots.add(new AbilSlot(id, name, slot));
+            }
         });
-        return map;
+        return slots;
     }
 
     private void travFindUnlocked(int id, Set<Integer> pageCache, Set<Integer> checked, Map<Integer, Slot> allSlots, List<AbilSlot> unlockedSlots) {
@@ -162,55 +166,8 @@ public class AtreeScreen extends BuilderScreen {
         return slots;
     }
 
-    public List<String> getUnlockedNames() {
-        return getUnlocked().stream().map(AbilSlot::name).toList();
-    }
-
     public Set<Integer> getUnlockedIds() {
         return getUnlocked().stream().map(AbilSlot::id).collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getIds() {
-        return getNames().stream().map(name -> {
-            try {
-                return Integer.parseInt(castTreeObj.entrySet().stream().filter(entry -> Objects.equals(name, removeNum(entry.getValue().getAsJsonObject().get("display_name").getAsString()))).findAny().orElse(null).getKey());
-            } catch (NullPointerException e) {
-                //System.out.println("ITEM NOT FOUND");
-                return 0;
-            }
-        }).collect(Collectors.toSet());
-    }
-
-    public Map<Integer, Integer> getIdsWSlots() {
-        Map<Integer, Integer> map = new HashMap<>();
-        getNamesWSlots().forEach((name, slot) -> {
-            try {
-                map.put(Integer.parseInt(castTreeObj.entrySet().stream().filter(entry -> Objects.equals(name, removeNum(entry.getValue().getAsJsonObject().get("display_name").getAsString()))).findAny().orElse(null).getKey()), slot);
-            } catch (NullPointerException e) {
-                //System.out.println("ITEM NOT FOUND");
-            }
-        });
-        return map;
-    }
-
-    public Map<Integer, Integer> getAllUpgradedIdsWithSlots() {
-        Map<Integer, Integer> idsWSlots = getIdsWSlots();
-        for (int i = 0; i < 3; i++) { // So tier 2 abilities have a chance to upgrade to tier 3
-            Map<Integer, Integer> toReplace = new HashMap<>();
-            getIds().forEach(id -> {
-                if (currentDupeMap.containsKey(id.toString()) && getIds().contains(currentDupeMap.get(id.toString()).getAsJsonArray().get(0).getAsInt())) {
-                    toReplace.put(id, currentDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt());
-                }
-            });
-            toReplace.forEach((integer, integer2) -> {
-                if (idsWSlots.containsKey(integer)) {
-                    int slot = idsWSlots.get(integer);
-                    idsWSlots.remove(integer);
-                    idsWSlots.put(integer2, slot);
-                }
-            });
-        }
-        return idsWSlots;
     }
 
     public void renderSaveButtons() {
