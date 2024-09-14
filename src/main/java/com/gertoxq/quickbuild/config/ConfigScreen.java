@@ -2,8 +2,10 @@ package com.gertoxq.quickbuild.config;
 
 import com.gertoxq.quickbuild.client.QuickBuildClient;
 import com.gertoxq.quickbuild.screens.Button;
+import com.gertoxq.quickbuild.screens.builder.BuildScreen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
@@ -59,7 +61,23 @@ public class ConfigScreen extends Screen {
             }
         }));
 
-        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 96, 100, 20,
+        addDrawableChild(ButtonWidget.builder(
+                        Text.literal("Build Precision: ").append(Text.literal(BuildScreen.options.get(QuickBuildClient.getConfigManager().getConfig().getPrecision())).styled(style -> style.withColor(Formatting.AQUA))),
+                        button -> {
+                            QuickBuildClient.getConfigManager().getConfig().setPrecision((QuickBuildClient.getConfigManager().getConfig().getPrecision() + 1) % 4);
+                            button.setMessage(Text.literal("Build Precision: ")
+                                    .append(Text.literal(BuildScreen.options.get(QuickBuildClient.getConfigManager().getConfig().getPrecision())).styled(style -> style.withColor(Formatting.AQUA))));
+                            QuickBuildClient.getConfigManager().saveConfig();
+                        })
+                .position(this.width / 2 - 100, this.height / 4 + 96)
+                .size(179, 20).build()
+        );
+        addDrawableChild(ButtonWidget.builder(
+                Text.literal("?"),
+                button -> client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(BuildScreen.precisionTooltip))
+        ).position(this.width / 2 + 80, this.height / 4 + 96).size(20, 20).build());
+
+        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 122, 100, 20,
                 Text.literal("Close"),
                 button -> client.setScreen(parent)));
     }

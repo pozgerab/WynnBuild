@@ -1,12 +1,17 @@
 # WynnBuild
-_A mod for generating [WynnBuilder](https://hppeng-wynn.github.io/builder/) urls in-game._
-
-## This mod just got updated to the latest wynncraft version, some features are not available yet
+_A mod for generating [WynnBuilder](https://wynnbuilder.github.io/builder/) urls in-game._
 
 ## Usage
 Opening your character info gui or ability tree will gather your info for your build. If you make changes to your build, make sure to manually fetch the info again with the **Read** button on the right bottom side of your screen.
 
 Pressing the **BUILD** button in the bottom right side of your screen will generate and output your build url to the chat that you can copy and share.
+
+You can customize how precise your stats of your build will be with the **Precision** option inside the config menu (**/build config**):
+### Precision options
+- **OFF** - The item is passed to the builder as a default item (meaning item with average rols)
+- **NEVER** - The item is always passed as a default item unless it's a crafted or custom item (rolls always apply)
+- **ON** - The item is passed as a custom item if the item is saved (not the currently used equipment) (the stats are precise)
+- **FORCE** - The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)
 
 ## Powders
 As it isn't possible to tell what tier is a powder on an item, you can set a default value for it in the config screen. For specifying each powder level, you'll need to do that in the actual builder.
@@ -32,16 +37,7 @@ You can save any item from your inventory or with the use of the [WynnCustom](ht
 ![Saved item menu](https://cdn.modrinth.com/data/cached_images/4b6dcc20e856104e46acbf62c9951f9f45e50235.png)
 
 ## Builder
-You can configure your builds even more with the use of the in-game builder **(/build builder)**. You can provide your currently equipped equipment or any saved item.
-
-## Item Stat Precision
-You can calibrate how precise your stats will be by specifying if the saved item will be passed to the builder as a custom item (precise stats) or as a default item. As default, this is set to always use the default item with average rolls.
-- **Never**: Items are always passed to the builder as default items, tries to force custom items as default items (rolls always apply)
-- **Off**: Items are passed to the builder as default item unless it is custom.
-- **On**: Items are passed as custom items (precise stats) if the item is selected (doesn't include EMPTY SAFE)
-- **Force**: Forces items to be passed as custom items (even when not selecting items and only using EMPTY SAFE)
-
-This builder ignores requirements for more customizability.
+You can configure your builds even more with the use of the in-game builder **(/build builder)**. You can provide your currently equipped equipment or any saved item. You can calibrate how precise your stats will be by setting the **[Precision](#Precision-options)** option As default, this is set to always use the default item with average rolls. This builder ignores requirements for more customizability.
 ![Builder menu](https://cdn.modrinth.com/data/cached_images/9b5ae01f0888f1ea0836471d061de6139f5fdba0.png)
 
 _Note: the mod is still under development, more features, easier usage and QoL changes are yet to come._

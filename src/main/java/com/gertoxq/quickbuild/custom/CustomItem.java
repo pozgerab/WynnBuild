@@ -116,6 +116,9 @@ public class CustomItem {
         Map<String, Object> statMap = new HashMap<>();
 
         try {
+            if (hash.startsWith("CI-")) {
+                hash = hash.substring(3);
+            }
             String version = hash.substring(0, 1);
             boolean fixID = Boolean.parseBoolean(String.valueOf(Integer.parseInt(hash.substring(1, 2), 10)));
             String tag = hash.substring(2);
@@ -127,54 +130,40 @@ public class CustomItem {
                 while (!tag.isEmpty()) {
                     String id = ci_save_order.get(Base64.toInt(tag.substring(0, 2)));
                     int len = Base64.toInt(tag.substring(2, 4));
-                    if (rolledIDs.contains(id)) {
-                        int sign = Integer.parseInt(tag.substring(4, 5), 10);
-                        int minRoll = Base64.toInt(tag.substring(5, 5 + len));
-                        if (sign != 0) {
-                            minRoll *= -1;
+                    Object val;
+                    if (nonRolled_strings.contains(id)) {
+                        switch (id) {
+                            case "tier" -> {
+                                val = tiers.get(Base64.toInt(tag.substring(2, 3)));
+                                len = -1;
+                            }
+                            case "type" -> {
+                                val = all_types.get(Base64.toInt(tag.substring(2, 3)));
+                                len = -1;
+                            }
+                            case "atkSpd" -> {
+                                val = attackSpeeds.get(Base64.toInt(tag.substring(2, 3)));
+                                len = -1;
+                            }
+                            case "classReq" -> {
+                                System.out.println(tag
+                                );
+                                System.out.println(Base64.toInt(tag.substring(3, 4)));
+                                val = classes.get(Base64.toInt(tag.substring(2, 3)));
+                                len = -1;
+                            }
+                            default -> val = tag.substring(4, 4 + len).replace("%20", " ");
                         }
-                        statMap.put(id, minRoll);
-                        tag = tag.substring(5 + len);
+                        tag = tag.substring(4 + len);
                     } else {
-                        Object val;
-                        if (nonRolled_strings.contains(id)) {
-                            switch (id) {
-                                case "tier" -> {
-                                    val = tiers.get(Base64.toInt(tag.substring(2, 3)));
-                                    len = -1;
-                                }
-                                case "type" -> {
-                                    val = all_types.get(Base64.toInt(tag.substring(2, 3)));
-                                    len = -1;
-                                }
-                                case "atkSpd" -> {
-                                    val = attackSpeeds.get(Base64.toInt(tag.substring(2, 3)));
-                                    len = -1;
-                                }
-                                case "classReq" -> {
-                                    System.out.println(tag
-                                    );
-                                    System.out.println(Base64.toInt(tag.substring(3, 4)));
-                                    val = classes.get(Base64.toInt(tag.substring(2, 3)));
-                                    len = -1;
-                                }
-                                default -> val = tag.substring(4, 4 + len).replace("%20", " ");
-                            }
-                            tag = tag.substring(4 + len);
-                        } else {
-                            int sign = Integer.parseInt(tag.substring(4, 5), 10);
-                            val = Base64.toInt(tag.substring(5, 5 + len));
-                            if (sign == 1) {
-                                val = (Integer) val * -1;
-                            }
-                            tag = tag.substring(5 + len);
+                        int sign = Integer.parseInt(tag.substring(4, 5), 10);
+                        val = Base64.toInt(tag.substring(5, 5 + len));
+                        if (sign == 1) {
+                            val = (Integer) val * -1;
                         }
-
-                        if (id.equals("majorIds")) {
-                            val = List.of(val);
-                        }
-                        statMap.put(id, val);
+                        tag = tag.substring(5 + len);
                     }
+                    statMap.put(id, val);
                 }
                 return new CustomItem(statMap);
             }
@@ -213,13 +202,11 @@ public class CustomItem {
         for (int i = 0; i < Data.ci_save_order.size(); i++) {
             String id = Data.ci_save_order.get(i);
             Object val = statMap.get(id);
-
             if (Objects.equals(id, "majorIds")) {
                 if (val instanceof IntList l && !l.isEmpty()) {
                     val = l.getInt(0);
                 } else val = "";
             }
-
             if (val instanceof String sVal && !sVal.isEmpty()) {
                 if (Data.damages.contains(id) && val.equals("0-0") ||
                         (!verbose && Arrays.asList("lore", "majorIds", "quest", "materials", "drop", "set").contains(id))) {
@@ -379,8 +366,8 @@ public class CustomItem {
             } catch (Exception ignored) {
             }
 
-            s.remove(0);
-            s.remove(s.size() - 1);
+            s.removeFirst();
+            s.removeLast();
 
             String idName = String.join(" ", s);
             findAndSetIdentification(idName, value, raws);

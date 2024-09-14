@@ -131,8 +131,15 @@ public class SavedItemsScreen extends Screen {
             });
             addDrawableChild(new Button(left - 100, top, 100, 20, Text.literal("Copy Hash"), button -> {
                 if (getSelectedOrNull() == null) return;
+                SavedItemType item = getSelectedOrNull().item;
+                CustomItem customItem = CustomItem.getCustomFromHash(item.getHash());
                 client.keyboard.setClipboard(getSelectedOrNull().item.getHash());
-                client.player.sendMessage(Text.literal("Copied hash of " + getSelectedOrNull().item.getName()));
+                client.player.sendMessage(Text.literal("Copied hash of ")
+                        .append(Text.literal(getSelectedOrNull().item.getName())
+                                .styled(style -> style.withColor(customItem.getTier().format)
+                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, customItem.buildLore().stream()
+                                                .reduce(Text.empty(), (subTotal, element) -> subTotal.copy().append(element).append("\n"))))
+                                        .withUnderline(true))));
             }));
             addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"), button -> {
                 client.execute(() -> client.setScreen(new BuildScreen()));
@@ -204,7 +211,7 @@ public class SavedItemsScreen extends Screen {
                 context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getName() + ": " + custom.statMap.get(IDS.NAME.name)), x + 2, y + 5, Formatting.WHITE.getColorValue());
                 context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format)), x + 2, y + 15, Formatting.WHITE.getColorValue());
                 if (getSelectedOrNull() != null)
-                    context.drawTooltip(textRenderer, getSelectedOrNull().custom.buildLore(), x + width, y + 17);
+                    context.drawTooltip(textRenderer, getSelectedOrNull().custom.buildLore(), x + width, SavedItemListWidget.this.getY() + 17);
             }
 
             @Override

@@ -1,5 +1,7 @@
 package com.gertoxq.quickbuild.config;
 
+import org.jetbrains.annotations.Range;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +16,7 @@ public class ConfigType {
     private int defaultPowderLevel = 6;
     private List<SavedItemType> savedItems = new ArrayList<>();
     private int atreeIdleTime = 10;
+    private @Range(from = 0, to = 3) int precision = 1;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -87,6 +90,15 @@ public class ConfigType {
         this.defaultPowderLevel = defaultPowderLevel;
     }
 
+    @Range(from = 0, to = 3)
+    public int getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(@Range(from = 0, to = 3) int precision) {
+        this.precision = precision;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -100,13 +112,14 @@ public class ConfigType {
                 && tomeIds == modConfig.tomeIds
                 && defaultPowderLevel == modConfig.defaultPowderLevel
                 && savedItems == modConfig.savedItems
-                && atreeIdleTime == modConfig.atreeIdleTime;
+                && atreeIdleTime == modConfig.atreeIdleTime
+                && precision == modConfig.precision;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(showButtons, atreeEncoding,
                 cast, savedAtrees, showTreeLoader,
-                tomeIds, defaultPowderLevel, savedItems, atreeIdleTime);
+                tomeIds, defaultPowderLevel, savedItems, atreeIdleTime, precision);
     }
 }

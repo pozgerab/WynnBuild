@@ -195,7 +195,7 @@ public class QuickBuildClient implements ClientModInitializer {
         }
         if (stats.values().stream().allMatch(i -> i == 0)) {
             //  If all stats are 0, possibly the data isn't fetched
-            player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
+            player.sendMessage(Text.literal("Open your character menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
             return;
         }
         List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(emptySafe ? stats.get(id) : 0, 2))); // sp
@@ -277,19 +277,49 @@ public class QuickBuildClient implements ClientModInitializer {
                 .append("_");
         // Adds equipment or empty value except for weapon (Each has to be 3 chars)
         for (int i = 0; i < 9; i++) {
+            int precision = QuickBuildClient.getConfigManager().getConfig().getPrecision();
+            int id = 0;
+            String customStr = "";
+            boolean custom = false;
+            if (ids.get(i) == -1) continue;
+            CustomItem item;
             if (ids.get(i) == -2) {
-                String craftedCode = "CI-" + craftedHashes.get(i);      //  Combine with hash
+                item = CustomItem.getCustomFromHash(craftedHashes.get(i));
+                custom = true;
+            } else {
+                item = getItem(items.get(i), i < 8 ? types.get(i) : null);
+            }
+            if (precision == 0) {
+                id = ids.get(i);
+            } else if (precision == 1) {
+                if (item.getBaseItemId() == null) {
+                    id = item.getBaseItemId();
+                } else {
+                    customStr = item.encodeCustom(true);
+                    custom = true;
+                }
+            } else if (precision == 2) {
+                if (custom) {
+                    customStr = item.encodeCustom(true);
+                } else {
+                    id = ids.get(i);
+                }
+            } else {
+                customStr = item.encodeCustom(true);
+                custom = true;
+            }
+
+            if (custom) {
+                String craftedCode = "CI-" + customStr;                 //  Combine with hash
                 url.append(Base64.fromIntN(craftedCode.length(), 3)) //  Length of full hash encoded
                         .append(craftedCode);                           //  full crafted hash
-                continue;
+            } else {
+                url.append(Base64.fromIntN(id, 3));
             }
-            if (i == 8) {
-                url.append(Base64.fromIntN(ids.get(8), 3)); // Add main hand
-            } else url.append(ids.get(i) == -1 ? "2S" + emptyEquipmentPrefix.get(i) : Base64.fromIntN(ids.get(i), 3));
         }
         if (stats.values().stream().allMatch(i -> i == 0)) {
             //  If all stats are 0, possibly the data isn't fetched
-            player.sendMessage(Text.literal("Open your menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
+            player.sendMessage(Text.literal("Open your character menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
             return 0;
         }
         List.of(SP.values()).forEach(id -> url.append(Base64.fromIntN(stats.get(id), 2))); // sp

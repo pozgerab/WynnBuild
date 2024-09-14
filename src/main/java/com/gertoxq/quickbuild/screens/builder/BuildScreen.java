@@ -32,8 +32,8 @@ import java.util.function.Consumer;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 
 public class BuildScreen extends Screen {
-    private static final List<String> options = List.of("OFF", "NEVER", "ON", "FORCE");
-    private static final String precisionTooltip = """
+    public static final List<String> options = List.of("OFF", "NEVER", "ON", "FORCE");
+    public static final String precisionTooltip = """
             OFF - The item is passed to the builder as a default item (rolls apply)
             
             NEVER - The item is passed as a default item always if possible unless it's crafted or custom (rolls always apply)
@@ -47,7 +47,7 @@ public class BuildScreen extends Screen {
     private static List<TextWidget> buildDisplays;
     private static List<String> buildHashes;
     private static List<Integer> preciseOptions;
-    private static int universalPrecision = 1;
+    private static int universalPrecision = QuickBuildClient.getConfigManager().getConfig().getPrecision();
     private static boolean emptySafe = true;
     private static boolean loaded = false;
     private List<CustomItem> hotbarWeapons = new ArrayList<>();
@@ -84,7 +84,7 @@ public class BuildScreen extends Screen {
                 110, 270, 100, 10, Text.empty(), textRenderer
         )));
         buildHashes = new ArrayList<>(Collections.nCopies(10, null));        //  10th is atree
-        preciseOptions = new ArrayList<>(Collections.nCopies(9, 1)); // DEFAULT NEVER
+        preciseOptions = new ArrayList<>(Collections.nCopies(9, QuickBuildClient.getConfigManager().getConfig().getPrecision())); // DEFAULT NEVER
         buildIds = new ArrayList<>(Collections.nCopies(10, ""));
         initIDs();
         currentSelect = new AtomicReference<>();
