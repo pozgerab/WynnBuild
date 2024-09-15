@@ -1,15 +1,20 @@
 package com.gertoxq.quickbuild.client;
 
 import com.gertoxq.quickbuild.config.ConfigScreen;
+import com.gertoxq.quickbuild.config.SavedItemType;
+import com.gertoxq.quickbuild.custom.CustomItem;
+import com.gertoxq.quickbuild.custom.IDS;
 import com.gertoxq.quickbuild.screens.ImportAtreeScreen;
 import com.gertoxq.quickbuild.screens.builder.BuildScreen;
 import com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import static com.gertoxq.quickbuild.client.QuickBuildClient.buildCrafted;
+import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
+import static com.gertoxq.quickbuild.custom.CustomItem.getItem;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class CommandReg {
@@ -54,6 +59,35 @@ public class CommandReg {
             })));
             dispatcher.register(literal("build").then(literal("builder").executes(context -> {
                 client.send(() -> client.setScreen(new BuildScreen()));
+                return 1;
+            })));
+            dispatcher.register(literal("build").then(literal("saveitem").executes(context -> {
+                try {
+                    ItemStack item = client.player.getMainHandStack();
+                    CustomItem customItem = getItem(item);
+                    if (customItem == null) {
+                        throw new Exception("customItem = null");
+                    }
+                    String itemName = customItem.statMap.get(IDS.NAME.name).toString();
+                    IDS.ItemType type = customItem.getType();
+                    SavedItemType savedItem = new SavedItemType(
+                            "h:" + itemName,
+                            type,
+                            customItem.encodeCustom(true),
+                            idMap.getOrDefault(itemName, -1)
+                    );
+                    var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
+                    if (exisiting == null) {
+                        client.player.sendMessage(Text.literal("Saved ").append(customItem.createItemShowcase())
+                                .append(" under the name of: ").append(Text.literal(savedItem.getName()).styled(style -> style.withBold(true))));
+                    } else {
+                        client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
+                                .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    client.player.sendMessage(Text.literal("Can't save this item").styled(style -> style.withColor(Formatting.RED)));
+                }
                 return 1;
             })));
         });

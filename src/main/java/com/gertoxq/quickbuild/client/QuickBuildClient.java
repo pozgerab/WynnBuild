@@ -44,6 +44,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static final String WYNNCUSTOM_DOMAIN = "https://hppeng-wynn.github.io/custom/#";
     public final static List<String> emptyEquipmentPrefix = List.of("G", "H", "I", "J", "K", "L", "M", "N");
     public static Map<String, Integer> idMap = new HashMap<>();
+    public static Map<Integer, IDS.ItemType> typeMap = new HashMap<>();
     public static Map<String, Integer> tomeMap = new HashMap<>();
     public static Map<String, JsonElement> dupeMap;
     public static Map<String, JsonElement> currentDupeMap;
@@ -255,7 +256,7 @@ public class QuickBuildClient implements ClientModInitializer {
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
                 .append(Text.literal("SAVE").styled(style -> style.withColor(Formatting.GOLD)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Clicking this will open a menu where you can save items allowing you to use it in later builds")))
-                        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems " + url))))
+                        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems"))))
                 .append("\n").styled(style -> style.withBold(true)));
 
     }
@@ -350,15 +351,16 @@ public class QuickBuildClient implements ClientModInitializer {
         client = MinecraftClient.getInstance();
         Task.init();
 
-        InputStream inputStream = QuickBuild.class.getResourceAsStream("/" + "idMap.json");
+        InputStream idStream = QuickBuild.class.getResourceAsStream("/" + "idMap.json");
         InputStream dupeStream = QuickBuild.class.getResourceAsStream("/" + "dupes.json");
         InputStream atreeStream = QuickBuild.class.getResourceAsStream("/" + "atree.json");
         InputStream tomeStream = QuickBuild.class.getResourceAsStream("/" + "tomeIdMap.json");
+        InputStream typeStream = QuickBuild.class.getResourceAsStream("/" + "typeMap.json");
 
         try {
-            assert inputStream != null;
+            assert idStream != null;
             ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(inputStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> idMap.put(s, jsonElement.getAsInt()));
+                    new InputStreamReader(idStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> idMap.put(s, jsonElement.getAsInt()));
             assert dupeStream != null;
             dupeMap = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(dupeStream, StandardCharsets.UTF_8))).asMap();
@@ -368,6 +370,10 @@ public class QuickBuildClient implements ClientModInitializer {
             assert tomeStream != null;
             ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(tomeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> tomeMap.put(s, jsonElement.getAsInt()));
+            assert typeStream != null;
+            ((JsonObject) JsonParser.parseReader(
+                    new InputStreamReader(typeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> typeMap.put(Integer.parseInt(s), IDS.ItemType.values()[jsonElement.getAsInt()]));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

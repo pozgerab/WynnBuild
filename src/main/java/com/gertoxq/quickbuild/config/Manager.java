@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 
 import static com.gertoxq.quickbuild.Powder.DEFAULT_POWDER_LEVEL;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
+import static com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen.getNotUsedName;
 
 public class Manager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -68,5 +71,16 @@ public class Manager {
     public void setConfig(ConfigType config) {
         this.config = config;
         saveConfig();
+    }
+
+    public SavedItemType addSavedOrReturnExisting(SavedItemType savedItem) {
+        List<SavedItemType> sameItems = getConfigManager().getConfig().getSavedItems().stream().filter(si -> Objects.equals(si.getHash(), savedItem.getHash())).toList();
+        if (sameItems.isEmpty()) {
+            savedItem.setName(getNotUsedName(savedItem.getName()));
+            getConfigManager().getConfig().getSavedItems().add(savedItem);
+            getConfigManager().saveConfig();
+            return null;
+        }
+        return sameItems.getFirst();
     }
 }

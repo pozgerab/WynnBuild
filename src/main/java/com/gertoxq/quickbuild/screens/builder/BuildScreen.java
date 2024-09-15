@@ -2,7 +2,6 @@ package com.gertoxq.quickbuild.screens.builder;
 
 import com.gertoxq.quickbuild.Cast;
 import com.gertoxq.quickbuild.client.QuickBuildClient;
-import com.gertoxq.quickbuild.config.ConfigType;
 import com.gertoxq.quickbuild.config.SavedBuildType;
 import com.gertoxq.quickbuild.config.SavedItemType;
 import com.gertoxq.quickbuild.custom.CustomItem;
@@ -34,9 +33,9 @@ import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 public class BuildScreen extends Screen {
     public static final List<String> options = List.of("OFF", "NEVER", "ON", "FORCE");
     public static final String precisionTooltip = """
-            OFF - The item is passed to the builder as a default item (rolls apply)
+            OFF - The item is passed to the builder as a default item (meaning an item with average rolls)
             
-            NEVER - The item is passed as a default item always if possible unless it's crafted or custom (rolls always apply)
+            NEVER - The item is always passed as a default item unless it's a crafted or custom item (average rolls always)
             
             ON - The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)
             
@@ -98,7 +97,6 @@ public class BuildScreen extends Screen {
         if (!loaded) initState();
         loaded = true;
         buildDisplays.forEach(this::addDrawableChild);
-        ConfigType config = getConfigManager().getConfig();
         hotbarWeapons = client.player.getInventory().main.subList(0, 9).stream().map(CustomItem::getItem).filter(Objects::nonNull).toList();
 
         List<IDS.ItemType> armorTypes = List.of(IDS.ItemType.Helmet, IDS.ItemType.Chestplate, IDS.ItemType.Leggings, IDS.ItemType.Boots);
@@ -236,14 +234,15 @@ public class BuildScreen extends Screen {
         return new ClickableIcon(x, y, 40, 40, identifier, clickableIcon -> {
             final var select = createTypeSelect(types, 120, 200, width / 2 + 40, 20, key);
             final CustomItem item = CustomItem.getItem(items.get(key), currentType);
-            if (item == null) return;
-            var currentlyEq = select.addEntryToTop(new Custom(new SavedItemType("CURRENT", currentType, item.encodeCustom(true), ids.get(key)), item, true));
-            final var currentEntry = select.children().stream().filter(entry -> entry.getValue().saved.getHash().equals(buildHashes.get(key))).findAny().orElse(null);
-            if (currentEntry != null) {
-                var selectedEntry = select.addEntryToTop(currentEntry.getValue());
-                select.removeEntryWithoutScrolling(currentEntry);
-                select.setSelected(selectedEntry);
-            } else select.setSelected(currentlyEq);
+            if (item != null && types.contains(item.getType())) {
+                var currentlyEq = select.addEntryToTop(new Custom(new SavedItemType("CURRENT", currentType, item.encodeCustom(true), ids.get(key)), item, true));
+                final var currentEntry = select.children().stream().filter(entry -> entry.getValue().saved.getHash().equals(buildHashes.get(key))).findAny().orElse(null);
+                if (currentEntry != null) {
+                    var selectedEntry = select.addEntryToTop(currentEntry.getValue());
+                    select.removeEntryWithoutScrolling(currentEntry);
+                    select.setSelected(selectedEntry);
+                } else select.setSelected(currentlyEq);
+            }
             renderAndSetCurrentSelect(select);
         });
     }

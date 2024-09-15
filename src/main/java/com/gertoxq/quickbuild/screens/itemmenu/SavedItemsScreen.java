@@ -19,10 +19,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.gertoxq.quickbuild.client.QuickBuildClient.getConfigManager;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.idMap;
+import static com.gertoxq.quickbuild.custom.CustomItem.getCustomFromHash;
 import static com.gertoxq.quickbuild.custom.CustomItem.getItem;
 
 public class SavedItemsScreen extends Screen {
@@ -38,6 +41,26 @@ public class SavedItemsScreen extends Screen {
         super(Text.literal("Saved Items"));
         this.parent = parent;
         this.defHash = defHash;
+    }
+
+    public static String getNotUsedName(String name) {
+        if (getConfigManager().getConfig().getSavedItems().stream().noneMatch(si -> Objects.equals(si.getName(), name))) {
+            return name;
+        }
+        int no = 0;
+        AtomicReference<String> newName = new AtomicReference<>(name);
+        do {
+            var unversioned = Arrays.stream(name.split("#")).toList();
+            try {
+                no = Integer.parseInt(unversioned.getLast());
+                unversioned.removeLast();
+            } catch (NumberFormatException ignored) {
+            }
+            newName.set(String.join("#", unversioned) + "#" + (++no));
+        } while (
+                getConfigManager().getConfig().getSavedItems().stream().anyMatch(si -> Objects.equals(si.getName(), newName.get()))
+        );
+        return newName.get();
     }
 
     @Override
@@ -71,20 +94,27 @@ public class SavedItemsScreen extends Screen {
                     new Task(() -> info.setMessage(Text.empty()), 100);
                     return;
                 }
-                CustomItem item = CustomItem.getCustomFromHash(code);
-                if (item == null) {
+                CustomItem customItem = CustomItem.getCustomFromHash(code);
+                if (customItem == null) {
                     info.setMessage(Text.literal("Invalid hash").styled(style -> style.withColor(Formatting.RED)));
                     new Task(() -> info.setMessage(Text.empty()), 100);
                     return;
                 }
                 SavedItemType savedItem = new SavedItemType(
                         nameInput.getText(),
-                        IDS.ItemType.find((String) item.statMap.get(IDS.TYPE.name)),
+                        IDS.ItemType.find((String) customItem.statMap.get(IDS.TYPE.name)),
                         code,
-                        idMap.getOrDefault(item.statMap.get(IDS.NAME.name).toString(), -1)
+                        idMap.getOrDefault(customItem.statMap.get(IDS.NAME.name).toString(), -1)
                 );
-                getConfigManager().getConfig().getSavedItems().add(savedItem);
-                getConfigManager().saveConfig();
+                var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
+                if (exisiting == null) {
+                    savedItem.setName(getNotUsedName(savedItem.getName()));
+                    getConfigManager().getConfig().getSavedItems().add(savedItem);
+                    getConfigManager().saveConfig();
+                } else {
+                    client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
+                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                }
             } catch (Exception ignored) {
                 client.player.sendMessage(Text.literal("Failed to save").styled(style -> style.withColor(Formatting.RED)));
             }
@@ -110,8 +140,15 @@ public class SavedItemsScreen extends Screen {
                         customItem.encodeCustom(true),
                         idMap.getOrDefault(customItem.statMap.get(IDS.NAME.name).toString(), -1)
                 );
-                getConfigManager().getConfig().getSavedItems().add(savedItem);
-                getConfigManager().saveConfig();
+                var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
+                if (exisiting == null) {
+                    savedItem.setName(getNotUsedName(savedItem.getName()));
+                    getConfigManager().getConfig().getSavedItems().add(savedItem);
+                    getConfigManager().saveConfig();
+                } else {
+                    client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
+                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                }
             } catch (Exception e) {
                 info.setMessage(Text.literal("Invalid item").styled(style -> style.withColor(Formatting.RED)));
                 new Task(() -> info.setMessage(Text.empty()), 100);
@@ -135,11 +172,7 @@ public class SavedItemsScreen extends Screen {
                 CustomItem customItem = CustomItem.getCustomFromHash(item.getHash());
                 client.keyboard.setClipboard(getSelectedOrNull().item.getHash());
                 client.player.sendMessage(Text.literal("Copied hash of ")
-                        .append(Text.literal(getSelectedOrNull().item.getName())
-                                .styled(style -> style.withColor(customItem.getTier().format)
-                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, customItem.buildLore().stream()
-                                                .reduce(Text.empty(), (subTotal, element) -> subTotal.copy().append(element).append("\n"))))
-                                        .withUnderline(true))));
+                        .append(customItem.createItemShowcase()));
             }));
             addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"), button -> {
                 client.execute(() -> client.setScreen(new BuildScreen()));
@@ -158,11 +191,15 @@ public class SavedItemsScreen extends Screen {
                     removeEntry(getSelectedOrNull());
                     client.player.sendMessage(Text.literal("Deleted ").append(Text.literal(name)
                             .styled(style -> style.withUnderline(true).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("CLICK TO COPY: ").append(hash)))
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, hash)))));
+                                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, hash)))).append("  ==  ").append(getCustomFromHash(hash).createItemShowcase()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }));
+        }
+
+        public void createFilter() {
+
         }
 
         @Override

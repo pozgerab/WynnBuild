@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -27,13 +28,14 @@ public class CustomItem {
     public static final String baseStatSchema = "\\S [A-Z][a-zA-Z.]*(?:\\s+[A-Z][a-zA-Z.]*)*: [+-]?\\d+";
     public static final Pattern baseStatRegex = Pattern.compile(baseStatSchema);
     public static final String tilsSchema = "\\s\\[(100(\\.0)?|[1-9]?[0-9](\\.[0-9])?)%].*";
-    public static final Pattern tilsRegex = Pattern.compile(tilsSchema);
     public static final String bonusSchema = "[+-]?\\d+%? [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*";
     public static final Pattern bonusRegex = Pattern.compile(bonusSchema);
     public static final String rangeSchema = "\\S [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*: \\d+-\\d+";
     public static final Pattern rangeRegex = Pattern.compile(rangeSchema);
     public static final String perxSchema = "[+-]\\d/[35]s .*";
     public static final Pattern perxRegex = Pattern.compile(perxSchema);
+    public static final String slotSchema = "^\\[([0-5])/([1-5])] Powder Slots .*";
+    public static final Pattern slotRegex = Pattern.compile(slotSchema);
     private static final List<IDS> percentable = IDS.getByMetric(IDS.Metric.PERCENT);
     private static final List<IDS> raws = IDS.getByMetric(IDS.Metric.RAW);
     private static final List<IDS> rangeds = IDS.getByMetric(IDS.Metric.INT_INT);
@@ -83,7 +85,13 @@ public class CustomItem {
                 }
             }
         }
-        if (defType != null && custom.getType().name() == IDS.TYPE.defaultValue) {
+
+        Integer maybeId = idMap.getOrDefault(name, null);
+
+        if (maybeId != null && typeMap.containsKey(maybeId)) {
+            IDS.ItemType type = typeMap.get(maybeId);
+            custom.set(IDS.TYPE, type.name());
+        } else if (defType != null && custom.getType().name() == IDS.TYPE.defaultValue) {
             custom.set(IDS.TYPE, defType.name());
         }
 
@@ -98,7 +106,7 @@ public class CustomItem {
     }
 
     public static String getItemHash(ItemStack item, IDS.ItemType type) {
-        CustomItem custom = getItem(item);
+        CustomItem custom = getItem(item, type);
 
         return custom == null ? "" : custom.encodeCustom(true);
     }
@@ -146,9 +154,6 @@ public class CustomItem {
                                 len = -1;
                             }
                             case "classReq" -> {
-                                System.out.println(tag
-                                );
-                                System.out.println(Base64.toInt(tag.substring(3, 4)));
                                 val = classes.get(Base64.toInt(tag.substring(2, 3)));
                                 len = -1;
                             }
@@ -415,6 +420,16 @@ public class CustomItem {
                     break;
                 }
             }
+        } else if (slotRegex.matcher(textStr).matches()) {
+            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
+            String slots = s.getFirst().replaceAll("[\\[\\]]", "");
+            List<String> nums = new ArrayList<>(List.of(slots.split("/")));
+            try {
+                int max = Integer.parseInt(nums.get(1));
+                this.set(IDS.SLOTS, max);
+            } catch (NumberFormatException ignored) {
+            }
+
         } else if (perxRegex.matcher(textStr).matches()) {
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
             String strVal = s.get(0);
@@ -465,6 +480,18 @@ public class CustomItem {
                 break;
             }
         }
+    }
+
+    public Text createItemShowcase(String mainString) {
+        return Text.literal(mainString)
+                .styled(style -> style.withColor(getTier().format)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, buildLore().stream()
+                                .reduce(Text.empty(), (subTotal, element) -> subTotal.copy().append(element).append("\n"))))
+                        .withUnderline(true));
+    }
+
+    public Text createItemShowcase() {
+        return createItemShowcase(getName());
     }
 
     public static class Data {
