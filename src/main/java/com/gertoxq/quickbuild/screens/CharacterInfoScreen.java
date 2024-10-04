@@ -10,7 +10,7 @@ import java.util.Map;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.getLoreFromItemStack;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.removeFormat;
 
-public class CharacterInfoScreen extends BuilderScreen {
+public class CharacterInfoScreen extends BScreen {
     public CharacterInfoScreen(GenericContainerScreen screen) {
         super(screen);
     }

@@ -33,7 +33,11 @@ After saving your first preset, in the abilty tree menu, the names of your class
 You can disable the preset loader buttons in the main config screen (**/build config**).
 
 ## Saving items
-You can save any item from your inventory or with the use of the [WynnCustom](https://hppeng-wynn.github.io/custom/) hash code (COPY HASH). You can use these items in the [**Builder**](#Builder). You can open this menu with ( **/build saveditems** ). _This feature is in beta, filters and QoL changes are currently in developement._
+You can save any item from your inventory or with the use of the [WynnCustom](https://hppeng-wynn.github.io/custom/) hash code (COPY HASH). You can use these items in the [**Builder**](#Builder). You can open this menu with ( **/build saveditems** ).
+
+You can also save your item in your hand with the **/build saveitem** command. **Crafted accessories or renamed items' item type is not recognised.**
+
+_This feature is in beta, filters and QoL changes are currently in developement._
 ![Saved item menu](https://cdn.modrinth.com/data/cached_images/4b6dcc20e856104e46acbf62c9951f9f45e50235.png)
 
 ## Builder

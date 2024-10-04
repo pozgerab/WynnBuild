@@ -4,8 +4,9 @@ import com.gertoxq.quickbuild.Cast;
 import com.gertoxq.quickbuild.client.QuickBuildClient;
 import com.gertoxq.quickbuild.config.SavedBuildType;
 import com.gertoxq.quickbuild.config.SavedItemType;
+import com.gertoxq.quickbuild.custom.AllIDs;
 import com.gertoxq.quickbuild.custom.CustomItem;
-import com.gertoxq.quickbuild.custom.IDS;
+import com.gertoxq.quickbuild.custom.ID;
 import com.gertoxq.quickbuild.screens.AXISPOS;
 import com.gertoxq.quickbuild.screens.Button;
 import com.gertoxq.quickbuild.screens.itemmenu.SelectableListWidget;
@@ -99,18 +100,18 @@ public class BuildScreen extends Screen {
         buildDisplays.forEach(this::addDrawableChild);
         hotbarWeapons = client.player.getInventory().main.subList(0, 9).stream().map(CustomItem::getItem).filter(Objects::nonNull).toList();
 
-        List<IDS.ItemType> armorTypes = List.of(IDS.ItemType.Helmet, IDS.ItemType.Chestplate, IDS.ItemType.Leggings, IDS.ItemType.Boots);
+        List<ID.ItemType> armorTypes = List.of(ID.ItemType.Helmet, ID.ItemType.Chestplate, ID.ItemType.Leggings, ID.ItemType.Boots);
         for (int i = 0; i < 4; i++) {
-            final IDS.ItemType armorType = armorTypes.get(i);
+            final ID.ItemType armorType = armorTypes.get(i);
             final int x = 40;
             final int y = 40 * i + 10 * i + 20;
             ClickableIcon icon = createTypeSelection(x, y, armorType, Identifier.of("quickbuild", "iron_" + armorType.name().toLowerCase() + ".png"), i);
             addDrawableChild(icon);
         }
 
-        List<IDS.ItemType> accTypes = List.of(IDS.ItemType.Ring, IDS.ItemType.Ring, IDS.ItemType.Bracelet, IDS.ItemType.Necklace);
+        List<ID.ItemType> accTypes = List.of(ID.ItemType.Ring, ID.ItemType.Ring, ID.ItemType.Bracelet, ID.ItemType.Necklace);
         for (int j = 0; j < 4; j++) {
-            final IDS.ItemType accType = accTypes.get(j);
+            final ID.ItemType accType = accTypes.get(j);
             final int x = 140;
             final int y = 50 * j + 20;
             final int key = j + 4;
@@ -142,7 +143,7 @@ public class BuildScreen extends Screen {
                         "equipment when building if you haven't set an item for the specified slot. Setting this to false excludes skill points from the build")))
                 .build());
 
-        List<IDS.ItemType> weaponTypes = List.of(IDS.ItemType.Spear, IDS.ItemType.Bow, IDS.ItemType.Dagger, IDS.ItemType.Wand, IDS.ItemType.Relik);
+        List<ID.ItemType> weaponTypes = List.of(ID.ItemType.Spear, ID.ItemType.Bow, ID.ItemType.Dagger, ID.ItemType.Wand, ID.ItemType.Relik);
         ClickableIcon weaponIcon = createTypeSelection(40, 230, weaponTypes, Identifier.of("minecraft", "textures/item/iron_sword.png"), 8, cast.weapon);
         addDrawableChild(weaponIcon);
 
@@ -226,11 +227,11 @@ public class BuildScreen extends Screen {
         }));
     }
 
-    private ClickableIcon createTypeSelection(final int x, final int y, final IDS.ItemType type, final Identifier identifier, final int key) {
+    private ClickableIcon createTypeSelection(final int x, final int y, final ID.ItemType type, final Identifier identifier, final int key) {
         return createTypeSelection(x, y, List.of(type), identifier, key, type);
     }
 
-    private ClickableIcon createTypeSelection(final int x, final int y, final List<IDS.ItemType> types, final Identifier identifier, final int key, IDS.ItemType currentType) {
+    private ClickableIcon createTypeSelection(final int x, final int y, final List<ID.ItemType> types, final Identifier identifier, final int key, ID.ItemType currentType) {
         return new ClickableIcon(x, y, 40, 40, identifier, clickableIcon -> {
             final var select = createTypeSelect(types, 120, 200, width / 2 + 40, 20, key);
             final CustomItem item = CustomItem.getItem(items.get(key), currentType);
@@ -259,7 +260,7 @@ public class BuildScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
     }
 
-    private ItemSelect createTypeSelect(IDS.ItemType type, int width, int height, int x, int y, int key) {
+    private ItemSelect createTypeSelect(ID.ItemType type, int width, int height, int x, int y, int key) {
         return createTypeSelect(List.of(type), width, height, x, y, key);
     }
 
@@ -269,7 +270,7 @@ public class BuildScreen extends Screen {
         );
     }
 
-    private ItemSelect createTypeSelect(List<IDS.ItemType> types, int width, int height, int x, int y, int key) {
+    private ItemSelect createTypeSelect(List<ID.ItemType> types, int width, int height, int x, int y, int key) {
         return new ItemSelect(
                 width,
                 height, x, y, 30,
@@ -359,7 +360,7 @@ public class BuildScreen extends Screen {
                     buildNames.set(this.key, getSelectedOrNull().getValue().item.getName());
                 }
                 buildHashes.set(this.key, getSelectedOrNull().getValue().saved.getHash());
-                IDS.Tier tier = getSelectedOrNull().getValue().item.getTier();
+                ID.Tier tier = getSelectedOrNull().getValue().item.getTier();
 
                 buildDisplays.get(this.key).setMessage(Text.literal(buildNames.get(this.key)).styled(style -> style.withColor(tier.format)));
                 if (this.key == 8) { // IF WEAPON TYPE CHANGES RESET ATREE VALUE
@@ -403,8 +404,8 @@ public class BuildScreen extends Screen {
             SavedItemType item = entry.getValue().saved;
             if (item.getHash().equals(buildHashes.get(this.key)))
                 context.fill(x, y, x + entryWidth, y + entryHeight, Formatting.GREEN.getColorValue());
-            IDS.Tier tier = IDS.Tier.valueOf((String) custom.statMap.get(IDS.TIER.name));
-            context.drawTextWithShadow(textRenderer, Text.literal((String) custom.statMap.get(IDS.NAME.name)).styled(style -> style.withColor(tier.format)), x + 2, y + 5, Formatting.WHITE.getColorValue());
+            ID.Tier tier = custom.get(AllIDs.TIER);
+            context.drawTextWithShadow(textRenderer, Text.literal(custom.get(AllIDs.NAME)).styled(style -> style.withColor(tier.format)), x + 2, y + 5, Formatting.WHITE.getColorValue());
             context.drawTextWithShadow(textRenderer, Text.literal(item.getName() + ": ").styled(style -> style.withColor(Formatting.WHITE)).append(Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format))), x + 2, y + 15, Formatting.WHITE.getColorValue());
             if (getSelectedOrNull() != null)
                 context.drawTooltip(textRenderer, getSelectedOrNull().getValue().item.buildLore(), x + width, ItemSelect.this.getY() + 17);

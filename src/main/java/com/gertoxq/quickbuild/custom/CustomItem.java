@@ -4,20 +4,29 @@ import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.Cast;
 import com.gertoxq.quickbuild.Powder;
 import com.gertoxq.quickbuild.client.QuickBuildClient;
-import it.unimi.dsi.fastutil.ints.IntList;
+import com.gertoxq.quickbuild.util.WynnData;
+import com.mojang.authlib.properties.PropertyMap;
 import net.fabricmc.loader.impl.util.StringUtil;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.CustomModelDataComponent;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -32,44 +41,58 @@ public class CustomItem {
     public static final Pattern bonusRegex = Pattern.compile(bonusSchema);
     public static final String rangeSchema = "\\S [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*: \\d+-\\d+";
     public static final Pattern rangeRegex = Pattern.compile(rangeSchema);
-    public static final String perxSchema = "[+-]\\d/[35]s .*";
+    public static final String perxSchema = "[+-]\\d+/[35]s .*";
     public static final Pattern perxRegex = Pattern.compile(perxSchema);
     public static final String slotSchema = "^\\[([0-5])/([1-5])] Powder Slots .*";
     public static final Pattern slotRegex = Pattern.compile(slotSchema);
-    private static final List<IDS> percentable = IDS.getByMetric(IDS.Metric.PERCENT);
-    private static final List<IDS> raws = IDS.getByMetric(IDS.Metric.RAW);
-    private static final List<IDS> rangeds = IDS.getByMetric(IDS.Metric.INT_INT);
-    private static final List<IDS> perxs = IDS.getByMetric(IDS.Metric.PERXS);
+    private static final List<TypedID<Integer>> percentable = ID.getByTypedMetric(ID.Metric.PERCENT);
+    private static final List<TypedID<Integer>> raws = ID.getByTypedMetric(ID.Metric.RAW);
+    private static final List<DoubleID<DoubleID.Range, String>> rangeds = ID.getByDoubleMetric(ID.Metric.RANGE);
+    private static final List<TypedID<Integer>> perxs = ID.getByTypedMetric(ID.Metric.PERXS);
     public Map<String, Object> statMap = new HashMap<>();
+    public Item material;
+    public int modelData = 0;
+    public String headId;
 
     public CustomItem() {
-        List.of(IDS.values()).forEach(ids -> statMap.put(ids.name, ids.defaultValue));
+        ID.values().forEach(ids -> set(ids, ids.defaultValue));
     }
 
     public CustomItem(Map<String, Object> statMap) {
         this.statMap = statMap;
-        List.of(IDS.values()).forEach(ids -> statMap.putIfAbsent(ids.name, ids.defaultValue));
+        ID.values().forEach(ids -> statMap.putIfAbsent(ids.name, ids.defaultValue));
     }
 
     public static @Nullable CustomItem getItem(@NotNull ItemStack item) {
         return getItem(item, null);
     }
 
-    public static @Nullable CustomItem getItem(@NotNull ItemStack item, IDS.ItemType defType) {
+    public static @Nullable CustomItem getItem(@NotNull ItemStack item, ID.ItemType defType) {
         CustomItem custom = new CustomItem();
+
+        custom.material = item.getItem();
+        try {
+            custom.modelData = item.get(DataComponentTypes.CUSTOM_MODEL_DATA).value();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         TextColor nameColor = item.getName().getStyle().getColor();
         String name = removeTilFormat(item.getName().getString());
 
         Item defItem = item.getItem();
-        IDS.Tier tier = Stream.of(IDS.Tier.values()).filter(t -> Objects.equals(TextColor.fromFormatting(t.format), nameColor)).findAny().orElse(IDS.Tier.Normal);
+        ID.Tier tier = Stream.of(ID.Tier.values()).filter(t -> Objects.equals(TextColor.fromFormatting(t.format), nameColor)).findAny().orElse(ID.Tier.Normal);
 
-        custom.set(IDS.TIER, tier.name());
+        custom.set(AllIDs.TIER, tier);
 
-        custom.set(IDS.NAME, name);
+        custom.set(AllIDs.NAME, name);
 
         List<Text> lore = getLoreFromItemStack(item);
         if (lore == null) return null;
+
+        if (custom.getType().isWeapon()) {          //  WILL BE SET LATER, THIS IS JUST IN CASE A VALUE WON'T BE FOUND
+            custom.set(AllIDs.ATKSPD, ID.ATKSPDS.NORMAL);
+        }
 
         lore.forEach(text -> {
             String textStr = removeTilFormat(removeFormat(text.getString()));
@@ -77,10 +100,10 @@ public class CustomItem {
         });
 
 
-        if (custom.getType().name() == IDS.TYPE.defaultValue) {
-            for (IDS.ItemType type : types) {
+        if (custom.getType().name().equals(AllIDs.TYPE.defaultValue)) {
+            for (ID.ItemType type : types) {
                 if (defItem.toString().contains(type.name().toLowerCase())) {
-                    custom.set(IDS.TYPE, type.name());
+                    custom.set(AllIDs.TYPE, type);
                     break;
                 }
             }
@@ -88,24 +111,22 @@ public class CustomItem {
 
         Integer maybeId = idMap.getOrDefault(name, null);
 
-        if (maybeId != null && typeMap.containsKey(maybeId)) {
-            IDS.ItemType type = typeMap.get(maybeId);
-            custom.set(IDS.TYPE, type.name());
-        } else if (defType != null && custom.getType().name() == IDS.TYPE.defaultValue) {
-            custom.set(IDS.TYPE, defType.name());
+        if (maybeId != null && WynnData.getData().containsKey(maybeId)) {
+            var def = WynnData.getData().get(maybeId);
+            custom.set(AllIDs.TYPE, def.type());
+            custom.set(AllIDs.ATKSPD, def.baseItem().get(AllIDs.ATKSPD));
+        } else if (defType != null && custom.getType().name().equals(AllIDs.TYPE.defaultValue)) {
+            custom.set(AllIDs.TYPE, defType);
         }
 
-        if (custom.statMap.get("lvl").equals(0)) {
+        if (custom.get(AllIDs.LVL).equals(0)) {
             return null;
         }
 
-        if (custom.getType().isWeapon()) {          //  WILL BE SET LATER, THIS IS JUST IN CASE A VALUE WON'T BE FOUND
-            custom.set(IDS.ATKSPD, IDS.ATKSPDS.NORMAL.name());
-        }
         return custom;
     }
 
-    public static String getItemHash(ItemStack item, IDS.ItemType type) {
+    public static String getItemHash(ItemStack item, ID.ItemType type) {
         CustomItem custom = getItem(item, type);
 
         return custom == null ? "" : custom.encodeCustom(true);
@@ -119,58 +140,90 @@ public class CustomItem {
         return string.replaceAll(tilsSchema, "").replace("*", "").replace("?", "");
     }
 
-    public static @Nullable CustomItem getCustomFromHash(String hash) {
+    public static @Nullable CustomItem getCustomFromHash(String hash, Function<CustomItem, CustomItem> after) {
         if (hash == null || hash.isEmpty()) return null;
+        String name = hash;
         Map<String, Object> statMap = new HashMap<>();
 
         try {
-            if (hash.startsWith("CI-")) {
-                hash = hash.substring(3);
+            if (name.startsWith("CI-")) {
+                name = name.substring(3);
             }
-            String version = hash.substring(0, 1);
-            boolean fixID = Boolean.parseBoolean(String.valueOf(Integer.parseInt(hash.substring(1, 2), 10)));
-            String tag = hash.substring(2);
 
-            if (version.equals("1")) {
+            char version = name.charAt(0);
+            boolean fixID = Character.getNumericValue(name.charAt(1)) == 1;
+            String tag = name.substring(2);
+
+            statMap.put("minRolls", new HashMap<String, Integer>());
+            statMap.put("maxRolls", new HashMap<String, Integer>());
+
+            if (version == '1') {
                 if (fixID) {
                     statMap.put("fixID", true);
                 }
+
                 while (!tag.isEmpty()) {
                     String id = ci_save_order.get(Base64.toInt(tag.substring(0, 2)));
                     int len = Base64.toInt(tag.substring(2, 4));
-                    Object val;
-                    if (nonRolled_strings.contains(id)) {
-                        switch (id) {
-                            case "tier" -> {
-                                val = tiers.get(Base64.toInt(tag.substring(2, 3)));
-                                len = -1;
-                            }
-                            case "type" -> {
-                                val = all_types.get(Base64.toInt(tag.substring(2, 3)));
-                                len = -1;
-                            }
-                            case "atkSpd" -> {
-                                val = attackSpeeds.get(Base64.toInt(tag.substring(2, 3)));
-                                len = -1;
-                            }
-                            case "classReq" -> {
-                                val = classes.get(Base64.toInt(tag.substring(2, 3)));
-                                len = -1;
-                            }
-                            default -> val = tag.substring(4, 4 + len).replace("%20", " ");
+
+                    if (rolledIDs.contains(id)) {
+                        int sign = Integer.parseInt(tag.substring(4, 5));
+                        int minRoll = Base64.toInt(tag.substring(5, 5 + len));
+
+                        if (!fixID) {
+                            int maxRoll = Base64.toInt(tag.substring(5 + len, 5 + 2 * len));
+                            if (sign > 1) maxRoll *= -1;
+                            if (sign % 2 == 1) minRoll *= -1;
+
+                            ((Map<String, Integer>) statMap.get("minRolls")).put(id, minRoll);
+                            ((Map<String, Integer>) statMap.get("maxRolls")).put(id, maxRoll);
+                            statMap.put(id, minRoll);
+
+                            tag = tag.substring(5 + 2 * len);
+                        } else {
+                            if (sign != 0) minRoll *= -1;
+                            ((Map<String, Integer>) statMap.get("minRolls")).put(id, minRoll);
+                            ((Map<String, Integer>) statMap.get("maxRolls")).put(id, minRoll);
+                            statMap.put(id, minRoll);
+
+                            tag = tag.substring(5 + len);
                         }
-                        tag = tag.substring(4 + len);
                     } else {
-                        int sign = Integer.parseInt(tag.substring(4, 5), 10);
-                        val = Base64.toInt(tag.substring(5, 5 + len));
-                        if (sign == 1) {
-                            val = (Integer) val * -1;
+                        Object val;
+                        if (nonRolled_strings.contains(id)) {
+                            switch (id) {
+                                case "tier":
+                                    val = tiers.get(Base64.toInt(tag.substring(2, 3)));
+                                    len = -1;
+                                    break;
+                                case "type":
+                                    val = all_types.get(Base64.toInt(tag.substring(2, 3)));
+                                    len = -1;
+                                    break;
+                                case "atkSpd":
+                                    val = attackSpeeds.get(Base64.toInt(tag.substring(2, 3)));
+                                    len = -1;
+                                    break;
+                                case "classReq":
+                                    val = classes.get(Base64.toInt(tag.substring(2, 3)));
+                                    len = -1;
+                                    break;
+                                default:
+                                    val = tag.substring(4, 4 + len).replace("%20", " ");
+                                    break;
+                            }
+                            tag = tag.substring(4 + len);
+                        } else {
+                            int sign = Integer.parseInt(tag.substring(4, 5));
+                            val = Base64.toInt(tag.substring(5, 5 + len));
+                            if (sign == 1) val = -(int) val;
+                            tag = tag.substring(5 + len);
                         }
-                        tag = tag.substring(5 + len);
+
+                        statMap.put(id, val);
                     }
-                    statMap.put(id, val);
                 }
-                return new CustomItem(statMap);
+                return after.apply(new CustomItem(statMap));
             }
         } catch (Exception error) {
             error.printStackTrace();
@@ -180,37 +233,126 @@ public class CustomItem {
         return null;
     }
 
-    public IDS.Tier getTier() {
-        return IDS.Tier.valueOf((String) statMap.get(IDS.TIER.name));
+    public static @Nullable CustomItem getCustomFromHash(String hash) {
+        return getCustomFromHash(hash, CustomItem::setDisplays);
     }
 
-    public IDS.ItemType getType() {
-        return IDS.ItemType.find(statMap.get(IDS.TYPE.name).toString());
+    public CustomItem setDisplaysOf(int id) {
+        var itemInst = WynnData.getData().get(id);
+        setDisplaysOf(itemInst.icon(), itemInst.armorMaterial());
+        return this;
+    }
+
+    public CustomItem setDisplaysOf(WynnData.Icon icon, String armorMat) {
+        if (icon != null && icon.headId() == null) {
+            modelData = icon.customModelData();
+            material = Registries.ITEM.get(icon.id());
+        } else if (armorMat != null) {
+            material = Registries.ITEM.get(Identifier.ofVanilla((armorMat.equals("chain") ? "chainmail" : armorMat) + "_" + getType().name().toLowerCase()));
+        } else if (icon != null) {
+            material = Items.PLAYER_HEAD;
+            headId = icon.headId();
+        } else material = Items.BARRIER;
+        return this;
+    }
+
+    public CustomItem setDisplays() {
+        return setDisplaysOf(getBaseItemId());
+    }
+
+    public ItemStack createStack() {
+        ItemStack itemStack = new ItemStack(material);
+        itemStack.set(DataComponentTypes.CUSTOM_MODEL_DATA, new CustomModelDataComponent(modelData));
+        itemStack.set(DataComponentTypes.LORE, new LoreComponent(buildLore()));
+        itemStack.set(DataComponentTypes.ITEM_NAME, Text.literal(getName()).styled(style -> style.withColor(getTier().format)));
+        if (headId != null) {
+            try {
+                itemStack.set(DataComponentTypes.PROFILE, new ProfileComponent(Optional.empty(), Optional.of(UUID.fromString(headId)), new PropertyMap()));
+            } catch (Exception ignored) {
+
+            }
+        }
+        return itemStack;
+    }
+
+    public ID.Tier getTier() {
+        return get(AllIDs.TIER);
+    }
+
+    public ID.ItemType getType() {
+        return get(AllIDs.TYPE);
     }
 
     public String getName() {
-        return (String) statMap.get(IDS.NAME.name);
+        return get(AllIDs.NAME);
     }
 
     public Integer getBaseItemId() {
-        return idMap.getOrDefault(getName(), null);
+        return WynnData.getIdMap().getOrDefault(getName(), null);
     }
 
-    public void set(@NotNull IDS id, Object value) {
+    public @NotNull Object get(@NotNull ID id) {
+        return statMap.getOrDefault(id.name, id.defaultValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> @NotNull T get(@NotNull TypedID<T> id) {
+        return (T) statMap.getOrDefault(id.name, id.defaultValue);
+    }
+
+    public void set(@NotNull ID id, Object value) {
         statMap.put(id.name, value);
+    }
+
+    public <T> void set(@NotNull TypedID<T> id, T value) {
+        statMap.put(id.name, value);
+    }
+
+    public <T, R> void set(@NotNull DoubleID<T, R> id, T value) {
+        statMap.put(id.name, id.parse(value));
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, R> @NotNull T get(@NotNull DoubleID<T, R> id) {
+        return id.getParser().translator().getter().apply((R) statMap.getOrDefault(id.name, id.defaultValue));
     }
 
     public String encodeCustom(boolean verbose) {
         StringBuilder hashBuilder = new StringBuilder();
-        hashBuilder.append("11");
+        hashBuilder.append("1");
+        boolean fixId = get(AllIDs.FIXID);
+        hashBuilder.append(get(AllIDs.FIXID) ? 1 : 0);
 
         for (int i = 0; i < Data.ci_save_order.size(); i++) {
             String id = Data.ci_save_order.get(i);
-            Object val = statMap.get(id);
-            if (Objects.equals(id, "majorIds")) {
-                if (val instanceof IntList l && !l.isEmpty()) {
-                    val = l.getInt(0);
-                } else val = "";
+            ID identification = ID.getByName(id);
+            Object val = get(identification);
+            if (rolledIDs.contains(id)) {
+                int val_min = fixId ? (int) statMap.getOrDefault(id, identification.defaultValue) : ((Map<?, ?>) statMap.get("minRolls")).containsKey(id) ? (int) ((Map<?, ?>) statMap.get("minRolls")).get(id) : 0;
+                int val_max = fixId ? (int) statMap.getOrDefault(id, identification.defaultValue) : ((Map<?, ?>) statMap.get("maxRolls")).containsKey(id) ? (int) ((Map<?, ?>) statMap.get("maxRolls")).get(id) : 0;
+                int sign = (val_min < 0 ? 1 : 0) + 2 * (val_max < 0 ? 1 : 0);
+
+                int min_len = Math.max(1, (int) Math.ceil(log(64, Math.abs(val_min) + 1)));
+                int max_len = Math.max(1, (int) Math.ceil(log(64, Math.abs(val_max) + 1)));
+                int len = Math.max(min_len, max_len);
+                val_min = Math.abs(val_min);
+                val_max = Math.abs(val_max);
+
+                if (val_min != 0 || val_max != 0) {
+                    if (get(AllIDs.FIXID)) {
+                        hashBuilder.append(Base64.fromIntN(i, 2))
+                                .append(Base64.fromIntN(len, 2))
+                                .append(sign)
+                                .append(Base64.fromIntN(val_min, len));
+                    } else {
+                        hashBuilder.append(Base64.fromIntN(i, 2))
+                                .append(Base64.fromIntN(len, 2))
+                                .append(sign)
+                                .append(Base64.fromIntN(val_min, len))
+                                .append(Base64.fromIntN(val_max, len));
+
+                    }
+                }
             }
             if (val instanceof String sVal && !sVal.isEmpty()) {
                 if (Data.damages.contains(id) && val.equals("0-0") ||
@@ -223,7 +365,7 @@ public class CustomItem {
                     case "tier" -> hashBuilder.append(Base64.fromIntN(i, 2))
                             .append(Base64.fromIntN(tiers.indexOf(sVal), 1));
                     case "atkSpd" -> hashBuilder.append(Base64.fromIntN(i, 2))
-                            .append(Base64.fromIntN(Data.attackSpeeds.indexOf(sVal), 1));
+                            .append(Base64.fromIntN(attackSpeeds.indexOf(sVal), 1));
                     case "classReq" -> hashBuilder.append(Base64.fromIntN(i, 2))
                             .append(Base64.fromIntN(classes.indexOf(sVal), 1));
                     default -> hashBuilder.append(Base64.fromIntN(i, 2))
@@ -248,25 +390,25 @@ public class CustomItem {
     public List<Text> buildLore() {
         List<Text> lore = new ArrayList<>();
         try {
-            IDS.ItemType type = IDS.ItemType.find((String) statMap.get(IDS.TYPE.name));
+            ID.ItemType type = get(AllIDs.TYPE);
             Cast cast = type.getCast() != null ? type.getCast() : QuickBuildClient.cast;
-            IDS.Tier tier = IDS.Tier.valueOf(statMap.get(IDS.TIER.name).toString());
-            String name = (String) statMap.get(IDS.NAME.name);
+            ID.Tier tier = get(AllIDs.TIER);
+            String name = get(AllIDs.NAME);
 
             lore.add(Text.literal(name).styled(style -> style.withColor(tier.format)));
 
             if (type.isWeapon()) {
-                IDS.ATKSPDS atsSpd = IDS.ATKSPDS.find((String) statMap.get(IDS.ATKSPD.name));
+                ID.ATKSPDS atsSpd = get(AllIDs.ATKSPD);
                 lore.add(Text.literal(String.join(" ", Arrays.stream(atsSpd.name().toLowerCase().split("_")).map(StringUtil::capitalize).toList()) + " Attack Speed").styled(style -> style.withColor(Formatting.GRAY)));
                 lore.add(Text.empty());
             } else lore.add(Text.empty());
 
-            List<IDS> damageIds = damages.stream().map(IDS::getByName).toList();
+            List<ID> damageIds = damages.stream().map(ID::getByName).toList();
             AtomicInteger i = new AtomicInteger();
             damageIds.forEach(damId -> {
-                if (statMap.get(damId.name).equals(damId.defaultValue)) return;
+                if (get(damId).equals(damId.defaultValue)) return;
                 Powder.Element element = Powder.Element.getInstance(damId.displayName.split(" ")[0]);
-                String damVal = statMap.get(damId.name).toString();
+                String damVal = get(damId).toString();
                 if (element == null) {
                     lore.add(Text.literal("✣ " + damId.displayName + ": " + damVal).styled(style -> style.withColor(Formatting.GOLD)));
                 } else {
@@ -282,9 +424,9 @@ public class CustomItem {
                 i.set(0);
             }
 
-            Arrays.stream(IDS.values()).filter(ids -> ids.isReq() && ids.metric == IDS.Metric.RAW).forEach(ids -> {
-                if (statMap.get(ids.name).equals(ids.defaultValue)) return;
-                Integer val = (Integer) statMap.get(ids.name);
+            ID.values().stream().filter(ids -> ids.isReq() && ids.metric == ID.Metric.RAW).forEach(ids -> {
+                if (get(ids).equals(ids.defaultValue)) return;
+                Integer val = (Integer) get(ids);
                 lore.add(Text.literal(ids.displayName + ": " + val).styled(style -> style.withColor(Formatting.GRAY)));
                 i.incrementAndGet();
             });
@@ -293,9 +435,9 @@ public class CustomItem {
 
             raws.forEach(rawId -> {
                 if (rawId.isReq()) return;
-                if (statMap.get(rawId.name).equals(rawId.defaultValue)) return;
+                if (get(rawId).equals(rawId.defaultValue)) return;
 
-                Integer val = (Integer) statMap.get(rawId.name);
+                Integer val = get(rawId);
 
                 if (rawId.displayName.contains("&")) {
                     int nO = Integer.parseInt(rawId.displayName.split("&")[1]) - 1;
@@ -315,8 +457,8 @@ public class CustomItem {
             }
 
             percentable.forEach(ids -> {
-                if (statMap.get(ids.name).equals(ids.defaultValue)) return;
-                Integer val = (Integer) statMap.get(ids.name);
+                if (get(ids).equals(ids.defaultValue)) return;
+                Integer val = get(ids);
                 if (ids.displayName.contains("&")) {
                     int nO = Integer.parseInt(ids.displayName.split("&")[1]) - 1;
 
@@ -335,8 +477,8 @@ public class CustomItem {
             }
 
             perxs.forEach(ids -> {
-                if (statMap.get(ids.name).equals(ids.defaultValue)) return;
-                Integer val = (Integer) statMap.get(ids.name);
+                if (get(ids).equals(ids.defaultValue)) return;
+                Integer val = get(ids);
                 lore.add(colorByPos(val).append("/ns").append(Text.literal(" " + ids.displayName).styled(style -> style.withColor(Formatting.GRAY))));
                 i.incrementAndGet();
             });
@@ -361,11 +503,12 @@ public class CustomItem {
     }
 
     public void setFromString(String textStr) {
+        System.out.println(textStr);
         int value = 0;
         if (baseStatRegex.matcher(textStr).matches()) {
             textStr = textStr.replace(":", "");
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.get(s.size() - 1);
+            String strVal = s.getLast();
             try {
                 value = Integer.parseInt(strVal);
             } catch (Exception ignored) {
@@ -377,10 +520,23 @@ public class CustomItem {
             String idName = String.join(" ", s);
             findAndSetIdentification(idName, value, raws);
 
+        } else if (perxRegex.matcher(textStr).matches()) {
+            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
+            String strVal = s.getFirst();
+            try {
+                value = Integer.parseInt(strVal.split("/")[0]);
+            } catch (Exception ignored) {
+            }
+
+            s.removeFirst();
+
+            String idName = String.join(" ", s);
+            findAndSetIdentification(idName, value, perxs);
+
         } else if (bonusRegex.matcher(textStr).matches()) {
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.get(0);
-            List<IDS> potentialIds;
+            String strVal = s.getFirst();
+            List<TypedID<Integer>> potentialIds;
             if (strVal.endsWith("%")) {
                 potentialIds = percentable;
             } else {
@@ -391,7 +547,7 @@ public class CustomItem {
             } catch (Exception ignored) {
             }
 
-            s.remove(0);
+            s.removeFirst();
 
             String idName = String.join(" ", s);
             findAndSetIdentification(idName, value, potentialIds);
@@ -399,7 +555,7 @@ public class CustomItem {
         } else if (rangeRegex.matcher(textStr).matches()) {
             textStr = textStr.replace(":", "");
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.get(s.size() - 1);
+            String strVal = s.getLast();
             int from = 0;
             int to = 0;
             try {
@@ -409,14 +565,14 @@ public class CustomItem {
             } catch (Exception ignored) {
             }
 
-            s.remove(0);
-            s.remove(s.size() - 1);
+            s.removeFirst();
+            s.removeLast();
 
             String idName = String.join(" ", s);
 
-            for (IDS ids : rangeds) {
-                if (Objects.equals(ids.displayName, idName) && this.statMap.get(ids.name) instanceof String) {
-                    this.set(ids, from + "-" + to);
+            for (DoubleID<DoubleID.Range, String> id : rangeds) {
+                if (Objects.equals(id.displayName, idName)) {
+                    this.set(id, new DoubleID.Range(from, to));
                     break;
                 }
             }
@@ -426,43 +582,30 @@ public class CustomItem {
             List<String> nums = new ArrayList<>(List.of(slots.split("/")));
             try {
                 int max = Integer.parseInt(nums.get(1));
-                this.set(IDS.SLOTS, max);
+                this.set(AllIDs.SLOTS, max);
             } catch (NumberFormatException ignored) {
             }
 
-        } else if (perxRegex.matcher(textStr).matches()) {
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.get(0);
-            try {
-                value = Integer.parseInt(strVal.split("/")[0]);
-            } catch (Exception ignored) {
-            }
-
-            s.remove(0);
-
-            String idName = String.join(" ", s);
-            findAndSetIdentification(idName, value, perxs);
-
         } else if (textStr.contains(" Attack Speed")) {
             String atkSpdString = textStr.replace(" Attack Speed", "").replace(" ", "_");
-            IDS.ATKSPDS atkspd = Arrays.stream(IDS.ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(IDS.ATKSPDS.NORMAL);
-            this.set(IDS.ATKSPD, atkspd.name());
-        } else if (textStr.contains(IDS.CLASS_REQ.displayName)) {
+            ID.ATKSPDS atkspd = Arrays.stream(ID.ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(ID.ATKSPDS.NORMAL);
+            this.set(AllIDs.ATKSPD, atkspd);
+        } else if (textStr.contains(AllIDs.CLASS_REQ.displayName)) {
             textStr = textStr.replace(":", "");
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.get(s.size() - 1);
+            String strVal = s.getLast();
             String castVal = strVal.split("/")[0];
             Cast itemCast = Cast.find(castVal);
             if (itemCast != null) {
-                this.set(IDS.CLASS_REQ, itemCast.name);
-                this.set(IDS.TYPE, itemCast.weapon.name());
+                this.set(AllIDs.CLASS_REQ, itemCast);
+                this.set(AllIDs.TYPE, itemCast.weapon);
             }
         }
     }
 
-    private void findAndSetIdentification(String idName, int value, @NotNull List<IDS> potential) {
-        for (IDS ids : potential) {
-            if (ids.displayName.contains("&")) {
+    private void findAndSetIdentification(String idName, int value, List<TypedID<Integer>> potential) {
+        for (TypedID<Integer> ids : potential) {
+            if (ids.isSpellCostReduction()) {
                 int nO;
                 try {
                     nO = Integer.parseInt(ids.displayName.split("&")[1]) - 1;
@@ -470,13 +613,13 @@ public class CustomItem {
                     continue;
                 }
                 String abilName = cast.abilities.get(nO);
-                if (idName.equals(abilName + " Cost") && this.statMap.get(ids.name) instanceof Integer intVal) {
-                    this.set(ids, intVal + value);
+                if (idName.equals(abilName + " Cost")) {
+                    set(ids, get(ids) + value);
                     break;
                 }
             }
-            if (Objects.equals(ids.displayName, idName) && this.statMap.get(ids.name) instanceof Integer intVal) {
-                this.set(ids, intVal + value);
+            if (Objects.equals(ids.displayName, idName)) {
+                set(ids, get(ids) + value);
                 break;
             }
         }
@@ -485,8 +628,7 @@ public class CustomItem {
     public Text createItemShowcase(String mainString) {
         return Text.literal(mainString)
                 .styled(style -> style.withColor(getTier().format)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, buildLore().stream()
-                                .reduce(Text.empty(), (subTotal, element) -> subTotal.copy().append(element).append("\n"))))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, reduceTextList(buildLore())))
                         .withUnderline(true));
     }
 

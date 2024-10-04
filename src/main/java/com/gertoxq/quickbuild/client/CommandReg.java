@@ -2,10 +2,12 @@ package com.gertoxq.quickbuild.client;
 
 import com.gertoxq.quickbuild.config.ConfigScreen;
 import com.gertoxq.quickbuild.config.SavedItemType;
+import com.gertoxq.quickbuild.custom.AllIDs;
 import com.gertoxq.quickbuild.custom.CustomItem;
-import com.gertoxq.quickbuild.custom.IDS;
+import com.gertoxq.quickbuild.custom.ID;
 import com.gertoxq.quickbuild.screens.ImportAtreeScreen;
 import com.gertoxq.quickbuild.screens.builder.BuildScreen;
+import com.gertoxq.quickbuild.screens.gallery.GalleryScreen;
 import com.gertoxq.quickbuild.screens.itemmenu.SavedItemsScreen;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
@@ -61,6 +63,10 @@ public class CommandReg {
                 client.send(() -> client.setScreen(new BuildScreen()));
                 return 1;
             })));
+            dispatcher.register(literal("build").then(literal("beta").then(literal("gallery").executes(context -> {
+                client.send(() -> client.setScreen(new GalleryScreen()));
+                return 1;
+            }))));
             dispatcher.register(literal("build").then(literal("saveitem").executes(context -> {
                 try {
                     ItemStack item = client.player.getMainHandStack();
@@ -68,8 +74,8 @@ public class CommandReg {
                     if (customItem == null) {
                         throw new Exception("customItem = null");
                     }
-                    String itemName = customItem.statMap.get(IDS.NAME.name).toString();
-                    IDS.ItemType type = customItem.getType();
+                    String itemName = customItem.get(AllIDs.NAME);
+                    ID.ItemType type = customItem.getType();
                     SavedItemType savedItem = new SavedItemType(
                             "h:" + itemName,
                             type,

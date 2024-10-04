@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static com.gertoxq.quickbuild.client.QuickBuildClient.*;
 
-public class AtreeScreen extends BuilderScreen {
+public class AtreeScreen extends BScreen {
     static final Set<Integer> allCache = new HashSet<>();
     static final Set<Integer> readCache = new HashSet<>();
     static Set<Integer> unlockedCache = new HashSet<>(Set.of(0));

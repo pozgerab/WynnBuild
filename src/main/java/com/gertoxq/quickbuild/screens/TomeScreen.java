@@ -8,7 +8,7 @@ import java.util.List;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.removeFormat;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.tomeMap;
 
-public class TomeScreen extends BuilderScreen {
+public class TomeScreen extends BScreen {
 
     public static final List<Integer> EMPTY_IDS = List.of(61, 61, 62, 62, 62, 62, 63, 93);
     public static List<Integer> tomeSlots = List.of(11, 19, 22, 30, 31, 32, 4, 49);

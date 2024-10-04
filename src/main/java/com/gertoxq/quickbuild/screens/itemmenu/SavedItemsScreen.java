@@ -2,8 +2,9 @@ package com.gertoxq.quickbuild.screens.itemmenu;
 
 import com.gertoxq.quickbuild.client.QuickBuildClient;
 import com.gertoxq.quickbuild.config.SavedItemType;
+import com.gertoxq.quickbuild.custom.AllIDs;
 import com.gertoxq.quickbuild.custom.CustomItem;
-import com.gertoxq.quickbuild.custom.IDS;
+import com.gertoxq.quickbuild.custom.ID;
 import com.gertoxq.quickbuild.screens.Button;
 import com.gertoxq.quickbuild.screens.builder.BuildScreen;
 import com.gertoxq.quickbuild.util.Task;
@@ -102,9 +103,9 @@ public class SavedItemsScreen extends Screen {
                 }
                 SavedItemType savedItem = new SavedItemType(
                         nameInput.getText(),
-                        IDS.ItemType.find((String) customItem.statMap.get(IDS.TYPE.name)),
+                        customItem.get(AllIDs.TYPE),
                         code,
-                        idMap.getOrDefault(customItem.statMap.get(IDS.NAME.name).toString(), -1)
+                        idMap.getOrDefault(customItem.get(AllIDs.NAME), -1)
                 );
                 var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
                 if (exisiting == null) {
@@ -133,12 +134,12 @@ public class SavedItemsScreen extends Screen {
                 if (customItem == null) {
                     throw new Exception("customItem = null");
                 }
-                IDS.ItemType type = customItem.getType();
+                ID.ItemType type = customItem.getType();
                 SavedItemType savedItem = new SavedItemType(
                         nameInput.getText(),
                         type,
                         customItem.encodeCustom(true),
-                        idMap.getOrDefault(customItem.statMap.get(IDS.NAME.name).toString(), -1)
+                        idMap.getOrDefault(customItem.get(AllIDs.NAME), -1)
                 );
                 var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
                 if (exisiting == null) {
@@ -220,10 +221,15 @@ public class SavedItemsScreen extends Screen {
         public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
             final SavedItemType item;
             final CustomItem custom;
+            final ItemStack displayStack;
 
             protected Entry(SavedItemType item) {
                 this.item = item;
                 this.custom = CustomItem.getCustomFromHash(item.getHash());
+                if (custom.getBaseItemId() != null) {
+                    this.displayStack = custom.createStack();
+                } else displayStack = null;
+                System.out.println(displayStack);
             }
 
             @Override
@@ -244,9 +250,31 @@ public class SavedItemsScreen extends Screen {
 
             @Override
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                IDS.Tier tier = IDS.Tier.valueOf((String) custom.statMap.get(IDS.TIER.name));
-                context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getName() + ": " + custom.statMap.get(IDS.NAME.name)), x + 2, y + 5, Formatting.WHITE.getColorValue());
+                ID.Tier tier = custom.get(AllIDs.TIER);
+                context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getName() + ": " + custom.get(AllIDs.NAME)), x + 2, y + 5, Formatting.WHITE.getColorValue());
                 context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format)), x + 2, y + 15, Formatting.WHITE.getColorValue());
+                if (displayStack != null) {
+                    float width = 16;
+                    float height = 16;
+                    float xOffset = 200 - 30;
+                    float yOffset = (float) (35 - 24) / 2;
+                    float scaleX = 1.2f;
+                    float scaleY = 1.2f;
+
+                    float centerX = x + width / 2 + xOffset;
+                    float centerY = y + height / 2 + yOffset;
+
+                    context.getMatrices().push();
+
+                    context.getMatrices().translate(centerX, centerY, 0);
+
+                    context.getMatrices().scale(scaleX, scaleY, 1.0f);
+
+                    context.getMatrices().translate(-centerX, -centerY, 0);
+
+                    context.drawItem(displayStack, (int) (x + xOffset), (int) (y + yOffset));
+                    context.getMatrices().pop();
+                }
                 if (getSelectedOrNull() != null)
                     context.drawTooltip(textRenderer, getSelectedOrNull().custom.buildLore(), x + width, SavedItemListWidget.this.getY() + 17);
             }

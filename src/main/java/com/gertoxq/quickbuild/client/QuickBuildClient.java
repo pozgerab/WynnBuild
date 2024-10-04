@@ -3,13 +3,14 @@ package com.gertoxq.quickbuild.client;
 import com.gertoxq.quickbuild.Base64;
 import com.gertoxq.quickbuild.*;
 import com.gertoxq.quickbuild.config.Manager;
+import com.gertoxq.quickbuild.custom.AllIDs;
 import com.gertoxq.quickbuild.custom.CustomItem;
-import com.gertoxq.quickbuild.custom.IDS;
+import com.gertoxq.quickbuild.custom.ID;
 import com.gertoxq.quickbuild.screens.*;
 import com.gertoxq.quickbuild.util.Task;
+import com.gertoxq.quickbuild.util.WynnData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -20,17 +21,11 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,8 +38,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static final Integer BUILDER_VERSION = 9;
     public static final String WYNNCUSTOM_DOMAIN = "https://hppeng-wynn.github.io/custom/#";
     public final static List<String> emptyEquipmentPrefix = List.of("G", "H", "I", "J", "K", "L", "M", "N");
-    public static Map<String, Integer> idMap = new HashMap<>();
-    public static Map<Integer, IDS.ItemType> typeMap = new HashMap<>();
+    public static Map<String, Integer> idMap;
     public static Map<String, Integer> tomeMap = new HashMap<>();
     public static Map<String, JsonElement> dupeMap;
     public static Map<String, JsonElement> currentDupeMap;
@@ -60,7 +54,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static Clickable PRESETBUTTON;
     public static Clickable UI = new Clickable(() -> true);
     public static List<Integer> tomeIds = Collections.nCopies(8, null);
-    public static List<IDS.ItemType> types = List.of(IDS.ItemType.Helmet, IDS.ItemType.Chestplate, IDS.ItemType.Leggings, IDS.ItemType.Boots, IDS.ItemType.Ring, IDS.ItemType.Ring, IDS.ItemType.Bracelet, IDS.ItemType.Necklace);
+    public static List<ID.ItemType> types = List.of(ID.ItemType.Helmet, ID.ItemType.Chestplate, ID.ItemType.Leggings, ID.ItemType.Boots, ID.ItemType.Ring, ID.ItemType.Ring, ID.ItemType.Bracelet, ID.ItemType.Necklace);
     public static int REFETCH_DELAY = 40;
     public static Manager configManager;
     public static int ATREE_IDLE; // How many ticks is elapsed before turning page while reading atree
@@ -95,9 +89,9 @@ public class QuickBuildClient implements ClientModInitializer {
         return news.get();
     }
 
-    public static IDS.ItemType getType(ItemStack stack) {
-        IDS.ItemType iType = null;
-        for (IDS.ItemType type : types) {
+    public static ID.ItemType getType(ItemStack stack) {
+        ID.ItemType iType = null;
+        for (ID.ItemType type : types) {
             if (stack.getItem().toString().contains(type.name().toLowerCase())) {
                 iType = type;
             }
@@ -108,8 +102,20 @@ public class QuickBuildClient implements ClientModInitializer {
         return iType;
     }
 
-    public static IDS.ItemType getCastType() {
-        return Arrays.stream(IDS.ItemType.values()).filter(type -> type.getCast() == cast).findAny().orElse(IDS.ItemType.Dagger);
+    public static ID.ItemType getCastType() {
+        return Arrays.stream(ID.ItemType.values()).filter(type -> type.getCast() == cast).findAny().orElse(ID.ItemType.Dagger);
+    }
+
+    public static MutableText reduceTextList(List<Text> ogLore) {
+        MutableText lore = Text.empty();
+        for (int i = 0; i < ogLore.size(); i++) {
+            Text line = ogLore.get(i);
+            lore.append(line);
+            if (i != ogLore.size() - 1) {
+                lore.append("\n");
+            }
+        }
+        return lore;
     }
 
     public static void saveArmor() {
@@ -160,7 +166,7 @@ public class QuickBuildClient implements ClientModInitializer {
                 ids.add(id);
                 continue;
             }
-            if (itemStack.getName().getStyle().getColor() == TextColor.fromFormatting(IDS.Tier.Crafted.format)) {
+            if (itemStack.getName().getStyle().getColor() == TextColor.fromFormatting(ID.Tier.Crafted.format)) {
                 craftedHashes.set(i, CustomItem.getItemHash(itemStack, types.get(i)));
                 ids.add(-2);
                 continue;
@@ -351,32 +357,9 @@ public class QuickBuildClient implements ClientModInitializer {
         client = MinecraftClient.getInstance();
         Task.init();
 
-        InputStream idStream = QuickBuild.class.getResourceAsStream("/" + "idMap.json");
-        InputStream dupeStream = QuickBuild.class.getResourceAsStream("/" + "dupes.json");
-        InputStream atreeStream = QuickBuild.class.getResourceAsStream("/" + "atree.json");
-        InputStream tomeStream = QuickBuild.class.getResourceAsStream("/" + "tomeIdMap.json");
-        InputStream typeStream = QuickBuild.class.getResourceAsStream("/" + "typeMap.json");
-
-        try {
-            assert idStream != null;
-            ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(idStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> idMap.put(s, jsonElement.getAsInt()));
-            assert dupeStream != null;
-            dupeMap = ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(dupeStream, StandardCharsets.UTF_8))).asMap();
-            assert atreeStream != null;
-            fullatree = ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();
-            assert tomeStream != null;
-            ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(tomeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> tomeMap.put(s, jsonElement.getAsInt()));
-            assert typeStream != null;
-            ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(typeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> typeMap.put(Integer.parseInt(s), IDS.ItemType.values()[jsonElement.getAsInt()]));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        AllIDs.load();
+        WynnData.load();
+        idMap = WynnData.getIdMap();
 
         configManager = new Manager();
         configManager.loadConfig();

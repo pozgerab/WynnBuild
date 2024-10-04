@@ -1,18 +1,18 @@
 package com.gertoxq.quickbuild.config;
 
-import com.gertoxq.quickbuild.custom.IDS;
+import com.gertoxq.quickbuild.custom.ID;
 
 import java.util.Date;
 
 public class SavedItemType {
 
     private final Date createdAt;
-    private final IDS.ItemType type;
+    private final ID.ItemType type;
     private final String hash;
     private final int baseItemId;
     private String name;
 
-    public SavedItemType(String name, IDS.ItemType type, String hash, int baseItemId) {
+    public SavedItemType(String name, ID.ItemType type, String hash, int baseItemId) {
         this.baseItemId = baseItemId;
         this.createdAt = new Date();
         this.name = name;
@@ -36,7 +36,7 @@ public class SavedItemType {
         this.name = name;
     }
 
-    public IDS.ItemType getType() {
+    public ID.ItemType getType() {
         return type;
     }
 
