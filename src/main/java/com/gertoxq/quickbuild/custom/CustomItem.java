@@ -37,20 +37,20 @@ public class CustomItem {
     public static final String baseStatSchema = "\\S [A-Z][a-zA-Z.]*(?:\\s+[A-Z][a-zA-Z.]*)*: [+-]?\\d+";
     public static final Pattern baseStatRegex = Pattern.compile(baseStatSchema);
     public static final String tilsSchema = "\\s\\[(100(\\.0)?|[1-9]?[0-9](\\.[0-9])?)%].*";
-    public static final String bonusSchema = "[+-]?\\d+%? [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*";
+    public static final String bonusSchema = "[+-]?\\d+%? [A-Za-z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*";
     public static final Pattern bonusRegex = Pattern.compile(bonusSchema);
     public static final String rangeSchema = "\\S [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*: \\d+-\\d+";
     public static final Pattern rangeRegex = Pattern.compile(rangeSchema);
     public static final String perxSchema = "[+-]\\d+/[35]s .*";
     public static final Pattern perxRegex = Pattern.compile(perxSchema);
-    public static final String slotSchema = "^\\[([0-5])/([1-5])] Powder Slots .*";
+    public static final String slotSchema = "^\\[([0-5])/([1-5])] Powder Slots(?: .*)?";
     public static final Pattern slotRegex = Pattern.compile(slotSchema);
     private static final List<TypedID<Integer>> percentable = ID.getByTypedMetric(ID.Metric.PERCENT);
     private static final List<TypedID<Integer>> raws = ID.getByTypedMetric(ID.Metric.RAW);
     private static final List<DoubleID<DoubleID.Range, String>> rangeds = ID.getByDoubleMetric(ID.Metric.RANGE);
     private static final List<TypedID<Integer>> perxs = ID.getByTypedMetric(ID.Metric.PERXS);
     public Map<String, Object> statMap = new HashMap<>();
-    public Item material;
+    public Item material = Items.BARRIER;
     public int modelData = 0;
     public String headId;
 
@@ -74,11 +74,11 @@ public class CustomItem {
         try {
             custom.modelData = item.get(DataComponentTypes.CUSTOM_MODEL_DATA).value();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            System.out.println("No custom model data, prob armor or custom item");
         }
 
         TextColor nameColor = item.getName().getStyle().getColor();
-        String name = removeTilFormat(item.getName().getString());
+        String name = removeTilFormat(removeFormat(item.getName().getString()));
 
         Item defItem = item.getItem();
         ID.Tier tier = Stream.of(ID.Tier.values()).filter(t -> Objects.equals(TextColor.fromFormatting(t.format), nameColor)).findAny().orElse(ID.Tier.Normal);
@@ -140,6 +140,7 @@ public class CustomItem {
         return string.replaceAll(tilsSchema, "").replace("*", "").replace("?", "");
     }
 
+    @SuppressWarnings("unchecked")
     public static @Nullable CustomItem getCustomFromHash(String hash, Function<CustomItem, CustomItem> after) {
         if (hash == null || hash.isEmpty()) return null;
         String name = hash;
@@ -163,6 +164,7 @@ public class CustomItem {
                 }
 
                 while (!tag.isEmpty()) {
+                    if (tag.length() < 4) break;
                     String id = ci_save_order.get(Base64.toInt(tag.substring(0, 2)));
                     int len = Base64.toInt(tag.substring(2, 4));
 
@@ -219,7 +221,8 @@ public class CustomItem {
                             if (sign == 1) val = -(int) val;
                             tag = tag.substring(5 + len);
                         }
-
+                        if (id.equals("majorIds") && val instanceof String) {
+                        }
                         statMap.put(id, val);
                     }
                 }
@@ -257,6 +260,7 @@ public class CustomItem {
     }
 
     public CustomItem setDisplays() {
+        if (getBaseItemId() == null) return this;
         return setDisplaysOf(getBaseItemId());
     }
 
@@ -313,8 +317,12 @@ public class CustomItem {
     }
 
     @SuppressWarnings("unchecked")
-    public <T, R> @NotNull T get(@NotNull DoubleID<T, R> id) {
+    public <T, R> T get(@NotNull DoubleID<T, R> id) {
         return id.getParser().translator().getter().apply((R) statMap.getOrDefault(id.name, id.defaultValue));
+    }
+
+    public boolean hasIdentification(ID id) {
+        return !get(id).equals(id.defaultValue);
     }
 
     public String encodeCustom(boolean verbose) {
@@ -354,7 +362,8 @@ public class CustomItem {
                     }
                 }
             }
-            if (val instanceof String sVal && !sVal.isEmpty()) {
+            if (id.equals("majorIds") && val instanceof String) {
+            } else if (val instanceof String sVal && !sVal.isEmpty()) {
                 if (Data.damages.contains(id) && val.equals("0-0") ||
                         (!verbose && Arrays.asList("lore", "majorIds", "quest", "materials", "drop", "set").contains(id))) {
                     continue;
@@ -427,9 +436,15 @@ public class CustomItem {
             ID.values().stream().filter(ids -> ids.isReq() && ids.metric == ID.Metric.RAW).forEach(ids -> {
                 if (get(ids).equals(ids.defaultValue)) return;
                 Integer val = (Integer) get(ids);
-                lore.add(Text.literal(ids.displayName + ": " + val).styled(style -> style.withColor(Formatting.GRAY)));
+                lore.add(Text.literal("✔ ").styled(style -> style.withColor(Formatting.GREEN))
+                        .append(Text.literal(ids.displayName + ": " + val).styled(style -> style.withColor(Formatting.GRAY))));
                 i.incrementAndGet();
             });
+            if (get(AllIDs.CLASS_REQ) != null) {
+                lore.add(Text.literal("✔ ").styled(style -> style.withColor(Formatting.GREEN))
+                        .append(Text.literal(AllIDs.CLASS_REQ.displayName + ": " + get(AllIDs.CLASS_REQ).name).styled(style -> style.withColor(Formatting.GRAY))));
+                i.incrementAndGet();
+            }
 
             lore.add(Text.empty());
 
@@ -437,7 +452,7 @@ public class CustomItem {
                 if (rawId.isReq()) return;
                 if (get(rawId).equals(rawId.defaultValue)) return;
 
-                Integer val = get(rawId);
+                int val = get(rawId);
 
                 if (rawId.displayName.contains("&")) {
                     int nO = Integer.parseInt(rawId.displayName.split("&")[1]) - 1;
@@ -458,7 +473,7 @@ public class CustomItem {
 
             percentable.forEach(ids -> {
                 if (get(ids).equals(ids.defaultValue)) return;
-                Integer val = get(ids);
+                int val = get(ids);
                 if (ids.displayName.contains("&")) {
                     int nO = Integer.parseInt(ids.displayName.split("&")[1]) - 1;
 
@@ -487,6 +502,9 @@ public class CustomItem {
                 lore.add(Text.empty());
                 i.set(0);
             }
+            if (hasIdentification(AllIDs.SLOTS)) {
+                lore.add(Text.literal("[0/" + get(AllIDs.SLOTS) + "] Powder Slots").styled(style -> style.withColor(Formatting.GRAY)));
+            }
             lore.add(Text.literal(tier + " " + type).styled(style -> style.withColor(tier.format)));
 
         } catch (Exception ignored) {
@@ -503,7 +521,6 @@ public class CustomItem {
     }
 
     public void setFromString(String textStr) {
-        System.out.println(textStr);
         int value = 0;
         if (baseStatRegex.matcher(textStr).matches()) {
             textStr = textStr.replace(":", "");
@@ -532,6 +549,16 @@ public class CustomItem {
 
             String idName = String.join(" ", s);
             findAndSetIdentification(idName, value, perxs);
+
+        } else if (slotRegex.matcher(textStr).matches()) {
+            String braces = textStr.split(" ")[0];  //  "[0/3]"
+            String slots = braces.replaceAll("[\\[\\]]", "");
+            List<String> nums = new ArrayList<>(List.of(slots.split("/")));
+            try {
+                int max = Integer.parseInt(nums.get(1));
+                this.set(AllIDs.SLOTS, max);
+            } catch (NumberFormatException ignored) {
+            }
 
         } else if (bonusRegex.matcher(textStr).matches()) {
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
@@ -576,29 +603,16 @@ public class CustomItem {
                     break;
                 }
             }
-        } else if (slotRegex.matcher(textStr).matches()) {
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String slots = s.getFirst().replaceAll("[\\[\\]]", "");
-            List<String> nums = new ArrayList<>(List.of(slots.split("/")));
-            try {
-                int max = Integer.parseInt(nums.get(1));
-                this.set(AllIDs.SLOTS, max);
-            } catch (NumberFormatException ignored) {
-            }
-
         } else if (textStr.contains(" Attack Speed")) {
             String atkSpdString = textStr.replace(" Attack Speed", "").replace(" ", "_");
             ID.ATKSPDS atkspd = Arrays.stream(ID.ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(ID.ATKSPDS.NORMAL);
             this.set(AllIDs.ATKSPD, atkspd);
         } else if (textStr.contains(AllIDs.CLASS_REQ.displayName)) {
-            textStr = textStr.replace(":", "");
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.getLast();
-            String castVal = strVal.split("/")[0];
+            textStr = textStr.split(": ")[1];
+            String castVal = textStr.split("/")[0];
             Cast itemCast = Cast.find(castVal);
             if (itemCast != null) {
                 this.set(AllIDs.CLASS_REQ, itemCast);
-                this.set(AllIDs.TYPE, itemCast.weapon);
             }
         }
     }

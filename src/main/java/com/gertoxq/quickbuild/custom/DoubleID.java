@@ -87,6 +87,10 @@ public class DoubleID<T, R> extends TypedID<R> {
         public static Range empty() {
             return new Range(0, 0);
         }
+
+        public boolean contains(double value) {
+            return value <= max && value >= min;
+        }
     }
 
 }

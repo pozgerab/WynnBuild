@@ -3,8 +3,11 @@ package com.gertoxq.quickbuild.custom;
 import com.gertoxq.quickbuild.Cast;
 import it.unimi.dsi.fastutil.ints.IntList;
 
+import java.util.List;
+
 import static com.gertoxq.quickbuild.custom.ID.*;
 
+@SuppressWarnings("unused")
 public class AllIDs {
     public static final TypedID<Boolean> FIXID = new TypedID<>(PutOn.ALL, true, "fixID");
     public static final TypedID<String> NAME = new TypedID<>(PutOn.ALL, "Custom", "name");
@@ -50,7 +53,7 @@ public class AllIDs {
     public static final TypedID<String> ADAM_ = new TypedID<>(PutOn.WEAPON, "", "aDam_");
     public static final TypedID<String> TDAM_ = new TypedID<>(PutOn.WEAPON, "", "tDam_");
     public static final TypedID<String> EDAM_ = new TypedID<>(PutOn.WEAPON, "", "eDam_");
-    public static final TypedID<String> MAJOR_IDS = new TypedID<>(PutOn.ALL, "", "majorIds");
+    public static final TypedID<List<String>> MAJOR_IDS = new TypedID<>(PutOn.ALL, List.of(), "majorIds");
     public static final TypedID<Integer> HPR_PCT = new TypedID<>(PutOn.ALL, 0, "hprPct", "Health Regen", Metric.PERCENT);
     public static final TypedID<Integer> MR = new TypedID<>(PutOn.ALL, 0, "mr", "Mana Regen", Metric.PERXS);
     public static final TypedID<Integer> SD_PCT = new TypedID<>(PutOn.ALL, 0, "sdPct", "Spell Damage", Metric.PERCENT);

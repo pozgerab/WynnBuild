@@ -27,6 +27,10 @@ public class TypedID<T> extends ID {
         return typedIds;
     }
 
+    public Class<T> getType() {
+        return type;
+    }
+
     public TypedMetric<T> getMetric() {
         return metric;
     }

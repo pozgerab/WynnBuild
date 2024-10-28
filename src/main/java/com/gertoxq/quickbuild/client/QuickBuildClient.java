@@ -21,7 +21,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +47,7 @@ public class QuickBuildClient implements ClientModInitializer {
     public static Map<String, JsonElement> currentDupeMap;
     public static Map<String, JsonElement> fullatree;
     public static JsonObject castTreeObj;
-    public static Cast cast = Cast.WARRIOR;
+    public static Cast cast = Cast.Warrior;
     public static Set<Integer> unlockedAbilIds = new HashSet<>();
     public static Set<Integer> atreeState = new HashSet<>();
     public static Map<SP, Integer> stats = SP.createStatMap();
@@ -166,8 +169,8 @@ public class QuickBuildClient implements ClientModInitializer {
                 ids.add(id);
                 continue;
             }
-            if (itemStack.getName().getStyle().getColor() == TextColor.fromFormatting(ID.Tier.Crafted.format)) {
-                craftedHashes.set(i, CustomItem.getItemHash(itemStack, types.get(i)));
+            if (itemStack.getName().getString().startsWith(ID.Tier.Crafted.color)) {
+                craftedHashes.set(i, CustomItem.getItemHash(itemStack, i != 8 ? types.get(i) : cast.weapon));
                 ids.add(-2);
                 continue;
             }
@@ -288,30 +291,34 @@ public class QuickBuildClient implements ClientModInitializer {
             int id = 0;
             String customStr = "";
             boolean custom = false;
-            if (ids.get(i) == -1) continue;
+            if (ids.get(i) == -1) {
+                url.append("2S").append(emptyEquipmentPrefix.get(i));
+                continue;
+            }
             CustomItem item;
             if (ids.get(i) == -2) {
                 item = CustomItem.getCustomFromHash(craftedHashes.get(i));
+                customStr = item.encodeCustom(true);
                 custom = true;
             } else {
                 item = getItem(items.get(i), i < 8 ? types.get(i) : null);
             }
-            if (precision == 0) {
+            if (precision == 0) { //    OFF
                 id = ids.get(i);
-            } else if (precision == 1) {
-                if (item.getBaseItemId() == null) {
+            } else if (precision == 1) {    //  NEVER
+                if (item.getBaseItemId() != null) {
                     id = item.getBaseItemId();
                 } else {
                     customStr = item.encodeCustom(true);
                     custom = true;
                 }
-            } else if (precision == 2) {
+            } else if (precision == 2) {    //  ON
                 if (custom) {
                     customStr = item.encodeCustom(true);
                 } else {
                     id = ids.get(i);
                 }
-            } else {
+            } else {    //  FORCE
                 customStr = item.encodeCustom(true);
                 custom = true;
             }
@@ -389,11 +396,15 @@ public class QuickBuildClient implements ClientModInitializer {
                 } else if (Objects.equals(titleCodes.getLast(), "\\ue000")) {
                     //     \udaff \udfea \ue000
                     //System.out.println("atreee");
-                    var atreeScreen = new AtreeScreen(containerScreen);
-                    if (!readAtree) {
-                        this.startAtreead(atreeScreen);
+                    try {
+                        var atreeScreen = new AtreeScreen(containerScreen);
+                        if (!readAtree) {
+                            this.startAtreead(atreeScreen);
+                        }
+                        BUTTON.addTo(atreeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
+                    } catch (ExceptionInInitializerError error) {
+                        error.printStackTrace();
                     }
-                    BUTTON.addTo(atreeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
                 } else if (Objects.equals(titleCodes.getLast(), "\\ue005")) {
                     //System.out.println("tome");
                     //     \udaff \udfdb \ue005

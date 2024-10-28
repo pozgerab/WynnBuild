@@ -10,11 +10,11 @@ import java.util.List;
 import static com.gertoxq.quickbuild.client.QuickBuildClient.cast;
 
 public enum Cast {
-    WARRIOR("Warrior", "Knight", List.of("Bash", "Charge", "Uppercut", "War Scream"), ID.ItemType.Spear),
-    ARCHER("Archer", "Hunter", List.of("Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"), ID.ItemType.Bow),
-    ASSASSIN("Assassin", "Ninja", List.of("Spin Attack", "Dash", "Multi Hit", "Smoke Bomb"), ID.ItemType.Dagger),
-    MAGE("Mage", "Dark Wizard", List.of("Heal", "Teleport", "Meteor", "placeholder"), ID.ItemType.Wand),
-    SHAMAN("Shaman", "Skyseer", List.of("Totem", "Haul", "Aura", "Uproot"), ID.ItemType.Relik);
+    Warrior("Warrior", "Knight", List.of("Bash", "Charge", "Uppercut", "War Scream"), ID.ItemType.Spear),
+    Archer("Archer", "Hunter", List.of("Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"), ID.ItemType.Bow),
+    Assassin("Assassin", "Ninja", List.of("Spin Attack", "Dash", "Multi Hit", "Smoke Bomb"), ID.ItemType.Dagger),
+    Mage("Mage", "Dark Wizard", List.of("Heal", "Teleport", "Meteor", "placeholder"), ID.ItemType.Wand),
+    Shaman("Shaman", "Skyseer", List.of("Totem", "Haul", "Aura", "Uproot"), ID.ItemType.Relik);
     public final String name;
     public final List<String> aliases = new ArrayList<>();
     public final String alias;

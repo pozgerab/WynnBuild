@@ -24,7 +24,7 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
     public GalleryWidget(int width, int height, int x, int y, int itemHeight, int itemWidth, List<T> items) {
         super(width, height, x, y, itemHeight, items);
         this.itemWidth = itemWidth;
-        this.colCount = getRowWidth() / itemWidth;
+        this.colCount = (int) Math.floor((double) (getRowWidth() - 5) / itemWidth); // 5 is scrollbar width
     }
 
     @Override
@@ -32,9 +32,13 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
         return hoveredEntry;
     }
 
+    public boolean isMouseOverElement(double mouseX, double mouseY) {
+        return mouseY >= (double) this.getY() && mouseY <= (double) this.getBottom() && mouseX >= (double) this.getX() && mouseX <= (double) this.getRight() - 10;
+    }
+
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.entryAtPosition(mouseX, mouseY) : null;
+        hoveredEntry = this.isMouseOverElement(mouseX, mouseY) ? this.entryAtPosition(mouseX, mouseY) : null;
         this.drawMenuListBackground(context);
         this.enableScissor(context);
         this.renderList(context, mouseX, mouseY, delta);
@@ -60,35 +64,33 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
     }
 
     @Override
+    protected int getMaxPosition() {
+        return Math.ceilDiv(this.getEntryCount(), colCount) * this.itemHeight + this.headerHeight + 10;
+    }
+
+    @Override
     protected void renderList(DrawContext context, int mouseX, int mouseY, float delta) {
         int rowLeft = this.getRowLeft();
-        int rowWidth = this.getRowWidth();
-        int rowCount = height / itemHeight;
-        int entryCount = this.getEntryCount();
-        int actualRows = (int) Math.ceil((double) entryCount / colCount);
-        double trailingSpace = (((double) rowWidth / itemWidth) - colCount) * itemWidth;
+        for (int i = 0; i < getEntryCount(); i++) {
+            int currRow = Math.floorDiv(i, colCount);
+            int currCol = i % colCount;
+            int n = this.getRowTop(currRow);
+            int o = this.getRowBottom(currRow);
 
-        for (int i = 0; i < actualRows; i++) {
-            int n = this.getRowTop(i);
-            int o = this.getRowBottom(i);
-            for (int j = 0; j < colCount; j++) {
-
-                int index = i * colCount + j;
-                if (entryCount < index + 1) break;
-                if (o >= this.getY() && n <= this.getBottom()) {
-                    double x = rowLeft + j * itemWidth + j;
-                    this.renderEntry(context, mouseX, mouseY, delta,
-                            index,
-                            (int) x,
-                            n, itemWidth, itemHeight);
-                }
+            if (o >= this.getY() && n <= this.getBottom()) {
+                double x = rowLeft + currCol * itemWidth + currCol;
+                this.renderEntry(context, mouseX, mouseY, delta,
+                        i,
+                        (int) x,
+                        n, itemWidth, itemHeight);
             }
         }
     }
 
-    public Entry entryAtPosition(double x, double y) {
+    public @Nullable Entry entryAtPosition(double x, double y) {
         int left = getX();
-        int right = left + this.width;
+        int right = getRight();
+        if (x > right - 10) return null;
         double yDistFromTop = y - (double) this.getY();
         double xDistFromLeft = x - (double) left;
         int yOffset = MathHelper.floor(yDistFromTop - this.headerHeight + (int) this.getScrollAmount() - 4);

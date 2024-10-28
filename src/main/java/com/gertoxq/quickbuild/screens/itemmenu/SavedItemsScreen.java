@@ -229,7 +229,6 @@ public class SavedItemsScreen extends Screen {
                 if (custom.getBaseItemId() != null) {
                     this.displayStack = custom.createStack();
                 } else displayStack = null;
-                System.out.println(displayStack);
             }
 
             @Override

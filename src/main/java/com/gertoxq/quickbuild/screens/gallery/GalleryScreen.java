@@ -4,6 +4,7 @@ import com.gertoxq.quickbuild.client.QuickBuildClient;
 import com.gertoxq.quickbuild.config.SavedItemType;
 import com.gertoxq.quickbuild.custom.CustomItem;
 import com.gertoxq.quickbuild.custom.ID;
+import com.gertoxq.quickbuild.custom.TypedID;
 import com.gertoxq.quickbuild.screens.BScreen;
 import com.gertoxq.quickbuild.screens.itemmenu.SelectableListWidget;
 import com.gertoxq.quickbuild.util.WynnData;
@@ -26,9 +27,12 @@ import java.util.*;
 
 public class GalleryScreen extends Screen {
     private final static List<DupeInstance> dupeButtons = new ArrayList<>();
+    private static final List<GalleryItem> wynnItems = WynnData.getData().values().stream()
+            .map(itemData -> new GalleryItem(itemData.baseItem(), itemData.baseItem().createStack())).toList();
     private static String filterString = "$";
     private static List<GalleryItem> matchItems = new ArrayList<>();
     private static ItemGallery gallery;
+
     public GalleryScreen() {
         super(Text.literal("Gallery"));
     }
@@ -41,7 +45,7 @@ public class GalleryScreen extends Screen {
 
         addDrawableChild(widget);
 
-        gallery = new ItemGallery(200, height, width / 2 - 100, 0, 32, 32, List.of());
+        gallery = new ItemGallery(205, height, width / 2 - 100, 0, 32, 32, List.of());
         gallery.replaceEntries(filterItems(filterString).stream().map(gallery::create).toList());
         gallery.refreshScroll();
         addDrawableChild(gallery);
@@ -51,6 +55,7 @@ public class GalleryScreen extends Screen {
     private @NotNull TextFieldWidget getTextFieldWidget() {
         TextFieldWidget widget = new TextFieldWidget(textRenderer, width / 2 - 200, 20, Text.empty());
         widget.setText(filterString);
+        widget.setMaxLength(Integer.MAX_VALUE);
         widget.setChangedListener(s -> {
             filterString = s.strip().toLowerCase();
             matchItems = filterItems(filterString);
@@ -66,8 +71,7 @@ public class GalleryScreen extends Screen {
             return new GalleryItem(item, item.createStack());
         }).toList());
         if (!filterString.startsWith("$")) {
-            items.addAll(WynnData.getData().values().stream()
-                    .map(itemData -> new GalleryItem(itemData.baseItem(), itemData.baseItem().createStack())).toList());
+            items.addAll(wynnItems);
         } else {
             filterString = filterString.substring(1);
         }
@@ -75,28 +79,59 @@ public class GalleryScreen extends Screen {
             return items;
         }
 
-//        String[] tokens = filterString.split(" ");
-//        int tokenStartIndex = -1;
-//        String lastToken = "";
-//        for (String token : tokens) {
-//            tokenStartIndex += lastToken.length() + 1;
-//            lastToken = token;
-//
-//            if (token.contains(":")) {
-//                String keyString = token.substring(0, token.indexOf(':'));
-//                String inputString = token.substring(token.indexOf(':') + 1);
-//
-//                String[] filters = inputString.split(",");
-//                for (String filter : filters) {
-//
-//
-//                }
-//            }
-//        }
+        String[] tokens = filterString.split(" ");
+        int tokenStartIndex = -1;
+        String lastToken = "";
+        final Map<TypedID<?>, List<Filter<?>>> filters = new HashMap<>();
+        for (String token : tokens) {
+            tokenStartIndex += lastToken.length() + 1;
+            lastToken = token;
 
-        final String filterStr = filterString;
+            if (token.contains(":")) {
+                String keyString = token.substring(0, token.indexOf(':'));
+                TypedID<?> id = (TypedID<?>) ID.getByNameIgnoreCase(keyString);
+                if (id == null) continue;
+                String inputString = token.substring(token.indexOf(':') + 1);
 
-        return items.stream().filter(galleryItem -> galleryItem.customItem.getName().toLowerCase().contains(filterStr)).toList();
+                String[] matchers = inputString.split(",");
+                for (String matcher : matchers) {
+                    Filter<?> filter;
+                    if (id.getType() == Integer.class) {
+                        @SuppressWarnings("unchecked")
+                        Filter<Integer> filterr = new Filter.Inttype((TypedID<Integer>) id, matcher);
+                        filter = filterr;
+                    } else if (id.getType() == String.class) {
+                        @SuppressWarnings("unchecked")
+                        Filter<String> filterr = new Filter.Stringtype((TypedID<String>) id, matcher);
+                        filter = filterr;
+                    } else {
+                        continue;
+                    }
+                    if (filter.isValid()) {
+                        List<Filter<?>> prev = filters.getOrDefault(filter.watchedId, new ArrayList<>());
+                        prev.add(filter);
+                        filters.put(filter.watchedId, prev);
+                    }
+                }
+            } else {
+                Filter<String> filter = new Filter.NameFilter(token);
+                List<Filter<?>> prev = filters.getOrDefault(filter.watchedId, new ArrayList<>());
+                prev.add(filter);
+                filters.put(filter.watchedId, prev);
+            }
+        }
+
+        return items.stream().filter(galleryItem -> {
+            List<Boolean> differentIdQuery = new ArrayList<>();
+            filters.forEach((checkedId, list) -> {
+                boolean sameIdQuery = list.stream().map(idFilter -> idFilter
+                                .parseString(galleryItem.customItem))
+                        .reduce(false, (aBoolean, aBoolean2) -> aBoolean || aBoolean2);
+                differentIdQuery.add(sameIdQuery);
+            });
+            return differentIdQuery.stream()
+                    .reduce(true, (aBoolean, aBoolean2) -> aBoolean && aBoolean2);
+        }).toList();
     }
 
     @Override
@@ -217,8 +252,13 @@ public class GalleryScreen extends Screen {
         }
 
         @Override
-        public void renderChild(SelectableListWidget<GalleryItem>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        protected int getDefaultScrollbarX() {
+            return getRight() - 5;
+        }
 
+
+        @Override
+        public void renderChild(SelectableListWidget<GalleryItem>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             BScreen.renderItem(context, entry.getValue().itemStack(), x, y, 24, (float) (entryWidth - 16) / 2, (float) (entryHeight - 16) / 2);
 
             if (getSelectedOrNull() != null) {
@@ -244,11 +284,6 @@ public class GalleryScreen extends Screen {
 
         public DupeSelector(int x, int y, List<DupeInstance> items) {
             super(25, GalleryScreen.this.height, x, y, 24, 24, items);
-        }
-
-        @Override
-        protected void renderList(DrawContext context, int mouseX, int mouseY, float delta) {
-            super.renderList(context, mouseX, mouseY, delta);
         }
 
         @Override

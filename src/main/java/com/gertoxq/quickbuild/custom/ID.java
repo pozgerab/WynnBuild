@@ -7,9 +7,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class ID {
 
@@ -42,7 +40,11 @@ public class ID {
     }
 
     public static ID getByName(String name) {
-        return allIDs.stream().filter(ids -> Objects.equals(ids.name, name)).findAny().orElse(null);
+        return allIDs.stream().filter(ids -> name.equals(ids.name)).findAny().orElse(null);
+    }
+
+    public static ID getByNameIgnoreCase(String name) {
+        return allIDs.stream().filter(ids -> name.equalsIgnoreCase(ids.name)).findAny().orElse(null);
     }
 
     public static <T, R> @NotNull List<DoubleID<T, R>> getByDoubleMetric(DoubleTypedMetric<T, R> metric) {
@@ -114,9 +116,6 @@ public class ID {
         VERY_FAST,
         SUPER_FAST;
 
-        public static ATKSPDS find(String string) {
-            return Arrays.stream(ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(string)).findAny().orElse(null);
-        }
     }
 
     public enum Tier {
@@ -157,10 +156,6 @@ public class ID {
         public static final List<ItemType> armors = List.of(Helmet, Chestplate, Leggings, Boots);
         public static final List<ItemType> weapons = List.of(Wand, Spear, Bow, Dagger, Relik);
         public Cast cast;
-
-        public static ItemType find(String name) {
-            return Arrays.stream(ItemType.values()).filter(type -> type.name().equalsIgnoreCase(name)).findAny().orElse(null);
-        }
 
         public Cast getCast() {
             return Cast.findByWeapon(this);

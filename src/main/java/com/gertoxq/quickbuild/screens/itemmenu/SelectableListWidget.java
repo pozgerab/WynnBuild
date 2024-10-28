@@ -43,7 +43,7 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
 
     @Override
     protected int getDefaultScrollbarX() {
-        return right;
+        return right - 5;
     }
 
     @Override

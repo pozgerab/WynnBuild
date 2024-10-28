@@ -31,7 +31,7 @@ public class Manager {
                 BufferedReader reader = Files.newBufferedReader(CONFIG_PATH);
                 config = GSON.fromJson(reader, ConfigType.class);
                 try {
-                    cast = Cast.valueOf(config.getCast().toUpperCase());
+                    cast = Cast.valueOf(config.getCast());
                     currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
                     castTreeObj = fullatree.get(cast.name).getAsJsonObject();
                 } catch (Exception e) {
