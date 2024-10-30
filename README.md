@@ -46,9 +46,4 @@ You can configure your builds even more with the use of the in-game builder **(/
 
 _Note: the mod is still under development, more features, easier usage and QoL changes are yet to come._
 
-## (BETA) Gallery
-The Item Gallery ( **/build beta gallery** ) shows all wynncraft items and saved versions of them.
-
-A filter feature is implemented with the wynnbuild id codes (will change, not user friendly), and the character "$" at the start is used to show only the saved items
-
-#### _All the data (items, tomes, etc...) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_
+_All the data (items, tomes, etc...) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_
