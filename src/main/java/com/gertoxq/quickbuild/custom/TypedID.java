@@ -11,16 +11,16 @@ public class TypedID<T> extends ID {
     private final TypedMetric<T> metric;
 
     @SuppressWarnings("unchecked")
-    TypedID(PutOn on, T defaultValue, String name, String displayName, TypedMetric<T> metric) {
-        super(on, defaultValue, name, displayName, metric);
+    TypedID(PutOn on, T defaultValue, String name, String displayName, TypedMetric<T> metric, boolean rolled) {
+        super(on, defaultValue, name, displayName, metric, rolled);
         this.type = (Class<T>) defaultValue.getClass();
         this.defaultValue = defaultValue;
         this.metric = metric;
         typedIds.add(this);
     }
 
-    TypedID(PutOn on, T defaultValue, String name) {
-        this(on, defaultValue, name, "", TypedMetric.createOther());
+    TypedID(PutOn on, T defaultValue, String name, boolean rolled) {
+        this(on, defaultValue, name, "", TypedMetric.createOther(), rolled);
     }
 
     public static List<TypedID<?>> getTypedIds() {

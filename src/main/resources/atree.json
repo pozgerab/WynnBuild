@@ -91,7 +91,7 @@
       ]
     },
     "8": {
-      "display_name": "Cheaper Escape",
+      "display_name": "Cheaper Escape I",
       "parents": [
         7,
         9
@@ -348,7 +348,7 @@
       ]
     },
     "27": {
-      "display_name": "Cheaper Arrow Storm",
+      "display_name": "Cheaper Arrow Storm I",
       "parents": [
         28,
         26,
@@ -425,7 +425,7 @@
       ]
     },
     "32": {
-      "display_name": "More Focus",
+      "display_name": "More Focus I",
       "parents": [
         29
       ],
@@ -605,7 +605,7 @@
       ]
     },
     "45": {
-      "display_name": "Cheaper Arrow Shield",
+      "display_name": "Cheaper Arrow Shield I",
       "parents": [
         44,
         46,
@@ -690,7 +690,7 @@
       ]
     },
     "51": {
-      "display_name": "Cheaper Arrow Storm",
+      "display_name": "Cheaper Arrow Storm II",
       "parents": [
         52,
         50
@@ -828,7 +828,7 @@
       ]
     },
     "60": {
-      "display_name": "Cheaper Escape",
+      "display_name": "Cheaper Escape II",
       "parents": [
         55,
         59,
@@ -844,7 +844,7 @@
       ]
     },
     "61": {
-      "display_name": "Cheaper Arrow Shield",
+      "display_name": "Cheaper Arrow Shield II",
       "parents": [
         57,
         60,
@@ -992,7 +992,7 @@
       ]
     },
     "72": {
-      "display_name": "More Focus",
+      "display_name": "More Focus II",
       "parents": [
         67,
         71
@@ -1044,7 +1044,7 @@
       ]
     },
     "76": {
-      "display_name": "Cheaper Arrow Bomb",
+      "display_name": "Cheaper Arrow Bomb II",
       "parents": [
         75,
         72,
@@ -1068,7 +1068,7 @@
       ]
     },
     "1": {
-      "display_name": "Spear Proficiency",
+      "display_name": "Spear Proficiency 1",
       "parents": [
         0
       ],
@@ -1384,7 +1384,7 @@
       ]
     },
     "26": {
-      "display_name": "Spear Proficiency",
+      "display_name": "Spear Proficiency II",
       "parents": [
         25,
         27
@@ -1564,7 +1564,7 @@
       "children": []
     },
     "39": {
-      "display_name": "Cheaper War Scream",
+      "display_name": "Cheaper War Scream I",
       "parents": [
         34,
         33,
@@ -1863,7 +1863,7 @@
       ]
     },
     "61": {
-      "display_name": "Cheaper Bash",
+      "display_name": "Cheaper Bash II",
       "parents": [
         60,
         53,
@@ -1877,7 +1877,7 @@
       ]
     },
     "62": {
-      "display_name": "Cheaper War Scream",
+      "display_name": "Cheaper War Scream II",
       "parents": [
         55
       ],
@@ -1987,7 +1987,7 @@
       ]
     },
     "71": {
-      "display_name": "Cheaper Uppercut",
+      "display_name": "Cheaper Uppercut 2",
       "parents": [
         68,
         69
@@ -2030,7 +2030,7 @@
       ]
     },
     "1": {
-      "display_name": "Wand Proficiency",
+      "display_name": "Wand Proficiency I",
       "parents": [
         0
       ],
@@ -2062,7 +2062,7 @@
       ]
     },
     "4": {
-      "display_name": "Wand Proficiency",
+      "display_name": "Wand Proficiency II",
       "parents": [
         5
       ],
@@ -2427,7 +2427,7 @@
       ]
     },
     "32": {
-      "display_name": "Cheaper Teleport",
+      "display_name": "Cheaper Teleport II",
       "parents": [
         31,
         24,
@@ -2482,7 +2482,7 @@
       "children": []
     },
     "36": {
-      "display_name": "Healthier Ophanim",
+      "display_name": "Healthier Ophanim I",
       "parents": [
         31,
         32,
@@ -2654,7 +2654,7 @@
       ]
     },
     "47": {
-      "display_name": "Larger Mana Bank",
+      "display_name": "Larger Mana Bank II",
       "parents": [
         38,
         46
@@ -2693,7 +2693,7 @@
       "children": []
     },
     "50": {
-      "display_name": "Cheaper Ice Snake",
+      "display_name": "Cheaper Ice Snake II",
       "parents": [
         44,
         51
@@ -2724,7 +2724,7 @@
       ]
     },
     "52": {
-      "display_name": "Cheaper Meteor",
+      "display_name": "Cheaper Meteor II",
       "parents": [
         51,
         45,
@@ -2832,7 +2832,7 @@
       "children": []
     },
     "60": {
-      "display_name": "More Winded",
+      "display_name": "More Winded II",
       "parents": [
         54,
         61
@@ -2861,7 +2861,7 @@
       ]
     },
     "62": {
-      "display_name": "Healthier Ophanim",
+      "display_name": "Healthier Ophanim II",
       "parents": [
         56,
         61
@@ -2877,7 +2877,7 @@
       ]
     },
     "63": {
-      "display_name": "Larger Mana Bank",
+      "display_name": "Larger Mana Bank III",
       "parents": [
         57
       ],
@@ -2950,7 +2950,7 @@
       ]
     },
     "69": {
-      "display_name": "Cheaper Heal",
+      "display_name": "Cheaper Heal II",
       "parents": [
         68,
         70
@@ -2997,7 +2997,7 @@
       ]
     },
     "1": {
-      "display_name": "Dagger Proficiency",
+      "display_name": "Dagger Proficiency I",
       "parents": [
         0
       ],
@@ -3375,7 +3375,7 @@
       ]
     },
     "29": {
-      "display_name": "Dagger Proficiency",
+      "display_name": "Dagger Proficiency II",
       "parents": [
         28,
         25
@@ -3617,7 +3617,7 @@
       ]
     },
     "48": {
-      "display_name": "Cheaper Dash",
+      "display_name": "Cheaper Dash II",
       "parents": [
         43,
         51
@@ -3642,7 +3642,7 @@
       ]
     },
     "50": {
-      "display_name": "Cheaper Spin Attack",
+      "display_name": "Cheaper Spin Attack II",
       "parents": [
         45,
         49
@@ -3671,7 +3671,7 @@
       ]
     },
     "52": {
-      "display_name": "Cheaper Multihit",
+      "display_name": "Cheaper Multihit II",
       "parents": [
         51,
         74,
@@ -3798,7 +3798,7 @@
       ]
     },
     "60": {
-      "display_name": "Cheaper Smoke Bomb",
+      "display_name": "Cheaper Smoke Bomb II",
       "parents": [
         59,
         53,
@@ -4045,7 +4045,7 @@
       ]
     },
     "1": {
-      "display_name": "Relik Proficiency",
+      "display_name": "Relik Proficiency 1",
       "parents": [
         0
       ],
@@ -4057,7 +4057,7 @@
       ]
     },
     "2": {
-      "display_name": "Cheaper Totem",
+      "display_name": "Cheaper Totem I",
       "parents": [
         1
       ],
@@ -4127,7 +4127,7 @@
       ]
     },
     "8": {
-      "display_name": "Cheaper Haul",
+      "display_name": "Cheaper Haul I",
       "parents": [
         7,
         9
@@ -4255,13 +4255,15 @@
     "17": {
       "display_name": "Rain Dance",
       "parents": [
-        12
+        12,
+        18
       ],
       "id": 17,
       "dependencies": [
         0
       ],
       "children": [
+        18,
         21
       ]
     },
@@ -4269,15 +4271,16 @@
       "display_name": "Shocking Aura",
       "parents": [
         13,
-        19
+        19,
+        17
       ],
       "id": 18,
       "dependencies": [
         9
       ],
       "children": [
-        19,
-        22
+        17,
+        19
       ]
     },
     "19": {
@@ -4318,13 +4321,13 @@
         7
       ],
       "children": [
-        25
+        25,
+        32
       ]
     },
     "22": {
       "display_name": "Sacrificial Shrine",
       "parents": [
-        18,
         19
       ],
       "id": 22,
@@ -4351,7 +4354,7 @@
       ]
     },
     "24": {
-      "display_name": "Cheaper Aura",
+      "display_name": "Cheaper Aura I",
       "parents": [
         23,
         25
@@ -4368,7 +4371,7 @@
       ]
     },
     "25": {
-      "display_name": "Cheaper Uproot",
+      "display_name": "Cheaper Uproot I",
       "parents": [
         24,
         21,
@@ -4383,7 +4386,7 @@
         26,
         28,
         29,
-        32
+        36
       ]
     },
     "26": {
@@ -4402,7 +4405,7 @@
       ]
     },
     "27": {
-      "display_name": "More Puppets",
+      "display_name": "More Puppets I",
       "parents": [
         23,
         24
@@ -4422,9 +4425,7 @@
         25
       ],
       "id": 28,
-      "dependencies": [
-        21
-      ],
+      "dependencies": [],
       "children": []
     },
     "29": {
@@ -4467,32 +4468,27 @@
     "32": {
       "display_name": "Hymn of Hate",
       "parents": [
-        25,
-        33
+        21
       ],
       "id": 32,
       "dependencies": [
         21
       ],
-      "children": [
-        33,
-        36
-      ]
+      "children": []
     },
     "33": {
-      "display_name": "Larger Blood Pool",
+      "display_name": "Larger Blood Pool I",
       "parents": [
-        26,
-        32
+        26
       ],
       "id": 33,
       "dependencies": [
         22
       ],
       "children": [
-        32,
         36,
-        37
+        37,
+        38
       ]
     },
     "34": {
@@ -4509,7 +4505,7 @@
       ]
     },
     "35": {
-      "display_name": "More Puppets",
+      "display_name": "More Puppets II",
       "parents": [
         31
       ],
@@ -4524,41 +4520,45 @@
     "36": {
       "display_name": "Mask of the Fanatic",
       "parents": [
-        32,
-        33,
-        37
+        25,
+        33
       ],
       "id": 36,
       "dependencies": [],
       "children": [
-        37,
         38,
-        41
+        47,
+        63
       ]
     },
     "37": {
       "display_name": "Vengeful Spirit",
       "parents": [
         33,
-        36
+        38
       ],
       "id": 37,
       "dependencies": [],
       "children": [
-        36,
+        38,
         43
       ]
     },
     "38": {
       "display_name": "Masquerade",
       "parents": [
-        36
+        36,
+        37,
+        33
       ],
       "id": 38,
       "dependencies": [
         21
       ],
-      "children": []
+      "children": [
+        37,
+        41
+      ]
     },
     "39": {
       "display_name": "Double Totem",
@@ -4572,11 +4572,11 @@
       ],
       "children": [
         40,
-        44
+        49
       ]
     },
     "40": {
-      "display_name": "Cheaper Totem",
+      "display_name": "Cheaper Totem II",
       "parents": [
         35,
         39,
@@ -4590,15 +4590,15 @@
         39,
         41,
         42,
-        44,
-        45
+        49,
+        50
       ]
     },
     "41": {
       "display_name": "Storm Dance",
       "parents": [
         40,
-        36,
+        38,
         43
       ],
       "id": 41,
@@ -4609,8 +4609,8 @@
         40,
         42,
         43,
-        45,
-        46
+        46,
+        50
       ]
     },
     "42": {
@@ -4624,7 +4624,7 @@
       "children": []
     },
     "43": {
-      "display_name": "Cheaper Haul",
+      "display_name": "Cheaper Haul II",
       "parents": [
         41,
         37
@@ -4639,10 +4639,9 @@
       ]
     },
     "44": {
-      "display_name": "Cheaper Aura",
+      "display_name": "Cheaper Aura II",
       "parents": [
-        39,
-        40,
+        49,
         45
       ],
       "id": 44,
@@ -4651,16 +4650,15 @@
       ],
       "children": [
         45,
-        47,
-        49
+        53
       ]
     },
     "45": {
       "display_name": "Stronger Totem",
       "parents": [
-        44,
-        41,
-        40
+        50,
+        51,
+        44
       ],
       "id": 45,
       "dependencies": [
@@ -4668,9 +4666,7 @@
       ],
       "children": [
         44,
-        47,
-        48,
-        50
+        48
       ]
     },
     "46": {
@@ -4689,8 +4685,7 @@
     "47": {
       "display_name": "Totemic Shatter",
       "parents": [
-        44,
-        45
+        36
       ],
       "id": 47,
       "dependencies": [
@@ -4701,18 +4696,22 @@
     "48": {
       "display_name": "Depersonalization",
       "parents": [
+        51,
         45
       ],
       "id": 48,
       "dependencies": [
         38
       ],
-      "children": []
+      "children": [
+        54
+      ]
     },
     "49": {
       "display_name": "Crimson Effigy",
       "parents": [
-        44,
+        39,
+        40,
         50
       ],
       "id": 49,
@@ -4720,30 +4719,31 @@
         7
       ],
       "children": [
+        44,
         50,
-        53
+        61
       ]
     },
     "50": {
-      "display_name": "Mask of the Coward",
+      "display_name": "Mask of the Heretic",
       "parents": [
-        45,
+        41,
         49,
-        51
+        40
       ],
       "id": 50,
       "dependencies": [],
       "children": [
+        45,
         49,
-        51,
-        54
+        57,
+        61
       ]
     },
     "51": {
       "display_name": "Fluid Healing",
       "parents": [
         46,
-        50,
         52
       ],
       "id": 51,
@@ -4751,14 +4751,14 @@
         22
       ],
       "children": [
-        50,
+        45,
+        48,
         52,
-        54,
         55
       ]
     },
     "52": {
-      "display_name": "Larger Blood Pool",
+      "display_name": "Larger Blood Pool II",
       "parents": [
         46,
         51
@@ -4775,7 +4775,7 @@
     "53": {
       "display_name": "Maddening Roots",
       "parents": [
-        49
+        44
       ],
       "id": 53,
       "dependencies": [
@@ -4786,17 +4786,19 @@
       ]
     },
     "54": {
-      "display_name": "Chant of the Coward",
+      "display_name": "Chant of the Heretic",
       "parents": [
-        51,
-        50
+        48,
+        58
       ],
       "id": 54,
       "dependencies": [
         50
       ],
       "children": [
-        57
+        58,
+        62,
+        66
       ]
     },
     "55": {
@@ -4830,29 +4832,24 @@
     "57": {
       "display_name": "Chant of the Fanatic",
       "parents": [
-        54,
-        58
+        50
       ],
       "id": 57,
       "dependencies": [],
-      "children": [
-        58,
-        61,
-        62
-      ]
+      "children": []
     },
     "58": {
       "display_name": "Stronger Tether",
       "parents": [
         55,
-        57
+        54
       ],
       "id": 58,
       "dependencies": [
         46
       ],
       "children": [
-        57,
+        54,
         64
       ]
     },
@@ -4876,7 +4873,7 @@
       "parents": [
         56,
         59,
-        61
+        62
       ],
       "id": 60,
       "dependencies": [
@@ -4884,42 +4881,40 @@
       ],
       "children": [
         59,
-        61,
+        62,
         65
       ]
     },
     "61": {
       "display_name": "Seeking Totem",
       "parents": [
-        57,
-        60
+        50,
+        49
       ],
       "id": 61,
       "dependencies": [
         36
       ],
-      "children": [
-        60
-      ]
+      "children": []
     },
     "62": {
       "display_name": "Frog Dance",
       "parents": [
-        57
+        54,
+        60
       ],
       "id": 62,
       "dependencies": [
         50
       ],
       "children": [
-        63,
-        66
+        60
       ]
     },
     "63": {
       "display_name": "Chant of the Lunatic",
       "parents": [
-        62
+        36
       ],
       "id": 63,
       "dependencies": [
@@ -4928,7 +4923,7 @@
       "children": []
     },
     "64": {
-      "display_name": "Larger Blood Pool",
+      "display_name": "Larger Blood Pool III",
       "parents": [
         58
       ],
@@ -4957,7 +4952,7 @@
     "66": {
       "display_name": "Awakened",
       "parents": [
-        62,
+        54,
         68
       ],
       "id": 66,
@@ -4980,7 +4975,7 @@
       "children": []
     },
     "68": {
-      "display_name": "Cheaper Uproot",
+      "display_name": "Cheaper Uproot II",
       "parents": [
         65,
         66

@@ -17,18 +17,20 @@ public class ID {
     final @NotNull PutOn on;
     final @NotNull Object defaultValue;
     final StaticMetric metric;
+    final boolean rolled;
 
-    protected ID(@NotNull PutOn on, @NotNull Object defaultValue, @NotNull String name, @NotNull String displayName, StaticMetric metric) {
+    protected ID(@NotNull PutOn on, @NotNull Object defaultValue, @NotNull String name, @NotNull String displayName, StaticMetric metric, boolean rolled) {
         this.name = name;
         this.displayName = displayName;
         this.on = on;
         this.defaultValue = defaultValue;
         this.metric = metric;
+        this.rolled = rolled;
         allIDs.add(this);
     }
 
-    protected ID(PutOn on, Object defaultValue, String name) {
-        this(on, defaultValue, name, "", Metric.OTHERSTR);
+    protected ID(PutOn on, Object defaultValue, String name, boolean rolled) {
+        this(on, defaultValue, name, "", Metric.OTHERSTR, rolled);
     }
 
     public static List<ID> values() {
@@ -114,7 +116,7 @@ public class ID {
         NORMAL,
         FAST,
         VERY_FAST,
-        SUPER_FAST;
+        SUPER_FAST
 
     }
 

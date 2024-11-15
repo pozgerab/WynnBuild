@@ -5,15 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public class DoubleID<T, R> extends TypedID<R> {
+public class DoubleID<T, R> extends NonRolledID<R> {
 
     private static final List<DoubleID<?, ?>> doubleIds = new ArrayList<>();
     private final Parser<T, R> defaParser;
     private final DoubleTypedMetric<T, R> metric;
     private final Class<T> ogType;
+    private final T defaultParsed;
 
     DoubleID(PutOn on, String name, String displayName, DoubleTypedMetric<T, R> metric) {
         super(on, metric.translator.translator().parser().apply(metric.translator.value()), name, displayName, metric);
+        this.defaultParsed = metric.translator.value;
         this.defaParser = metric.translator;
         this.metric = metric;
         this.ogType = metric.translator.workClass;
@@ -22,6 +24,10 @@ public class DoubleID<T, R> extends TypedID<R> {
 
     public static List<DoubleID<?, ?>> getDoubleIds() {
         return doubleIds;
+    }
+
+    public T getDefaultParsed() {
+        return defaultParsed;
     }
 
     public Class<T> getParsedType() {

@@ -49,18 +49,26 @@ public class CustomItem {
     private static final List<TypedID<Integer>> raws = ID.getByTypedMetric(ID.Metric.RAW);
     private static final List<DoubleID<DoubleID.Range, String>> rangeds = ID.getByDoubleMetric(ID.Metric.RANGE);
     private static final List<TypedID<Integer>> perxs = ID.getByTypedMetric(ID.Metric.PERXS);
-    public Map<String, Object> statMap = new HashMap<>();
-    public Item material = Items.BARRIER;
+    public final Map<String, Object> statMap;
+    public Item material;
     public int modelData = 0;
     public String headId;
 
-    public CustomItem() {
-        ID.values().forEach(ids -> set(ids, ids.defaultValue));
-    }
-
     public CustomItem(Map<String, Object> statMap) {
         this.statMap = statMap;
-        ID.values().forEach(ids -> statMap.putIfAbsent(ids.name, ids.defaultValue));
+        statMap.putIfAbsent("minRolls", new HashMap<String, Integer>());
+        statMap.putIfAbsent("maxRolls", new HashMap<String, Integer>());
+        ID.values().forEach(ids -> {
+            if (ids instanceof NonRolledID<?>) {
+                statMap.putIfAbsent(ids.name, ids.defaultValue);
+            } else if (ids instanceof RolledID rolled) {
+                setRolledIfAbsent(rolled, rolled.defaultValue);
+            }
+        });
+    }
+
+    public CustomItem() {
+        this(new HashMap<>());
     }
 
     public static @Nullable CustomItem getItem(@NotNull ItemStack item) {
@@ -69,6 +77,8 @@ public class CustomItem {
 
     public static @Nullable CustomItem getItem(@NotNull ItemStack item, ID.ItemType defType) {
         CustomItem custom = new CustomItem();
+
+        //  TODO:   FIX ID RECOGNITION: CURRENTLY DOESNT KNOW IF RAW OR PERCENT I GUESS COULD BE ANY PROBLEM :(
 
         custom.material = item.getItem();
         try {
@@ -159,16 +169,23 @@ public class CustomItem {
             statMap.put("maxRolls", new HashMap<String, Integer>());
 
             if (version == '1') {
-                if (fixID) {
-                    statMap.put("fixID", true);
-                }
+                statMap.put("fixID", fixID);
 
                 while (!tag.isEmpty()) {
-                    if (tag.length() < 4) break;
                     String id = ci_save_order.get(Base64.toInt(tag.substring(0, 2)));
-                    int len = Base64.toInt(tag.substring(2, 4));
+                    ID identification = ID.getByName(id);
+                    if (identification == null) {
+                        System.out.println(id);
+                        continue;
+                    }
+                    int len = 2;
+                    try {
+                        len = Base64.toInt(tag.substring(2, 4));
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("probably nonrolled-string");
+                    }
 
-                    if (rolledIDs.contains(id)) {
+                    if (identification.rolled) {
                         int sign = Integer.parseInt(tag.substring(4, 5));
                         int minRoll = Base64.toInt(tag.substring(5, 5 + len));
 
@@ -186,7 +203,6 @@ public class CustomItem {
                             if (sign != 0) minRoll *= -1;
                             ((Map<String, Integer>) statMap.get("minRolls")).put(id, minRoll);
                             ((Map<String, Integer>) statMap.get("maxRolls")).put(id, minRoll);
-                            statMap.put(id, minRoll);
 
                             tag = tag.substring(5 + len);
                         }
@@ -265,7 +281,7 @@ public class CustomItem {
     }
 
     public ItemStack createStack() {
-        ItemStack itemStack = new ItemStack(material);
+        ItemStack itemStack = new ItemStack(material != null ? material : Items.BARRIER);
         itemStack.set(DataComponentTypes.CUSTOM_MODEL_DATA, new CustomModelDataComponent(modelData));
         itemStack.set(DataComponentTypes.LORE, new LoreComponent(buildLore()));
         itemStack.set(DataComponentTypes.ITEM_NAME, Text.literal(getName()).styled(style -> style.withColor(getTier().format)));
@@ -295,21 +311,65 @@ public class CustomItem {
         return WynnData.getIdMap().getOrDefault(getName(), null);
     }
 
+    @SuppressWarnings("unchecked")
+    public @NotNull Map<String, Integer> minRolls() {
+        return (Map<String, Integer>) statMap.get("minRolls");
+    }
+
+    @SuppressWarnings("unchecked")
+    public @NotNull Map<String, Integer> maxRolls() {
+        return (Map<String, Integer>) statMap.get("maxRolls");
+    }
+
     public @NotNull Object get(@NotNull ID id) {
-        return statMap.getOrDefault(id.name, id.defaultValue);
+        if (id instanceof NonRolledID<?>) {
+            return statMap.getOrDefault(id.name, id.defaultValue);
+        } else if (id instanceof RolledID rolled) {
+            return minRolls().getOrDefault(id.name, rolled.defaultValue);
+        }
+        throw new RuntimeException("Object #get ID. Wait, not rolled nor non-rolled??? id: " + id.name);
+    }
+
+    public @NotNull Integer getRolled(@NotNull RolledID id) {
+        return minRolls().getOrDefault(id.name, id.defaultValue);
+    }
+
+    public void setRolled(@NotNull RolledID id, Integer value) {
+        minRolls().put(id.name, value);
+        maxRolls().put(id.name, value);
+    }
+
+    public void setRolledIfAbsent(@NotNull RolledID id, Integer value) {
+        minRolls().putIfAbsent(id.name, value);
+        maxRolls().putIfAbsent(id.name, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> @NotNull T get(@NotNull TypedID<T> id) {
-        return (T) statMap.getOrDefault(id.name, id.defaultValue);
+        if (id instanceof NonRolledID<T>) return (T) statMap.getOrDefault(id.name, id.defaultValue);
+        else if (id instanceof RolledID rolled) {
+            return (T) getRolled(rolled); //    TODO:   FIX THE ENIRE ROLLS SYSTEM!!!
+        }
+        throw new RuntimeException("T get Typed<T>. Wait, not rolled nor non-rolled??? id: " + id.name);
     }
 
     public void set(@NotNull ID id, Object value) {
-        statMap.put(id.name, value);
+        if (id instanceof RolledID rolled) {
+            try {
+                setRolled(rolled, (Integer) value);
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                System.out.println("void set ID Object. Failed to cast to int while id is rolled (only ints)");
+            }
+        } else {
+            statMap.put(id.name, value);
+        }
     }
 
     public <T> void set(@NotNull TypedID<T> id, T value) {
-        statMap.put(id.name, value);
+        if (id instanceof RolledID rolledID) {
+            setRolled(rolledID, (Integer) value);
+        } else statMap.put(id.name, value);
     }
 
     public <T, R> void set(@NotNull DoubleID<T, R> id, T value) {
@@ -321,7 +381,7 @@ public class CustomItem {
         return id.getParser().translator().getter().apply((R) statMap.getOrDefault(id.name, id.defaultValue));
     }
 
-    public boolean hasIdentification(ID id) {
+    public boolean hasIdentification(@NotNull ID id) {
         return !get(id).equals(id.defaultValue);
     }
 
@@ -329,24 +389,30 @@ public class CustomItem {
         StringBuilder hashBuilder = new StringBuilder();
         hashBuilder.append("1");
         boolean fixId = get(AllIDs.FIXID);
-        hashBuilder.append(get(AllIDs.FIXID) ? 1 : 0);
+        hashBuilder.append(0);
+        set(AllIDs.FIXID, false);
+        //hashBuilder.append(get(AllIDs.FIXID) ? 1 : 0); CURRENTLY DOESNT WORK WITH NEW HPPENG
 
-        for (int i = 0; i < Data.ci_save_order.size(); i++) {
-            String id = Data.ci_save_order.get(i);
+        for (int i = 0; i < ci_save_order.size(); i++) {
+            String id = ci_save_order.get(i);
             ID identification = ID.getByName(id);
+            if (identification == null) {
+                System.out.println(id + " WAS NULL!!!!");
+                continue;
+            }
             Object val = get(identification);
-            if (rolledIDs.contains(id)) {
-                int val_min = fixId ? (int) statMap.getOrDefault(id, identification.defaultValue) : ((Map<?, ?>) statMap.get("minRolls")).containsKey(id) ? (int) ((Map<?, ?>) statMap.get("minRolls")).get(id) : 0;
-                int val_max = fixId ? (int) statMap.getOrDefault(id, identification.defaultValue) : ((Map<?, ?>) statMap.get("maxRolls")).containsKey(id) ? (int) ((Map<?, ?>) statMap.get("maxRolls")).get(id) : 0;
+            if (identification instanceof RolledID rolledID) {
+                int val_min = getRolled(rolledID);
+                int val_max = val_min;
                 int sign = (val_min < 0 ? 1 : 0) + 2 * (val_max < 0 ? 1 : 0);
 
                 int min_len = Math.max(1, (int) Math.ceil(log(64, Math.abs(val_min) + 1)));
                 int max_len = Math.max(1, (int) Math.ceil(log(64, Math.abs(val_max) + 1)));
                 int len = Math.max(min_len, max_len);
                 val_min = Math.abs(val_min);
-                val_max = Math.abs(val_max);
+                //val_max = Math.abs(val_max);
 
-                if (val_min != 0 || val_max != 0) {
+                if (val_min != 0) {
                     if (get(AllIDs.FIXID)) {
                         hashBuilder.append(Base64.fromIntN(i, 2))
                                 .append(Base64.fromIntN(len, 2))
@@ -357,12 +423,11 @@ public class CustomItem {
                                 .append(Base64.fromIntN(len, 2))
                                 .append(sign)
                                 .append(Base64.fromIntN(val_min, len))
-                                .append(Base64.fromIntN(val_max, len));
+                                .append(Base64.fromIntN(val_min, len));
 
                     }
                 }
-            }
-            if (id.equals("majorIds") && val instanceof String) {
+            } else if (id.equals("majorIds") && val instanceof String) {
             } else if (val instanceof String sVal && !sVal.isEmpty()) {
                 if (Data.damages.contains(id) && val.equals("0-0") ||
                         (!verbose && Arrays.asList("lore", "majorIds", "quest", "materials", "drop", "set").contains(id))) {
@@ -391,7 +456,6 @@ public class CustomItem {
             }
 
         }
-
         return hashBuilder.toString();
 
     }
@@ -626,8 +690,8 @@ public class CustomItem {
                 } catch (Exception ignored) {
                     continue;
                 }
-                String abilName = cast.abilities.get(nO);
-                if (idName.equals(abilName + " Cost")) {
+
+                if (Arrays.stream(Cast.values()).anyMatch(cast -> idName.equals(cast.abilities.get(nO) + " Cost"))) {
                     set(ids, get(ids) + value);
                     break;
                 }
@@ -652,17 +716,35 @@ public class CustomItem {
 
     public static class Data {
         public static List<String> ci_save_order = List.of(
-                "name", "lore", "tier", "set", "slots", "type", "material", "drop", "quest",
-                "nDam", "fDam", "wDam", "aDam", "tDam", "eDam", "atkSpd", "hp", "fDef", "wDef",
-                "aDef", "tDef", "eDef", "lvl", "classReq", "strReq", "dexReq", "intReq", "defReq",
-                "agiReq", "str", "dex", "int", "agi", "def", "id", "skillpoints", "reqs", "nDam_",
-                "fDam_", "wDam_", "aDam_", "tDam_", "eDam_", "majorIds", "hprPct", "mr", "sdPct",
-                "mdPct", "ls", "ms", "xpb", "lb", "ref", "thorns", "expd", "spd", "atkTier",
-                "poison", "hpBonus", "spRegen", "eSteal", "hprRaw", "sdRaw", "mdRaw", "fDamPct",
-                "wDamPct", "aDamPct", "tDamPct", "eDamPct", "fDefPct", "wDefPct", "aDefPct",
-                "tDefPct", "eDefPct", "spPct1", "spRaw1", "spPct2", "spRaw2", "spPct3", "spRaw3",
-                "spPct4", "spRaw4", "rainbowRaw", "sprint", "sprintReg", "jh", "lq", "gXp",
-                "gSpd", "durability", "duration", "charges"
+                "name", "lore", "tier", "set", "slots", "type",
+                "material", "drop", "quest",
+                "nDam", "fDam", "wDam", "aDam", "tDam", "eDam",
+                "atkSpd", "hp",
+                "fDef", "wDef", "aDef", "tDef", "eDef",
+                "lvl", "classReq",
+                "strReq", "dexReq", "intReq", "defReq", "agiReq",
+                "str", "dex", "int", "agi", "def", "id",
+                "skillpoints", "reqs",
+                "nDam_", "fDam_", "wDam_", "aDam_", "tDam_", "eDam_",
+                "majorIds", "hprPct", "mr",
+                "sdPct", "mdPct",
+                "ls", "ms", "xpb", "lb",
+                "ref", "thorns", "expd", "spd", "atkTier", "poison", "hpBonus", "spRegen", "eSteal", "hprRaw",
+                "sdRaw", "mdRaw",
+                "fDamPct", "wDamPct", "aDamPct", "tDamPct", "eDamPct",
+                "fDefPct", "wDefPct", "aDefPct", "tDefPct", "eDefPct",
+                "spPct1", "spRaw1", "spPct2", "spRaw2", "spPct3", "spRaw3", "spPct4", "spRaw4",
+                "rSdRaw",
+                "sprint", "sprintReg", "jh", "lq", "gXp", "gSpd", "durability", "duration", "charges", "maxMana", "critDamPct",
+                /*"sdRaw", "rSdRaw",*/ "nSdRaw", "eSdRaw", "tSdRaw", "wSdRaw", "fSdRaw", "aSdRaw",
+                /*"sdPct",*/ "rSdPct", "nSdPct", "eSdPct", "tSdPct", "wSdPct", "fSdPct", "aSdPct",
+                /*"mdRaw",*/ "rMdRaw", "nMdRaw", "eMdRaw", "tMdRaw", "wMdRaw", "fMdRaw", "aMdRaw",
+                /*"mdPct",*/ "rMdPct", "nMdPct", "eMdPct", "tMdPct", "wMdPct", "fMdPct", "aMdPct",
+                "damRaw", "rDamRaw", "nDamRaw", "eDamRaw", "tDamRaw", "wDamRaw", "fDamRaw", "aDamRaw",
+                "damPct", "rDamPct", "nDamPct", /*"eDamPct", "tDamPct", "wDamPct", "fDamPct", "aDamPct",*/
+                "healPct",
+                "kb", "weakenEnemy", "slowEnemy",
+                "rDefPct"
         );
         public static List<String> all_types = List.of("Helmet", "Chestplate", "Leggings", "Boots",
                 "Ring", "Bracelet", "Necklace", "Wand", "Spear", "Bow", "Dagger", "Relik", "Potion", "Scroll", "Food",
@@ -676,20 +758,51 @@ public class CustomItem {
                 "classReq", "atkSpd", "displayName", "nDam", "fDam", "wDam", "aDam", "tDam",
                 "eDam", "nDam_", "fDam_", "wDam_", "aDam_", "tDam_", "eDam_", "durability", "duration");
         public static List<String> rolledIDs = List.of(
-                "hprPct", "mr", "sdPct", "mdPct", "ls", "ms", "xpb", "lb", "ref", "thorns",
-                "expd", "spd", "atkTier", "poison", "hpBonus", "spRegen", "eSteal", "hprRaw",
-                "sdRaw", "mdRaw", "fDamPct", "wDamPct", "aDamPct", "tDamPct", "eDamPct", "fDefPct",
-                "wDefPct", "aDefPct", "tDefPct", "eDefPct", "spPct1", "spRaw1", "spPct2", "spRaw2",
-                "spPct3", "spRaw3", "spPct4", "spRaw4", "rSdRaw", "sprint", "sprintReg", "jh", "lq",
-                "gXp", "gSpd", "eMdPct", "eMdRaw", "eSdPct", "eSdRaw", "eDamRaw", "eDamAddMin",
-                "eDamAddMax", "tMdPct", "tMdRaw", "tSdPct", "tSdRaw", "tDamRaw", "tDamAddMin",
-                "tDamAddMax", "wMdPct", "wMdRaw", "wSdPct", "wSdRaw", "wDamRaw", "wDamAddMin",
-                "wDamAddMax", "fMdPct", "fMdRaw", "fSdPct", "fSdRaw", "fDamRaw", "fDamAddMin",
-                "fDamAddMax", "aMdPct", "aMdRaw", "aSdPct", "aSdRaw", "aDamRaw", "aDamAddMin",
-                "aDamAddMax", "nMdPct", "nMdRaw", "nSdPct", "nSdRaw", "nDamPct", "nDamRaw",
-                "nDamAddMin", "nDamAddMax", "damPct", "damRaw", "damAddMin", "damAddMax",
-                "rMdPct", "rMdRaw", "rSdPct", "rDamPct", "rDamRaw", "rDamAddMin", "rDamAddMax",
-                "spPct1Final", "spPct2Final", "spPct3Final", "spPct4Final", "healPct", "kb",
-                "weakenEnemy", "slowEnemy", "rDefPct");
+                "hprPct",
+                "mr",
+                "sdPct",
+                "mdPct",
+                "ls",
+                "ms",
+                "xpb",
+                "lb",
+                "ref",
+                "thorns",
+                "expd",
+                "spd",
+                "atkTier",
+                "poison",
+                "hpBonus",
+                "spRegen",
+                "eSteal",
+                "hprRaw",
+                "sdRaw",
+                "mdRaw",
+                "fDamPct", "wDamPct", "aDamPct", "tDamPct", "eDamPct",
+                "fDefPct", "wDefPct", "aDefPct", "tDefPct", "eDefPct",
+                "spPct1", "spRaw1",
+                "spPct2", "spRaw2",
+                "spPct3", "spRaw3",
+                "spPct4", "spRaw4",
+                "rSdRaw",
+                "sprint",
+                "sprintReg",
+                "jh",
+                "lq",
+                "gXp",
+                "gSpd",
+// wynn2 damages.
+                "eMdPct", "eMdRaw", "eSdPct", "eSdRaw",/*"eDamPct,"*/"eDamRaw", "eDamAddMin", "eDamAddMax",
+                "tMdPct", "tMdRaw", "tSdPct", "tSdRaw",/*"tDamPct,"*/"tDamRaw", "tDamAddMin", "tDamAddMax",
+                "wMdPct", "wMdRaw", "wSdPct", "wSdRaw",/*"wDamPct,"*/"wDamRaw", "wDamAddMin", "wDamAddMax",
+                "fMdPct", "fMdRaw", "fSdPct", "fSdRaw",/*"fDamPct,"*/"fDamRaw", "fDamAddMin", "fDamAddMax",
+                "aMdPct", "aMdRaw", "aSdPct", "aSdRaw",/*"aDamPct,"*/"aDamRaw", "aDamAddMin", "aDamAddMax",
+                "nMdPct", "nMdRaw", "nSdPct", "nSdRaw", "nDamPct", "nDamRaw", "nDamAddMin", "nDamAddMax",      // neutral which is now an element
+                /*"mdPct","mdRaw","sdPct","sdRaw",*/"damPct", "damRaw", "damAddMin", "damAddMax",          // These are the old ids. Become proportional.
+                "rMdPct", "rMdRaw", "rSdPct",/*"rSdRaw",*/"rDamPct", "rDamRaw", "rDamAddMin", "rDamAddMax",  // rainbow (the "element" of all minus neutral). rSdRaw is rainraw
+                "critDamPct",
+                "spPct1Final", "spPct2Final", "spPct3Final", "spPct4Final",
+                "healPct", "kb", "weakenEnemy", "slowEnemy", "rDefPct", "maxMana"
+        );
     }
 }
