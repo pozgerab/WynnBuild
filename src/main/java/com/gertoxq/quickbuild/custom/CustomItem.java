@@ -697,7 +697,7 @@ public class CustomItem {
                 }
             }
             if (Objects.equals(ids.displayName, idName)) {
-                set(ids, get(ids) + value);
+                set(ids, ids.name.equals(AllIDs.LVL.name) ? value : (get(ids) + value));
                 break;
             }
         }

@@ -91,7 +91,7 @@
       ]
     },
     "8": {
-      "display_name": "Cheaper Escape I",
+      "display_name": "Cheaper Escape",
       "parents": [
         7,
         9
@@ -348,7 +348,7 @@
       ]
     },
     "27": {
-      "display_name": "Cheaper Arrow Storm I",
+      "display_name": "Cheaper Arrow Storm",
       "parents": [
         28,
         26,
@@ -425,7 +425,7 @@
       ]
     },
     "32": {
-      "display_name": "More Focus I",
+      "display_name": "More Focus",
       "parents": [
         29
       ],
@@ -605,7 +605,7 @@
       ]
     },
     "45": {
-      "display_name": "Cheaper Arrow Shield I",
+      "display_name": "Cheaper Arrow Shield",
       "parents": [
         44,
         46,
@@ -690,7 +690,7 @@
       ]
     },
     "51": {
-      "display_name": "Cheaper Arrow Storm II",
+      "display_name": "Cheaper Arrow Storm",
       "parents": [
         52,
         50
@@ -828,7 +828,7 @@
       ]
     },
     "60": {
-      "display_name": "Cheaper Escape II",
+      "display_name": "Cheaper Escape",
       "parents": [
         55,
         59,
@@ -844,7 +844,7 @@
       ]
     },
     "61": {
-      "display_name": "Cheaper Arrow Shield II",
+      "display_name": "Cheaper Arrow Shield",
       "parents": [
         57,
         60,
@@ -992,7 +992,7 @@
       ]
     },
     "72": {
-      "display_name": "More Focus II",
+      "display_name": "More Focus",
       "parents": [
         67,
         71
@@ -1044,7 +1044,7 @@
       ]
     },
     "76": {
-      "display_name": "Cheaper Arrow Bomb II",
+      "display_name": "Cheaper Arrow Bomb",
       "parents": [
         75,
         72,
@@ -1068,7 +1068,7 @@
       ]
     },
     "1": {
-      "display_name": "Spear Proficiency 1",
+      "display_name": "Spear Proficiency",
       "parents": [
         0
       ],
@@ -1384,7 +1384,7 @@
       ]
     },
     "26": {
-      "display_name": "Spear Proficiency II",
+      "display_name": "Spear Proficiency",
       "parents": [
         25,
         27
@@ -1564,7 +1564,7 @@
       "children": []
     },
     "39": {
-      "display_name": "Cheaper War Scream I",
+      "display_name": "Cheaper War Scream",
       "parents": [
         34,
         33,
@@ -1863,7 +1863,7 @@
       ]
     },
     "61": {
-      "display_name": "Cheaper Bash II",
+      "display_name": "Cheaper Bash",
       "parents": [
         60,
         53,
@@ -1877,7 +1877,7 @@
       ]
     },
     "62": {
-      "display_name": "Cheaper War Scream II",
+      "display_name": "Cheaper War Scream",
       "parents": [
         55
       ],
@@ -1987,7 +1987,7 @@
       ]
     },
     "71": {
-      "display_name": "Cheaper Uppercut 2",
+      "display_name": "Cheaper Uppercut",
       "parents": [
         68,
         69
@@ -2030,7 +2030,7 @@
       ]
     },
     "1": {
-      "display_name": "Wand Proficiency I",
+      "display_name": "Wand Proficiency",
       "parents": [
         0
       ],
@@ -2062,7 +2062,7 @@
       ]
     },
     "4": {
-      "display_name": "Wand Proficiency II",
+      "display_name": "Wand Proficiency",
       "parents": [
         5
       ],
@@ -2427,7 +2427,7 @@
       ]
     },
     "32": {
-      "display_name": "Cheaper Teleport II",
+      "display_name": "Cheaper Teleport",
       "parents": [
         31,
         24,
@@ -2482,7 +2482,7 @@
       "children": []
     },
     "36": {
-      "display_name": "Healthier Ophanim I",
+      "display_name": "Healthier Ophanim",
       "parents": [
         31,
         32,
@@ -2654,7 +2654,7 @@
       ]
     },
     "47": {
-      "display_name": "Larger Mana Bank II",
+      "display_name": "Larger Mana Bank",
       "parents": [
         38,
         46
@@ -2693,7 +2693,7 @@
       "children": []
     },
     "50": {
-      "display_name": "Cheaper Ice Snake II",
+      "display_name": "Cheaper Ice Snake",
       "parents": [
         44,
         51
@@ -2724,7 +2724,7 @@
       ]
     },
     "52": {
-      "display_name": "Cheaper Meteor II",
+      "display_name": "Cheaper Meteor",
       "parents": [
         51,
         45,
@@ -2832,7 +2832,7 @@
       "children": []
     },
     "60": {
-      "display_name": "More Winded II",
+      "display_name": "More Winded",
       "parents": [
         54,
         61
@@ -2861,7 +2861,7 @@
       ]
     },
     "62": {
-      "display_name": "Healthier Ophanim II",
+      "display_name": "Healthier Ophanim",
       "parents": [
         56,
         61
@@ -2877,7 +2877,7 @@
       ]
     },
     "63": {
-      "display_name": "Larger Mana Bank III",
+      "display_name": "Larger Mana Bank",
       "parents": [
         57
       ],
@@ -2950,7 +2950,7 @@
       ]
     },
     "69": {
-      "display_name": "Cheaper Heal II",
+      "display_name": "Cheaper Heal",
       "parents": [
         68,
         70
@@ -2997,7 +2997,7 @@
       ]
     },
     "1": {
-      "display_name": "Dagger Proficiency I",
+      "display_name": "Dagger Proficiency",
       "parents": [
         0
       ],
@@ -3375,7 +3375,7 @@
       ]
     },
     "29": {
-      "display_name": "Dagger Proficiency II",
+      "display_name": "Dagger Proficiency",
       "parents": [
         28,
         25
@@ -3617,7 +3617,7 @@
       ]
     },
     "48": {
-      "display_name": "Cheaper Dash II",
+      "display_name": "Cheaper Dash",
       "parents": [
         43,
         51
@@ -3642,7 +3642,7 @@
       ]
     },
     "50": {
-      "display_name": "Cheaper Spin Attack II",
+      "display_name": "Cheaper Spin Attack",
       "parents": [
         45,
         49
@@ -3671,7 +3671,7 @@
       ]
     },
     "52": {
-      "display_name": "Cheaper Multihit II",
+      "display_name": "Cheaper Multihit",
       "parents": [
         51,
         74,
@@ -3798,7 +3798,7 @@
       ]
     },
     "60": {
-      "display_name": "Cheaper Smoke Bomb II",
+      "display_name": "Cheaper Smoke Bomb",
       "parents": [
         59,
         53,
@@ -4045,7 +4045,7 @@
       ]
     },
     "1": {
-      "display_name": "Relik Proficiency 1",
+      "display_name": "Relik Proficiency",
       "parents": [
         0
       ],
@@ -4057,7 +4057,7 @@
       ]
     },
     "2": {
-      "display_name": "Cheaper Totem I",
+      "display_name": "Cheaper Totem",
       "parents": [
         1
       ],
@@ -4127,7 +4127,7 @@
       ]
     },
     "8": {
-      "display_name": "Cheaper Haul I",
+      "display_name": "Cheaper Haul",
       "parents": [
         7,
         9
@@ -4354,7 +4354,7 @@
       ]
     },
     "24": {
-      "display_name": "Cheaper Aura I",
+      "display_name": "Cheaper Aura",
       "parents": [
         23,
         25
@@ -4371,7 +4371,7 @@
       ]
     },
     "25": {
-      "display_name": "Cheaper Uproot I",
+      "display_name": "Cheaper Uproot",
       "parents": [
         24,
         21,
@@ -4405,7 +4405,7 @@
       ]
     },
     "27": {
-      "display_name": "More Puppets I",
+      "display_name": "More Puppets",
       "parents": [
         23,
         24
@@ -4477,7 +4477,7 @@
       "children": []
     },
     "33": {
-      "display_name": "Larger Blood Pool I",
+      "display_name": "Larger Blood Pool",
       "parents": [
         26
       ],
@@ -4505,7 +4505,7 @@
       ]
     },
     "35": {
-      "display_name": "More Puppets II",
+      "display_name": "More Puppets",
       "parents": [
         31
       ],
@@ -4576,7 +4576,7 @@
       ]
     },
     "40": {
-      "display_name": "Cheaper Totem II",
+      "display_name": "Cheaper Totem",
       "parents": [
         35,
         39,
@@ -4624,7 +4624,7 @@
       "children": []
     },
     "43": {
-      "display_name": "Cheaper Haul II",
+      "display_name": "Cheaper Haul",
       "parents": [
         41,
         37
@@ -4639,7 +4639,7 @@
       ]
     },
     "44": {
-      "display_name": "Cheaper Aura II",
+      "display_name": "Cheaper Aura",
       "parents": [
         49,
         45
@@ -4758,7 +4758,7 @@
       ]
     },
     "52": {
-      "display_name": "Larger Blood Pool II",
+      "display_name": "Larger Blood Pool",
       "parents": [
         46,
         51
@@ -4923,7 +4923,7 @@
       "children": []
     },
     "64": {
-      "display_name": "Larger Blood Pool III",
+      "display_name": "Larger Blood Pool",
       "parents": [
         58
       ],
@@ -4975,7 +4975,7 @@
       "children": []
     },
     "68": {
-      "display_name": "Cheaper Uproot II",
+      "display_name": "Cheaper Uproot",
       "parents": [
         65,
         66

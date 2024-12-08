@@ -129,10 +129,17 @@ public class AtreeScreen extends BScreen {
     public List<AbilSlot> getUnlocked() {
 
         Set<Integer> pageCache = new HashSet<>();
-        List<Slot> filtered = handler.slots.stream().filter(slot -> !slot.getStack().isEmpty() && nameToId.containsKey(removeNum(removeFormat(slot.getStack().getName().getString())))).toList();
+        List<Slot> filtered = handler.slots.stream().filter(slot -> !slot.getStack().isEmpty() && nameToId.containsKey(removeNum(removeFormat(slot.getStack().getName().getString()
+                .replace("Unlock ", "")
+                .replace(" ability", "").trim())))).toList();
         Map<Integer, Slot> idSlotMap = new HashMap<>();
         filtered.forEach(slot -> {
-            Integer id = nameToId.getOrDefault(removeNum(removeFormat(slot.getStack().getName().getString())), Integer.MAX_VALUE);
+            String name = removeNum(removeFormat(slot.getStack().getName().getString()
+                    .replace("Unlock ", "")
+                    .replace(" ability", "").trim()));
+            //System.out.println(name);
+            //System.out.println(nameToId.containsKey(name));
+            Integer id = nameToId.getOrDefault(name, Integer.MAX_VALUE);
             if (allCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
                 id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt(); //  IN CASE OF LEVEL III
                 if (allCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
