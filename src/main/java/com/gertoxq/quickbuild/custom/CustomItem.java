@@ -586,7 +586,11 @@ public class CustomItem {
 
     public void setFromString(String textStr) {
         int value = 0;
-        if (baseStatRegex.matcher(textStr).matches()) {
+        if (textStr.contains(" Attack Speed")) {
+            String atkSpdString = textStr.split(" Attack Speed")[0].replace(" ", "_");
+            ID.ATKSPDS atkspd = Arrays.stream(ID.ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(ID.ATKSPDS.NORMAL);
+            this.set(AllIDs.ATKSPD, atkspd);
+        } else if (baseStatRegex.matcher(textStr).matches()) {
             textStr = textStr.replace(":", "");
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
             String strVal = s.getLast();
@@ -667,10 +671,6 @@ public class CustomItem {
                     break;
                 }
             }
-        } else if (textStr.contains(" Attack Speed")) {
-            String atkSpdString = textStr.replace(" Attack Speed", "").replace(" ", "_");
-            ID.ATKSPDS atkspd = Arrays.stream(ID.ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(ID.ATKSPDS.NORMAL);
-            this.set(AllIDs.ATKSPD, atkspd);
         } else if (textStr.contains(AllIDs.CLASS_REQ.displayName)) {
             textStr = textStr.split(": ")[1];
             String castVal = textStr.split("/")[0];
