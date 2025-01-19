@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "quickbuild",
+  "id": "wynnbuild",
   "version": "${version}",
-  "name": "QuickBuild",
+  "name": "WynnBuild",
   "description": "Mod for generating a wynnbuilder url with just one command\nConfig is opened with /build config",
   "authors": [
     "Gertoxq"
@@ -21,19 +21,19 @@
     }
   },
   "license": "All-Rights-Reserved",
-  "icon": "assets/quickbuild/icon.png",
+  "icon": "assets/wynnbuild/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.gertoxq.quickbuild.client.QuickBuildClient"
+      "com.gertoxq.wynnbuild.client.WynnBuildClient"
     ],
     "main": [
-      "com.gertoxq.quickbuild.QuickBuild"
+      "com.gertoxq.wynnbuild.WynnBuild"
     ]
   },
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=1.21 <=1.21.1"
   }
 }
