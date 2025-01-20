@@ -1,12 +1,15 @@
 package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.Base64;
-import com.gertoxq.wynnbuild.*;
+import com.gertoxq.wynnbuild.Cast;
+import com.gertoxq.wynnbuild.Powder;
+import com.gertoxq.wynnbuild.SP;
 import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
-import com.gertoxq.wynnbuild.screens.*;
+import com.gertoxq.wynnbuild.screens.Clickable;
+import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.gertoxq.wynnbuild.util.WynnData;
@@ -14,9 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -24,10 +25,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.gertoxq.wynnbuild.custom.CustomItem.getItem;
 import static com.gertoxq.wynnbuild.custom.CustomItem.removeTilFormat;
@@ -49,7 +49,6 @@ public class WynnBuildClient implements ClientModInitializer {
     public static String atreeSuffix;
     public static MinecraftClient client;
     public static Clickable BUTTON;
-    public static Clickable PRESETBUTTON;
     public static Clickable UI = new Clickable(() -> true);
     public static List<Integer> tomeIds = Collections.nCopies(8, null);
     public static List<ID.ItemType> types = List.of(ID.ItemType.Helmet, ID.ItemType.Chestplate, ID.ItemType.Leggings, ID.ItemType.Boots, ID.ItemType.Ring, ID.ItemType.Ring, ID.ItemType.Bracelet, ID.ItemType.Necklace);
@@ -61,9 +60,8 @@ public class WynnBuildClient implements ClientModInitializer {
     public static List<String> eqipmentNames = new ArrayList<>();
     public static List<List<Integer>> powders = new ArrayList<>();
     public static List<ItemStack> items;
-    private static int wynnLevel;
-    public boolean readAtree = false;
-    private int failures = 0;
+    public static int wynnLevel;
+    public static boolean readAtree = false;
 
     public static Manager getConfigManager() {
         return configManager;
@@ -155,7 +153,7 @@ public class WynnBuildClient implements ClientModInitializer {
      * @param atreeCode A string representing the ability tree code to include in the build.
      * @param emptySafe A boolean indicating whether to include skill point values in the URL or use defaults.
      */
-    public static void buildWithArgs(List<String> ids, String atreeCode, boolean emptySafe) {
+    public static void buildWithArgs(List<String> ids, String atreeCode, boolean emptySafe, @Nullable Integer precision) {
         if (client.player == null) return;
         ClientPlayerEntity player = client.player;
 
@@ -192,7 +190,7 @@ public class WynnBuildClient implements ClientModInitializer {
         for (int i = 0; i < 8; i++) {
             Integer tomeId = tomeIds.get(i);
             if (tomeId == null) {
-                url.append(Base64.fromIntN(TomeScreen.EMPTY_IDS.get(i), 2));
+                url.append(Base64.fromIntN(TomeScreenHandler.EMPTY_IDS.get(i), 2));
             } else {
                 url.append(Base64.fromIntN(tomeId, 2));
             }
@@ -200,7 +198,7 @@ public class WynnBuildClient implements ClientModInitializer {
         url.append(atreeCode); // atree
 
         //  Send copyable build to client
-        player.sendMessage(Utils.getBuildTemplate(url.toString()));
+        player.sendMessage(Utils.getBuildTemplate(url.toString(), precision));
         if (!emptySafe)
             client.player.sendMessage(Text.literal("Note that not using the EMPTY SAFE option generates urls without skill points").styled(style -> style.withColor(Formatting.RED)));
     }
@@ -218,8 +216,8 @@ public class WynnBuildClient implements ClientModInitializer {
         }
         // Adds equipment or empty value except for weapon (Each has to be 3 chars)
         List<String> finalIds = new ArrayList<>();
+        int precision = WynnBuildClient.getConfigManager().getConfig().getPrecision();
         for (int i = 0; i < 9; i++) {
-            int precision = WynnBuildClient.getConfigManager().getConfig().getPrecision();
             int id = 0;
             String customStr = "";
             boolean custom = false;
@@ -261,7 +259,7 @@ public class WynnBuildClient implements ClientModInitializer {
                 finalIds.add(String.valueOf(id));
             }
         }
-        buildWithArgs(finalIds, atreeSuffix, true);
+        buildWithArgs(finalIds, atreeSuffix, true, precision);
         return 1;
     }
 
@@ -280,130 +278,14 @@ public class WynnBuildClient implements ClientModInitializer {
             readAtree = true;
         }
         BUTTON = new Clickable(() -> configManager.getConfig().isShowButtons());
-        PRESETBUTTON = new Clickable(() -> configManager.getConfig().isShowTreeLoader());
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             getConfigManager().loadConfig();
-            if (screen instanceof GenericContainerScreen containerScreen) {
-                String title = containerScreen.getTitle().getString();
-                List<String> titleCodes = new ArrayList<>();
-                for (int i = 0; i < title.length(); i++) {
-                    char ch = title.charAt(i);
-                    titleCodes.add(String.format("\\u%04x", (int) ch));
-                }
-                //System.out.println(titleCodes.getLast());
-                if (Objects.equals(titleCodes.getLast(), "\\ue003")) {
-                    //     \udaff \udfdc \ue003
-                    //System.out.println("charinfo");
-                    var charInfoScreen = new CharacterInfoScreen(containerScreen);
-                    new Task(() -> this.saveCharInfo(charInfoScreen), 2);
-                    BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, 0, -20, Text.literal("Read"), button -> client.execute(() -> this.saveCharInfo(charInfoScreen)));
-                    BUTTON.addTo(charInfoScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
-                } else if (Objects.equals(titleCodes.getLast(), "\\ue000")) {
-                    //     \udaff \udfea \ue000
-                    //System.out.println("atreee");
-                    try {
-                        var atreeScreen = new AtreeScreen(containerScreen);
-                        if (!readAtree) {
-                            this.startAtreead(atreeScreen);
-                        }
-                        BUTTON.addTo(atreeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.startAtreead(atreeScreen));
-                    } catch (ExceptionInInitializerError error) {
-                        error.printStackTrace();
-                    }
-                } else if (Objects.equals(titleCodes.getLast(), "\\ue005")) {
-                    //System.out.println("tome");
-                    //     \udaff \udfdb \ue005
-                    var tomeScreen = new TomeScreen(containerScreen);
-                    new Task(() -> saveTomeInfo(tomeScreen), 2);
-                    BUTTON.addTo(tomeScreen.getScreen(), AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("Read"), button -> this.saveTomeInfo(tomeScreen));
-                }
-            } else if (screen instanceof InventoryScreen screen1) {
-                BUTTON.addTo(screen1, AXISPOS.END, AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
+            if (screen instanceof InventoryScreen screen1) {
+                BUTTON.addTo(screen1, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
             }
         });
 
-        CommandReg.init(client);
-    }
-
-    private void startAtreead(AtreeScreen screen) {
-        if (castTreeObj == null) {
-            assert client.player != null;
-            client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)));
-            return;
-        }
-        AtomicBoolean allowClick = new AtomicBoolean(false);
-        ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
-        final int pages = 9;
-        var clicker = screen.getClicker();
-        AtreeScreen.resetData();
-        clicker.scrollAtree(-pages);            // 21
-        new Task(() -> saveATree(screen), pages * 4 + 20);
-        for (int i = 0; i < pages; i++) {
-            new Task(() -> clicker.scrollAtree(1), i * ATREE_IDLE + pages * 4 + 24); //  28   38   34
-            new Task(() -> saveATree(screen), i * ATREE_IDLE + ATREE_IDLE / 2 + pages * 4 + 24); //  30  25  28... 51
-        }
-        new Task(() -> {
-            allowClick.set(true);
-            BitVector encodedTree = AtreeCoder.encode_atree(atreeState);
-            atreeSuffix = encodedTree.toB64();
-            configManager.getConfig().setAtreeEncoding(atreeSuffix);
-            configManager.saveConfig();
-        }, pages * ATREE_IDLE + 8 + pages * 4 + 20);     // 45
-        readAtree = true;
-    }
-
-    private void saveTomeInfo(@NotNull TomeScreen tomeScreen) {
-        catchNotLoaded(() -> {
-            tomeIds = tomeScreen.getIds();
-            configManager.getConfig().setTomeIds(tomeIds);
-            configManager.saveConfig();
-        });
-    }
-
-    private void saveCharInfo(@NotNull CharacterInfoScreen infoScreen) {
-        catchNotLoaded(() -> {
-            wynnLevel = infoScreen.getLevel();
-            stats = infoScreen.getStats();
-            cast = infoScreen.getCast();
-            configManager.getConfig().setCast(cast.name);
-            configManager.saveConfig();
-            currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
-            castTreeObj = fullatree.get(cast.name).getAsJsonObject();
-        });
-    }
-
-    /**
-     * Wraps a method in a try block to catch errors at screen reading
-     *
-     * @param method
-     */
-    private void catchNotLoaded(Runnable method) {
-        try {
-            method.run();
-            failures = 0;
-        } catch (Exception e) {
-            failures++;
-            client.player.sendMessage(Text.literal("Fetching failed! Press the READ button to fetch manually")
-                    .styled(style -> style.withColor(Formatting.RED)));
-            if (failures < 2) {
-                new Task(() -> catchNotLoaded(method), REFETCH_DELAY);
-            }
-            e.printStackTrace();
-        }
-    }
-
-    public void saveATree(AtreeScreen screen) {
-        if (castTreeObj == null) {
-            assert client.player != null;
-            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
-            return;
-        }
-        //screen.getUnlockedNames().forEach(System.out::println);
-        Set<Integer> unlockedIds = screen.getUnlockedIds();
-        //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
-        unlockedAbilIds.addAll(unlockedIds);
-        atreeState.addAll(unlockedAbilIds);
-        //System.out.println("Unlocked "+ Arrays.toString(unlockedAbilIds.toArray()));
+        CommandRegistry.init(client);
     }
 }

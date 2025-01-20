@@ -24,4 +24,7 @@ public record Clickable(BooleanSupplier condition) {
         addTo(screen, xAxis, yAxis, width, height, 0, 0, message, action);
     }
 
+    public enum AXISPOS {
+        START, CENTER, END
+    }
 }

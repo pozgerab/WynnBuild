@@ -13,7 +13,7 @@ public class ConfigType {
     private String cast = "Warrior";
     private List<SavedBuildType> savedAtrees = new ArrayList<>();
     private List<Integer> tomeIds = new ArrayList<>();
-    private int defaultPowderLevel = 6;
+    private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private List<SavedItemType> savedItems = new ArrayList<>();
     private int atreeIdleTime = 10;
     private @Range(from = 0, to = 3) int precision = 1;

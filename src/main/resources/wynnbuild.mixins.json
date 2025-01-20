@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.gertoxq.wynnbuild.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ScreenReplacerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

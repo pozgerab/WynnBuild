@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.config;
 
 import com.gertoxq.wynnbuild.Cast;
-import com.gertoxq.wynnbuild.screens.TomeScreen;
+import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -39,7 +39,7 @@ public class Manager {
                     System.out.println("Invalid Cast value");
                 }
                 ATREE_IDLE = config.getAtreeIdleTime();
-                tomeIds = config.getTomeIds().size() == 8 ? config.getTomeIds() : TomeScreen.EMPTY_IDS;
+                tomeIds = config.getTomeIds().size() == 8 ? config.getTomeIds() : TomeScreenHandler.EMPTY_IDS;
                 atreeSuffix = config.getAtreeEncoding();
                 DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
                 reader.close();

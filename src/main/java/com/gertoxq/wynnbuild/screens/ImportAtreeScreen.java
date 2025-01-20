@@ -8,6 +8,8 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -45,6 +47,7 @@ public class ImportAtreeScreen extends Screen {
                 ImportAtree.addBuild(nameInput.getText(), code);
             } catch (Exception e) {
                 client.player.sendMessage(Text.literal("Invalid code").styled(style -> style.withColor(Formatting.RED)));
+                client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 e.printStackTrace();
             }
             init();

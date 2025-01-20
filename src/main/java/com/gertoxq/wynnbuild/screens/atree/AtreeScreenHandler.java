@@ -1,20 +1,31 @@
-package com.gertoxq.wynnbuild.screens;
+package com.gertoxq.wynnbuild.screens.atree;
 
-import com.gertoxq.wynnbuild.atreeimport.ImportAtree;
+import com.gertoxq.wynnbuild.AtreeCoder;
+import com.gertoxq.wynnbuild.BitVector;
+import com.gertoxq.wynnbuild.GuiSlot;
+import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
+import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
 
-public class AtreeScreen extends BScreen {
+public class AtreeScreenHandler extends ContainerScreenHandler {
     static final Set<Integer> allCache = new HashSet<>();
     static final Set<Integer> readCache = new HashSet<>();
     static Set<Integer> unlockedCache = new HashSet<>(Set.of(0));
@@ -38,10 +49,11 @@ public class AtreeScreen extends BScreen {
         }
     }
 
-    public AtreeScreen(GenericContainerScreen screen) {
-        super(screen);
-        renderSaveButtons();
-        tempDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
+    public AtreeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+        super(syncId, playerInventory, inventory, 6);
+        if (!readAtree) {
+            startAtreead();
+        }
     }
 
     public static void resetData() {
@@ -54,9 +66,57 @@ public class AtreeScreen extends BScreen {
         readCache.clear();
     }
 
+    public void saveATree() {
+        if (castTreeObj == null) {
+            assert client.player != null;
+            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
+            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            return;
+        }
+        //screen.getUnlockedNames().forEach(System.out::println);
+        Set<Integer> unlockedIds = getUnlockedIds();
+        //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
+        unlockedAbilIds.addAll(unlockedIds);
+        atreeState.addAll(unlockedAbilIds);
+        //System.out.println("Unlocked "+ Arrays.toString(unlockedAbilIds.toArray()));
+    }
+
+    public void startAtreead() {
+        if (castTreeObj == null) {
+            assert client != null;
+            assert client.player != null;
+            client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)));
+            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            return;
+        }
+        AtomicBoolean allowClick = new AtomicBoolean(false);
+        ScreenMouseEvents.allowMouseClick(AtreeScreen.CURRENT_ATREE_SCREEN).register((screen1, mouseX, mouseY, button) -> allowClick.get());
+        final int pages = 9;
+        AtreeScreenHandler.resetData();
+        scrollAtree(-pages);            // 21
+        new Task(this::saveATree, pages * 4 + 20);
+        for (int i = 0; i < pages; i++) {
+            new Task(() -> scrollAtree(1), i * ATREE_IDLE + pages * 4 + 24); //  28   38   34
+            new Task(this::saveATree, i * ATREE_IDLE + ATREE_IDLE / 2 + pages * 4 + 24); //  30  25  28... 51
+        }
+        new Task(() -> {
+            allowClick.set(true);
+            BitVector encodedTree = AtreeCoder.encode_atree(atreeState);
+            atreeSuffix = encodedTree.toB64();
+            configManager.getConfig().setAtreeEncoding(atreeSuffix);
+            configManager.saveConfig();
+        }, pages * ATREE_IDLE + 8 + pages * 4 + 20);     // 45
+        readAtree = true;
+    }
+
+    @Override
+    public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
+
+    }
+
     public List<AbilSlot> getSlots() {
-        List<AbilSlot> slots = new ArrayList<>();
-        handler.slots.forEach(slot -> {
+        List<AbilSlot> realSlots = new ArrayList<>();
+        slots.forEach(slot -> {
 
             String name = Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()).replace("Unlock ", "").replace(" ability", ""));
 
@@ -69,10 +129,10 @@ public class AtreeScreen extends BScreen {
                     }
                 }
                 readCache.add(id);
-                slots.add(new AbilSlot(id, name, slot));
+                realSlots.add(new AbilSlot(id, name, slot));
             }
         });
-        return slots;
+        return realSlots;
     }
 
     private void travFindUnlocked(int id, Set<Integer> pageCache, Set<Integer> checked, Map<Integer, Slot> allSlots, List<AbilSlot> unlockedSlots) {
@@ -130,7 +190,7 @@ public class AtreeScreen extends BScreen {
     public List<AbilSlot> getUnlocked() {
 
         Set<Integer> pageCache = new HashSet<>();
-        List<Slot> filtered = handler.slots.stream().filter(slot -> !slot.getStack().isEmpty() && nameToId.containsKey(Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()
+        List<Slot> filtered = slots.stream().filter(slot -> !slot.getStack().isEmpty() && nameToId.containsKey(Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()
                 .replace("Unlock ", "")
                 .replace(" ability", "").trim())))).toList();
         Map<Integer, Slot> idSlotMap = new HashMap<>();
@@ -178,10 +238,10 @@ public class AtreeScreen extends BScreen {
         return getUnlocked().stream().map(AbilSlot::id).collect(Collectors.toSet());
     }
 
-    public void renderSaveButtons() {
-        AtomicInteger i = new AtomicInteger();
-        ImportAtree.getBuilds().stream().filter(save -> save.getCast() == cast)
-                .forEach(build -> PRESETBUTTON.addTo(getScreen(), AXISPOS.END, AXISPOS.START, 100, 20, 0, i.getAndAdd(20), Text.literal("Load ").append(build.getName()), button -> ImportAtree.applyBuild(build.getName(), this)));
+    public void scrollAtree(int amount) {
+        for (int i = 0; i < Math.abs(amount); i++) {
+            new Task(() -> client.execute(() -> this.leftClickSlot(amount > 0 ? GuiSlot.ATREE_UP.slot : GuiSlot.ATREE_DOWN.slot)), i * 4);
+        }
     }
 
     public record AbilSlot(int id, String name, Slot slot) {

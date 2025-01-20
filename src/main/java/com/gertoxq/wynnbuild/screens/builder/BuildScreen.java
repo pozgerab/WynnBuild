@@ -7,8 +7,8 @@ import com.gertoxq.wynnbuild.config.SavedItemType;
 import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
-import com.gertoxq.wynnbuild.screens.AXISPOS;
 import com.gertoxq.wynnbuild.screens.Button;
+import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.itemmenu.SelectableListWidget;
 import com.gertoxq.wynnbuild.util.Task;
 import net.minecraft.client.gui.DrawContext;
@@ -19,14 +19,13 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -34,6 +33,11 @@ import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
 
 public class BuildScreen extends Screen {
     public static final List<String> PRECISION_OPTIONS = List.of("OFF", "NEVER", "ON", "FORCE");
+    public static final Map<Integer, Text> PRECISION_TOOLTIPS = Map.of(
+            0, Text.literal("The item is passed to the builder as a default item (meaning an item with average rolls)"),
+            1, Text.literal("The item is always passed as a default item unless it's a crafted or custom item (average rolls always)"),
+            2, Text.literal("The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)"),
+            3, Text.literal("The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)"));
     public static final String precisionTooltip = """
             OFF - The item is passed to the builder as a default item (meaning an item with average rolls)
             
@@ -92,7 +96,7 @@ public class BuildScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
         clearChildren();
         saveArmor();
@@ -106,7 +110,7 @@ public class BuildScreen extends Screen {
             final ID.ItemType armorType = armorTypes.get(i);
             final int x = 40;
             final int y = 40 * i + 10 * i + 20;
-            ClickableIcon icon = createTypeSelection(x, y, armorType, Identifier.of("quickbuild", "iron_" + armorType.name().toLowerCase() + ".png"), i);
+            ClickableIcon icon = createTypeSelection(x, y, armorType, Identifier.of("wynnbuild", "iron_" + armorType.name().toLowerCase() + ".png"), i);
             addDrawableChild(icon);
         }
 
@@ -116,11 +120,11 @@ public class BuildScreen extends Screen {
             final int x = 140;
             final int y = 50 * j + 20;
             final int key = j + 4;
-            ClickableIcon icon = createTypeSelection(x, y, accType, Identifier.of("quickbuild", accType.name().toLowerCase() + ".png"), key);
+            ClickableIcon icon = createTypeSelection(x, y, accType, Identifier.of("wynnbuild", accType.name().toLowerCase() + ".png"), key);
             addDrawableChild(icon);
         }
 
-        UI.addTo(this, AXISPOS.END, AXISPOS.END, 120, 20, Text.literal("CLEAR BUILD"), button -> {
+        UI.addTo(this, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 120, 20, Text.literal("CLEAR BUILD"), button -> {
             clearAndInit();
             initState();
         });
@@ -146,7 +150,7 @@ public class BuildScreen extends Screen {
         ClickableIcon weaponIcon = createTypeSelection(40, 230, weaponTypes, Identifier.of("minecraft", "textures/item/iron_sword.png"), 8, cast.weapon);
         addDrawableChild(weaponIcon);
 
-        ClickableIcon atreeIcon = new ClickableIcon(140, 230, 40, 40, Identifier.of("quickbuild", "atreeicon.png"), clickableIcon -> {
+        ClickableIcon atreeIcon = new ClickableIcon(140, 230, 40, 40, Identifier.of("wynnbuild", "atreeicon.png"), clickableIcon -> {
             Cast currentCast = null;
             if (buildHashes.get(8) == null) {
                 if (currentSelect.get() != null) currentSelect.get().dispose();
@@ -218,9 +222,10 @@ public class BuildScreen extends Screen {
                         finalIds.set(i, item.encodeCustom(true));
                     }
                 }
-                WynnBuildClient.buildWithArgs(finalIds, buildIds.get(9), emptySafe);
+                WynnBuildClient.buildWithArgs(finalIds, buildIds.get(9), emptySafe, null);
             } catch (Exception e) {
                 client.player.sendMessage(Text.literal("Something went wrong when trying to build"));
+                client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 e.printStackTrace();
             }
         }));

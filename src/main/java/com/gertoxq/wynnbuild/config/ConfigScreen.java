@@ -21,7 +21,7 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
 
         addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)), Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)))
@@ -46,9 +46,9 @@ public class ConfigScreen extends Screen {
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 72, 100, 20, Text.literal("Powder level: "), textRenderer));
 
         addDrawableChild(CyclingButtonWidget.<Integer>builder(val -> Text.literal(String.valueOf(val)))
+                .values(1, 2, 3, 4, 5, 6)
                 .initially(WynnBuildClient.getConfigManager().getConfig().getDefaultPowderLevel())
                 .omitKeyText()
-                .values(1, 2, 3, 4, 5, 6)
                 .build(this.width / 2, this.height / 4 + 72, 30, 20, Text.empty(),
                         (button, value) -> {
                             WynnBuildClient.getConfigManager().getConfig().setDefaultPowderLevel(value);
@@ -56,8 +56,8 @@ public class ConfigScreen extends Screen {
                         }));
 
         addDrawableChild(CyclingButtonWidget.<Integer>builder(integer -> Text.literal(BuildScreen.PRECISION_OPTIONS.get(integer)).styled(style -> style.withColor(Formatting.AQUA)))
-                .initially(WynnBuildClient.getConfigManager().getConfig().getPrecision())
                 .values(0, 1, 2, 3)
+                .initially(WynnBuildClient.getConfigManager().getConfig().getPrecision())
                 .build(this.width / 2 - 100, this.height / 4 + 96, 179, 20, Text.literal("Build Precision"),
                         (button, value) -> {
                             WynnBuildClient.getConfigManager().getConfig().setPrecision(value);

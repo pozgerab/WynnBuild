@@ -4,9 +4,12 @@ import com.gertoxq.wynnbuild.AtreeCoder;
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
 import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.config.SavedBuildType;
-import com.gertoxq.wynnbuild.screens.AtreeScreen;
+import com.gertoxq.wynnbuild.screens.atree.AtreeScreen;
+import com.gertoxq.wynnbuild.screens.atree.AtreeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 import java.util.*;
@@ -34,15 +37,15 @@ public class ImportAtree {
         if (counter.getAndIncrement() >= max) return () -> allowClick.set(true);
         return () -> {
             Map<Integer, Integer> idSlots = new HashMap<>();
-            screen.getSlots().forEach(abilSlot -> idSlots.put(abilSlot.id(), abilSlot.slot().getIndex()));
+            screen.getScreenHandler().getSlots().forEach(abilSlot -> idSlots.put(abilSlot.id(), abilSlot.slot().getIndex()));
             AtomicInteger j = new AtomicInteger(0);
             var unsorted = applyIds.stream().filter(idSlots::containsKey).toList();
             var sortedAbils = new Atrouter(new HashSet<>(unsorted), castTreeObj).findRoute();
             sortedAbils.forEach(id -> {
-                new Task(() -> screen.getClicker().click(idSlots.get(id)), j.get() * 15 + 2);
+                new Task(() -> screen.getScreenHandler().leftClickSlot(idSlots.get(id)), j.get() * 15 + 2);
                 j.addAndGet(1);
             });
-            new Task(() -> screen.getClicker().scrollAtree(1), sortedAbils.size() * 15 + 10)
+            new Task(() -> screen.getScreenHandler().scrollAtree(1), sortedAbils.size() * 15 + 10)
                     .then(traverse(screen, applyIds, counter, max), 5);
         };
     }
@@ -51,13 +54,14 @@ public class ImportAtree {
         SavedBuildType build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
         if (build == null) {
             client.player.sendMessage(Text.literal("Build not found, something went wrong"));
+            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
         Set<Integer> applyIds = AtreeCoder.decode_atree(build.getValue());
         allowClick.set(false);
-        ScreenMouseEvents.allowMouseClick(screen.getScreen()).register((screen1, mouseX, mouseY, button) -> allowClick.get());
-        screen.getClicker().scrollAtree(-7); // Wait for scroll finish
-        AtreeScreen.resetReader();
+        ScreenMouseEvents.allowMouseClick(screen).register((screen1, mouseX, mouseY, button) -> allowClick.get());
+        screen.getScreenHandler().scrollAtree(-7); // Wait for scroll finish
+        AtreeScreenHandler.resetReader();
         new Task(traverse(screen, applyIds, new AtomicInteger(0), 7), 7 * 4);
     }
 

@@ -12,6 +12,7 @@
     "sources": "https://github.com/pozgerab/WynnBuild",
     "issues": "https://github.com/pozgerab/WynnBuild/issues"
   },
+  "accessWidener": "wynnbuild.accesswidener",
   "custom": {
     "modmenu": {
       "links": {
@@ -31,9 +32,13 @@
       "com.gertoxq.wynnbuild.WynnBuild"
     ]
   },
+  "mixins": [
+    "wynnbuild.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
+    "fabric-api": "*",
     "minecraft": ">=1.21 <=1.21.1"
   }
 }

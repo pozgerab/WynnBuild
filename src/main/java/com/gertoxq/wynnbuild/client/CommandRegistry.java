@@ -12,7 +12,9 @@ import com.gertoxq.wynnbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.wynnbuild.util.WynnData;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -21,7 +23,7 @@ import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
 import static com.gertoxq.wynnbuild.custom.CustomItem.getItem;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
-public class CommandReg {
+public class CommandRegistry {
 
     public static void init(MinecraftClient client) {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
@@ -29,7 +31,7 @@ public class CommandReg {
                     .executes(context -> WynnBuildClient.build()).then(literal("help").executes(context -> {
                         var p = context.getSource().getClient().player;
                         if (p == null) return 0;
-                        p.sendMessage(Text.literal("Welcome to QuickBuild").styled(style -> style.withColor(Formatting.GOLD)).append(
+                        p.sendMessage(Text.literal("Welcome to WynnBuild").styled(style -> style.withColor(Formatting.GOLD)).append(
                                 Text.literal("""
                                         
                                         This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share.
@@ -91,10 +93,12 @@ public class CommandReg {
                     } else {
                         client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
                                 .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     client.player.sendMessage(Text.literal("Can't save this item").styled(style -> style.withColor(Formatting.RED)));
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
                 return 1;
             })));

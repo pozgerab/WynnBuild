@@ -14,7 +14,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
@@ -65,7 +67,7 @@ public class SavedItemsScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
         this.clearChildren();
         getConfigManager().loadConfig();
@@ -115,9 +117,11 @@ public class SavedItemsScreen extends Screen {
                 } else {
                     client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
                             .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
             } catch (Exception ignored) {
                 client.player.sendMessage(Text.literal("Failed to save").styled(style -> style.withColor(Formatting.RED)));
+                client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             }
             init();
         }));
@@ -149,6 +153,7 @@ public class SavedItemsScreen extends Screen {
                 } else {
                     client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
                             .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
             } catch (Exception e) {
                 info.setMessage(Text.literal("Invalid item").styled(style -> style.withColor(Formatting.RED)));

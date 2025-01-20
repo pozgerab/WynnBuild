@@ -5,8 +5,8 @@ import com.gertoxq.wynnbuild.config.SavedItemType;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.custom.TypedID;
-import com.gertoxq.wynnbuild.screens.BScreen;
 import com.gertoxq.wynnbuild.screens.itemmenu.SelectableListWidget;
+import com.gertoxq.wynnbuild.util.ScreenUtils;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.gertoxq.wynnbuild.util.WynnData;
 import net.minecraft.client.gui.DrawContext;
@@ -39,7 +39,7 @@ public class GalleryScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
 
         TextFieldWidget widget = getTextFieldWidget();
@@ -260,7 +260,7 @@ public class GalleryScreen extends Screen {
 
         @Override
         public void renderChild(SelectableListWidget<GalleryItem>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            BScreen.renderItem(context, entry.getValue().itemStack(), x, y, 24, (float) (entryWidth - 16) / 2, (float) (entryHeight - 16) / 2);
+            ScreenUtils.renderItem(context, entry.getValue().itemStack(), x, y, 24, (float) (entryWidth - 16) / 2, (float) (entryHeight - 16) / 2);
 
             if (getSelectedOrNull() != null) {
                 context.drawTooltip(GalleryScreen.this.textRenderer,
