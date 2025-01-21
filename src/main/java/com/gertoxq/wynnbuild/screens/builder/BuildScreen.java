@@ -35,17 +35,13 @@ public class BuildScreen extends Screen {
     public static final List<String> PRECISION_OPTIONS = List.of("OFF", "NEVER", "ON", "FORCE");
     public static final Map<Integer, Text> PRECISION_TOOLTIPS = Map.of(
             0, Text.literal("The item is passed to the builder as a default item (meaning an item with average rolls)"),
-            1, Text.literal("The item is always passed as a default item unless it's a crafted or custom item (average rolls always)"),
+            1, Text.literal("The item is always passed as a default item unless it's a crafted or custom (average rolls always)"),
             2, Text.literal("The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)"),
-            3, Text.literal("The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)"));
-    public static final String precisionTooltip = """
-            OFF - The item is passed to the builder as a default item (meaning an item with average rolls)
-            
-            NEVER - The item is always passed as a default item unless it's a crafted or custom item (average rolls always)
-            
-            ON - The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)
-            
-            FORCE - The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)""";
+            3, Text.literal("The item is always passed as a custom item (uses your exact rolls, most precision)"));
+    public static final String precisionTooltip = "\n" + PRECISION_OPTIONS.get(0) + " - " + PRECISION_TOOLTIPS.get(0).getString() + "\n" +
+            "\n" + PRECISION_OPTIONS.get(1) + " - " + PRECISION_TOOLTIPS.get(1).getString() + "\n" +
+            "\n" + PRECISION_OPTIONS.get(2) + " - " + PRECISION_TOOLTIPS.get(2).getString() + "\n" +
+            "\n" + PRECISION_OPTIONS.get(3) + " - " + PRECISION_TOOLTIPS.get(3).getString();
     private static AtomicReference<SelectableListWidget<?>> currentSelect = new AtomicReference<>();
     private static List<String> buildIds = new ArrayList<>(Collections.nCopies(10, ""));
     private static List<String> buildNames;

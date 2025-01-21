@@ -2,6 +2,7 @@ package com.gertoxq.wynnbuild.screens.charinfo;
 
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ContainerScreen;
+import com.gertoxq.wynnbuild.screens.ScreenManager;
 import com.gertoxq.wynnbuild.util.Task;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -15,6 +16,8 @@ import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
 public class CharacterInfoScreen extends ContainerScreen<CharacterInfoScreenHandler> {
 
     public static final Pattern TITLE_PATTERN = Pattern.compile("\udaff\udfdc\ue003");
+    public static final ScreenManager.ScreenInstanceCreater<CharacterInfoScreenHandler, CharacterInfoScreen> CREATOR =
+            (handler1, inventory, title) -> new CharacterInfoScreen(new CharacterInfoScreenHandler(handler1.syncId, inventory, handler1.getInventory()), inventory, title);
 
     public CharacterInfoScreen(CharacterInfoScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);

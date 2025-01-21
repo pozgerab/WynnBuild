@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
 
@@ -42,6 +43,23 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
         }
     }
 
+    @Override
+    protected void renderEntry(DrawContext context, int mouseX, int mouseY, float delta, int index, int x, int y, int entryWidth, int entryHeight) {
+        var entry = this.getEntry(index);
+        entry.drawBorder(context, index, y, x, entryWidth, entryHeight, mouseX, mouseY, Objects.equals(this.hoveredEntry, entry), delta);
+        if (this.isSelectedEntry(index)) {
+            int i = this.isFocused() ? -1 : -8355712;
+            this.drawSelectionHighlight(context, x, y, entryWidth, entryHeight, i, -16777216);
+        }
+
+        entry.render(context, index, y, x, entryWidth, entryHeight, mouseX, mouseY, Objects.equals(this.hoveredEntry, entry), delta);
+    }
+
+    protected void drawSelectionHighlight(DrawContext context, int x, int y, int entryWidth, int entryHeight, int borderColor, int fillColor) {
+        int xEnd = x + entryWidth;
+        context.fill(x, y - 2, xEnd, y + entryHeight + 2, borderColor);
+        context.fill(x + 1, y - 1, xEnd - 1, y + entryHeight + 1, fillColor);
+    }
 
     @Override
     protected @Nullable SelectableListWidget<T>.Entry getEntryAtPosition(double x, double y) {

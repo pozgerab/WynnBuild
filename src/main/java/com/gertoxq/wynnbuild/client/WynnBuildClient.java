@@ -9,6 +9,7 @@ import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.screens.Clickable;
+import com.gertoxq.wynnbuild.screens.ScreenManager;
 import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
@@ -53,7 +54,6 @@ public class WynnBuildClient implements ClientModInitializer {
     public static List<Integer> tomeIds = Collections.nCopies(8, null);
     public static List<ID.ItemType> types = List.of(ID.ItemType.Helmet, ID.ItemType.Chestplate, ID.ItemType.Leggings, ID.ItemType.Boots, ID.ItemType.Ring, ID.ItemType.Ring, ID.ItemType.Bracelet, ID.ItemType.Necklace);
     public static int REFETCH_DELAY = 40;
-    public static Manager configManager;
     public static int ATREE_IDLE; // How many ticks is elapsed before turning page while reading atree
     public static List<String> craftedHashes = new ArrayList<>(Collections.nCopies(9, ""));
     public static List<Integer> ids = new ArrayList<>();
@@ -62,6 +62,7 @@ public class WynnBuildClient implements ClientModInitializer {
     public static List<ItemStack> items;
     public static int wynnLevel;
     public static boolean readAtree = false;
+    private static Manager configManager;
 
     public static Manager getConfigManager() {
         return configManager;
@@ -271,6 +272,7 @@ public class WynnBuildClient implements ClientModInitializer {
 
         AllIDs.load();
         WynnData.load();
+        ScreenManager.register();
 
         configManager = new Manager();
         configManager.loadConfig();
@@ -280,7 +282,7 @@ public class WynnBuildClient implements ClientModInitializer {
         BUTTON = new Clickable(() -> configManager.getConfig().isShowButtons());
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
-            getConfigManager().loadConfig();
+            configManager.loadConfig();
             if (screen instanceof InventoryScreen screen1) {
                 BUTTON.addTo(screen1, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
             }

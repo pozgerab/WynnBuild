@@ -13,6 +13,8 @@ You can customize how precise your stats of your build will be with the **Precis
 - **ON** - The item is passed as a custom item if the item is saved (not the currently used equipment) (the stats are precise)
 - **FORCE** - The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)
 
+![Precision Option](https://cdn.modrinth.com/data/1RCjAAcr/images/b581fa86bcb87455948acbf479cd46f9139cd3be.png)
+
 ## Powders
 As it isn't possible to tell what tier is a powder on an item, you can set a default value for it in the config screen. For specifying each powder level, you'll need to do that in the actual builder.
 
@@ -46,4 +48,9 @@ You can configure your builds even more with the use of the in-game builder **(/
 
 _Note: the mod is still under development, more features, easier usage and QoL changes are yet to come._
 
-_All the data (items, tomes, etc...) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_
+## (BETA) Gallery
+The Item Gallery ( **/build beta gallery** ) shows all wynncraft items and saved versions of them.
+
+A filter feature is implemented with the wynnbuild id codes (will change, not user friendly), and the character "$" at the start is used to show only the saved items
+
+#### _All the data (items, tomes, etc...) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_

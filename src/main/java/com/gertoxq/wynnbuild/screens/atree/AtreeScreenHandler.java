@@ -8,6 +8,7 @@ import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,6 +50,8 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         }
     }
 
+    public boolean readCurrent = false;
+
     public AtreeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(syncId, playerInventory, inventory, 6);
         if (!readAtree) {
@@ -89,8 +92,12 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
+        final AtreeScreen atreeScreen = AtreeScreen.CURRENT_ATREE_SCREEN;
         AtomicBoolean allowClick = new AtomicBoolean(false);
-        ScreenMouseEvents.allowMouseClick(AtreeScreen.CURRENT_ATREE_SCREEN).register((screen1, mouseX, mouseY, button) -> allowClick.get());
+        ScreenMouseEvents.allowMouseClick(atreeScreen).register((screen1, mouseX, mouseY, button) -> allowClick.get());
+        ScreenKeyboardEvents.allowKeyPress(atreeScreen).register((screen, key, scancode, modifiers) -> allowClick.get());
+        atreeScreen.setMessage(Text.literal("Reading...").styled(style -> style.withColor(Formatting.RED)));
+        atreeScreen.setMessageVisible(true);
         final int pages = 9;
         AtreeScreenHandler.resetData();
         scrollAtree(-pages);            // 21
@@ -103,8 +110,11 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
             allowClick.set(true);
             BitVector encodedTree = AtreeCoder.encode_atree(atreeState);
             atreeSuffix = encodedTree.toB64();
-            configManager.getConfig().setAtreeEncoding(atreeSuffix);
-            configManager.saveConfig();
+            getConfigManager().getConfig().setAtreeEncoding(atreeSuffix);
+            getConfigManager().saveConfig();
+            atreeScreen.setMessage(Text.literal("Ability tree read successfully: ").append(atreeSuffix).styled(style -> style.withColor(Formatting.GREEN)));
+            new Task(() -> atreeScreen.setMessageVisible(false), 200);
+            readCurrent = true;
         }, pages * ATREE_IDLE + 8 + pages * 4 + 20);     // 45
         readAtree = true;
     }

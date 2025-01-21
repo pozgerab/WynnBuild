@@ -16,7 +16,6 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.github_releases": "https://github.com/pozgerab/WynnBuild/releases",
         "modmenu.modrinth": "https://modrinth.com/mod/wynnbuild"
       }
     }
@@ -30,6 +29,9 @@
     ],
     "main": [
       "com.gertoxq.wynnbuild.WynnBuild"
+    ],
+    "modmenu": [
+      "com.gertoxq.wynnbuild.config.ModMenuConfig"
     ]
   },
   "mixins": [
@@ -37,8 +39,10 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "fabric": "*",
     "fabric-api": "*",
     "minecraft": ">=1.21 <=1.21.1"
+  },
+  "suggests": {
+    "modmenu": ">=8.0.0"
   }
 }

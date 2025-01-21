@@ -35,8 +35,8 @@ public class CharacterInfoScreenHandler extends ContainerScreenHandler {
             wynnLevel = getLevel();
             stats = getStats();
             cast = getCast();
-            configManager.getConfig().setCast(cast.name);
-            configManager.saveConfig();
+            getConfigManager().getConfig().setCast(cast.name);
+            getConfigManager().saveConfig();
             currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
             castTreeObj = fullatree.get(cast.name).getAsJsonObject();
         });

@@ -61,11 +61,6 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
     }
 
     @Override
-    protected void renderEntry(DrawContext context, int mouseX, int mouseY, float delta, int index, int x, int y, int entryWidth, int entryHeight) {
-        super.renderEntry(context, mouseX, mouseY, delta, index, x, y, entryWidth, entryHeight);
-    }
-
-    @Override
     public Entry getEntry(int index) {
         return super.getEntry(index);
     }
