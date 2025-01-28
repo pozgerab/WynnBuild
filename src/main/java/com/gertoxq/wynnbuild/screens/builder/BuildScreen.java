@@ -19,6 +19,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -220,7 +221,7 @@ public class BuildScreen extends Screen {
                 }
                 WynnBuildClient.buildWithArgs(finalIds, buildIds.get(9), emptySafe, null);
             } catch (Exception e) {
-                client.player.sendMessage(Text.literal("Something went wrong when trying to build"));
+                client.player.sendMessage(Text.literal("Something went wrong when trying to build"), false);
                 client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 e.printStackTrace();
             }
@@ -304,13 +305,14 @@ public class BuildScreen extends Screen {
         protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
             context.drawBorder(this.getX(), this.getY(), this.getWidth(), this.getHeight(), Formatting.WHITE.getColorValue());
             context.drawTexture(
+                    RenderLayer::getGuiTextured,
                     this.texture,
                     this.getX(),
                     this.getY(),
+                    0.0F,
+                    0.0F,
                     this.getWidth(),
                     this.getHeight(),
-                    0.0F,
-                    0.0F,
                     this.getWidth(),
                     this.getHeight(),
                     this.textureWidth,

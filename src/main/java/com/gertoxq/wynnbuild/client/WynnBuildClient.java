@@ -135,14 +135,14 @@ public class WynnBuildClient implements ClientModInitializer {
         String customHash = item == null ? "" : item.encodeCustom(true);
 
         if (customHash.isEmpty()) {
-            client.player.sendMessage(Text.literal("Couldn't encode this item"));
+            client.player.sendMessage(Text.literal("Couldn't encode this item"), false);
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
         String url = WYNNCUSTOM_DOMAIN + customHash;
         String fullHash = "CI-" + customHash;
 
-        client.player.sendMessage(Utils.getItemPrintTemplate(item, fullHash, url));
+        client.player.sendMessage(Utils.getItemPrintTemplate(item, fullHash, url), false);
 
     }
 
@@ -181,7 +181,7 @@ public class WynnBuildClient implements ClientModInitializer {
         }
         if (stats.values().stream().allMatch(i -> i == 0)) {
             //  If all stats are 0, possibly the data isn't fetched
-            player.sendMessage(Text.literal("Open your character menu while holding your weapon to fetch information for your build").formatted(Formatting.RED));
+            player.sendMessage(Text.literal("Open your character menu while holding your weapon to fetch information for your build").formatted(Formatting.RED), false);
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
@@ -199,9 +199,9 @@ public class WynnBuildClient implements ClientModInitializer {
         url.append(atreeCode); // atree
 
         //  Send copyable build to client
-        player.sendMessage(Utils.getBuildTemplate(url.toString(), precision));
+        player.sendMessage(Utils.getBuildTemplate(url.toString(), precision), false);
         if (!emptySafe)
-            client.player.sendMessage(Text.literal("Note that not using the EMPTY SAFE option generates urls without skill points").styled(style -> style.withColor(Formatting.RED)));
+            client.player.sendMessage(Text.literal("Note that not using the EMPTY SAFE option generates urls without skill points").styled(style -> style.withColor(Formatting.RED)), false);
     }
 
     public static int build() {
@@ -211,7 +211,7 @@ public class WynnBuildClient implements ClientModInitializer {
         saveArmor();
 
         if (ids.get(8) == -1) {
-            player.sendMessage(Text.literal("Hold a weapon!").styled(style -> style.withColor(Formatting.RED)));
+            player.sendMessage(Text.literal("Hold a weapon!").styled(style -> style.withColor(Formatting.RED)), false);
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return 0;
         }

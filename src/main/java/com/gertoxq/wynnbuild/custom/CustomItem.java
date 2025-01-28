@@ -76,9 +76,9 @@ public class CustomItem {
 
         custom.material = item.getItem();
         try {
-            custom.modelData = item.get(DataComponentTypes.CUSTOM_MODEL_DATA).value();
+            custom.modelData = item.get(DataComponentTypes.CUSTOM_MODEL_DATA).getFloat(0).intValue();
         } catch (NullPointerException e) {
-            System.out.println("No custom model data, prob armor or custom item");
+//            System.out.println("No custom model data, prob armor or custom item");
         }
 
         TextColor nameColor = item.getName().getStyle().getColor();
@@ -276,7 +276,7 @@ public class CustomItem {
 
     public ItemStack createStack() {
         ItemStack itemStack = new ItemStack(material != null ? material : Items.BARRIER);
-        itemStack.set(DataComponentTypes.CUSTOM_MODEL_DATA, new CustomModelDataComponent(modelData));
+        itemStack.set(DataComponentTypes.CUSTOM_MODEL_DATA, new CustomModelDataComponent(List.of(((float) modelData)), List.of(), List.of(), List.of()));
         itemStack.set(DataComponentTypes.LORE, new LoreComponent(buildLore()));
         itemStack.set(DataComponentTypes.ITEM_NAME, Text.literal(getName()).styled(style -> style.withColor(getTier().format)));
         if (headId != null) {
@@ -423,7 +423,7 @@ public class CustomItem {
                 }
             } else if (id.equals("majorIds") && val instanceof String) {
             } else if (val instanceof String sVal && !sVal.isEmpty()) {
-                if (Data.damages.contains(id) && val.equals("0-0") ||
+                if (damages.contains(id) && val.equals("0-0") ||
                         (!verbose && Arrays.asList("lore", "majorIds", "quest", "materials", "drop", "set").contains(id))) {
                     continue;
                 }

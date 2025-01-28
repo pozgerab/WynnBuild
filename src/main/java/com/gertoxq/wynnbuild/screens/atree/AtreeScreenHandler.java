@@ -72,7 +72,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
     public void saveATree() {
         if (castTreeObj == null) {
             assert client.player != null;
-            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)));
+            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)), false);
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
@@ -88,7 +88,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         if (castTreeObj == null) {
             assert client != null;
             assert client.player != null;
-            client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)));
+            client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)), false);
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
