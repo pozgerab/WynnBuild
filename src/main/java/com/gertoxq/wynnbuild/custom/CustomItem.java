@@ -231,8 +231,6 @@ public class CustomItem {
                             if (sign == 1) val = -(int) val;
                             tag = tag.substring(5 + len);
                         }
-                        if (id.equals("majorIds") && val instanceof String) {
-                        }
                         statMap.put(id, val);
                     }
                 }

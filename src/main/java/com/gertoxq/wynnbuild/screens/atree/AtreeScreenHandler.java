@@ -232,9 +232,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
             findEndNode(prevIds, new ArrayList<>(prevIds), endNodes);
             Set<Integer> checked = new HashSet<>();
             //System.out.println("topNode="+endNodes);
-            endNodes.forEach(node -> {
-                travFindUnlocked(node, pageCache, checked, idSlotMap, slots);
-            });
+            endNodes.forEach(node -> travFindUnlocked(node, pageCache, checked, idSlotMap, slots));
         }
         //System.out.println("unlockedWhole="+unlockedCache);
         //System.out.println("unlockedPage="+pageCache);
