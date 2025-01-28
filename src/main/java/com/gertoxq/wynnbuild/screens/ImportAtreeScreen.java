@@ -54,7 +54,7 @@ public class ImportAtreeScreen extends Screen {
                 code = AtreeCoder.encode_atree(AtreeCoder.decode_atree(code)).toB64();
                 ImportAtree.addBuild(nameInput.getText(), code);
             } catch (Exception e) {
-                client.player.sendMessage(Text.literal("Invalid code").styled(style -> style.withColor(Formatting.RED)));
+                client.player.sendMessage(Text.literal("Invalid code").styled(style -> style.withColor(Formatting.RED)), false);
                 client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 e.printStackTrace();
             }

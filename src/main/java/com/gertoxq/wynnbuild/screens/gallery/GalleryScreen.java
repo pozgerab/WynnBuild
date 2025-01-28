@@ -244,10 +244,9 @@ public class GalleryScreen extends Screen {
         }
 
         @Override
-        protected int getDefaultScrollbarX() {
+        protected int getScrollbarX() {
             return getRight() - 5;
         }
-
 
         @Override
         public void renderChild(SelectableListWidget<GalleryItem>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {

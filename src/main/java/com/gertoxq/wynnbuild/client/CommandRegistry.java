@@ -36,7 +36,7 @@ public class CommandRegistry {
                                         
                                         This is a mod for quickly exporting your build with the use of wynnbuilder. As you run the '/build' command or click the build button on the right left side of your screen, this mod will generate you a wynnbuilder link that you can copy or share.
                                         You can configure the mod with /build config""")
-                        ).styled(style -> style.withColor(Formatting.GOLD)));
+                        ).styled(style -> style.withColor(Formatting.GOLD)), false);
                         return 1;
                     })));
             dispatcher.register(literal("build").then(literal("config").executes(context -> {
@@ -89,15 +89,15 @@ public class CommandRegistry {
                     var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
                     if (exisiting == null) {
                         client.player.sendMessage(Text.literal("Saved ").append(customItem.createItemShowcase())
-                                .append(" under the name of: ").append(Text.literal(savedItem.getName()).styled(style -> style.withBold(true))));
+                                .append(" under the name of: ").append(Text.literal(savedItem.getName()).styled(style -> style.withBold(true))), false);
                     } else {
                         client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
-                                .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                                .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))), false);
                         client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    client.player.sendMessage(Text.literal("Can't save this item").styled(style -> style.withColor(Formatting.RED)));
+                    client.player.sendMessage(Text.literal("Can't save this item").styled(style -> style.withColor(Formatting.RED)), false);
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
                 return 1;
