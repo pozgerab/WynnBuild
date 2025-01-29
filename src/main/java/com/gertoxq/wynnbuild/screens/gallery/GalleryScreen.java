@@ -236,15 +236,6 @@ public class GalleryScreen extends Screen {
         @Override
         public void setSelected(@Nullable SelectableListWidget<GalleryItem>.Entry entry) {
             super.setSelected(entry);
-//            savedVersions = QuickBuildClient.getConfigManager().getConfig().getSavedItems().stream()
-//                    .filter(savedItemType -> savedItemType.getBaseItemId() == entry.getValue().customItem().getBaseItemId()).toList();
-//
-//            for (int i = 0; i < savedVersions.size(); i++) {
-//                SavedItemType item = savedVersions.get(i);
-//
-//                dupeButtons.get(i).setItem(item);
-//
-//            }
         }
 
         @Override
