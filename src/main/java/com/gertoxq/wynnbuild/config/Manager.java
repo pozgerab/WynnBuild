@@ -33,7 +33,6 @@ public class Manager {
                 config = GSON.fromJson(reader, ConfigType.class);
                 try {
                     cast = Cast.valueOf(config.getCast());
-                    currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
                     castTreeObj = fullatree.get(cast.name).getAsJsonObject();
                 } catch (Exception e) {
                     System.out.println("Invalid Cast value");

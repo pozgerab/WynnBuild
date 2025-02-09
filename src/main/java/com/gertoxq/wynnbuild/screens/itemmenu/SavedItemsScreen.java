@@ -70,7 +70,6 @@ public class SavedItemsScreen extends Screen {
     public void init() {
         super.init();
         this.clearChildren();
-        getConfigManager().loadConfig();
         info = new TextWidget(width / 2 + 120, 40, 200, 20, Text.literal(""), textRenderer);
         var nameInput = new TextFieldWidget(textRenderer, width / 2 - 100, height - 75, 58, 20, Text.empty());
         nameInput.setPlaceholder(Text.literal("Name"));
@@ -180,9 +179,8 @@ public class SavedItemsScreen extends Screen {
                 client.player.sendMessage(Text.literal("Copied hash of ")
                         .append(customItem.createItemShowcase()), false);
             }));
-            addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"), button -> {
-                client.execute(() -> client.setScreen(new BuildScreen()));
-            }));
+            addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"),
+                    button -> client.execute(() -> client.setScreen(new BuildScreen()))));
             addDrawableChild(new Button(left - 100, top + 44, 100, 20, Text.literal("DELETE").styled(style -> style.withColor(Formatting.DARK_RED)), button -> {
                 if (getSelectedOrNull() == null) return;
                 String name;
@@ -204,9 +202,6 @@ public class SavedItemsScreen extends Screen {
             }));
         }
 
-        public void createFilter() {
-
-        }
 
         @Override
         public void setSelected(@Nullable SavedItemsScreen.SavedItemListWidget.Entry selected) {

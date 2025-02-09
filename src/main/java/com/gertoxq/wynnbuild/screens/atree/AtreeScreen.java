@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
-import static com.gertoxq.wynnbuild.screens.atree.AtreeScreenHandler.tempDupeMap;
 
 public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
 
@@ -27,7 +26,6 @@ public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
     public AtreeScreen(AtreeScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         CURRENT_ATREE_SCREEN = this;
-        tempDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
     }
 
     public void setMessage(Text message) {
