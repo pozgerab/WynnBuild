@@ -3,6 +3,7 @@ package com.gertoxq.wynnbuild.screens.charinfo;
 import com.gertoxq.wynnbuild.Cast;
 import com.gertoxq.wynnbuild.SP;
 import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
+import com.gertoxq.wynnbuild.screens.atree.Ability;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,11 +35,16 @@ public class CharacterInfoScreenHandler extends ContainerScreenHandler {
         Utils.catchNotLoaded(() -> {
             wynnLevel = getLevel();
             stats = getStats();
+            var prevCast = cast;
             cast = getCast();
             getConfigManager().getConfig().setCast(cast.name);
             getConfigManager().saveConfig();
-            currentDupeMap = dupeMap.get(cast.name).getAsJsonObject().asMap();
-            castTreeObj = fullatree.get(cast.name).getAsJsonObject();
+            if (!cast.equals(prevCast)) {
+                castTreeObj = fullatree.get(cast.name).getAsJsonObject();
+                if (cast.equals(prevCast)) {
+                    Ability.refreshTree();
+                }
+            }
         });
     }
 

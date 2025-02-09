@@ -64,7 +64,7 @@ public class ConfigScreen extends Screen {
                         Text.literal("?"),
                         button -> {
                             if (client.player == null) return;
-                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(BuildScreen.precisionTooltip));
+                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(BuildScreen.precisionTooltip), false);
                         })
                 .position(this.width / 2 + 80, this.height / 4 + 96)
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))

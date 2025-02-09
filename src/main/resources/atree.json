@@ -7,7 +7,10 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 4
     },
     "1": {
       "display_name": "Bow Proficiency",
@@ -20,7 +23,10 @@
       "children": [
         2,
         3
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 22
     },
     "2": {
       "display_name": "Cheaper Arrow Bomb",
@@ -31,7 +37,10 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 1,
+      "slot": 24
     },
     "3": {
       "display_name": "Heart Shatter",
@@ -42,7 +51,10 @@
       "dependencies": [],
       "children": [
         5
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 40
     },
     "4": {
       "display_name": "Double Shots",
@@ -54,7 +66,10 @@
       "children": [
         5,
         7
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 11
     },
     "5": {
       "display_name": "Escape",
@@ -68,7 +83,10 @@
       "children": [
         4,
         6
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 13
     },
     "6": {
       "display_name": "Power Shots",
@@ -80,7 +98,10 @@
       "children": [
         5,
         9
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 15
     },
     "7": {
       "display_name": "Arrow Storm",
@@ -95,10 +116,13 @@
         10,
         11,
         12
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 29
     },
     "8": {
-      "display_name": "Cheaper Escape",
+      "display_name": "Cheaper Escape I",
       "parents": [
         7,
         9
@@ -111,7 +135,10 @@
         12,
         13,
         15
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 31
     },
     "9": {
       "display_name": "Arrow Shield",
@@ -125,7 +152,10 @@
         8,
         13,
         14
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 33
     },
     "10": {
       "display_name": "Windy Feet",
@@ -134,7 +164,10 @@
       ],
       "id": 10,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 2,
+      "slot": 37
     },
     "11": {
       "display_name": "Air Mastery",
@@ -145,7 +178,10 @@
       "dependencies": [],
       "children": [
         16
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 9
     },
     "12": {
       "display_name": "Thunder Mastery",
@@ -160,7 +196,10 @@
         13,
         15,
         17
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 11
     },
     "13": {
       "display_name": "Fire Mastery",
@@ -175,7 +214,10 @@
         12,
         15,
         19
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 15
     },
     "14": {
       "display_name": "Water Mastery",
@@ -186,7 +228,10 @@
       "dependencies": [],
       "children": [
         20
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 17
     },
     "15": {
       "display_name": "Earth Mastery",
@@ -199,7 +244,10 @@
       "dependencies": [],
       "children": [
         18
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 22
     },
     "16": {
       "display_name": "Nimble String",
@@ -214,7 +262,10 @@
       "children": [
         17,
         21
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 27
     },
     "17": {
       "display_name": "Arrow Rain",
@@ -229,7 +280,10 @@
       "children": [
         16,
         22
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 29
     },
     "18": {
       "display_name": "Bryophyte Roots",
@@ -244,7 +298,10 @@
       "children": [
         19,
         24
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 40
     },
     "19": {
       "display_name": "Fire Creep",
@@ -258,7 +315,10 @@
       "children": [
         18,
         20
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 42
     },
     "20": {
       "display_name": "Phantom Ray",
@@ -273,7 +333,10 @@
       "children": [
         19,
         25
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 44
     },
     "21": {
       "display_name": "Triple Shots",
@@ -288,7 +351,10 @@
       "children": [
         22,
         23
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 45
     },
     "22": {
       "display_name": "Frenzy",
@@ -301,7 +367,10 @@
       "children": [
         21,
         23
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 47
     },
     "23": {
       "display_name": "Guardian Angels",
@@ -315,7 +384,10 @@
       ],
       "children": [
         26
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 10
     },
     "24": {
       "display_name": "Basaltic Trap",
@@ -327,7 +399,10 @@
       "children": [
         27,
         28
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 13
     },
     "25": {
       "display_name": "Focus",
@@ -338,7 +413,10 @@
       "dependencies": [],
       "children": [
         29
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 17
     },
     "26": {
       "display_name": "Windstorm",
@@ -352,10 +430,13 @@
         27,
         34,
         36
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 28
     },
     "27": {
-      "display_name": "Cheaper Arrow Storm",
+      "display_name": "Cheaper Arrow Storm I",
       "parents": [
         28,
         26,
@@ -367,7 +448,10 @@
         26,
         28,
         30
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 4,
+      "slot": 30
     },
     "28": {
       "display_name": "Implosion",
@@ -383,10 +467,13 @@
         29,
         30,
         31
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 4,
+      "slot": 32
     },
     "29": {
-      "display_name": "More Shields",
+      "display_name": "Arrow Wall",
       "parents": [
         25,
         28
@@ -399,7 +486,10 @@
         28,
         31,
         32
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 34
     },
     "30": {
       "display_name": "Patient Hunter",
@@ -416,7 +506,10 @@
         31,
         35,
         38
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 40
     },
     "31": {
       "display_name": "Grappling Hook",
@@ -429,10 +522,13 @@
       "dependencies": [],
       "children": [
         30
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 4,
+      "slot": 42
     },
     "32": {
-      "display_name": "More Focus",
+      "display_name": "More Focus I",
       "parents": [
         29
       ],
@@ -443,7 +539,10 @@
       "children": [
         33,
         40
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 44
     },
     "33": {
       "display_name": "Phantom Force",
@@ -454,7 +553,10 @@
       "dependencies": [
         20
       ],
-      "children": []
+      "children": [],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 52
     },
     "34": {
       "display_name": "Stormy Feet",
@@ -465,7 +567,10 @@
       "dependencies": [
         10
       ],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 46
     },
     "35": {
       "display_name": "Call of the Hound",
@@ -476,7 +581,10 @@
       "dependencies": [
         9
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 4,
+      "slot": 48
     },
     "36": {
       "display_name": "Leap",
@@ -489,7 +597,10 @@
       "children": [
         37,
         44
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 9
     },
     "37": {
       "display_name": "Traveler",
@@ -503,7 +614,10 @@
         36,
         38,
         43
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 5,
+      "slot": 11
     },
     "38": {
       "display_name": "Bouncing Bomb",
@@ -519,7 +633,10 @@
         39,
         41,
         43
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 13
     },
     "39": {
       "display_name": "Ivyroot Mamba",
@@ -537,7 +654,10 @@
         41,
         42,
         47
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 15
     },
     "40": {
       "display_name": "Twain's Arc",
@@ -553,7 +673,10 @@
         39,
         42,
         48
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 17
     },
     "41": {
       "display_name": "Rocket Jump",
@@ -565,7 +688,10 @@
       "dependencies": [
         0
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 23
     },
     "42": {
       "display_name": "Scorched Earth",
@@ -577,7 +703,10 @@
       "dependencies": [
         19
       ],
-      "children": []
+      "children": [],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 25
     },
     "43": {
       "display_name": "More Traps",
@@ -591,7 +720,10 @@
       ],
       "children": [
         46
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 30
     },
     "44": {
       "display_name": "Refined Gunpowder",
@@ -605,7 +737,10 @@
         45,
         49,
         54
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 36
     },
     "45": {
       "display_name": "Fierce Stomp",
@@ -621,10 +756,13 @@
         49,
         51,
         55
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 5,
+      "slot": 38
     },
     "46": {
-      "display_name": "Cheaper Arrow Shield",
+      "display_name": "Cheaper Arrow Shield I",
       "parents": [
         45,
         47,
@@ -637,10 +775,13 @@
         47,
         50,
         51
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 40
     },
     "47": {
-      "display_name": "Better Arrow Shield",
+      "display_name": "Honed Shield",
       "parents": [
         39,
         46,
@@ -655,7 +796,10 @@
         48,
         50,
         53
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 42
     },
     "48": {
       "display_name": "Shocking Bomb",
@@ -670,10 +814,13 @@
       "children": [
         47,
         53
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 44
     },
     "49": {
-      "display_name": "Better Leap",
+      "display_name": "Bounding Stride",
       "parents": [
         44,
         45
@@ -682,7 +829,10 @@
       "dependencies": [
         36
       ],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 46
     },
     "50": {
       "display_name": "Homing Shots",
@@ -692,7 +842,10 @@
       ],
       "id": 50,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 50
     },
     "51": {
       "display_name": "Mana Trap",
@@ -706,10 +859,13 @@
       "children": [
         52,
         56
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 6,
+      "slot": 12
     },
     "52": {
-      "display_name": "Cheaper Arrow Storm",
+      "display_name": "Cheaper Arrow Storm II",
       "parents": [
         53,
         51
@@ -721,7 +877,10 @@
         53,
         56,
         57
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 14
     },
     "53": {
       "display_name": "Initiator",
@@ -738,10 +897,13 @@
         52,
         57,
         58
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 16
     },
     "54": {
-      "display_name": "Better Guardian Angels",
+      "display_name": "Vigilant Sentinels",
       "parents": [
         55,
         44
@@ -753,7 +915,10 @@
       "children": [
         55,
         59
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 18
     },
     "55": {
       "display_name": "Escape Artist",
@@ -768,7 +933,10 @@
         54,
         56,
         60
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 20
     },
     "56": {
       "display_name": "Murder Flock",
@@ -784,7 +952,10 @@
       "children": [
         55,
         61
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 22
     },
     "57": {
       "display_name": "Decimator",
@@ -800,7 +971,10 @@
       "children": [
         58,
         62
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 24
     },
     "58": {
       "display_name": "Phasing Beam",
@@ -815,7 +989,10 @@
       "children": [
         57,
         62
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 26
     },
     "59": {
       "display_name": "Recycling",
@@ -828,7 +1005,10 @@
       "children": [
         60,
         65
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 36
     },
     "60": {
       "display_name": "Shrapnel Bomb",
@@ -844,10 +1024,13 @@
         61,
         65,
         66
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 38
     },
     "61": {
-      "display_name": "Cheaper Escape",
+      "display_name": "Cheaper Escape II",
       "parents": [
         56,
         60,
@@ -860,10 +1043,13 @@
         62,
         63,
         66
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 40
     },
     "62": {
-      "display_name": "Cheaper Arrow Shield",
+      "display_name": "Cheaper Arrow Shield II",
       "parents": [
         58,
         61,
@@ -876,10 +1062,13 @@
         63,
         64,
         68
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 43
     },
     "63": {
-      "display_name": "Stronger Hook",
+      "display_name": "Hookshot",
       "parents": [
         61,
         62
@@ -888,7 +1077,10 @@
       "dependencies": [
         31
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 48
     },
     "64": {
       "display_name": "Coursing Restraints",
@@ -899,7 +1091,10 @@
       "dependencies": [
         48
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 53
     },
     "65": {
       "display_name": "Arrow Hurricane",
@@ -915,7 +1110,10 @@
         70,
         75,
         76
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 10
     },
     "66": {
       "display_name": "Tangled Traps",
@@ -931,7 +1129,10 @@
       "children": [
         67,
         69
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 7,
+      "slot": 14
     },
     "67": {
       "display_name": "Beast Lore",
@@ -945,7 +1146,10 @@
       "children": [
         66,
         69
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 12
     },
     "68": {
       "display_name": "Crepuscular Ray",
@@ -958,7 +1162,10 @@
       ],
       "children": [
         73
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 16
     },
     "69": {
       "display_name": "Chilling Snare",
@@ -973,7 +1180,10 @@
       "children": [
         71,
         72
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 22
     },
     "70": {
       "display_name": "All-Seeing Panoptes",
@@ -984,10 +1194,13 @@
       "dependencies": [
         23
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 27
     },
     "71": {
-      "display_name": "Stronger Patient Hunter",
+      "display_name": "Swift Primer",
       "parents": [
         69
       ],
@@ -997,7 +1210,10 @@
       ],
       "children": [
         77
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 7,
+      "slot": 30
     },
     "72": {
       "display_name": "Snow Storm",
@@ -1010,10 +1226,13 @@
       "children": [
         73,
         78
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 32
     },
     "73": {
-      "display_name": "More Focus",
+      "display_name": "More Focus II",
       "parents": [
         68,
         72
@@ -1026,7 +1245,10 @@
         72,
         74,
         78
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 34
     },
     "74": {
       "display_name": "Ghostly Trigger",
@@ -1035,7 +1257,10 @@
       ],
       "id": 74,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 51
     },
     "75": {
       "display_name": "Elusive",
@@ -1044,7 +1269,10 @@
       ],
       "id": 75,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 38
     },
     "76": {
       "display_name": "Geyser Stomp",
@@ -1058,7 +1286,10 @@
       ],
       "children": [
         77
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 46
     },
     "77": {
       "display_name": "Grape Bomb",
@@ -1072,10 +1303,13 @@
       "children": [
         76,
         78
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 7,
+      "slot": 48
     },
     "78": {
-      "display_name": "Cheaper Arrow Bomb",
+      "display_name": "Cheaper Arrow Bomb II",
       "parents": [
         77,
         73,
@@ -1085,7 +1319,10 @@
       "dependencies": [],
       "children": [
         77
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 7,
+      "slot": 51
     }
   },
   "Warrior": {
@@ -1096,10 +1333,13 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 4
     },
     "1": {
-      "display_name": "Spear Proficiency",
+      "display_name": "Spear Proficiency I",
       "parents": [
         2,
         0
@@ -1109,7 +1349,10 @@
       "children": [
         2,
         3
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 22
     },
     "2": {
       "display_name": "Cheaper Bash",
@@ -1120,7 +1363,10 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 1,
+      "slot": 20
     },
     "3": {
       "display_name": "Double Bash",
@@ -1131,7 +1377,10 @@
       "dependencies": [],
       "children": [
         4
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 40
     },
     "4": {
       "display_name": "Charge",
@@ -1145,7 +1394,10 @@
       "children": [
         6,
         7
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 13
     },
     "5": {
       "display_name": "Heavy Impact",
@@ -1154,7 +1406,10 @@
       ],
       "id": 5,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 2,
+      "slot": 37
     },
     "6": {
       "display_name": "Vehement",
@@ -1166,7 +1421,10 @@
       "children": [
         4,
         8
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 11
     },
     "7": {
       "display_name": "Tougher Skin",
@@ -1178,7 +1436,10 @@
       "children": [
         4,
         10
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 15
     },
     "8": {
       "display_name": "Uppercut",
@@ -1193,7 +1454,10 @@
         9,
         11,
         12
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 29
     },
     "9": {
       "display_name": "Cheaper Charge",
@@ -1209,7 +1473,10 @@
         12,
         13,
         14
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 31
     },
     "10": {
       "display_name": "War Scream",
@@ -1223,7 +1490,10 @@
         9,
         14,
         15
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 33
     },
     "11": {
       "display_name": "Earth Mastery",
@@ -1234,7 +1504,10 @@
       "dependencies": [],
       "children": [
         16
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 9
     },
     "12": {
       "display_name": "Thunder Mastery",
@@ -1249,7 +1522,10 @@
         13,
         14,
         17
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 11
     },
     "13": {
       "display_name": "Water Mastery",
@@ -1262,7 +1538,10 @@
       "dependencies": [],
       "children": [
         18
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 22
     },
     "14": {
       "display_name": "Air Mastery",
@@ -1277,7 +1556,10 @@
         12,
         13,
         19
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 15
     },
     "15": {
       "display_name": "Fire Mastery",
@@ -1288,7 +1570,10 @@
       "dependencies": [],
       "children": [
         20
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 17
     },
     "16": {
       "display_name": "Quadruple Bash",
@@ -1301,7 +1586,10 @@
       "children": [
         17,
         25
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 27
     },
     "17": {
       "display_name": "Fireworks",
@@ -1314,7 +1602,10 @@
       "children": [
         16,
         25
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 29
     },
     "18": {
       "display_name": "Half-Moon Swipe",
@@ -1327,7 +1618,10 @@
       ],
       "children": [
         23
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 40
     },
     "19": {
       "display_name": "Flyby Jab",
@@ -1340,7 +1634,10 @@
       "children": [
         20,
         21
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 33
     },
     "20": {
       "display_name": "Flaming Uppercut",
@@ -1355,7 +1652,10 @@
       "children": [
         19,
         21
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 35
     },
     "21": {
       "display_name": "Iron Lungs",
@@ -1367,7 +1667,10 @@
       "dependencies": [],
       "children": [
         24
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 3,
+      "slot": 43
     },
     "22": {
       "display_name": "Generalist",
@@ -1379,7 +1682,10 @@
       "children": [
         23,
         27
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 4,
+      "slot": 11
     },
     "23": {
       "display_name": "Air Shout",
@@ -1394,7 +1700,10 @@
       "children": [
         22,
         27
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 13
     },
     "24": {
       "display_name": "Mantle of the Bovemists",
@@ -1407,7 +1716,10 @@
       ],
       "children": [
         30
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 16
     },
     "25": {
       "display_name": "Bak'al's Grasp",
@@ -1421,10 +1733,13 @@
       ],
       "children": [
         26
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 19
     },
     "26": {
-      "display_name": "Spear Proficiency",
+      "display_name": "Spear Proficiency II",
       "parents": [
         25,
         27
@@ -1435,7 +1750,10 @@
         27,
         31,
         43
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 4,
+      "slot": 27
     },
     "27": {
       "display_name": "Cheaper Uppercut",
@@ -1453,7 +1771,10 @@
         29,
         32,
         43
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 4,
+      "slot": 30
     },
     "28": {
       "display_name": "Aerodynamics",
@@ -1467,7 +1788,10 @@
         27,
         29,
         30
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 4,
+      "slot": 32
     },
     "29": {
       "display_name": "Counter",
@@ -1477,7 +1801,10 @@
       ],
       "id": 29,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 40
     },
     "30": {
       "display_name": "Manachism",
@@ -1490,7 +1817,10 @@
       "children": [
         28,
         34
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 34
     },
     "31": {
       "display_name": "Blood Pact",
@@ -1502,7 +1832,10 @@
       "children": [
         35,
         37
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 9
     },
     "32": {
       "display_name": "Flying Kick",
@@ -1517,10 +1850,13 @@
         36,
         38,
         42
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 12
     },
     "33": {
-      "display_name": "Stronger Mantle",
+      "display_name": "Blessed Bulwark",
       "parents": [
         34,
         32
@@ -1534,7 +1870,10 @@
         34,
         36,
         38
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 15
     },
     "34": {
       "display_name": "Sacred Surge",
@@ -1547,7 +1886,10 @@
       "children": [
         33,
         40
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 17
     },
     "35": {
       "display_name": "Enraged Blow",
@@ -1560,7 +1902,10 @@
       ],
       "children": [
         41
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 19
     },
     "36": {
       "display_name": "Riposte",
@@ -1572,7 +1917,10 @@
       "dependencies": [
         29
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 23
     },
     "37": {
       "display_name": "Exhilarate",
@@ -1583,10 +1931,13 @@
       "dependencies": [
         43
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 27
     },
     "38": {
-      "display_name": "Cheaper War Scream",
+      "display_name": "Cheaper War Scream I",
       "parents": [
         33,
         32,
@@ -1599,7 +1950,10 @@
         42,
         45,
         49
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 31
     },
     "39": {
       "display_name": "Cleansing Breeze",
@@ -1614,10 +1968,13 @@
         40,
         45,
         46
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 33
     },
     "40": {
-      "display_name": "Stronger Bash",
+      "display_name": "Crushing Blow",
       "parents": [
         39,
         34
@@ -1627,7 +1984,10 @@
       "children": [
         39,
         46
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 35
     },
     "41": {
       "display_name": "Boiling Blood",
@@ -1641,7 +2001,10 @@
         42,
         44,
         47
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 37
     },
     "42": {
       "display_name": "Ragnarokkr",
@@ -1657,7 +2020,10 @@
       "children": [
         41,
         44
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 39
     },
     "43": {
       "display_name": "Intoxicating Blood",
@@ -1669,7 +2035,10 @@
       "dependencies": [
         25
       ],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 37
     },
     "44": {
       "display_name": "Comet",
@@ -1681,7 +2050,10 @@
       "dependencies": [
         17
       ],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 5,
+      "slot": 47
     },
     "45": {
       "display_name": "Collide",
@@ -1693,7 +2065,10 @@
       "dependencies": [
         32
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 41
     },
     "46": {
       "display_name": "Rejuvenating Skin",
@@ -1705,7 +2080,10 @@
       "dependencies": [],
       "children": [
         50
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 43
     },
     "47": {
       "display_name": "Uncontainable Corruption",
@@ -1721,7 +2099,10 @@
         48,
         51,
         54
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 9
     },
     "48": {
       "display_name": "Radiant Devotee",
@@ -1735,7 +2116,10 @@
         47,
         49,
         51
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 11
     },
     "49": {
       "display_name": "Whirlwind Strike",
@@ -1750,7 +2134,10 @@
       "children": [
         48,
         56
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 13
     },
     "50": {
       "display_name": "Mythril Skin",
@@ -1762,7 +2149,10 @@
       "children": [
         52,
         53
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 16
     },
     "51": {
       "display_name": "Armour Breaker",
@@ -1774,7 +2164,10 @@
       "dependencies": [
         25
       ],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 19
     },
     "52": {
       "display_name": "Shield Strike",
@@ -1787,7 +2180,10 @@
       "children": [
         53,
         61
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 24
     },
     "53": {
       "display_name": "Sparkling Hope",
@@ -1800,7 +2196,10 @@
       "children": [
         52,
         61
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 26
     },
     "54": {
       "display_name": "Massive Bash",
@@ -1814,7 +2213,10 @@
         55,
         58,
         62
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 27
     },
     "55": {
       "display_name": "Tempest",
@@ -1829,7 +2231,10 @@
         56,
         58,
         59
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 29
     },
     "56": {
       "display_name": "Spirit of the Rabbit",
@@ -1844,7 +2249,10 @@
         57,
         59,
         66
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 31
     },
     "57": {
       "display_name": "Provoke",
@@ -1856,7 +2264,10 @@
       "dependencies": [],
       "children": [
         61
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 41
     },
     "58": {
       "display_name": "Massacre",
@@ -1871,7 +2282,10 @@
       ],
       "children": [
         59
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 37
     },
     "59": {
       "display_name": "Axe Kick",
@@ -1884,7 +2298,10 @@
       "dependencies": [],
       "children": [
         58
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 6,
+      "slot": 39
     },
     "60": {
       "display_name": "Radiance",
@@ -1893,10 +2310,13 @@
       ],
       "id": 60,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 53
     },
     "61": {
-      "display_name": "Cheaper Bash",
+      "display_name": "Cheaper Bash II",
       "parents": [
         52,
         53,
@@ -1908,10 +2328,13 @@
         57,
         60,
         67
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 43
     },
     "62": {
-      "display_name": "Cheaper War Scream",
+      "display_name": "Cheaper War Scream II",
       "parents": [
         54
       ],
@@ -1920,10 +2343,13 @@
       "children": [
         63,
         70
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 9
     },
     "63": {
-      "display_name": "Better Enraged Blow",
+      "display_name": "Overwhelming Rage",
       "parents": [
         62
       ],
@@ -1931,7 +2357,10 @@
       "dependencies": [
         25
       ],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 19
     },
     "64": {
       "display_name": "Discombobulate",
@@ -1942,7 +2371,10 @@
       "dependencies": [],
       "children": [
         66
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 11
     },
     "65": {
       "display_name": "Thunderclap",
@@ -1952,7 +2384,10 @@
       ],
       "id": 65,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 23
     },
     "66": {
       "display_name": "Cyclone",
@@ -1967,10 +2402,13 @@
         64,
         65,
         67
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 13
     },
     "67": {
-      "display_name": "Stronger Sacred Surge",
+      "display_name": "Consecration",
       "parents": [
         61,
         66
@@ -1983,7 +2421,10 @@
         65,
         66,
         68
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 16
     },
     "68": {
       "display_name": "Second Chance",
@@ -1995,7 +2436,10 @@
       "children": [
         71,
         72
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 34
     },
     "69": {
       "display_name": "Brink of Madness",
@@ -2007,7 +2451,10 @@
       "dependencies": [],
       "children": [
         71
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 40
     },
     "70": {
       "display_name": "Bloodlust",
@@ -2021,10 +2468,13 @@
       "children": [
         69,
         73
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 27
     },
     "71": {
-      "display_name": "Cheaper Uppercut",
+      "display_name": "Cheaper Uppercut II",
       "parents": [
         68,
         69
@@ -2033,7 +2483,10 @@
       "dependencies": [],
       "children": [
         69
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 7,
+      "slot": 42
     },
     "72": {
       "display_name": "Martyr",
@@ -2042,7 +2495,10 @@
       ],
       "id": 72,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 7,
+      "slot": 44
     },
     "73": {
       "display_name": "Haemorrhage",
@@ -2053,7 +2509,10 @@
       "dependencies": [
         31
       ],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 38
     }
   },
   "Mage": {
@@ -2064,10 +2523,13 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 4
     },
     "1": {
-      "display_name": "Wand Proficiency",
+      "display_name": "Wand Proficiency I",
       "parents": [
         0,
         2
@@ -2077,7 +2539,10 @@
       "children": [
         2,
         3
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 22
     },
     "2": {
       "display_name": "Cheaper Meteor",
@@ -2088,7 +2553,10 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 1,
+      "slot": 24
     },
     "3": {
       "display_name": "Shooting Star",
@@ -2099,10 +2567,13 @@
       "dependencies": [],
       "children": [
         5
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 40
     },
     "4": {
-      "display_name": "Wand Proficiency",
+      "display_name": "Wand Proficiency II",
       "parents": [
         5
       ],
@@ -2111,7 +2582,10 @@
       "children": [
         5,
         7
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 11
     },
     "5": {
       "display_name": "Teleport",
@@ -2125,7 +2599,10 @@
       "children": [
         4,
         6
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 13
     },
     "6": {
       "display_name": "Wisdom",
@@ -2137,7 +2614,10 @@
       "children": [
         5,
         9
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 15
     },
     "7": {
       "display_name": "Heal",
@@ -2151,7 +2631,10 @@
         8,
         10,
         11
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 29
     },
     "8": {
       "display_name": "Cheaper Teleport",
@@ -2166,7 +2649,10 @@
         9,
         11,
         12
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 31
     },
     "9": {
       "display_name": "Ice Snake",
@@ -2180,7 +2666,10 @@
         8,
         13,
         14
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 33
     },
     "10": {
       "display_name": "Air Mastery",
@@ -2191,7 +2680,10 @@
       "dependencies": [],
       "children": [
         15
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 9
     },
     "11": {
       "display_name": "Thunder Mastery",
@@ -2204,7 +2696,10 @@
       "children": [
         12,
         16
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 11
     },
     "12": {
       "display_name": "Water Mastery",
@@ -2216,7 +2711,10 @@
       "dependencies": [],
       "children": [
         18
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 22
     },
     "13": {
       "display_name": "Fire Mastery",
@@ -2227,7 +2725,10 @@
       "dependencies": [],
       "children": [
         17
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 15
     },
     "14": {
       "display_name": "Earth Mastery",
@@ -2238,7 +2739,10 @@
       "dependencies": [],
       "children": [
         17
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 17
     },
     "15": {
       "display_name": "Wind Slash",
@@ -2253,7 +2757,10 @@
       "children": [
         16,
         20
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 27
     },
     "16": {
       "display_name": "Thunderstorm",
@@ -2268,7 +2775,10 @@
       "children": [
         15,
         20
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 29
     },
     "17": {
       "display_name": "Burning Sigil",
@@ -2281,7 +2791,10 @@
       "children": [
         19,
         22
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 3,
+      "slot": 34
     },
     "18": {
       "display_name": "Sunshower",
@@ -2294,10 +2807,13 @@
       ],
       "children": [
         21
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 40
     },
     "19": {
-      "display_name": "Stronger Meteor",
+      "display_name": "Crashing Comet",
       "parents": [
         17
       ],
@@ -2305,7 +2821,10 @@
       "dependencies": [
         0
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 44
     },
     "20": {
       "display_name": "Windsweeper",
@@ -2319,7 +2838,10 @@
       ],
       "children": [
         23
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 10
     },
     "21": {
       "display_name": "Ophanim",
@@ -2330,7 +2852,10 @@
       "dependencies": [],
       "children": [
         24
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 13
     },
     "22": {
       "display_name": "Arcane Transfer",
@@ -2343,7 +2868,10 @@
       ],
       "children": [
         25
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 16
     },
     "23": {
       "display_name": "Cheaper Heal",
@@ -2357,7 +2885,10 @@
         24,
         26,
         27
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 28
     },
     "24": {
       "display_name": "Purification",
@@ -2374,7 +2905,10 @@
         27,
         28,
         32
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 31
     },
     "25": {
       "display_name": "Sentient Snake",
@@ -2391,7 +2925,10 @@
         28,
         29,
         33
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 4,
+      "slot": 33
     },
     "26": {
       "display_name": "Eye Piercer",
@@ -2404,7 +2941,10 @@
       ],
       "children": [
         30
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 4,
+      "slot": 36
     },
     "27": {
       "display_name": "Breathless",
@@ -2416,7 +2956,10 @@
       "dependencies": [
         20
       ],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 4,
+      "slot": 38
     },
     "28": {
       "display_name": "Larger Heal",
@@ -2428,7 +2971,10 @@
       "dependencies": [
         7
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 4,
+      "slot": 41
     },
     "29": {
       "display_name": "Larger Mana Bank",
@@ -2439,7 +2985,10 @@
       "dependencies": [
         22
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 44
     },
     "30": {
       "display_name": "Cheaper Ice Snake",
@@ -2453,7 +3002,10 @@
         31,
         34,
         39
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 9
     },
     "31": {
       "display_name": "Fortitude",
@@ -2468,10 +3020,13 @@
         32,
         34,
         36
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 5,
+      "slot": 11
     },
     "32": {
-      "display_name": "Cheaper Teleport",
+      "display_name": "Cheaper Teleport II",
       "parents": [
         31,
         24,
@@ -2485,7 +3040,10 @@
         35,
         36,
         37
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 13
     },
     "33": {
       "display_name": "Pyrokinesis",
@@ -2502,7 +3060,10 @@
         35,
         37,
         38
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 16
     },
     "34": {
       "display_name": "Blink",
@@ -2514,7 +3075,10 @@
       "dependencies": [
         5
       ],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 19
     },
     "35": {
       "display_name": "Freezing Sigil",
@@ -2524,10 +3088,13 @@
       ],
       "id": 35,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 24
     },
     "36": {
-      "display_name": "Healthier Ophanim",
+      "display_name": "Resilient Light",
       "parents": [
         31,
         32,
@@ -2541,7 +3108,10 @@
         37,
         40,
         41
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 30
     },
     "37": {
       "display_name": "Snake Nest",
@@ -2560,7 +3130,10 @@
         38,
         41,
         42
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 32
     },
     "38": {
       "display_name": "Seance",
@@ -2574,7 +3147,10 @@
         37,
         42,
         47
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 34
     },
     "39": {
       "display_name": "Transonic Warp",
@@ -2590,7 +3166,10 @@
       "children": [
         40,
         44
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 36
     },
     "40": {
       "display_name": "Fluid Healing",
@@ -2605,7 +3184,10 @@
         39,
         41,
         44
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 5,
+      "slot": 38
     },
     "41": {
       "display_name": "Orphion's Pulse",
@@ -2624,7 +3206,10 @@
         42,
         43,
         45
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 40
     },
     "42": {
       "display_name": "Arcane Restoration",
@@ -2640,10 +3225,13 @@
       "children": [
         41,
         43
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 42
     },
     "43": {
-      "display_name": "Stronger Ophanim",
+      "display_name": "Incandescence",
       "parents": [
         41,
         42
@@ -2652,7 +3240,10 @@
       "dependencies": [
         21
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 50
     },
     "44": {
       "display_name": "Diffusion",
@@ -2667,7 +3258,10 @@
       "children": [
         48,
         50
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 10
     },
     "45": {
       "display_name": "Lightweaver",
@@ -2680,7 +3274,10 @@
       "children": [
         46,
         52
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 13
     },
     "46": {
       "display_name": "Arcane Speed",
@@ -2697,10 +3294,13 @@
         47,
         49,
         52
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 15
     },
     "47": {
-      "display_name": "Larger Mana Bank",
+      "display_name": "Larger Mana Bank II",
       "parents": [
         38,
         46
@@ -2713,7 +3313,10 @@
         46,
         49,
         53
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 17
     },
     "48": {
       "display_name": "More Winded",
@@ -2724,7 +3327,10 @@
       "dependencies": [
         20
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 18
     },
     "49": {
       "display_name": "Psychokinesis",
@@ -2736,10 +3342,13 @@
       "dependencies": [
         0
       ],
-      "children": []
+      "children": [],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 25
     },
     "50": {
-      "display_name": "Cheaper Ice Snake",
+      "display_name": "Cheaper Ice Snake II",
       "parents": [
         44,
         51
@@ -2750,7 +3359,10 @@
         51,
         54,
         55
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 28
     },
     "51": {
       "display_name": "Explosive Entrance",
@@ -2767,10 +3379,13 @@
         52,
         55,
         56
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 6,
+      "slot": 30
     },
     "52": {
-      "display_name": "Cheaper Meteor",
+      "display_name": "Cheaper Meteor II",
       "parents": [
         51,
         45,
@@ -2781,7 +3396,10 @@
       "children": [
         51,
         56
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 32
     },
     "53": {
       "display_name": "Chaos Explosion",
@@ -2794,7 +3412,10 @@
       ],
       "children": [
         57
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 35
     },
     "54": {
       "display_name": "Time Dilation",
@@ -2805,7 +3426,10 @@
       "dependencies": [],
       "children": [
         60
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 36
     },
     "55": {
       "display_name": "Gust",
@@ -2821,10 +3445,13 @@
       "children": [
         56,
         58
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 38
     },
     "56": {
-      "display_name": "Better Ophanim",
+      "display_name": "Augury",
       "parents": [
         51,
         52,
@@ -2838,7 +3465,10 @@
         55,
         58,
         62
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 40
     },
     "57": {
       "display_name": "Arctic Snake",
@@ -2852,10 +3482,13 @@
       "children": [
         59,
         63
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 43
     },
     "58": {
-      "display_name": "Stronger Sunshower",
+      "display_name": "Searing Light",
       "parents": [
         55,
         56
@@ -2864,7 +3497,10 @@
       "dependencies": [
         18
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 6,
+      "slot": 48
     },
     "59": {
       "display_name": "Arcane Power",
@@ -2875,10 +3511,13 @@
       "dependencies": [
         22
       ],
-      "children": []
+      "children": [],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 51
     },
     "60": {
-      "display_name": "More Winded",
+      "display_name": "More Winded II",
       "parents": [
         54,
         61
@@ -2890,7 +3529,10 @@
       "children": [
         61,
         68
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 9
     },
     "61": {
       "display_name": "Devitalize",
@@ -2904,10 +3546,13 @@
         60,
         62,
         64
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 11
     },
     "62": {
-      "display_name": "Healthier Ophanim",
+      "display_name": "Everlasting Light",
       "parents": [
         56,
         61
@@ -2920,10 +3565,13 @@
         61,
         64,
         65
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 13
     },
     "63": {
-      "display_name": "Larger Mana Bank",
+      "display_name": "Larger Mana Bank III",
       "parents": [
         57
       ],
@@ -2933,7 +3581,10 @@
       ],
       "children": [
         67
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 16
     },
     "64": {
       "display_name": "Divination",
@@ -2945,7 +3596,10 @@
       "dependencies": [
         21
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 7,
+      "slot": 21
     },
     "65": {
       "display_name": "Sunflare",
@@ -2957,10 +3611,13 @@
       "children": [
         66,
         70
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 23
     },
     "66": {
-      "display_name": "Better Lightweaver",
+      "display_name": "Halo",
       "parents": [
         65
       ],
@@ -2968,7 +3625,10 @@
       "dependencies": [
         45
       ],
-      "children": []
+      "children": [],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 31
     },
     "67": {
       "display_name": "Arcane Overflow",
@@ -2982,7 +3642,10 @@
       "children": [
         70,
         71
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 34
     },
     "68": {
       "display_name": "Timelock",
@@ -2994,10 +3657,13 @@
       "dependencies": [],
       "children": [
         69
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 36
     },
     "69": {
-      "display_name": "Cheaper Heal",
+      "display_name": "Cheaper Heal II",
       "parents": [
         68,
         70
@@ -3007,7 +3673,10 @@
       "children": [
         68,
         70
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 38
     },
     "70": {
       "display_name": "Manastorm",
@@ -3020,7 +3689,10 @@
       "dependencies": [],
       "children": [
         69
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 41
     },
     "71": {
       "display_name": "Memory Recollection",
@@ -3031,7 +3703,10 @@
       "dependencies": [
         53
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 7,
+      "slot": 44
     }
   },
   "Assassin": {
@@ -3042,10 +3717,13 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 4
     },
     "1": {
-      "display_name": "Dagger Proficiency",
+      "display_name": "Dagger Proficiency I",
       "parents": [
         2,
         0
@@ -3055,7 +3733,10 @@
       "children": [
         2,
         3
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 22
     },
     "2": {
       "display_name": "Cheaper Spin Attack",
@@ -3066,7 +3747,10 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 1,
+      "slot": 20
     },
     "3": {
       "display_name": "Double Spin",
@@ -3077,7 +3761,10 @@
       "dependencies": [],
       "children": [
         5
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 40
     },
     "4": {
       "display_name": "Poisoned Blade",
@@ -3089,7 +3776,10 @@
       "children": [
         5,
         7
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 11
     },
     "5": {
       "display_name": "Dash",
@@ -3103,7 +3793,10 @@
       "children": [
         4,
         6
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 13
     },
     "6": {
       "display_name": "Double Slice",
@@ -3115,7 +3808,10 @@
       "children": [
         5,
         9
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 15
     },
     "7": {
       "display_name": "Smoke Bomb",
@@ -3129,7 +3825,10 @@
         8,
         10,
         11
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 29
     },
     "8": {
       "display_name": "Cheaper Dash",
@@ -3144,7 +3843,10 @@
         9,
         12,
         13
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 31
     },
     "9": {
       "display_name": "Multihit",
@@ -3158,7 +3860,10 @@
         8,
         13,
         14
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 33
     },
     "10": {
       "display_name": "Earth Mastery",
@@ -3171,7 +3876,10 @@
       "children": [
         11,
         15
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 9
     },
     "11": {
       "display_name": "Thunder Mastery",
@@ -3184,7 +3892,10 @@
       "children": [
         10,
         15
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 11
     },
     "12": {
       "display_name": "Fire Mastery",
@@ -3196,7 +3907,10 @@
       "dependencies": [],
       "children": [
         18
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 22
     },
     "13": {
       "display_name": "Water Mastery",
@@ -3211,7 +3925,10 @@
         12,
         14,
         16
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 15
     },
     "14": {
       "display_name": "Air Mastery",
@@ -3224,7 +3941,10 @@
       "children": [
         13,
         16
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 17
     },
     "15": {
       "display_name": "Backstab",
@@ -3238,7 +3958,10 @@
       ],
       "children": [
         17
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 3,
+      "slot": 28
     },
     "16": {
       "display_name": "Fatality",
@@ -3253,7 +3976,10 @@
       "children": [
         19,
         22
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 3,
+      "slot": 34
     },
     "17": {
       "display_name": "Vanish",
@@ -3268,7 +3994,10 @@
       "children": [
         18,
         20
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 38
     },
     "18": {
       "display_name": "Sticky Bomb",
@@ -3283,7 +4012,10 @@
       "children": [
         17,
         21
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 40
     },
     "19": {
       "display_name": "Righting Reflex",
@@ -3292,7 +4024,10 @@
       ],
       "id": 19,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 42
     },
     "20": {
       "display_name": "Surprise Strike",
@@ -3305,7 +4040,10 @@
       ],
       "children": [
         23
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 4,
+      "slot": 11
     },
     "21": {
       "display_name": "Mirror Image",
@@ -3319,7 +4057,10 @@
       "children": [
         24,
         31
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 13
     },
     "22": {
       "display_name": "Lacerate",
@@ -3330,7 +4071,10 @@
       "dependencies": [],
       "children": [
         25
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 16
     },
     "23": {
       "display_name": "Silent Killer",
@@ -3344,7 +4088,10 @@
       "children": [
         26,
         27
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 19
     },
     "24": {
       "display_name": "Shenanigans",
@@ -3357,7 +4104,10 @@
       "children": [
         28,
         46
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 31
     },
     "25": {
       "display_name": "Wall of Smoke",
@@ -3371,10 +4121,13 @@
       "children": [
         29,
         46
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 26
     },
     "26": {
-      "display_name": "Better Smoke Bomb",
+      "display_name": "Rolling Fog",
       "parents": [
         23,
         27
@@ -3387,7 +4140,10 @@
         27,
         30,
         32
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 4,
+      "slot": 36
     },
     "27": {
       "display_name": "Shadow Travel",
@@ -3406,7 +4162,10 @@
         30,
         33,
         72
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 4,
+      "slot": 38
     },
     "28": {
       "display_name": "Cheaper Multihit",
@@ -3427,10 +4186,13 @@
         34,
         72,
         73
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 4,
+      "slot": 41
     },
     "29": {
-      "display_name": "Dagger Proficiency",
+      "display_name": "Dagger Proficiency II",
       "parents": [
         28,
         25
@@ -3441,7 +4203,10 @@
         28,
         34,
         73
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 44
     },
     "30": {
       "display_name": "Shadow Siphon",
@@ -3451,7 +4216,10 @@
       ],
       "id": 30,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 46
     },
     "31": {
       "display_name": "Last Laugh",
@@ -3462,7 +4230,10 @@
       "dependencies": [
         21
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 4,
+      "slot": 21
     },
     "32": {
       "display_name": "Cheaper Smoke Bomb",
@@ -3478,7 +4249,10 @@
         33,
         35,
         39
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 9
     },
     "33": {
       "display_name": "Blazing Powder",
@@ -3493,7 +4267,10 @@
         32,
         35,
         36
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 12
     },
     "34": {
       "display_name": "Weightless",
@@ -3506,7 +4283,10 @@
       "children": [
         37,
         77
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 16
     },
     "35": {
       "display_name": "Black Hole",
@@ -3516,7 +4296,10 @@
       ],
       "id": 35,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 19
     },
     "36": {
       "display_name": "Sandbagging",
@@ -3531,7 +4314,10 @@
         40,
         41,
         43
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 22
     },
     "37": {
       "display_name": "Hop",
@@ -3544,7 +4330,10 @@
       "children": [
         36,
         41
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 24
     },
     "38": {
       "display_name": "Dancing Blade",
@@ -3556,7 +4345,10 @@
       "dependencies": [
         5
       ],
-      "children": []
+      "children": [],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 52
     },
     "39": {
       "display_name": "Violent Vortex",
@@ -3567,7 +4359,10 @@
       "dependencies": [],
       "children": [
         42
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 27
     },
     "40": {
       "display_name": "Delirious Gas",
@@ -3578,17 +4373,23 @@
       "dependencies": [
         7
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 30
     },
     "41": {
-      "display_name": "Stronger Multihit",
+      "display_name": "Mutilate",
       "parents": [
         36,
         37
       ],
       "id": 41,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 32
     },
     "42": {
       "display_name": "Marked",
@@ -3600,7 +4401,10 @@
       "children": [
         47,
         51
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 37
     },
     "43": {
       "display_name": "Echo",
@@ -3615,7 +4419,10 @@
       "children": [
         44,
         48
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 40
     },
     "44": {
       "display_name": "Shurikens",
@@ -3629,7 +4436,10 @@
         38,
         43,
         45
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 5,
+      "slot": 42
     },
     "45": {
       "display_name": "Far Reach",
@@ -3643,7 +4453,10 @@
         38,
         44,
         50
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 44
     },
     "46": {
       "display_name": "Psithurism",
@@ -3656,7 +4469,10 @@
       "children": [
         24,
         28
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 34
     },
     "47": {
       "display_name": "Ambush",
@@ -3669,10 +4485,13 @@
       ],
       "children": [
         74
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 9
     },
     "48": {
-      "display_name": "Cheaper Dash",
+      "display_name": "Cheaper Dash II",
       "parents": [
         43,
         51
@@ -3682,7 +4501,10 @@
       "children": [
         51,
         53
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 13
     },
     "49": {
       "display_name": "Parry",
@@ -3694,10 +4516,13 @@
       "children": [
         50,
         54
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 15
     },
     "50": {
-      "display_name": "Cheaper Spin Attack",
+      "display_name": "Cheaper Spin Attack II",
       "parents": [
         45,
         49
@@ -3707,7 +4532,10 @@
       "children": [
         49,
         55
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 17
     },
     "51": {
       "display_name": "Death Magnet",
@@ -3723,10 +4551,13 @@
       "children": [
         48,
         52
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 11
     },
     "52": {
-      "display_name": "Cheaper Multihit",
+      "display_name": "Cheaper Multihit II",
       "parents": [
         51,
         74,
@@ -3741,7 +4572,10 @@
         56,
         74,
         76
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 6,
+      "slot": 29
     },
     "53": {
       "display_name": "Hoodwink",
@@ -3760,7 +4594,10 @@
         60,
         75,
         76
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 31
     },
     "54": {
       "display_name": "Choke Bomb",
@@ -3776,7 +4613,10 @@
         55,
         57,
         75
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 33
     },
     "55": {
       "display_name": "Wall Jump",
@@ -3791,7 +4631,10 @@
       "children": [
         54,
         57
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 35
     },
     "56": {
       "display_name": "Fatal Spin",
@@ -3808,10 +4651,13 @@
         58,
         59,
         76
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 37
     },
     "57": {
-      "display_name": "Stronger Lacerate",
+      "display_name": "Eviscerate",
       "parents": [
         75,
         54,
@@ -3824,10 +4670,13 @@
       "children": [
         61,
         75
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 43
     },
     "58": {
-      "display_name": "Stronger Vortex",
+      "display_name": "Bladestorm",
       "parents": [
         56
       ],
@@ -3835,7 +4684,10 @@
       "dependencies": [
         39
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 45
     },
     "59": {
       "display_name": "Harvester",
@@ -3851,10 +4703,13 @@
         60,
         62,
         65
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 10
     },
     "60": {
-      "display_name": "Cheaper Smoke Bomb",
+      "display_name": "Cheaper Smoke Bomb II",
       "parents": [
         59,
         53,
@@ -3870,7 +4725,10 @@
         62,
         63,
         66
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 13
     },
     "61": {
       "display_name": "Blade Fury",
@@ -3887,7 +4745,10 @@
         63,
         64,
         68
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 16
     },
     "62": {
       "display_name": "More Marks",
@@ -3899,10 +4760,13 @@
       "dependencies": [
         42
       ],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 20
     },
     "63": {
-      "display_name": "Stronger Clones",
+      "display_name": "Deadly Decoys",
       "parents": [
         60,
         61
@@ -3911,7 +4775,10 @@
       "dependencies": [
         43
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 23
     },
     "64": {
       "display_name": "Ricochets",
@@ -3922,7 +4789,10 @@
       "dependencies": [
         44
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 7,
+      "slot": 26
     },
     "65": {
       "display_name": "Satsujin",
@@ -3934,7 +4804,10 @@
       "children": [
         70,
         71
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 28
     },
     "66": {
       "display_name": "Forbidden Art",
@@ -3947,7 +4820,10 @@
       ],
       "children": [
         67
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 31
     },
     "67": {
       "display_name": "Diversion",
@@ -3960,7 +4836,10 @@
       ],
       "children": [
         78
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 41
     },
     "68": {
       "display_name": "Jasmine Bloom",
@@ -3971,10 +4850,13 @@
       "dependencies": [],
       "children": [
         69
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 34
     },
     "69": {
-      "display_name": "Better Weightless",
+      "display_name": "Cloudstepper",
       "parents": [
         68
       ],
@@ -3982,7 +4864,10 @@
       "dependencies": [
         34
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 7,
+      "slot": 44
     },
     "70": {
       "display_name": "Devour",
@@ -3993,16 +4878,22 @@
       "dependencies": [
         59
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 45
     },
     "71": {
-      "display_name": "Better Marked",
+      "display_name": "Marked for Death",
       "parents": [
         65
       ],
       "id": 71,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 47
     },
     "72": {
       "display_name": "Bamboozle",
@@ -4014,7 +4905,10 @@
       "dependencies": [
         21
       ],
-      "children": []
+      "children": [],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 49
     },
     "73": {
       "display_name": "Distraction",
@@ -4024,10 +4918,13 @@
       ],
       "id": 73,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 6,
+      "pageNumber": 4,
+      "slot": 51
     },
     "74": {
-      "display_name": "Nightcloak Knife",
+      "display_name": "Nightcloak Knives",
       "parents": [
         52,
         47
@@ -4039,7 +4936,10 @@
       "children": [
         52,
         56
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 27
     },
     "75": {
       "display_name": "Pirouette",
@@ -4054,7 +4954,10 @@
       ],
       "children": [
         57
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 41
     },
     "76": {
       "display_name": "Dissolution",
@@ -4069,7 +4972,10 @@
       ],
       "children": [
         56
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 6,
+      "slot": 39
     },
     "77": {
       "display_name": "Flow State",
@@ -4080,10 +4986,13 @@
       "dependencies": [],
       "children": [
         45
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 26
     },
     "78": {
-      "display_name": "Even Stronger Clones",
+      "display_name": "Lethal Images",
       "parents": [
         67
       ],
@@ -4091,7 +5000,10 @@
       "dependencies": [
         43
       ],
-      "children": []
+      "children": [],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 49
     }
   },
   "Shaman": {
@@ -4102,10 +5014,13 @@
       "dependencies": [],
       "children": [
         1
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 4
     },
     "1": {
-      "display_name": "Relik Proficiency",
+      "display_name": "Relik Proficiency I",
       "parents": [
         0,
         2
@@ -4115,10 +5030,13 @@
       "children": [
         2,
         3
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 22
     },
     "2": {
-      "display_name": "Cheaper Totem",
+      "display_name": "Cheaper Totem I",
       "parents": [
         1
       ],
@@ -4128,7 +5046,10 @@
       ],
       "children": [
         1
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 1,
+      "slot": 24
     },
     "3": {
       "display_name": "Totemic Smash",
@@ -4139,7 +5060,10 @@
       "dependencies": [],
       "children": [
         5
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 1,
+      "slot": 40
     },
     "4": {
       "display_name": "Distant Grasp",
@@ -4151,7 +5075,10 @@
       "children": [
         5,
         7
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 11
     },
     "5": {
       "display_name": "Haul",
@@ -4165,7 +5092,10 @@
       "children": [
         4,
         6
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 13
     },
     "6": {
       "display_name": "Hand of the Shaman",
@@ -4177,7 +5107,10 @@
       "children": [
         5,
         9
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 15
     },
     "7": {
       "display_name": "Uproot",
@@ -4192,10 +5125,13 @@
         10,
         11,
         12
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 2,
+      "slot": 29
     },
     "8": {
-      "display_name": "Cheaper Haul",
+      "display_name": "Cheaper Haul I",
       "parents": [
         7,
         9
@@ -4210,7 +5146,10 @@
         12,
         13,
         14
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 2,
+      "slot": 31
     },
     "9": {
       "display_name": "Aura",
@@ -4224,7 +5163,10 @@
         8,
         14,
         15
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 2,
+      "slot": 33
     },
     "10": {
       "display_name": "Totem Shove",
@@ -4233,7 +5175,10 @@
       ],
       "id": 10,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 1,
+      "pageNumber": 2,
+      "slot": 37
     },
     "11": {
       "display_name": "Earth Mastery",
@@ -4246,7 +5191,10 @@
       "children": [
         12,
         16
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 3,
+      "slot": 9
     },
     "12": {
       "display_name": "Air Mastery",
@@ -4263,7 +5211,10 @@
         13,
         14,
         16
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 3,
+      "slot": 11
     },
     "13": {
       "display_name": "Water Mastery",
@@ -4276,7 +5227,10 @@
       "dependencies": [],
       "children": [
         18
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 22
     },
     "14": {
       "display_name": "Thunder Mastery",
@@ -4291,7 +5245,10 @@
         12,
         13,
         19
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 15
     },
     "15": {
       "display_name": "Fire Mastery",
@@ -4302,7 +5259,10 @@
       "dependencies": [],
       "children": [
         20
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 17
     },
     "16": {
       "display_name": "Nature's Jolt",
@@ -4316,7 +5276,10 @@
       ],
       "children": [
         17
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 3,
+      "slot": 19
     },
     "17": {
       "display_name": "Overseer",
@@ -4329,7 +5292,10 @@
       ],
       "children": [
         21
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 3,
+      "slot": 37
     },
     "18": {
       "display_name": "Rain Dance",
@@ -4344,7 +5310,10 @@
       "children": [
         19,
         22
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 3,
+      "slot": 40
     },
     "19": {
       "display_name": "Shocking Aura",
@@ -4360,7 +5329,10 @@
       "children": [
         18,
         20
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 3,
+      "slot": 42
     },
     "20": {
       "display_name": "Flaming Tongue",
@@ -4375,7 +5347,10 @@
       "children": [
         19,
         23
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 3,
+      "slot": 44
     },
     "21": {
       "display_name": "Puppet Master",
@@ -4388,7 +5363,10 @@
       ],
       "children": [
         24
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 10
     },
     "22": {
       "display_name": "Mask of the Lunatic",
@@ -4403,7 +5381,10 @@
       "children": [
         26,
         33
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 4,
+      "slot": 12
     },
     "23": {
       "display_name": "Sacrificial Shrine",
@@ -4416,7 +5397,10 @@
       ],
       "children": [
         27
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 17
     },
     "24": {
       "display_name": "Stagnation",
@@ -4431,10 +5415,13 @@
       "children": [
         25,
         28
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 4,
+      "slot": 27
     },
     "25": {
-      "display_name": "Cheaper Aura",
+      "display_name": "Cheaper Aura I",
       "parents": [
         24,
         26
@@ -4448,10 +5435,13 @@
         26,
         28,
         29
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 4,
+      "slot": 29
     },
     "26": {
-      "display_name": "Cheaper Uproot",
+      "display_name": "Cheaper Uproot I",
       "parents": [
         25,
         22,
@@ -4468,7 +5458,10 @@
         29,
         30,
         37
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 4,
+      "slot": 31
     },
     "27": {
       "display_name": "Rebound",
@@ -4483,10 +5476,13 @@
         30,
         31,
         34
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 4,
+      "slot": 34
     },
     "28": {
-      "display_name": "More Puppets",
+      "display_name": "More Puppets I",
       "parents": [
         24,
         25
@@ -4497,7 +5493,10 @@
       ],
       "children": [
         32
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 4,
+      "slot": 37
     },
     "29": {
       "display_name": "Haunting Memory",
@@ -4507,10 +5506,13 @@
       ],
       "id": 29,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 4,
+      "slot": 39
     },
     "30": {
-      "display_name": "Better Totem",
+      "display_name": "Totemic Reach",
       "parents": [
         26,
         27
@@ -4519,7 +5521,10 @@
       "dependencies": [
         0
       ],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 4,
+      "slot": 41
     },
     "31": {
       "display_name": "Blood Connection",
@@ -4530,7 +5535,10 @@
       "dependencies": [
         5
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 4,
+      "slot": 44
     },
     "32": {
       "display_name": "Exploding Puppets",
@@ -4544,7 +5552,10 @@
       "children": [
         35,
         36
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 10
     },
     "33": {
       "display_name": "Hymn of Hate",
@@ -4558,7 +5569,10 @@
       "children": [
         22,
         26
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 4,
+      "slot": 15
     },
     "34": {
       "display_name": "Larger Blood Pool",
@@ -4574,7 +5588,10 @@
         37,
         38,
         40
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 16
     },
     "35": {
       "display_name": "Bullwhip",
@@ -4587,10 +5604,13 @@
       ],
       "children": [
         41
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 18
     },
     "36": {
-      "display_name": "More Puppets",
+      "display_name": "More Puppets II",
       "parents": [
         32
       ],
@@ -4600,7 +5620,10 @@
       ],
       "children": [
         42
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 5,
+      "slot": 28
     },
     "37": {
       "display_name": "Mask of the Fanatic",
@@ -4615,7 +5638,10 @@
         40,
         49,
         67
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 13
     },
     "38": {
       "display_name": "Lashing Lance",
@@ -4631,7 +5657,10 @@
         39,
         40,
         45
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 26
     },
     "39": {
       "display_name": "Vengeful Spirit",
@@ -4641,7 +5670,10 @@
       ],
       "id": 39,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 7,
+      "pageNumber": 5,
+      "slot": 34
     },
     "40": {
       "display_name": "Masquerade",
@@ -4656,7 +5688,10 @@
         38,
         39,
         43
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 23
     },
     "41": {
       "display_name": "Double Totem",
@@ -4671,10 +5706,13 @@
       "children": [
         42,
         51
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 5,
+      "slot": 36
     },
     "42": {
-      "display_name": "Cheaper Totem",
+      "display_name": "Cheaper Totem II",
       "parents": [
         36,
         41,
@@ -4690,7 +5728,10 @@
         44,
         51,
         52
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 5,
+      "slot": 38
     },
     "43": {
       "display_name": "Storm Dance",
@@ -4709,7 +5750,10 @@
         45,
         48,
         52
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 5,
+      "slot": 41
     },
     "44": {
       "display_name": "Regeneration",
@@ -4719,10 +5763,13 @@
       ],
       "id": 44,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 48
     },
     "45": {
-      "display_name": "Cheaper Haul",
+      "display_name": "Cheaper Haul II",
       "parents": [
         43,
         38
@@ -4734,10 +5781,13 @@
       "children": [
         43,
         48
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 5,
+      "slot": 44
     },
     "46": {
-      "display_name": "Cheaper Aura",
+      "display_name": "Cheaper Aura II",
       "parents": [
         51,
         47
@@ -4750,10 +5800,13 @@
         47,
         60,
         70
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 28
     },
     "47": {
-      "display_name": "Stronger Totem",
+      "display_name": "Imbued Totem",
       "parents": [
         52,
         53,
@@ -4768,7 +5821,10 @@
         50,
         53,
         60
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 31
     },
     "48": {
       "display_name": "Twisted Tether",
@@ -4783,7 +5839,10 @@
       "children": [
         53,
         54
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 16
     },
     "49": {
       "display_name": "Totemic Shatter",
@@ -4794,7 +5853,10 @@
       "dependencies": [
         37
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 5,
+      "slot": 21
     },
     "50": {
       "display_name": "Depersonalization",
@@ -4808,7 +5870,10 @@
       ],
       "children": [
         56
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 41
     },
     "51": {
       "display_name": "Crimson Effigy",
@@ -4826,7 +5891,10 @@
         52,
         55,
         65
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 6,
+      "slot": 10
     },
     "52": {
       "display_name": "Mask of the Heretic",
@@ -4842,7 +5910,10 @@
         51,
         61,
         65
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 6,
+      "slot": 13
     },
     "53": {
       "display_name": "Fluid Healing",
@@ -4860,10 +5931,13 @@
         50,
         54,
         57
-      ]
+      ],
+      "col": 6,
+      "pageNumber": 6,
+      "slot": 33
     },
     "54": {
-      "display_name": "Bloodier",
+      "display_name": "Bloodier I",
       "parents": [
         48,
         53
@@ -4875,7 +5949,10 @@
       "children": [
         53,
         57
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 35
     },
     "55": {
       "display_name": "Maddening Roots",
@@ -4886,7 +5963,10 @@
       "dependencies": [
         7
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 18
     },
     "56": {
       "display_name": "Chant of the Heretic",
@@ -4903,7 +5983,10 @@
         59,
         66,
         73
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 14
     },
     "57": {
       "display_name": "Deeper Wounds",
@@ -4918,7 +6001,10 @@
       "children": [
         58,
         62
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 6,
+      "slot": 43
     },
     "58": {
       "display_name": "Blood Rite",
@@ -4934,7 +6020,10 @@
         56,
         59,
         68
-      ]
+      ],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 16
     },
     "59": {
       "display_name": "Sanguine Strike",
@@ -4944,7 +6033,10 @@
       ],
       "id": 59,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 6,
+      "pageNumber": 7,
+      "slot": 24
     },
     "60": {
       "display_name": "Friendly Fire",
@@ -4954,7 +6046,10 @@
       ],
       "id": 60,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 38
     },
     "61": {
       "display_name": "Chant of the Fanatic",
@@ -4963,10 +6058,13 @@
       ],
       "id": 61,
       "dependencies": [],
-      "children": []
+      "children": [],
+      "col": 5,
+      "pageNumber": 6,
+      "slot": 23
     },
     "62": {
-      "display_name": "Stronger Tether",
+      "display_name": "Bloodletting",
       "parents": [
         57
       ],
@@ -4974,7 +6072,10 @@
       "dependencies": [
         48
       ],
-      "children": []
+      "children": [],
+      "col": 8,
+      "pageNumber": 6,
+      "slot": 53
     },
     "63": {
       "display_name": "Triple Totem",
@@ -4989,7 +6090,10 @@
       "children": [
         64,
         71
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 18
     },
     "64": {
       "display_name": "Invigorating Wave",
@@ -5006,7 +6110,10 @@
         63,
         66,
         71
-      ]
+      ],
+      "col": 2,
+      "pageNumber": 7,
+      "slot": 20
     },
     "65": {
       "display_name": "Seeking Totem",
@@ -5018,7 +6125,10 @@
       "dependencies": [
         52
       ],
-      "children": []
+      "children": [],
+      "col": 3,
+      "pageNumber": 6,
+      "slot": 21
     },
     "66": {
       "display_name": "Frog Dance",
@@ -5032,7 +6142,10 @@
       ],
       "children": [
         64
-      ]
+      ],
+      "col": 4,
+      "pageNumber": 7,
+      "slot": 22
     },
     "67": {
       "display_name": "Chant of the Lunatic",
@@ -5043,10 +6156,13 @@
       "dependencies": [
         22
       ],
-      "children": []
+      "children": [],
+      "col": 4,
+      "pageNumber": 5,
+      "slot": 31
     },
     "68": {
-      "display_name": "Bloodier",
+      "display_name": "Bloodier II",
       "parents": [
         58
       ],
@@ -5056,7 +6172,10 @@
       ],
       "children": [
         74
-      ]
+      ],
+      "col": 8,
+      "pageNumber": 7,
+      "slot": 35
     },
     "69": {
       "display_name": "Shepherd",
@@ -5067,7 +6186,10 @@
       "dependencies": [
         21
       ],
-      "children": []
+      "children": [],
+      "col": 0,
+      "pageNumber": 7,
+      "slot": 45
     },
     "70": {
       "display_name": "Commander",
@@ -5080,7 +6202,10 @@
       ],
       "children": [
         72
-      ]
+      ],
+      "col": 0,
+      "pageNumber": 6,
+      "slot": 36
     },
     "71": {
       "display_name": "Soaring Wingbeats",
@@ -5095,10 +6220,13 @@
       "children": [
         69,
         75
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 37
     },
     "72": {
-      "display_name": "Hummingbirds' Song",
+      "display_name": "Hummingbird's Song",
       "parents": [
         70
       ],
@@ -5109,7 +6237,10 @@
       "children": [
         63,
         64
-      ]
+      ],
+      "col": 1,
+      "pageNumber": 7,
+      "slot": 10
     },
     "73": {
       "display_name": "Awakened",
@@ -5123,7 +6254,10 @@
       ],
       "children": [
         75
-      ]
+      ],
+      "col": 5,
+      "pageNumber": 7,
+      "slot": 50
     },
     "74": {
       "display_name": "Blood Sorrow",
@@ -5134,10 +6268,13 @@
       "dependencies": [
         7
       ],
-      "children": []
+      "children": [],
+      "col": 7,
+      "pageNumber": 7,
+      "slot": 43
     },
     "75": {
-      "display_name": "Cheaper Uproot",
+      "display_name": "Cheaper Uproot II",
       "parents": [
         71,
         73
@@ -5148,7 +6285,10 @@
       ],
       "children": [
         73
-      ]
+      ],
+      "col": 3,
+      "pageNumber": 7,
+      "slot": 48
     }
   }
 }

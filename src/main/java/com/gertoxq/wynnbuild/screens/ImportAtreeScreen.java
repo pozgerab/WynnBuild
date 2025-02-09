@@ -37,7 +37,6 @@ public class ImportAtreeScreen extends Screen {
     protected void init() {
         super.init();
         this.clearChildren();
-        getConfigManager().loadConfig();
         var nameInput = new TextFieldWidget(textRenderer, width / 2 - 100, height / 4 + 24, 58, 20, Text.empty());
         nameInput.setPlaceholder(Text.literal("Name"));
         if (nameVal != null) nameInput.setText(nameVal);
@@ -54,7 +53,7 @@ public class ImportAtreeScreen extends Screen {
                 code = AtreeCoder.encode_atree(AtreeCoder.decode_atree(code)).toB64();
                 ImportAtree.addBuild(nameInput.getText(), code);
             } catch (Exception e) {
-                client.player.sendMessage(Text.literal("Invalid code").styled(style -> style.withColor(Formatting.RED)));
+                client.player.sendMessage(Text.literal("Invalid code").styled(style -> style.withColor(Formatting.RED)), false);
                 client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 e.printStackTrace();
             }

@@ -51,7 +51,7 @@ public class ImportAtree {
     public static void applyBuild(String name, AtreeScreen screen) {
         SavedBuildType build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
         if (build == null) {
-            client.player.sendMessage(Text.literal("Build not found, something went wrong"));
+            client.player.sendMessage(Text.literal("Build not found, something went wrong"), false);
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }

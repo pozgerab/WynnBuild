@@ -16,7 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
+import static com.gertoxq.wynnbuild.client.WynnBuildClient.fullatree;
+import static com.gertoxq.wynnbuild.client.WynnBuildClient.tomeMap;
 
 public class WynnData {
 
@@ -33,7 +34,6 @@ public class WynnData {
 
     public static void load() {
         InputStream dataStream = WynnBuild.class.getResourceAsStream("/" + "dataMap.json");
-        InputStream dupeStream = WynnBuild.class.getResourceAsStream("/" + "dupes.json");
         InputStream atreeStream = WynnBuild.class.getResourceAsStream("/" + "atree.json");
         InputStream tomeStream = WynnBuild.class.getResourceAsStream("/" + "tomeIdMap.json");
         try {
@@ -42,11 +42,8 @@ public class WynnData {
                     new InputStreamReader(dataStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> {
                 int id = Integer.parseInt(s);
                 JsonArray itemArray = jsonElement.getAsJsonArray(); // ["type":0, "name":"nameidk", "icon": {"id":"mc:iron:horse_amor", "customModelData":1]
-                String name = itemArray.get(0).getAsString();
-                nameToId.put(name, id);
-                ID.ItemType type = ID.ItemType.values()[itemArray.get(1).getAsInt()];
-                JsonElement iconEl = itemArray.get(2);
-                JsonArray iconArray = iconEl.isJsonNull() ? null : itemArray.get(2).getAsJsonArray();
+                JsonElement iconEl = itemArray.get(0);
+                JsonArray iconArray = iconEl.isJsonNull() ? null : iconEl.getAsJsonArray();
                 Icon icon;
                 if (iconArray != null && iconArray.size() == 3) {
                     icon = new Icon(Identifier.ofVanilla(iconArray.get(1).getAsString().split(":")[1]), iconArray.get(2).getAsInt(), null);
@@ -56,19 +53,18 @@ public class WynnData {
                     icon = null;
                 }
 
-                JsonElement armorEl = itemArray.get(3);
+                JsonElement armorEl = itemArray.get(1);
                 String armorMat = armorEl.isJsonNull() ? null : armorEl.getAsString();
 
-                CustomItem item = CustomItem.getCustomFromHash(itemArray.get(4).getAsString(), a -> a
+                CustomItem item = CustomItem.getCustomFromHash(itemArray.get(2).getAsString(), a -> a
                         .setDisplaysOf(icon, armorMat)
                 );
 
-                dataMap.put(id, new ItemData(id, name, type, icon, armorMat, item));
+                nameToId.put(item.getName(), id);
+
+                dataMap.put(id, new ItemData(id, item.getName(), item.getType(), icon, armorMat, item));
             });
 
-            assert dupeStream != null;
-            dupeMap = ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(dupeStream, StandardCharsets.UTF_8))).asMap();
             assert atreeStream != null;
             fullatree = ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();

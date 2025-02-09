@@ -70,7 +70,6 @@ public class SavedItemsScreen extends Screen {
     public void init() {
         super.init();
         this.clearChildren();
-        getConfigManager().loadConfig();
         info = new TextWidget(width / 2 + 120, 40, 200, 20, Text.literal(""), textRenderer);
         var nameInput = new TextFieldWidget(textRenderer, width / 2 - 100, height - 75, 58, 20, Text.empty());
         nameInput.setPlaceholder(Text.literal("Name"));
@@ -116,11 +115,11 @@ public class SavedItemsScreen extends Screen {
                     getConfigManager().saveConfig();
                 } else {
                     client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
-                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))), false);
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
             } catch (Exception ignored) {
-                client.player.sendMessage(Text.literal("Failed to save").styled(style -> style.withColor(Formatting.RED)));
+                client.player.sendMessage(Text.literal("Failed to save").styled(style -> style.withColor(Formatting.RED)), false);
                 client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             }
             init();
@@ -152,7 +151,7 @@ public class SavedItemsScreen extends Screen {
                     getConfigManager().saveConfig();
                 } else {
                     client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
-                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
+                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))), false);
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
             } catch (Exception e) {
@@ -178,11 +177,10 @@ public class SavedItemsScreen extends Screen {
                 CustomItem customItem = CustomItem.getCustomFromHash(item.getHash());
                 client.keyboard.setClipboard(getSelectedOrNull().item.getHash());
                 client.player.sendMessage(Text.literal("Copied hash of ")
-                        .append(customItem.createItemShowcase()));
+                        .append(customItem.createItemShowcase()), false);
             }));
-            addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"), button -> {
-                client.execute(() -> client.setScreen(new BuildScreen()));
-            }));
+            addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"),
+                    button -> client.execute(() -> client.setScreen(new BuildScreen()))));
             addDrawableChild(new Button(left - 100, top + 44, 100, 20, Text.literal("DELETE").styled(style -> style.withColor(Formatting.DARK_RED)), button -> {
                 if (getSelectedOrNull() == null) return;
                 String name;
@@ -197,16 +195,13 @@ public class SavedItemsScreen extends Screen {
                     removeEntry(getSelectedOrNull());
                     client.player.sendMessage(Text.literal("Deleted ").append(Text.literal(name)
                             .styled(style -> style.withUnderline(true).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("CLICK TO COPY: ").append(hash)))
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, hash)))).append("  ==  ").append(getCustomFromHash(hash).createItemShowcase()));
+                                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, hash)))).append("  ==  ").append(getCustomFromHash(hash).createItemShowcase()), false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }));
         }
 
-        public void createFilter() {
-
-        }
 
         @Override
         public void setSelected(@Nullable SavedItemsScreen.SavedItemListWidget.Entry selected) {
@@ -214,7 +209,7 @@ public class SavedItemsScreen extends Screen {
         }
 
         @Override
-        protected int getDefaultScrollbarX() {
+        protected int getScrollbarX() {
             return getX() + getWidth();
         }
 

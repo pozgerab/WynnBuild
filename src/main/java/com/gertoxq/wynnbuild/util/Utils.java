@@ -107,7 +107,7 @@ public class Utils {
         } catch (Exception e) {
             failures++;
             WynnBuildClient.client.player.sendMessage(Text.literal("Fetching failed! Press the READ button to fetch manually")
-                    .styled(style -> style.withColor(Formatting.RED)));
+                    .styled(style -> style.withColor(Formatting.RED)), false);
             if (failures < 2) {
                 new Task(() -> catchNotLoaded(method), WynnBuildClient.REFETCH_DELAY);
             }

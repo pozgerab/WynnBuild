@@ -42,7 +42,7 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
     public abstract void dispose();
 
     @Override
-    protected int getDefaultScrollbarX() {
+    protected int getScrollbarX() {
         return right - 5;
     }
 

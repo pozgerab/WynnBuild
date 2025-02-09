@@ -20,8 +20,8 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
     }
 
     @Override
-    protected int getMaxPosition() {
-        return Math.ceilDiv(this.getEntryCount(), colCount) * this.itemHeight + this.headerHeight + 10;
+    public int getMaxScrollY() {
+        return Math.ceilDiv(this.getEntryCount(), colCount) * this.itemHeight + this.headerHeight - height;
     }
 
     @Override
@@ -68,7 +68,7 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
         if (x > right - 10) return null;
         double yDistFromTop = y - (double) this.getY();
         double xDistFromLeft = x - (double) left;
-        int yOffset = MathHelper.floor(yDistFromTop - this.headerHeight + (int) this.getScrollAmount() - 4);
+        int yOffset = MathHelper.floor(yDistFromTop - this.headerHeight + (int) this.getScrollY() - 4);
         int xOffset = MathHelper.floor(xDistFromLeft);
         int entryIndex = yOffset / this.itemHeight * colCount + xOffset / this.itemWidth;
         return (x >= (double) left && x <= (double) right && entryIndex >= 0 && yOffset >= 0 && entryIndex < this.getEntryCount() ? this.children().get(entryIndex) : null);
@@ -77,6 +77,6 @@ public abstract class GalleryWidget<T> extends SelectableListWidget<T> {
     @Override
     protected void centerScrollOn(SelectableListWidget<T>.Entry entry) {
         int index = this.children().indexOf(entry);
-        this.setScrollAmount(index / colCount * this.itemHeight + this.itemHeight / 2 - this.height / 2);
+        this.setScrollY(index / colCount * this.itemHeight + this.itemHeight / 2 - this.height / 2);
     }
 }
