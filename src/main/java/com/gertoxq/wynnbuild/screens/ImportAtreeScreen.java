@@ -37,7 +37,6 @@ public class ImportAtreeScreen extends Screen {
     protected void init() {
         super.init();
         this.clearChildren();
-        getConfigManager().loadConfig();
         var nameInput = new TextFieldWidget(textRenderer, width / 2 - 100, height / 4 + 24, 58, 20, Text.empty());
         nameInput.setPlaceholder(Text.literal("Name"));
         if (nameVal != null) nameInput.setText(nameVal);

@@ -6,8 +6,6 @@ import com.gertoxq.wynnbuild.GuiSlot;
 import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -25,30 +23,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
+import static com.gertoxq.wynnbuild.screens.atree.Ability.nameToId;
 
 public class AtreeScreenHandler extends ContainerScreenHandler {
     static final Set<Integer> allCache = new HashSet<>();
     static final Set<Integer> readCache = new HashSet<>();
     static Set<Integer> unlockedCache = new HashSet<>(Set.of(0));
-    static Map<String, JsonElement> tempDupeMap;
     static List<Integer> prevIds = new ArrayList<>();
-    static Map<String, Integer> nameToId = new HashMap<>();
-    static Map<Integer, List<Integer>> idToParent = new HashMap<>();
-    static Map<Integer, List<Integer>> idToChildren = new HashMap<>();
-
-    static {
-        for (String key : castTreeObj.keySet()) {
-            JsonObject nestedObject = castTreeObj.getAsJsonObject(key);
-
-            String displayName = nestedObject.get("display_name").getAsString();
-            List<Integer> parents = nestedObject.get("parents").getAsJsonArray().asList().stream().map(JsonElement::getAsInt).toList();
-            List<Integer> children = nestedObject.get("children").getAsJsonArray().asList().stream().map(JsonElement::getAsInt).toList();
-            int id = nestedObject.get("id").getAsInt();
-            nameToId.putIfAbsent(displayName, id);
-            idToParent.putIfAbsent(id, parents);
-            idToChildren.putIfAbsent(id, children);
-        }
-    }
 
     public boolean readCurrent = false;
 
@@ -128,18 +109,12 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         List<AbilSlot> realSlots = new ArrayList<>();
         slots.forEach(slot -> {
 
-            String name = Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()).replace("Unlock ", "").replace(" ability", ""));
+            String name = Utils.removeNum(Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()).replace("Unlock ", "").replace(" ability", "")));
 
-            Integer id = nameToId.getOrDefault(name, null);
-            if (id != null) {
-                if (readCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
-                    id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt(); //  IN CASE OF LEVEL III
-                    if (readCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
-                        id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt();
-                    }
-                }
-                readCache.add(id);
-                realSlots.add(new AbilSlot(id, name, slot));
+            Optional<Integer> abilityId = Ability.getIdByNameAndSlot(name, slot.getIndex());
+            if (abilityId.isPresent()) {
+                readCache.add(abilityId.get());
+                realSlots.add(new AbilSlot(abilityId.get(), name, slot));
             }
         });
         return realSlots;
@@ -166,7 +141,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
             unlockedSlots.add(new AbilSlot(id, name, slot));
             pageCache.add(id);
             unlockedCache.add(id);
-            idToChildren.get(id).stream().sorted().forEach(integer -> travFindUnlocked(integer, pageCache, checked, allSlots, unlockedSlots));
+            Ability.getById(id).children().stream().sorted().forEach(integer -> travFindUnlocked(integer, pageCache, checked, allSlots, unlockedSlots));
             return;
         }
         if (lore == null || lore.isEmpty()) return;
@@ -174,20 +149,20 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         String lastStr = Utils.removeFormat(lore.getLast().getString());
         if (lastStr.contains("You do not meet the requirements")) return;
         if (lastStr.contains("Blocked by another ability")) return;
-        List<Integer> parents = idToParent.get(id);
+        List<Integer> parents = Ability.getById(id).parents();
         //System.out.println(id+"'s parents="+parents);
         if (parents.stream().anyMatch(unlockedCache::contains)) {
             unlockedSlots.add(new AbilSlot(id, name, slot));
             pageCache.add(id);
             unlockedCache.add(id);
             //System.out.println("added "+ id);
-            idToChildren.get(id).stream().sorted().forEach(integer -> travFindUnlocked(integer, pageCache, checked, allSlots, unlockedSlots));
+            Ability.getById(id).children().stream().sorted().forEach(integer -> travFindUnlocked(integer, pageCache, checked, allSlots, unlockedSlots));
         }
     }
 
     private void findEndNode(List<Integer> allId, List<Integer> remaining, Set<Integer> endNodes) {
         if (remaining.isEmpty()) return;
-        List<Integer> children = new ArrayList<>(idToChildren.getOrDefault(remaining.getFirst(), new ArrayList<>()));
+        List<Integer> children = new ArrayList<>(Ability.getAbilityMap().getOrDefault(remaining.getFirst(), Ability.empty()).children());
         remaining.removeFirst();
         children.forEach(kid -> {
             if (!allId.contains(kid)) {
@@ -205,19 +180,14 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
                 .replace(" ability", "").trim())))).toList();
         Map<Integer, Slot> idSlotMap = new HashMap<>();
         filtered.forEach(slot -> {
+
             String name = Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()
                     .replace("Unlock ", "")
                     .replace(" ability", "").trim()));
             //System.out.println(name);
             //System.out.println(nameToId.containsKey(name));
-            Integer id = nameToId.getOrDefault(name, Integer.MAX_VALUE);
-            if (allCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
-                id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt(); //  IN CASE OF LEVEL III
-                if (allCache.contains(id) && tempDupeMap.containsKey(id.toString())) {
-                    id = tempDupeMap.get(id.toString()).getAsJsonArray().get(1).getAsInt();
-                }
-            }
-            idSlotMap.put(id, slot);
+            Optional<Integer> id = Ability.getIdByNameAndSlot(name, slot.getIndex());
+            id.ifPresent(integer -> idSlotMap.put(integer, slot));
         });
         List<Integer> sortedIds = idSlotMap.keySet().stream().sorted().toList();
         allCache.addAll(sortedIds);

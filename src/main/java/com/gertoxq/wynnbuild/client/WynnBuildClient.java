@@ -10,6 +10,7 @@ import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
+import com.gertoxq.wynnbuild.screens.atree.Ability;
 import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
@@ -39,8 +40,6 @@ public class WynnBuildClient implements ClientModInitializer {
     public static final String WYNNCUSTOM_DOMAIN = "https://hppeng-wynn.github.io/custom/#";
     public final static List<String> emptyEquipmentPrefix = List.of("G", "H", "I", "J", "K", "L", "M", "N");
     public static Map<String, Integer> tomeMap = new HashMap<>();
-    public static Map<String, JsonElement> dupeMap;
-    public static Map<String, JsonElement> currentDupeMap;
     public static Map<String, JsonElement> fullatree;
     public static JsonObject castTreeObj;
     public static Cast cast = Cast.Warrior;
@@ -269,20 +268,19 @@ public class WynnBuildClient implements ClientModInitializer {
 
         client = MinecraftClient.getInstance();
         Task.init();
-
         AllIDs.load();
         WynnData.load();
         ScreenManager.register();
 
         configManager = new Manager();
         configManager.loadConfig();
-        if (!configManager.getConfig().getAtreeEncoding().isEmpty()) {
-            readAtree = true;
-        }
+        readAtree = !configManager.getConfig().getAtreeEncoding().isEmpty();
+
+        Ability.refreshTree();
+
         BUTTON = new Clickable(() -> configManager.getConfig().isShowButtons());
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
-            configManager.loadConfig();
             if (screen instanceof InventoryScreen screen1) {
                 BUTTON.addTo(screen1, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> build());
             }
