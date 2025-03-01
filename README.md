@@ -20,7 +20,8 @@ As it isn't possible to tell what tier is a powder on an item, you can set a def
 
 ## Config
 You can configure the mod with **/build config** command. You can disable all buttons or access the encoded value of your current atree.
-Ability tree presets are also configurable.
+Ability tree presets are also configurable (**/build saveatree**).
+![Config Screen](https://cdn.modrinth.com/data/1RCjAAcr/images/ed4d865d94ad43a1e1d9bf6239ccb461876f0aa4.png)
 
 ## Custom / Crafted Items
 You can now use crafted (or custom if you're using the builder) items in your builds. The mod detects crafted items automatically and use them in the build. Custom item are only available in the [**Builder**](#Builder)

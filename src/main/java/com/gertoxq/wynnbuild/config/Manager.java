@@ -33,10 +33,11 @@ public class Manager {
                 config = GSON.fromJson(reader, ConfigType.class);
                 try {
                     cast = Cast.valueOf(config.getCast());
-                    castTreeObj = fullatree.get(cast.name).getAsJsonObject();
                 } catch (Exception e) {
-                    System.out.println("Invalid Cast value");
+                    System.out.println("Invalid Cast value: " + config.getCast());
+                    cast = Cast.Warrior;
                 }
+                castTreeObj = fullatree.get(cast.name).getAsJsonObject();
                 ATREE_IDLE = config.getAtreeIdleTime();
                 tomeIds = config.getTomeIds().size() == 8 ? config.getTomeIds() : TomeScreenHandler.EMPTY_IDS;
                 atreeSuffix = config.getAtreeEncoding();

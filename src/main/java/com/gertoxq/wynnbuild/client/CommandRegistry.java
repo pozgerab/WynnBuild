@@ -7,7 +7,6 @@ import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.screens.ImportAtreeScreen;
 import com.gertoxq.wynnbuild.screens.builder.BuildScreen;
-import com.gertoxq.wynnbuild.screens.gallery.GalleryScreen;
 import com.gertoxq.wynnbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.wynnbuild.util.WynnData;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -68,7 +67,8 @@ public class CommandRegistry {
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("beta").then(literal("gallery").executes(context -> {
-                client.send(() -> client.setScreen(new GalleryScreen()));
+                client.player.sendMessage(Text.literal("Disabled feature").styled(style -> style.withColor(Formatting.RED)), false);
+                //client.send(() -> client.setScreen(new GalleryScreen()));
                 return 1;
             }))));
             dispatcher.register(literal("build").then(literal("saveitem").executes(context -> {
@@ -84,7 +84,7 @@ public class CommandRegistry {
                             "h:" + itemName,
                             type,
                             customItem.encodeCustom(true),
-                            WynnData.getIdMap().getOrDefault(itemName, -1)
+                            WynnData.getIdMap().getOrDefault(itemName, null)
                     );
                     var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
                     if (exisiting == null) {

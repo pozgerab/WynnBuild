@@ -9,10 +9,10 @@ public class SavedItemType {
     private final Date createdAt;
     private final ID.ItemType type;
     private final String hash;
-    private final int baseItemId;
+    private final Integer baseItemId;
     private String name;
 
-    public SavedItemType(String name, ID.ItemType type, String hash, int baseItemId) {
+    public SavedItemType(String name, ID.ItemType type, String hash, Integer baseItemId) {
         this.baseItemId = baseItemId;
         this.createdAt = new Date();
         this.name = name;
@@ -20,7 +20,7 @@ public class SavedItemType {
         this.hash = hash;
     }
 
-    public int getBaseItemId() {
+    public Integer getBaseItemId() {
         return baseItemId;
     }
 

@@ -60,6 +60,11 @@ public class WynnData {
                         .setDisplaysOf(icon, armorMat)
                 );
 
+                if (item == null) {
+                    System.out.println("item is unparsable: " + itemArray.get(2).getAsString());
+                    return;
+                }
+
                 nameToId.put(item.getName(), id);
 
                 dataMap.put(id, new ItemData(id, item.getName(), item.getType(), icon, armorMat, item));
@@ -73,6 +78,7 @@ public class WynnData {
                     new InputStreamReader(tomeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> tomeMap.put(s, jsonElement.getAsInt()));
 
         } catch (Exception e) {
+            System.out.println("didn't finish init, something went wrong with wynnbuild");
             e.printStackTrace();
         }
     }

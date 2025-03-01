@@ -35,9 +35,9 @@ import static com.gertoxq.wynnbuild.custom.CustomItem.getItem;
 import static com.gertoxq.wynnbuild.custom.CustomItem.removeTilFormat;
 
 public class WynnBuildClient implements ClientModInitializer {
-    public static final String DOMAIN = "https://hppeng-wynn.github.io/builder/#";
+    public static final String DOMAIN = "https://wynnbuilder.github.io/builder/#";
     public static final Integer BUILDER_VERSION = 9;
-    public static final String WYNNCUSTOM_DOMAIN = "https://hppeng-wynn.github.io/custom/#";
+    public static final String WYNNCUSTOM_DOMAIN = "https://wynnbuilder.github.io/custom/#";
     public final static List<String> emptyEquipmentPrefix = List.of("G", "H", "I", "J", "K", "L", "M", "N");
     public static Map<String, Integer> tomeMap = new HashMap<>();
     public static Map<String, JsonElement> fullatree;

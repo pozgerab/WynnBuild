@@ -169,7 +169,7 @@ public class CustomItem {
                     String id = ci_save_order.get(Base64.toInt(tag.substring(0, 2)));
                     ID identification = ID.getByName(id);
                     if (identification == null) {
-                        System.out.println(id);
+                        System.out.println(id + " was null");
                         continue;
                     }
                     int len = 2;

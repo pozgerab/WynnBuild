@@ -226,7 +226,7 @@ public class SavedItemsScreen extends Screen {
             protected Entry(SavedItemType item) {
                 this.item = item;
                 this.custom = CustomItem.getCustomFromHash(item.getHash());
-                if (custom.getBaseItemId() != null) {
+                if (item.getBaseItemId() != null) {
                     this.displayStack = custom.createStack();
                 } else displayStack = null;
             }
