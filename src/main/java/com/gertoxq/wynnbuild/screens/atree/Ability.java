@@ -44,6 +44,11 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
     public static void refreshTree() {
         System.out.println("Refreshing atree, should only happen when changing cast...");
         ABILITY_MAP.clear();
+        if (castTreeObj == null) {
+            // this shouldn't be null, but if something goes wrong at initialization prevent crash
+            System.out.println("Something went wrong with ability tree casting, opening the character menu again should fix it or create an issue ??");
+            return;
+        }
         for (String key : castTreeObj.keySet()) {
             JsonObject nestedObject = castTreeObj.getAsJsonObject(key);
 
