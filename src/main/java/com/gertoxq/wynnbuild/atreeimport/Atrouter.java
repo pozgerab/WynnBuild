@@ -1,53 +1,46 @@
 package com.gertoxq.wynnbuild.atreeimport;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.gertoxq.wynnbuild.screens.atree.Ability;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Atrouter {
     public final Set<Integer> nodesWithoutParents;
     private final Map<Integer, Set<Integer>> atreeGraph = new HashMap<>();
-    private final Map<Integer, List<Integer>> dependencies = new HashMap<>();
+    private final Map<Integer, Set<Integer>> dependencies = new HashMap<>();
     private final Set<Integer> visited = new HashSet<>();
     private final List<Integer> route = new ArrayList<>();
     private final Set<Integer> nodesToVisit;
+    private final Set<Integer> allNodes;
 
-    public Atrouter(Set<Integer> nodesToVisit, JsonObject whole) {
+    public Atrouter(Set<Integer> nodesToVisit, Set<Integer> allNodesToVisit) {
         this.nodesToVisit = nodesToVisit;
         this.nodesWithoutParents = new HashSet<>(nodesToVisit);
-        graphSetup(whole);
+        this.allNodes = allNodesToVisit;
+        graphSetup();
     }
 
-    private void graphSetup(JsonObject jsonObject) {
-        for (String key : jsonObject.keySet()) {
-            int node = Integer.parseInt(key);
+    private void graphSetup() {
+
+        Ability.getAbilityMap().forEach((node, ability) -> {
             if (nodesToVisit.contains(node)) {
-                JsonObject nodeInfo = jsonObject.getAsJsonObject(key);
 
-                JsonArray dependencyArray = nodeInfo.getAsJsonArray("dependencies");
-                List<Integer> dependencyList = new ArrayList<>();
-                for (int i = 0; i < dependencyArray.size(); i++) {
-                    int dependency = dependencyArray.get(i).getAsInt();
-                    if (nodesToVisit.contains(dependency)) {
-                        dependencyList.add(dependency);
-                    }
-                }
-                dependencies.put(node, dependencyList);
+                dependencies.put(node, ability.dependencies().stream().filter(nodesToVisit::contains).collect(Collectors.toSet()));
 
-                JsonArray children = nodeInfo.getAsJsonArray("children");
-                Set<Integer> adjacentNodes = new HashSet<>();
-                for (int i = 0; i < children.size(); i++) {
-                    int child = children.get(i).getAsInt();
-                    if (nodesToVisit.contains(child)) {
-                        adjacentNodes.add(child);
+                atreeGraph.put(node, ability.children().stream().filter(child -> {
+                    if (nodesToVisit.contains(child) && !Ability.areSameLevel(node, child)) {
                         nodesWithoutParents.remove(child);
+                        return true;
                     }
-                }
+                    return false;
+                }).collect(Collectors.toSet()));
 
-                atreeGraph.put(node, adjacentNodes);
+                if (ability.parents().stream().noneMatch(parent -> !Ability.areSameLevel(node, parent) && !nodesToVisit.contains(parent) && allNodes.contains(parent))) {
+                    nodesWithoutParents.remove(node);
+                }
             }
-        }
+        });
     }
 
     public List<Integer> findRoute() {

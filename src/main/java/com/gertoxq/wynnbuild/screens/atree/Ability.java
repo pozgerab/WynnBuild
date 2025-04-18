@@ -12,7 +12,7 @@ import java.util.*;
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.castTreeObj;
 
 public record Ability(int id, String name, List<Integer> parents, List<Integer> children, @Nullable Integer pageNum,
-                      @Nullable Integer slot) {
+                      @Nullable Integer slot, List<Integer> dependencies) {
 
     private static final Map<Integer, Ability> ABILITY_MAP = new HashMap<>();
     static Map<String, List<Integer>> nameToId = new HashMap<>();
@@ -25,9 +25,14 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
         return ABILITY_MAP.get(id);
     }
 
+    public static boolean areSameLevel(int id1, int id2) {
+        var entry = Ability.getById(id1);
+        return entry.parents().contains(id2) && entry.children().contains(id2);
+    }
+
     @Contract(" -> new")
     public static @NotNull Ability empty() {
-        return new Ability(-1, "Empty", List.of(), List.of(), -1, -1);
+        return new Ability(-1, "Empty", List.of(), List.of(), -1, -1, List.of());
     }
 
     public static Optional<Integer> getIdByNameAndSlot(String name, int slot) {
@@ -53,8 +58,10 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
             JsonObject nestedObject = castTreeObj.getAsJsonObject(key);
 
             String displayName = Utils.removeNum(nestedObject.get("display_name").getAsString());
-            List<Integer> parents = nestedObject.get("parents").getAsJsonArray().asList().stream().map(JsonElement::getAsInt).toList();
-            List<Integer> children = nestedObject.get("children").getAsJsonArray().asList().stream().map(JsonElement::getAsInt).toList();
+            List<Integer> parents = nestedObject.getAsJsonArray("parents").asList().stream().map(JsonElement::getAsInt).toList();
+            List<Integer> children = nestedObject.getAsJsonArray("children").asList().stream().map(JsonElement::getAsInt).toList();
+            List<Integer> dependencies = nestedObject.getAsJsonArray("dependencies").asList().stream().map(JsonElement::getAsInt).toList();
+
             int id = nestedObject.get("id").getAsInt();
 
             JsonElement pageNumEl = nestedObject.get("pageNumber");
@@ -66,7 +73,7 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
             } else {
                 nameToId.put(displayName, new ArrayList<>(List.of(id)));
             }
-            Ability ability = new Ability(id, displayName, parents, children, pageNum, slot);
+            Ability ability = new Ability(id, displayName, parents, children, pageNum, slot, dependencies);
             ABILITY_MAP.put(id, ability);
         }
     }

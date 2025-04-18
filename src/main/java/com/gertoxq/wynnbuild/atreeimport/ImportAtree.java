@@ -38,7 +38,7 @@ public class ImportAtree {
             screen.getScreenHandler().getSlots().forEach(abilSlot -> idSlots.put(abilSlot.id(), abilSlot.slot().getIndex()));
             AtomicInteger j = new AtomicInteger(0);
             var unsorted = applyIds.stream().filter(idSlots::containsKey).toList();
-            var sortedAbils = new Atrouter(new HashSet<>(unsorted), castTreeObj).findRoute();
+            var sortedAbils = new Atrouter(new HashSet<>(unsorted), applyIds).findRoute();
             sortedAbils.forEach(id -> {
                 new Task(() -> screen.getScreenHandler().leftClickSlot(idSlots.get(id)), j.get() * 15 + 2);
                 j.addAndGet(1);

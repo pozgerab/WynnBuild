@@ -57,7 +57,6 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             return;
         }
-        //screen.getUnlockedNames().forEach(System.out::println);
         Set<Integer> unlockedIds = getUnlockedIds();
         //System.out.println("Unlocked "+ Arrays.toString(unlockedIds.toArray()));
         unlockedAbilIds.addAll(unlockedIds);
