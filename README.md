@@ -9,9 +9,7 @@ Pressing the **BUILD** button in the bottom right side of your screen will gener
 You can customize how precise your stats of your build will be with the **Precision** option inside the config menu (**/build config**):
 ### Precision options
 - **OFF** - The item is passed to the builder as a default item (meaning item with average rols)
-- **NEVER** - The item is always passed as a default item unless it's a crafted or custom item (rolls always apply)
-- **ON** - The item is passed as a custom item if the item is saved (not the currently used equipment) (the stats are precise)
-- **FORCE** - The item is always passed as a custom item (even forces the currently used equipments in EMPTY SAFE mode, most precision)
+- **FORCE** - The item is passed as a custom item (uses exact rolls, most precision)
 
 ![Precision Option](https://cdn.modrinth.com/data/1RCjAAcr/images/b581fa86bcb87455948acbf479cd46f9139cd3be.png)
 

@@ -45,6 +45,7 @@ public class CustomItem {
     private static final List<TypedID<Integer>> RAWS = ID.getByTypedMetric(ID.Metric.RAW);
     private static final List<DoubleID<DoubleID.Range, String>> RANGEDS = ID.getByDoubleMetric(ID.Metric.RANGE);
     private static final List<TypedID<Integer>> PERXS = ID.getByTypedMetric(ID.Metric.PERXS);
+
     public final Map<String, Object> statMap;
     public Item material;
     public int modelData = 0;

@@ -70,13 +70,13 @@ public class ConfigScreen extends Screen {
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))
                 .size(20, 20).build();
 
-        addDrawableChild(CyclingButtonWidget.<Integer>builder(integer -> Text.literal(BuildScreen.PRECISION_OPTIONS.get(integer)).styled(style -> style.withColor(Formatting.AQUA)))
-                .values(0, 1, 2, 3)
-                .initially(getConfigManager().getConfig().getPrecision())
+        addDrawableChild(CyclingButtonWidget.onOffBuilder()
+                .values(false, true)
+                .initially(getConfigManager().getConfig().getPrecision() == 1)
                 .build(this.width / 2 - 100, this.height / 4 + 96, 179, 20, Text.literal("Build Precision"),
                         (button, value) -> {
-                            help.setTooltip(helpFactory.apply(value));
-                            getConfigManager().getConfig().setPrecision(value);
+                            help.setTooltip(helpFactory.apply(value ? 1 : 0));
+                            getConfigManager().getConfig().setPrecision(value ? 1 : 0);
                             getConfigManager().saveConfig();
                         }));
 

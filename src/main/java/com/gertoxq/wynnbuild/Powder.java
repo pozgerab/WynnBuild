@@ -14,9 +14,8 @@ public class Powder {
     public static Map<String, Integer> powderIDs = new HashMap<>();
     public static Map<Integer, String> powderNames = new HashMap<>();
     public static int MAX_POWDER_LEVEL = 6;
-    public static String schema = "\\[\\s*([0-3])\\s*/\\s*([1-3])\\s*] Powder Slots \\[\\s*([✤✦✽✹❋])(\\s+([✤✦✽✹❋])){0,2}\\s*]";
-    public static Pattern regex = Pattern.compile(schema);
-    public static int DEFAULT_POWDER_LEVEL;
+    public static Pattern regex = Pattern.compile("\\[\\s*([0-9]{1,2})\\s*/\\s*([0-9]{1,2})\\s*] Powder Slots \\[\\s*([✤✦❉✹❋](?:\\s*[✤✦❉✹❋]){0,23})?\\s*]");
+    public static int DEFAULT_POWDER_LEVEL = 6;
 
     static {
         int _powderID = 0;
@@ -29,15 +28,14 @@ public class Powder {
         }
     }
 
-    public static String getPowderString(List<List<Integer>> powders) {
+    public static String getPowderString(List<List<Element>> powders) {
         StringBuilder buildString = new StringBuilder();
 
-        for (List<Integer> _powderset : powders) {
+        for (List<Element> _powderset : powders) {
             int nBits = (int) Math.ceil((double) _powderset.size() / 6);
             buildString.append(Base64.fromIntN(nBits, 1));
 
-            List<Integer> powderset = new ArrayList<>(_powderset);
-
+            List<Integer> powderset = new ArrayList<>(_powderset).stream().map(element -> powderIDs.get(element.name().substring(0, 1) + DEFAULT_POWDER_LEVEL)).toList();
             while (!powderset.isEmpty()) {
 
                 List<Integer> firstSix = new ArrayList<>(powderset.subList(0, Math.min(6, powderset.size())));
@@ -57,27 +55,21 @@ public class Powder {
         return buildString.toString();
     }
 
-    public static @Nullable List<Integer> getPowderFromString(String string) {
+    public static @Nullable List<Element> getPowderFromString(String string) {
         if (!regex.matcher(string).matches()) return null;
-        Map<Element, Integer> powderMap = new HashMap<>();
+        List<Element> powders = new ArrayList<>();
         for (Element element : Element.values()) {
             if (string.contains(element.icon)) {
-                powderMap.put(element, powderMap.getOrDefault(element, 0) + StringUtils.countMatches(string, element.icon));
+                powders.addAll(Collections.nCopies(StringUtils.countMatches(string, element.icon), element));
             }
         }
-        List<Integer> powders = new ArrayList<>();
-        powderMap.forEach((element, integer) -> {
-            for (int i = 0; i < integer; i++) {
-                powders.add(powderIDs.get(element.toString().charAt(0) + String.valueOf(DEFAULT_POWDER_LEVEL)));
-            }
-        });
         return powders;
     }
 
     public enum Element {
         EARTH("✤", Formatting.DARK_GREEN),
         THUNDER("✦", Formatting.YELLOW),
-        WATER("✽", Formatting.AQUA),
+        WATER("❉", Formatting.AQUA),
         FIRE("✹", Formatting.RED),
         AIR("❋", Formatting.WHITE);
         public final String icon;

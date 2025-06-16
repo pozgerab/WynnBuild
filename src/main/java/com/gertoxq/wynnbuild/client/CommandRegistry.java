@@ -6,7 +6,6 @@ import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.screens.ImportAtreeScreen;
-import com.gertoxq.wynnbuild.screens.builder.BuildScreen;
 import com.gertoxq.wynnbuild.screens.itemmenu.SavedItemsScreen;
 import com.gertoxq.wynnbuild.util.WynnData;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -63,7 +62,7 @@ public class CommandRegistry {
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("builder").executes(context -> {
-                client.send(() -> client.setScreen(new BuildScreen()));
+                //client.send(() -> client.setScreen(new BuildScreen()));
                 return 1;
             })));
             dispatcher.register(literal("build").then(literal("beta").then(literal("gallery").executes(context -> {

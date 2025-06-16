@@ -28,7 +28,7 @@ public class Utils {
     }
 
     public static String removeFormat(@NotNull String str) {
-        return str.replaceAll("§[0-9a-fA-Fklmnor]", "");
+        return str.replaceAll("§.", "");
     }
 
     public static String removeNum(String str) {
@@ -74,15 +74,15 @@ public class Utils {
                 .append("\n").styled(style -> style.withBold(true));
     }
 
-    public static Text getBuildTemplate(String url, @Range(from = 0, to = 3) Integer precision) {
-        assert precision == null || precision > 3;
-        return (precision == null ? Text.literal("\n    ") : Text.literal("\n(").styled(style -> style.withColor(Formatting.DARK_GRAY))
+    public static Text getBuildTemplate(String url, @Range(from = 0, to = 3) boolean precise) {
+        int precision = precise ? 1 : 0;
+        return Text.literal("\n(").styled(style -> style.withColor(Formatting.DARK_GRAY))
                 .append(Text.literal(BuildScreen.PRECISION_OPTIONS.get(precision)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true).withUnderline(true)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 Text.literal("Precision Option: ").append(BuildScreen.PRECISION_OPTIONS.get(precision)).append("\n").append(BuildScreen.PRECISION_TOOLTIPS.get(precision)).append("\n\n")
                                         .append(Text.literal("CLICK TO CHANGE PRECISION (/build config)").styled(style1 -> style1.withColor(Formatting.GREEN)))))
                         .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build config"))))
-                .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY))))
+                .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
                 .append(Text.literal(" Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
                         .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url)))

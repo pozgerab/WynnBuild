@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.screens.builder;
 
 import com.gertoxq.wynnbuild.Cast;
+import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
 import com.gertoxq.wynnbuild.config.SavedBuildType;
 import com.gertoxq.wynnbuild.config.SavedItemType;
@@ -26,23 +27,23 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
 
 public class BuildScreen extends Screen {
-    public static final List<String> PRECISION_OPTIONS = List.of("OFF", "NEVER", "ON", "FORCE");
-    public static final Map<Integer, Text> PRECISION_TOOLTIPS = Map.of(
-            0, Text.literal("The item is passed to the builder as a default item (meaning an item with average rolls)"),
-            1, Text.literal("The item is always passed as a default item unless it's a crafted or custom (average rolls always)"),
-            2, Text.literal("The item is passed as custom item if the item is saved (not the currently used equipment) (the stats are precisely passed)"),
-            3, Text.literal("The item is always passed as a custom item (uses your exact rolls, most precision)"));
-    public static final String precisionTooltip = "\n" + PRECISION_OPTIONS.get(0) + " - " + PRECISION_TOOLTIPS.get(0).getString() + "\n" +
-            "\n" + PRECISION_OPTIONS.get(1) + " - " + PRECISION_TOOLTIPS.get(1).getString() + "\n" +
-            "\n" + PRECISION_OPTIONS.get(2) + " - " + PRECISION_TOOLTIPS.get(2).getString() + "\n" +
-            "\n" + PRECISION_OPTIONS.get(3) + " - " + PRECISION_TOOLTIPS.get(3).getString();
+    public static final List<String> PRECISION_OPTIONS = List.of("OFF", "ON");
+    public static final List<Text> PRECISION_TOOLTIPS = List.of(
+            Text.literal("The item is passed as a default item unless it's a crafted or custom (average rolls always)"),
+            Text.literal("The item is passed as a custom item (uses your exact rolls, most precision)"));
+    public static final String precisionTooltip = IntStream.range(0, 2).boxed().toList().stream().map(i -> PRECISION_OPTIONS.get(i) + " - " + PRECISION_TOOLTIPS.get(i)).collect(Collectors.joining("\n"));
     private static AtomicReference<SelectableListWidget<?>> currentSelect = new AtomicReference<>();
     private static List<String> buildIds = new ArrayList<>(Collections.nCopies(10, ""));
     private static List<String> buildNames;
@@ -59,7 +60,7 @@ public class BuildScreen extends Screen {
     }
 
     private static void initIDs() {
-        saveArmor();
+        //  removed "saveArmor()"
         if (ids.size() == 9) {
             for (int i = 0; i < 9; i++) {
                 if (ids.get(i) == -2) {
@@ -94,9 +95,13 @@ public class BuildScreen extends Screen {
 
     @Override
     public void init() {
+
         super.init();
+
+        client.player.sendMessage(Text.literal("Temporaty disabled").styled(style -> style.withColor(Formatting.RED)), false);
+        this.close();
+
         clearChildren();
-        saveArmor();
         if (!loaded) initState();
         loaded = true;
         buildDisplays.forEach(this::addDrawableChild);
@@ -190,7 +195,7 @@ public class BuildScreen extends Screen {
                         } else {
                             if (emptySafe) {
                                 if (preciseCode == 3) {
-                                    CustomItem customItem = CustomItem.getItem(items.get(i), types.size() > i ? types.get(i) : null);
+                                    CustomItem customItem = CustomItem.getItem(/*items.get(i)*/null, types.size() > i ? types.get(i) : null);
                                     if (customItem != null) {
                                         finalIds.set(i, customItem.encodeCustom(true));
                                         continue;
@@ -209,7 +214,7 @@ public class BuildScreen extends Screen {
                         } else finalIds.set(i, buildIds.get(i));
                     } else if (preciseCode == 1) {
                         if (item.getBaseItemId() == null) {
-                            finalIds.set(i, emptyEquipmentPrefix.get(i));
+                            finalIds.set(i, Build.EMPTY_EQUIPMENT_PREFIX.get(i));
                         } else finalIds.set(i, String.valueOf(item.getBaseItemId()));
                     } else if (preciseCode == 2) {
                         if (buildIds.get(i).isEmpty()) {
@@ -219,7 +224,8 @@ public class BuildScreen extends Screen {
                         finalIds.set(i, item.encodeCustom(true));
                     }
                 }
-                WynnBuildClient.buildWithArgs(finalIds, buildIds.get(9), emptySafe, null);
+                //  TODO    REMAKE THIS ENTIRE THING OR REMOVE
+                //WynnBuildClient.buildWithArgs(finalIds, buildIds.get(9), emptySafe, true);
             } catch (Exception e) {
                 client.player.sendMessage(Text.literal("Something went wrong when trying to build"), false);
                 client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
@@ -235,7 +241,7 @@ public class BuildScreen extends Screen {
     private ClickableIcon createTypeSelection(final int x, final int y, final List<ID.ItemType> types, final Identifier identifier, final int key, ID.ItemType currentType) {
         return new ClickableIcon(x, y, 40, 40, identifier, clickableIcon -> {
             final var select = createTypeSelect(types, 120, 200, width / 2 + 40, 20, key);
-            final CustomItem item = CustomItem.getItem(items.get(key), currentType);
+            final CustomItem item = CustomItem.getItem(/*items.get(key)*/null, currentType);
             if (item != null && types.contains(item.getType())) {
                 var currentlyEq = select.addEntryToTop(new Custom(new SavedItemType("CURRENT", currentType, item.encodeCustom(true), ids.get(key)), item, true));
                 final var currentEntry = select.children().stream().filter(entry -> entry.getValue().saved.getHash().equals(buildHashes.get(key))).findAny().orElse(null);
@@ -355,7 +361,7 @@ public class BuildScreen extends Screen {
                         }
                     } else if (ids.get(this.key) != -1) {
                         buildIds.set(this.key, String.valueOf(ids.get(this.key)));
-                        buildNames.set(this.key, eqipmentNames.get(this.key));
+                        //buildNames.set(this.key, eqipmentNames.get(this.key));
                     }
                 } else {
                     buildIds.set(this.key, getSelectedOrNull().getValue().saved.getHash());
