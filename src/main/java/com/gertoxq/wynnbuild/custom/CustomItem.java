@@ -35,14 +35,16 @@ import static com.gertoxq.wynnbuild.client.WynnBuildClient.types;
 import static com.gertoxq.wynnbuild.custom.CustomItem.Data.*;
 
 public class CustomItem {
-    public static final Pattern baseStatRegex = Pattern.compile("\\S [A-Z][a-zA-Z.]*(?:\\s+[A-Z][a-zA-Z.]*)*: [+-]?\\d+");
+    public static final Pattern BASE_STAT_REGEX = Pattern.compile("\\S [A-Z][a-zA-Z.]*(?:\\s+[A-Z][a-zA-Z.]*)*: [+-]?\\d+");
     public static final String tilsSchema = "\\s\\[(100(\\.0)?|[1-9]?[0-9](\\.[0-9])?)%].*";
-    public static final Pattern bonusRegex = Pattern.compile("[+-]?\\d+%? [A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*");
-    public static final Pattern rangeRegex = Pattern.compile("\\S [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*: \\d+-\\d+");
-    public static final Pattern perxRegex = Pattern.compile("[+-]\\d+/[35]s .*");
-    public static final Pattern slotRegex = Pattern.compile("^\\[([0-5])/([1-5])] Powder Slots(?: .*)?");
+    public static final Pattern BONUS_REGEX = Pattern.compile("([+-]\\d+%?)(/\\d+%?)? ([A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*)");
+    public static final Pattern PERX_REGEX = Pattern.compile("([+-]\\d+/[35]s)(/\\d+/[35]s)? ([A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*)");
+    public static final Pattern RANGE_REGEX = Pattern.compile("\\S [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*: \\d+-\\d+");
+    public static final Pattern SLOT_REGEX = Pattern.compile("^\\[([0-5])/([1-5])] Powder Slots(?: .*)?");
     private static final List<TypedID<Integer>> PERCENTABLE = ID.getByTypedMetric(ID.Metric.PERCENT);
     private static final List<TypedID<Integer>> RAWS = ID.getByTypedMetric(ID.Metric.RAW);
+    private static final List<TypedID<Integer>> RAWS_BONUS = RAWS.stream().filter(integerTypedID -> integerTypedID.rolled).toList();
+    private static final List<TypedID<Integer>> RAWS_BASE = RAWS.stream().filter(integerTypedID -> !integerTypedID.rolled).toList();
     private static final List<DoubleID<DoubleID.Range, String>> RANGEDS = ID.getByDoubleMetric(ID.Metric.RANGE);
     private static final List<TypedID<Integer>> PERXS = ID.getByTypedMetric(ID.Metric.PERXS);
 
@@ -505,7 +507,7 @@ public class CustomItem {
 
             lore.add(Text.empty());
 
-            RAWS.forEach(rawId -> {
+            RAWS_BONUS.forEach(rawId -> {
                 if (rawId.isReq()) return;
                 if (get(rawId).equals(rawId.defaultValue)) return;
 
@@ -583,7 +585,7 @@ public class CustomItem {
             String atkSpdString = textStr.split(" Attack Speed")[0].replace(" ", "_");
             ID.ATKSPDS atkspd = Arrays.stream(ID.ATKSPDS.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(ID.ATKSPDS.NORMAL);
             this.set(AllIDs.ATKSPD, atkspd);
-        } else if (baseStatRegex.matcher(textStr).matches()) {
+        } else if (BASE_STAT_REGEX.matcher(textStr).matches()) {
             textStr = textStr.replace(":", "");
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
             String strVal = s.getLast();
@@ -596,10 +598,16 @@ public class CustomItem {
             s.removeLast();
 
             String idName = String.join(" ", s);
-            findAndSetIdentification(idName, value, RAWS);
+            findAndSetIdentification(idName, value, RAWS_BASE);
 
-        } else if (perxRegex.matcher(textStr).matches()) {
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
+        } else if (PERX_REGEX.matcher(textStr).matches()) {
+            List<String> s;
+            if (textStr.split("/").length > 2) { // if custom /
+                List<String> strings = new ArrayList<>(List.of(textStr.split("/", 3)));
+                s = new ArrayList<>(List.of(strings.getLast().split(" ")));
+            } else {
+                s = new ArrayList<>(List.of(textStr.split(" ")));
+            }
             String strVal = s.getFirst();
             try {
                 value = Integer.parseInt(strVal.split("/")[0]);
@@ -609,9 +617,10 @@ public class CustomItem {
             s.removeFirst();
 
             String idName = String.join(" ", s);
+
             findAndSetIdentification(idName, value, PERXS);
 
-        } else if (slotRegex.matcher(textStr).matches()) {
+        } else if (SLOT_REGEX.matcher(textStr).matches()) {
             String braces = textStr.split(" ")[0];  //  "[0/3]"
             String slots = braces.replaceAll("[\\[\\]]", "");
             List<String> nums = new ArrayList<>(List.of(slots.split("/")));
@@ -621,14 +630,20 @@ public class CustomItem {
             } catch (NumberFormatException ignored) {
             }
 
-        } else if (bonusRegex.matcher(textStr).matches()) {
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
+        } else if (BONUS_REGEX.matcher(textStr).matches()) {
+            List<String> s;
+            if (textStr.contains("/")) {
+                var strings = new ArrayList<>(List.of(textStr.split("/")));
+                s = new ArrayList<>(List.of(strings.getLast().split(" ")));
+            } else {
+                s = new ArrayList<>(List.of(textStr.split(" ")));
+            }
             String strVal = s.getFirst();
             List<TypedID<Integer>> potentialIds;
             if (strVal.endsWith("%")) {
                 potentialIds = PERCENTABLE;
             } else {
-                potentialIds = RAWS;
+                potentialIds = RAWS_BONUS;
             }
             try {
                 value = Integer.parseInt(strVal.replace("%", ""));
@@ -640,7 +655,7 @@ public class CustomItem {
             String idName = String.join(" ", s);
             findAndSetIdentification(idName, value, potentialIds);
 
-        } else if (rangeRegex.matcher(textStr).matches()) {
+        } else if (RANGE_REGEX.matcher(textStr).matches()) {
             textStr = textStr.replace(":", "");
             List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
             String strVal = s.getLast();
