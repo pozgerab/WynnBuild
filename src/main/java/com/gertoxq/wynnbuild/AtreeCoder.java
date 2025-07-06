@@ -1,16 +1,13 @@
 package com.gertoxq.wynnbuild;
 
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.client;
+import static com.gertoxq.wynnbuild.client.WynnBuildClient.displayErr;
 
 public class AtreeCoder {
 
@@ -23,8 +20,7 @@ public class AtreeCoder {
 
     private static void traverse(int id, Set<Integer> atree_state, Set<Integer> visited, BitVector ret) {
         if (WynnBuildClient.castTreeObj == null) {
-            client.player.sendMessage(Text.literal("CastTree is null"), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("CastTree is null");
             return;
         }
         var head = WynnBuildClient.castTreeObj.get(String.valueOf(id)).getAsJsonObject();
@@ -53,8 +49,7 @@ public class AtreeCoder {
 
     private static void traverse(int id, Set<Integer> visited, Set<Integer> ret, BitVector bits, AtomicInteger i) {
         if (WynnBuildClient.castTreeObj == null) {
-            client.player.sendMessage(Text.literal("CastTree is null"), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("CastTree is null");
             return;
         }
         var head = WynnBuildClient.castTreeObj.get(String.valueOf(id)).getAsJsonObject();

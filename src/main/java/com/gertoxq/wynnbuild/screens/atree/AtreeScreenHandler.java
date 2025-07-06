@@ -5,16 +5,12 @@ import com.gertoxq.wynnbuild.BitVector;
 import com.gertoxq.wynnbuild.GuiSlot;
 import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
-import com.gertoxq.wynnbuild.util.Utils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -23,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
-import static com.gertoxq.wynnbuild.screens.atree.Ability.nameToId;
 
 public class AtreeScreenHandler extends ContainerScreenHandler {
     static final Set<Integer> allCache = new HashSet<>();
@@ -53,8 +48,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
     public void saveATree() {
         if (castTreeObj == null) {
             assert client.player != null;
-            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("First read the Character Info data");
             return;
         }
         Set<Integer> unlockedIds = getUnlockedIds();
@@ -68,8 +62,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         if (castTreeObj == null) {
             assert client != null;
             assert client.player != null;
-            client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("First read character info");
             return;
         }
         final AtreeScreen atreeScreen = AtreeScreen.CURRENT_ATREE_SCREEN;
@@ -104,22 +97,14 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
 
     }
 
-    public List<AbilSlot> getSlots() {
-        List<AbilSlot> realSlots = new ArrayList<>();
-        slots.forEach(slot -> {
-
-            String name = Utils.removeNum(Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()).replace("Unlock ", "").replace(" ability", "")));
-
-            Optional<Integer> abilityId = Ability.getIdByNameAndSlot(name, slot.getIndex());
-            if (abilityId.isPresent()) {
-                readCache.add(abilityId.get());
-                realSlots.add(new AbilSlot(abilityId.get(), name, slot));
-            }
-        });
-        return realSlots;
+    public List<AtreeNode> getSlots() {
+        return slots.stream().map(AtreeNode::new).filter(node -> node.getId().map(integer -> {
+            readCache.add(integer);
+            return true;
+        }).orElse(false)).toList();
     }
 
-    private void travFindUnlocked(int id, Set<Integer> pageCache, Set<Integer> checked, Map<Integer, Slot> allSlots, List<AbilSlot> unlockedSlots) {
+    private void travFindUnlocked(int id, Set<Integer> pageCache, Set<Integer> checked, Map<Integer, AtreeNode> allSlots, List<AtreeNode> unlockedSlots) {
 
         //System.out.println("Checked="+checked);
         if (checked.contains(id)) {
@@ -132,26 +117,21 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
             //System.out.println(id + " is not found in slots");
             return;
         }
-        Slot slot = allSlots.get(id);
-        List<Text> lore = Utils.getLore(slot.getStack());
-        Text nameText = slot.getStack().getName();
-        String name = Utils.removeFormat(nameText.getString());
+        AtreeNode node = allSlots.get(id);
         if (unlockedCache.contains(id)) {
-            unlockedSlots.add(new AbilSlot(id, name, slot));
+            unlockedSlots.add(node);
             pageCache.add(id);
-            unlockedCache.add(id);
             Ability.getById(id).children().stream().sorted().forEach(integer -> travFindUnlocked(integer, pageCache, checked, allSlots, unlockedSlots));
             return;
         }
-        if (lore == null || lore.isEmpty()) return;
-        if (name.startsWith("Unlock ")) return;
-        String lastStr = Utils.removeFormat(lore.getLast().getString());
-        if (lastStr.contains("You do not meet the requirements")) return;
-        if (lastStr.contains("Blocked by another ability")) return;
+
+        // if reachable, skip
+        if (!node.isUnlockedOrUnreachable()) return;
         List<Integer> parents = Ability.getById(id).parents();
         //System.out.println(id+"'s parents="+parents);
+        // if any parent is unlocked and not reachable it must be unlocked
         if (parents.stream().anyMatch(unlockedCache::contains)) {
-            unlockedSlots.add(new AbilSlot(id, name, slot));
+            unlockedSlots.add(node);
             pageCache.add(id);
             unlockedCache.add(id);
             //System.out.println("added "+ id);
@@ -171,26 +151,17 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         findEndNode(allId, remaining, endNodes);
     }
 
-    public List<AbilSlot> getUnlocked() {
+    public List<AtreeNode> getUnlocked() {
 
         Set<Integer> pageCache = new HashSet<>();
-        List<Slot> filtered = slots.stream().filter(slot -> !slot.getStack().isEmpty() && nameToId.containsKey(Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()
-                .replace("Unlock ", "")
-                .replace(" ability", "").trim())))).toList();
-        Map<Integer, Slot> idSlotMap = new HashMap<>();
-        filtered.forEach(slot -> {
-
-            String name = Utils.removeNum(Utils.removeFormat(slot.getStack().getName().getString()
-                    .replace("Unlock ", "")
-                    .replace(" ability", "").trim()));
-            //System.out.println(name);
-            //System.out.println(nameToId.containsKey(name));
-            Optional<Integer> id = Ability.getIdByNameAndSlot(name, slot.getIndex());
-            id.ifPresent(integer -> idSlotMap.put(integer, slot));
+        List<AtreeNode> filtered = getSlots();
+        Map<Integer, AtreeNode> idSlotMap = new HashMap<>();
+        filtered.forEach(node -> {
+            node.getId().ifPresent(integer -> idSlotMap.put(integer, node));
         });
         List<Integer> sortedIds = idSlotMap.keySet().stream().sorted().toList();
         allCache.addAll(sortedIds);
-        List<AbilSlot> slots = new ArrayList<>();
+        List<AtreeNode> slots = new ArrayList<>();
 
         //System.out.println("sortedIds="+sortedIds);
         //System.out.println("PrevIds="+prevIds);
@@ -212,15 +183,12 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
     }
 
     public Set<Integer> getUnlockedIds() {
-        return getUnlocked().stream().map(AbilSlot::id).collect(Collectors.toSet());
+        return getUnlocked().stream().map(atreeNode -> atreeNode.id).collect(Collectors.toSet());
     }
 
     public void scrollAtree(int amount) {
         for (int i = 0; i < Math.abs(amount); i++) {
             new Task(() -> client.execute(() -> this.leftClickSlot(amount > 0 ? GuiSlot.ATREE_UP.slot : GuiSlot.ATREE_DOWN.slot)), i * 4);
         }
-    }
-
-    public record AbilSlot(int id, String name, Slot slot) {
     }
 }

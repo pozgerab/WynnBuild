@@ -6,7 +6,6 @@ import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.screens.Button;
-import com.gertoxq.wynnbuild.screens.builder.BuildScreen;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.WynnData;
 import net.minecraft.client.gui.DrawContext;
@@ -179,8 +178,7 @@ public class SavedItemsScreen extends Screen {
                 client.player.sendMessage(Text.literal("Copied hash of ")
                         .append(customItem.createItemShowcase()), false);
             }));
-            addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"),
-                    button -> client.execute(() -> client.setScreen(new BuildScreen()))));
+            //addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"), button -> client.execute(() -> client.setScreen(new BuildScreen()))));
             addDrawableChild(new Button(left - 100, top + 44, 100, 20, Text.literal("DELETE").styled(style -> style.withColor(Formatting.DARK_RED)), button -> {
                 if (getSelectedOrNull() == null) return;
                 String name;

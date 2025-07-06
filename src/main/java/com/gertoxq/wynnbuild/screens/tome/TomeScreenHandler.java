@@ -3,6 +3,7 @@ package com.gertoxq.wynnbuild.screens.tome;
 import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
+import com.gertoxq.wynnbuild.util.WynnData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -11,7 +12,8 @@ import net.minecraft.screen.slot.SlotActionType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
+import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
+import static com.gertoxq.wynnbuild.client.WynnBuildClient.tomeIds;
 import static com.gertoxq.wynnbuild.util.Utils.removeFormat;
 
 public class TomeScreenHandler extends ContainerScreenHandler {
@@ -46,11 +48,11 @@ public class TomeScreenHandler extends ContainerScreenHandler {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);
-            if (tomeMap.containsKey(name)) {
-                ids.add(tomeMap.getOrDefault(name, EMPTY_IDS.get(i)));
+            if (WynnData.getTomeMap().containsKey(name)) {
+                ids.add(WynnData.getTomeMap().getOrDefault(name, EMPTY_IDS.get(i)));
             } else {
                 //  idk why some tomes have a symbol at the end but substring them then
-                ids.add(tomeMap.getOrDefault(name.substring(0, name.length() - 1), EMPTY_IDS.get(i)));
+                ids.add(WynnData.getTomeMap().getOrDefault(name.substring(0, name.length() - 1), EMPTY_IDS.get(i)));
             }
         }
         return ids;

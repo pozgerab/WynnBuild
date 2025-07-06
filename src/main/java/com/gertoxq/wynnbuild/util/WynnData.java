@@ -17,12 +17,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.fullatree;
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.tomeMap;
 
 public class WynnData {
 
     private static final Map<Integer, ItemData> dataMap = new HashMap<>();
     private static final Map<String, Integer> nameToId = new HashMap<>();
+    private static final Map<String, Integer> tomeMap = new HashMap<>();
 
     public static Map<Integer, ItemData> getData() {
         return dataMap;
@@ -30,6 +30,10 @@ public class WynnData {
 
     public static Map<String, Integer> getIdMap() {
         return nameToId;
+    }
+
+    public static Map<String, Integer> getTomeMap() {
+        return tomeMap;
     }
 
     public static void load() {

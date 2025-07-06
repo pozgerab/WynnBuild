@@ -7,6 +7,7 @@ import net.minecraft.text.Text;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWidget<SelectableListWidget<T>.Entry> {
 
@@ -36,14 +37,29 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
 
     @Override
     public int getRowWidth() {
-        return width;
+        return width - 5;
     }
-
-    public abstract void dispose();
 
     @Override
     protected int getScrollbarX() {
         return right - 5;
+    }
+
+    public Optional<Entry> getSelectedOptional() {
+        return Optional.ofNullable(getSelectedOrNull());
+    }
+
+    @Override
+    public int getRowLeft() {
+        return this.getX();
+    }
+
+    @Override
+    protected void drawSelectionHighlight(DrawContext context, int y, int entryWidth, int entryHeight, int borderColor, int fillColor) {
+        int i = this.getRowLeft();
+        int j = this.getRowRight();
+        context.fill(i, y - 2, j, y + entryHeight + 2, borderColor);
+        context.fill(i + 1, y - 1, j - 1, y + entryHeight + 1, fillColor);
     }
 
     @Override
@@ -108,6 +124,9 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             SelectableListWidget.this.renderChild(this, context, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
+            if (isMouseOver(mouseX, mouseY)) {
+                context.fill(x, y, x + entryWidth, y + entryHeight, 0x808080);
+            }
         }
     }
 }

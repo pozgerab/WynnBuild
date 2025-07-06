@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.config;
 
+import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.screens.Button;
-import com.gertoxq.wynnbuild.screens.builder.BuildScreen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -16,8 +16,8 @@ import net.minecraft.util.Formatting;
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
 
 public class ConfigScreen extends Screen {
-    private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(BuildScreen.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
-            .append(Text.literal(" - ").styled(style -> style.withColor(Formatting.DARK_GRAY)).append(BuildScreen.PRECISION_TOOLTIPS.get(value)).styled(style -> style.withColor(Formatting.GOLD))));
+    private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(Build.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
+            .append(Text.literal(" - ").styled(style -> style.withColor(Formatting.DARK_GRAY)).append(Build.PRECISION_TOOLTIPS.get(value)).styled(style -> style.withColor(Formatting.GOLD))));
     private final Screen parent;
 
     public ConfigScreen(Screen parent) {
@@ -46,6 +46,7 @@ public class ConfigScreen extends Screen {
 
         var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(getConfigManager().getConfig().getAtreeEncoding()));
         input.setText(getConfigManager().getConfig().getAtreeEncoding());
+        input.setEditable(false);
         addDrawableChild(input);
 
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 72, 100, 20, Text.literal("Powder level: "), textRenderer));
@@ -64,19 +65,19 @@ public class ConfigScreen extends Screen {
                         Text.literal("?"),
                         button -> {
                             if (client.player == null) return;
-                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(BuildScreen.precisionTooltip), false);
+                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(Build.precisionTooltip), false);
                         })
                 .position(this.width / 2 + 80, this.height / 4 + 96)
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))
                 .size(20, 20).build();
 
-        addDrawableChild(CyclingButtonWidget.<Integer>builder(integer -> Text.literal(BuildScreen.PRECISION_OPTIONS.get(integer)).styled(style -> style.withColor(Formatting.AQUA)))
-                .values(0, 1, 2, 3)
-                .initially(getConfigManager().getConfig().getPrecision())
+        addDrawableChild(CyclingButtonWidget.onOffBuilder()
+                .values(false, true)
+                .initially(getConfigManager().getConfig().getPrecision() == 1)
                 .build(this.width / 2 - 100, this.height / 4 + 96, 179, 20, Text.literal("Build Precision"),
                         (button, value) -> {
-                            help.setTooltip(helpFactory.apply(value));
-                            getConfigManager().getConfig().setPrecision(value);
+                            help.setTooltip(helpFactory.apply(value ? 1 : 0));
+                            getConfigManager().getConfig().setPrecision(value ? 1 : 0);
                             getConfigManager().saveConfig();
                         }));
 

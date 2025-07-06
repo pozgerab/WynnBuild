@@ -239,11 +239,6 @@ public class GalleryScreen extends Screen {
         }
 
         @Override
-        public void dispose() {
-
-        }
-
-        @Override
         protected int getScrollbarX() {
             return getRight() - 5;
         }
@@ -275,11 +270,6 @@ public class GalleryScreen extends Screen {
 
         public DupeSelector(int x, int y, List<DupeInstance> items) {
             super(25, GalleryScreen.this.height, x, y, 24, 24, items);
-        }
-
-        @Override
-        public void dispose() {
-
         }
 
         @Override

@@ -16,7 +16,7 @@ public class ConfigType {
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private List<SavedItemType> savedItems = new ArrayList<>();
     private int atreeIdleTime = 10;
-    private @Range(from = 0, to = 3) int precision = 1;
+    private @Range(from = 0, to = 1) int precision = 0;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -90,7 +90,7 @@ public class ConfigType {
         this.defaultPowderLevel = defaultPowderLevel;
     }
 
-    @Range(from = 0, to = 3)
+    @Range(from = 0, to = 1)
     public int getPrecision() {
         return precision;
     }
