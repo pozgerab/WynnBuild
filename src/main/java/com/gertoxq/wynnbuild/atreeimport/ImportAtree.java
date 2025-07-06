@@ -2,6 +2,7 @@ package com.gertoxq.wynnbuild.atreeimport;
 
 import com.gertoxq.wynnbuild.AtreeCoder;
 import com.gertoxq.wynnbuild.config.SavedBuildType;
+import com.gertoxq.wynnbuild.screens.atree.AtreeNode;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreen;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
@@ -32,7 +33,7 @@ public class ImportAtree {
         if (counter.getAndIncrement() >= max) return () -> allowClick.set(true);
         return () -> {
             Map<Integer, Integer> idSlots = new HashMap<>();
-            screen.getScreenHandler().getSlots().forEach(abilSlot -> idSlots.put(abilSlot.id(), abilSlot.slot().getIndex()));
+            screen.getScreenHandler().getSlots().forEach(atreeNode -> idSlots.put(atreeNode.id, atreeNode.getSlot().getIndex()));
             AtomicInteger j = new AtomicInteger(0);
             var unsorted = applyIds.stream().filter(idSlots::containsKey).toList();
             var sortedAbils = new Atrouter(new HashSet<>(unsorted), applyIds).findRoute();
@@ -57,7 +58,15 @@ public class ImportAtree {
         ScreenKeyboardEvents.allowKeyPress(screen).register((screen1, key, scancode, modifiers) -> allowClick.get());
         screen.getScreenHandler().scrollAtree(-7); // Wait for scroll finish
         AtreeScreenHandler.resetReader();
-        new Task(traverse(screen, applyIds, new AtomicInteger(0), 7), 7 * 4);
+        new Task(() -> {
+            AtreeNode firstNode = screen.getScreenHandler().getSlots().getFirst();
+            if (firstNode.isUnlockedOrUnreachable()) {
+                displayErr("Atree is not empty, reset it first");
+                allowClick.set(true);
+                return;
+            }
+            traverse(screen, applyIds, new AtomicInteger(0), 7).run();
+        }, 7 * 4);
     }
 
 }

@@ -46,6 +46,7 @@ public class ConfigScreen extends Screen {
 
         var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(getConfigManager().getConfig().getAtreeEncoding()));
         input.setText(getConfigManager().getConfig().getAtreeEncoding());
+        input.setEditable(false);
         addDrawableChild(input);
 
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 72, 100, 20, Text.literal("Powder level: "), textRenderer));
