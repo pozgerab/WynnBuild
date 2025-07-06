@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.config;
 
+import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.screens.Button;
-import com.gertoxq.wynnbuild.screens.builder.BuildScreen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -16,8 +16,8 @@ import net.minecraft.util.Formatting;
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
 
 public class ConfigScreen extends Screen {
-    private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(BuildScreen.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
-            .append(Text.literal(" - ").styled(style -> style.withColor(Formatting.DARK_GRAY)).append(BuildScreen.PRECISION_TOOLTIPS.get(value)).styled(style -> style.withColor(Formatting.GOLD))));
+    private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(Build.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
+            .append(Text.literal(" - ").styled(style -> style.withColor(Formatting.DARK_GRAY)).append(Build.PRECISION_TOOLTIPS.get(value)).styled(style -> style.withColor(Formatting.GOLD))));
     private final Screen parent;
 
     public ConfigScreen(Screen parent) {
@@ -64,7 +64,7 @@ public class ConfigScreen extends Screen {
                         Text.literal("?"),
                         button -> {
                             if (client.player == null) return;
-                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(BuildScreen.precisionTooltip), false);
+                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(Build.precisionTooltip), false);
                         })
                 .position(this.width / 2 + 80, this.height / 4 + 96)
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))

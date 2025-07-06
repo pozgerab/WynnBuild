@@ -85,11 +85,6 @@ public class ContainerScreen<T extends ContainerScreenHandler> extends GenericCo
                 }
 
                 @Override
-                public void dispose() {
-
-                }
-
-                @Override
                 public void renderChild(SelectableListWidget<A>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                     AutoCompleteField.this.renderChild(entry, context, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
                 }

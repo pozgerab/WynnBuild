@@ -35,7 +35,6 @@ public class WynnBuildClient implements ClientModInitializer {
     public static final String DOMAIN = "https://wynnbuilder.github.io/builder/#";
     public static final Integer BUILDER_VERSION = 9;
     public static final String WYNNCUSTOM_DOMAIN = "https://wynnbuilder.github.io/custom/#";
-    public static Map<String, Integer> tomeMap = new HashMap<>();
     public static Map<String, JsonElement> fullatree;
     public static JsonObject castTreeObj;
     public static Cast cast = Cast.Warrior;
@@ -50,8 +49,6 @@ public class WynnBuildClient implements ClientModInitializer {
     public static List<ID.ItemType> types = List.of(ID.ItemType.Helmet, ID.ItemType.Chestplate, ID.ItemType.Leggings, ID.ItemType.Boots, ID.ItemType.Ring, ID.ItemType.Ring, ID.ItemType.Bracelet, ID.ItemType.Necklace);
     public static int REFETCH_DELAY = 40;
     public static int ATREE_IDLE; // How many ticks is elapsed before turning page while reading atree
-    public static List<String> craftedHashes = new ArrayList<>(Collections.nCopies(9, ""));
-    public static List<Integer> ids = new ArrayList<>();
     public static int wynnLevel;
     public static boolean readAtree = false;
     private static Manager configManager;
@@ -90,8 +87,7 @@ public class WynnBuildClient implements ClientModInitializer {
         String customHash = item == null ? "" : item.encodeCustom(true);
 
         if (customHash.isEmpty()) {
-            client.player.sendMessage(Text.literal("Couldn't encode this item"), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("Couldn't encode this item");
             return;
         }
         String url = WYNNCUSTOM_DOMAIN + customHash;

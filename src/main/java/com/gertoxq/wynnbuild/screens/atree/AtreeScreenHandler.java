@@ -8,13 +8,11 @@ import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -53,8 +51,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
     public void saveATree() {
         if (castTreeObj == null) {
             assert client.player != null;
-            client.player.sendMessage(Text.literal("First read the Character Info data").styled(style -> style.withColor(Formatting.RED)), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("First read the Character Info data");
             return;
         }
         Set<Integer> unlockedIds = getUnlockedIds();
@@ -68,8 +65,7 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
         if (castTreeObj == null) {
             assert client != null;
             assert client.player != null;
-            client.player.sendMessage(Text.literal("First read character info").styled(style -> style.withColor(Formatting.RED)), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("First read character info");
             return;
         }
         final AtreeScreen atreeScreen = AtreeScreen.CURRENT_ATREE_SCREEN;

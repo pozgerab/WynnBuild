@@ -81,8 +81,6 @@ public abstract class DropdownButton<T> extends ButtonWidget {
             DropdownButton.this.toggle(false);
         }
 
-        //  TODO    Test open and close logic
-
         @Override
         public void setFocused(boolean focused) {
             super.setFocused(focused);

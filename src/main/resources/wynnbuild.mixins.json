@@ -4,6 +4,7 @@
   "package": "com.gertoxq.wynnbuild.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "HighlightEntryListHover",
     "ScreenReplacerMixin"
   ],
   "injectors": {

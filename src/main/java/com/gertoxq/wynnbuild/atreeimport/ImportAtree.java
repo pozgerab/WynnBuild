@@ -7,9 +7,6 @@ import com.gertoxq.wynnbuild.screens.atree.AtreeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,8 +48,7 @@ public class ImportAtree {
     public static void applyBuild(String name, AtreeScreen screen) {
         SavedBuildType build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
         if (build == null) {
-            client.player.sendMessage(Text.literal("Build not found, something went wrong"), false);
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+            displayErr("Build not found, something went wrong");
             return;
         }
         Set<Integer> applyIds = AtreeCoder.decode_atree(build.getValue());
