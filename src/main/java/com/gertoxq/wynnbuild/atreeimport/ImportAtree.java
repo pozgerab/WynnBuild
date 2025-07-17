@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.atreeimport;
 
 import com.gertoxq.wynnbuild.AtreeCoder;
-import com.gertoxq.wynnbuild.config.SavedBuildType;
+import com.gertoxq.wynnbuild.config.SavedBuild;
 import com.gertoxq.wynnbuild.screens.atree.AtreeNode;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreen;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreenHandler;
@@ -21,11 +21,11 @@ public class ImportAtree {
 
     public static void addBuild(String name, String code) {
 
-        getConfigManager().getConfig().getSavedAtrees().add(new SavedBuildType(name, code, cast));
+        getConfigManager().getConfig().getSavedAtrees().add(new SavedBuild(name, code, cast));
         getConfigManager().saveConfig();
     }
 
-    public static List<SavedBuildType> getBuilds() {
+    public static List<SavedBuild> getBuilds() {
         return getConfigManager().getConfig().getSavedAtrees();
     }
 
@@ -47,12 +47,12 @@ public class ImportAtree {
     }
 
     public static void applyBuild(String name, AtreeScreen screen) {
-        SavedBuildType build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
+        SavedBuild build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
         if (build == null) {
             displayErr("Build not found, something went wrong");
             return;
         }
-        Set<Integer> applyIds = AtreeCoder.decode_atree(build.getValue());
+        Set<Integer> applyIds = AtreeCoder.decode_atree(build.getCode());
         allowClick.set(false);
         ScreenMouseEvents.allowMouseClick(screen).register((screen1, mouseX, mouseY, button) -> allowClick.get());
         ScreenKeyboardEvents.allowKeyPress(screen).register((screen1, key, scancode, modifiers) -> allowClick.get());

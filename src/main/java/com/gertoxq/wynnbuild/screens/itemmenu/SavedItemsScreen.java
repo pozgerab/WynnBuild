@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.screens.itemmenu;
 
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
-import com.gertoxq.wynnbuild.config.SavedItemType;
+import com.gertoxq.wynnbuild.config.SavedItem;
 import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
@@ -101,7 +101,7 @@ public class SavedItemsScreen extends Screen {
                     new Task(() -> info.setMessage(Text.empty()), 100);
                     return;
                 }
-                SavedItemType savedItem = new SavedItemType(
+                SavedItem savedItem = new SavedItem(
                         nameInput.getText(),
                         customItem.get(AllIDs.TYPE),
                         code,
@@ -137,7 +137,7 @@ public class SavedItemsScreen extends Screen {
                     throw new Exception("customItem = null");
                 }
                 ID.ItemType type = customItem.getType();
-                SavedItemType savedItem = new SavedItemType(
+                SavedItem savedItem = new SavedItem(
                         nameInput.getText(),
                         type,
                         customItem.encodeCustom(true),
@@ -172,7 +172,7 @@ public class SavedItemsScreen extends Screen {
             });
             addDrawableChild(new Button(left - 100, top, 100, 20, Text.literal("Copy Hash"), button -> {
                 if (getSelectedOrNull() == null) return;
-                SavedItemType item = getSelectedOrNull().item;
+                SavedItem item = getSelectedOrNull().item;
                 CustomItem customItem = CustomItem.getCustomFromHash(item.getHash());
                 client.keyboard.setClipboard(getSelectedOrNull().item.getHash());
                 client.player.sendMessage(Text.literal("Copied hash of ")
@@ -217,11 +217,11 @@ public class SavedItemsScreen extends Screen {
         }
 
         public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
-            final SavedItemType item;
+            final SavedItem item;
             final CustomItem custom;
             final ItemStack displayStack;
 
-            protected Entry(SavedItemType item) {
+            protected Entry(SavedItem item) {
                 this.item = item;
                 this.custom = CustomItem.getCustomFromHash(item.getHash());
                 if (item.getBaseItemId() != null) {

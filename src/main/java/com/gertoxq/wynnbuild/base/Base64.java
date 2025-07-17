@@ -1,4 +1,4 @@
-package com.gertoxq.wynnbuild;
+package com.gertoxq.wynnbuild.base;
 
 import java.util.HashMap;
 import java.util.Map;

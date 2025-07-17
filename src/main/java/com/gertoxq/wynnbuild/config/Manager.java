@@ -74,8 +74,8 @@ public class Manager {
         saveConfig();
     }
 
-    public SavedItemType addSavedOrReturnExisting(SavedItemType savedItem) {
-        List<SavedItemType> sameItems = getConfigManager().getConfig().getSavedItems().stream().filter(si -> Objects.equals(si.getHash(), savedItem.getHash())).toList();
+    public SavedItem addSavedOrReturnExisting(SavedItem savedItem) {
+        List<SavedItem> sameItems = getConfigManager().getConfig().getSavedItems().stream().filter(si -> Objects.equals(si.getHash(), savedItem.getHash())).toList();
         if (sameItems.isEmpty()) {
             savedItem.setName(getNotUsedName(savedItem.getName()));
             getConfigManager().getConfig().getSavedItems().add(savedItem);

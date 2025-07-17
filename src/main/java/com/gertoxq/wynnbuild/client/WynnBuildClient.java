@@ -26,6 +26,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -52,6 +54,7 @@ public class WynnBuildClient implements ClientModInitializer {
     public static int wynnLevel;
     public static boolean readAtree = false;
     private static Manager configManager;
+    private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
 
     public static Manager getConfigManager() {
         return configManager;

@@ -1,4 +1,4 @@
-package com.gertoxq.wynnbuild;
+package com.gertoxq.wynnbuild.base;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.screens.gallery;
 
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
-import com.gertoxq.wynnbuild.config.SavedItemType;
+import com.gertoxq.wynnbuild.config.SavedItem;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
 import com.gertoxq.wynnbuild.custom.TypedID;
@@ -144,13 +144,13 @@ public class GalleryScreen extends Screen {
     public static class DupeInstance {
 
         final ButtonWidget buttonWidget;
-        SavedItemType savedItem;
+        SavedItem savedItem;
         CustomItem customItem;
         GalleryItem originalItem;
         CustomItem originalCustom;
         boolean visible = false;
 
-        public DupeInstance(ButtonWidget buttonWidget, GalleryItem originalItem, SavedItemType item) {
+        public DupeInstance(ButtonWidget buttonWidget, GalleryItem originalItem, SavedItem item) {
             this.buttonWidget = buttonWidget;
             this.originalItem = originalItem;
             this.originalCustom = originalItem.customItem();
@@ -179,7 +179,7 @@ public class GalleryScreen extends Screen {
             buttonWidget.setTooltip(tooltip);
         }
 
-        public void setItem(SavedItemType newItem) {
+        public void setItem(SavedItem newItem) {
             savedItem = newItem;
             customItem = CustomItem.getCustomFromHash(savedItem.getHash());
             if (customItem == null) return;
@@ -227,7 +227,7 @@ public class GalleryScreen extends Screen {
 
     public class ItemGallery extends GalleryWidget<GalleryItem> {
 
-        public List<SavedItemType> savedVersions = new ArrayList<>();
+        public List<SavedItem> savedVersions = new ArrayList<>();
 
         public ItemGallery(int width, int height, int x, int y, int itemHeight, int itemWidth, List<GalleryItem> items) {
             super(width, height, x, y, itemHeight, itemWidth, items);

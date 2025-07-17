@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild;
 
+import com.gertoxq.wynnbuild.base.BitVector;
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
 
 import java.util.Arrays;

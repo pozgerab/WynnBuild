@@ -4,7 +4,7 @@ import com.gertoxq.wynnbuild.custom.ID;
 
 import java.util.Date;
 
-public class SavedItemType {
+public class SavedItem {
 
     private final Date createdAt;
     private final ID.ItemType type;
@@ -12,7 +12,7 @@ public class SavedItemType {
     private final Integer baseItemId;
     private String name;
 
-    public SavedItemType(String name, ID.ItemType type, String hash, Integer baseItemId) {
+    public SavedItem(String name, ID.ItemType type, String hash, Integer baseItemId) {
         this.baseItemId = baseItemId;
         this.createdAt = new Date();
         this.name = name;

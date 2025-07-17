@@ -1,6 +1,6 @@
 package com.gertoxq.wynnbuild.custom;
 
-import com.gertoxq.wynnbuild.Base64;
+import com.gertoxq.wynnbuild.base.Base64;
 import com.gertoxq.wynnbuild.Cast;
 import com.gertoxq.wynnbuild.Powder;
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
@@ -131,12 +131,6 @@ public class CustomItem {
         }
 
         return custom;
-    }
-
-    public static String getItemHash(ItemStack item, ID.ItemType type) {
-        CustomItem custom = getItem(item, type);
-
-        return custom == null ? "" : custom.encodeCustom(true);
     }
 
     private static double log(double b, double n) {
@@ -643,7 +637,7 @@ public class CustomItem {
             if (strVal.endsWith("%")) {
                 potentialIds = PERCENTABLE;
             } else {
-                potentialIds = RAWS_BONUS;
+                potentialIds = RAWS;
             }
             try {
                 value = Integer.parseInt(strVal.replace("%", ""));

@@ -1,13 +1,15 @@
 package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.config.ConfigScreen;
-import com.gertoxq.wynnbuild.config.SavedItemType;
+import com.gertoxq.wynnbuild.config.SavedItem;
 import com.gertoxq.wynnbuild.custom.AllIDs;
 import com.gertoxq.wynnbuild.custom.CustomItem;
 import com.gertoxq.wynnbuild.custom.ID;
-import com.gertoxq.wynnbuild.screens.ImportAtreeScreen;
+import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
+import com.gertoxq.wynnbuild.screens.atree.ImportAtreeScreen;
 import com.gertoxq.wynnbuild.screens.components.DropdownScreen;
 import com.gertoxq.wynnbuild.screens.itemmenu.SavedItemsScreen;
+import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -60,6 +62,11 @@ public class CommandRegistry {
                 return 1;
             })));
 
+            dispatcher.register(literal("readtree").executes(context -> {
+                client.execute(() -> new AbilityTreeQuery().queryTree());
+                return 1;
+            }));
+
             //registerTestCommands(dispatcher);
             //registerSaveCommands(dispatcher);
             //registerBetaCommands(dispatcher);
@@ -87,7 +94,7 @@ public class CommandRegistry {
                 }
                 String itemName = customItem.get(AllIDs.NAME);
                 ID.ItemType type = customItem.getType();
-                SavedItemType savedItem = new SavedItemType(
+                SavedItem savedItem = new SavedItem(
                         "h:" + itemName,
                         type,
                         customItem.encodeCustom(true),

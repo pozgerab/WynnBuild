@@ -11,10 +11,10 @@ public class ConfigType {
     private String atreeEncoding = "0";
     private boolean showTreeLoader = true;
     private String cast = "Warrior";
-    private List<SavedBuildType> savedAtrees = new ArrayList<>();
+    private List<SavedBuild> savedAtrees = new ArrayList<>();
     private List<Integer> tomeIds = new ArrayList<>();
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
-    private List<SavedItemType> savedItems = new ArrayList<>();
+    private List<SavedItem> savedItems = new ArrayList<>();
     private int atreeIdleTime = 10;
     private @Range(from = 0, to = 1) int precision = 0;
 
@@ -42,11 +42,11 @@ public class ConfigType {
         this.atreeIdleTime = atreeIdleTime;
     }
 
-    public List<SavedBuildType> getSavedAtrees() {
+    public List<SavedBuild> getSavedAtrees() {
         return savedAtrees;
     }
 
-    public void setSavedAtrees(List<SavedBuildType> savedAtrees) {
+    public void setSavedAtrees(List<SavedBuild> savedAtrees) {
         this.savedAtrees = savedAtrees;
     }
 
@@ -74,11 +74,11 @@ public class ConfigType {
         this.tomeIds = tomeIds;
     }
 
-    public List<SavedItemType> getSavedItems() {
+    public List<SavedItem> getSavedItems() {
         return savedItems;
     }
 
-    public void setSavedItems(List<SavedItemType> savedItems) {
+    public void setSavedItems(List<SavedItem> savedItems) {
         this.savedItems = savedItems;
     }
 

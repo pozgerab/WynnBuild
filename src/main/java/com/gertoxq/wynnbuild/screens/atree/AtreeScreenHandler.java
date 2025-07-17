@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.AtreeCoder;
-import com.gertoxq.wynnbuild.BitVector;
+import com.gertoxq.wynnbuild.base.BitVector;
 import com.gertoxq.wynnbuild.GuiSlot;
 import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
@@ -30,9 +30,6 @@ public class AtreeScreenHandler extends ContainerScreenHandler {
 
     public AtreeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(syncId, playerInventory, inventory, 6);
-        if (!readAtree) {
-            startAtreead();
-        }
     }
 
     public static void resetData() {

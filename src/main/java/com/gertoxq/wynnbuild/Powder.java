@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild;
 
+import com.gertoxq.wynnbuild.base.Base64;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ public class Powder {
 
         for (List<Element> _powderset : powders) {
             int nBits = (int) Math.ceil((double) _powderset.size() / 6);
-            buildString.append(Base64.fromIntN(nBits, 1));
+            buildString.append(com.gertoxq.wynnbuild.base.Base64.fromIntN(nBits, 1));
 
             List<Integer> powderset = new ArrayList<>(_powderset).stream().map(element -> powderIDs.get(element.name().substring(0, 1) + DEFAULT_POWDER_LEVEL)).toList();
             while (!powderset.isEmpty()) {

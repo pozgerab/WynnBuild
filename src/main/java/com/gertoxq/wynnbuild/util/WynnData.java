@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.fullatree;
+import static com.gertoxq.wynnbuild.base.EncodingBitVector.ENC;
 
 public class WynnData {
 
@@ -40,6 +41,7 @@ public class WynnData {
         InputStream dataStream = WynnBuild.class.getResourceAsStream("/" + "dataMap.json");
         InputStream atreeStream = WynnBuild.class.getResourceAsStream("/" + "atree.json");
         InputStream tomeStream = WynnBuild.class.getResourceAsStream("/" + "tomeIdMap.json");
+        InputStream bitcodeStream = WynnBuild.class.getResourceAsStream("/" + "bitcodemap.json");
         try {
             assert dataStream != null;
             ((JsonObject) JsonParser.parseReader(
@@ -80,6 +82,10 @@ public class WynnData {
             assert tomeStream != null;
             ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(tomeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> tomeMap.put(s, jsonElement.getAsInt()));
+
+            assert bitcodeStream != null;
+            ENC = ((JsonObject) JsonParser.parseReader(
+                    new InputStreamReader(bitcodeStream, StandardCharsets.UTF_8)));
 
         } catch (Exception e) {
             System.out.println("didn't finish init, something went wrong with wynnbuild");

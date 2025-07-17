@@ -2,12 +2,12 @@ package com.gertoxq.wynnbuild.config;
 
 import com.gertoxq.wynnbuild.Cast;
 
-public class SavedBuildType {
+public class SavedBuild {
     private String name;
     private String value;
     private Cast cast;
 
-    public SavedBuildType(String name, String value, Cast cast) {
+    public SavedBuild(String name, String value, Cast cast) {
         this.cast = cast;
         this.name = name;
         this.value = value;
@@ -21,7 +21,7 @@ public class SavedBuildType {
         this.name = name;
     }
 
-    public String getValue() {
+    public String getCode() {
         return value;
     }
 
