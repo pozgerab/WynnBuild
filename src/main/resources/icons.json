@@ -1,0 +1,34 @@
+{
+  "Ring": {
+    "min": 141,
+    "max": 157
+  },
+  "Bracelet": {
+    "min": 158,
+    "max": 171
+  },
+  "Necklace": {
+    "min": 172,
+    "max": 188
+  },
+  "Bow": {
+    "min": 189,
+    "max": 208
+  },
+  "Dagger": {
+    "min": 259,
+    "max": 278
+  },
+  "Wand": {
+    "min": 331,
+    "max": 351
+  },
+  "Relik": {
+    "min": 404,
+    "max": 423
+  },
+  "Spear": {
+    "min": 476,
+    "max": 495
+  }
+}
