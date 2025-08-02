@@ -72,7 +72,7 @@ public class BitVector {
         }
 
         long res;
-        if ((end - 1) / 32 == start / 32) {
+        if (Math.floorDiv((end - 1), 32) == Math.floorDiv(start, 32)) {
             res = (this.bits.get(start / 32) >>> (start % 32)) & ((1L << (end - start)) - 1);
         } else {
             int startPos = start % 32;
@@ -150,10 +150,12 @@ public class BitVector {
         this.bits.set(this.tailIdx - 1, currentVal | (v << prePos));
 
         if (postPos >= 32) {
-            this.tailIdx += 1;
+            this.tailIdx++;
+//            if (prePos != 0) {
             long partial = v >>> (32 - prePos);
             long nextVal = (this.tailIdx - 1 < this.bits.length()) ? this.bits.get(this.tailIdx - 1) : 0;
             this.bits.set(this.tailIdx - 1, nextVal | partial);
+//            }
         }
         this.length += vLen;
     }
