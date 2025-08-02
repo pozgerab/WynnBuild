@@ -1,4 +1,4 @@
-package com.gertoxq.wynnbuild.custom;
+package com.gertoxq.wynnbuild.identifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,12 +6,12 @@ import java.util.List;
 public class TypedID<T> extends ID {
 
     private static final List<TypedID<?>> typedIds = new ArrayList<>();
+    public final T defaultValue;
     final Class<T> type;
-    final T defaultValue;
-    private final TypedMetric<T> metric;
+    private final Metric.TypedMetric metric;
 
     @SuppressWarnings("unchecked")
-    TypedID(PutOn on, T defaultValue, String name, String displayName, TypedMetric<T> metric, boolean rolled) {
+    TypedID(PutOn on, T defaultValue, String name, String displayName, Metric.TypedMetric metric, boolean rolled) {
         super(on, defaultValue, name, displayName, metric, rolled);
         this.type = (Class<T>) defaultValue.getClass();
         this.defaultValue = defaultValue;
@@ -20,7 +20,7 @@ public class TypedID<T> extends ID {
     }
 
     TypedID(PutOn on, T defaultValue, String name, boolean rolled) {
-        this(on, defaultValue, name, "", TypedMetric.createOther(), rolled);
+        this(on, defaultValue, name, "", Metric.TypedMetric.createOther(), rolled);
     }
 
     public static List<TypedID<?>> getTypedIds() {
@@ -31,7 +31,7 @@ public class TypedID<T> extends ID {
         return type;
     }
 
-    public TypedMetric<T> getMetric() {
+    public Metric.TypedMetric getMetric() {
         return metric;
     }
 }
