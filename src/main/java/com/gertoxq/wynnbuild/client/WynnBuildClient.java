@@ -17,18 +17,14 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class WynnBuildClient implements ClientModInitializer {
     public static Map<String, JsonElement> fullatree;
     public static JsonObject castTreeObj;
-    public static Set<Integer> unlockedAbilIds = new HashSet<>();
     public static Clickable BUTTON;
     public static int REFETCH_DELAY = 40;
     public static int ATREE_IDLE; // How many ticks is elapsed before turning page while reading atree
-    public static boolean readAtree = false;
 
     @Override
     public void onInitializeClient() {
@@ -41,7 +37,6 @@ public class WynnBuildClient implements ClientModInitializer {
 
         WynnBuild.configManager = new Manager();
         WynnBuild.configManager.loadConfig();
-        readAtree = !WynnBuild.configManager.getConfig().getAtreeEncoding().isEmpty();
 
         Ability.refreshTree();
 

@@ -1,6 +1,6 @@
 package com.gertoxq.wynnbuild.config;
 
-import com.gertoxq.wynnbuild.Cast;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 
 public class SavedBuild {
     private String name;

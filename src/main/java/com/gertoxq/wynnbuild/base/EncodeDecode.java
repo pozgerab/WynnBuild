@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.base;
 
-import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.base.sp.SP;
 import com.gertoxq.wynnbuild.base.sp.SkillpointList;
@@ -17,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.gertoxq.wynnbuild.base.Powder.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.WynnBuild.ENC;
+import static com.gertoxq.wynnbuild.base.Powder.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
 import static com.gertoxq.wynnbuild.util.Utils.zip2;
 
@@ -172,7 +171,6 @@ public class EncodeDecode {
                 }
             }
         }
-        WynnBuild.info("Encoded tomes: {}", tomesVec.toB64());
         return tomesVec;
     }
 

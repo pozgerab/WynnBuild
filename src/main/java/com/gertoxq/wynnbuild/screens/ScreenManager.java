@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.client;
+import static com.gertoxq.wynnbuild.WynnBuild.client;
 
 public class ScreenManager {
 

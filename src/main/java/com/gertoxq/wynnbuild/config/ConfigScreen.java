@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.config;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.screens.Button;
 import net.minecraft.client.gui.DrawContext;
@@ -13,7 +14,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class ConfigScreen extends Screen {
     private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(Build.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
@@ -65,7 +66,7 @@ public class ConfigScreen extends Screen {
                         Text.literal("?"),
                         button -> {
                             if (client.player == null) return;
-                            client.player.sendMessage(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(Build.precisionTooltip), false);
+                            WynnBuild.message(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(Build.precisionTooltip));
                         })
                 .position(this.width / 2 + 80, this.height / 4 + 96)
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))

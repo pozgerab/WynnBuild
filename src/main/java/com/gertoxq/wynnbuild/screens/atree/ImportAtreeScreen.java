@@ -1,11 +1,10 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
-import com.gertoxq.wynnbuild.AtreeCoder;
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.atreeimport.ImportAtree;
+import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.config.SavedBuild;
-import com.gertoxq.wynnbuild.screens.Button;
 import com.gertoxq.wynnbuild.screens.itemmenu.SelectableListWidget;
-import com.gertoxq.wynnbuild.util.Task;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -17,10 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
-
 public class ImportAtreeScreen extends Screen {
-    private final Screen parent;
     @Nullable String nameVal;
     @Nullable String codeVal;
 
@@ -30,7 +26,6 @@ public class ImportAtreeScreen extends Screen {
 
     public ImportAtreeScreen(Screen parent, @Nullable String nameVal, @Nullable String codeVal) {
         super(Text.literal("Import atree"));
-        this.parent = parent;
         this.nameVal = nameVal;
         this.codeVal = codeVal;
     }
@@ -60,9 +55,10 @@ public class ImportAtreeScreen extends Screen {
             var code = codeInput.getText();
             if (code.isEmpty()) return;
             if (nameInput.getText().isEmpty()) return;
-            var recoded = AtreeCoder.encode_atree(AtreeCoder.decode_atree(code)).toB64();
+            AtreeCoder coder = WynnBuild.getAtreeCoder();
+            var recoded = coder.encode_atree(coder.decode_atree(code)).toB64();
             if (!Objects.equals(recoded, code)) {
-                displayErr("Invalid code");
+                WynnBuild.displayErr("Invalid code");
                 return;
             }
             ImportAtree.addBuild(nameInput.getText(), code);
@@ -80,8 +76,8 @@ public class ImportAtreeScreen extends Screen {
 
         adder.add(ButtonWidget.builder(Text.literal("DEL").styled(style -> style.withColor(Formatting.RED).withBold(true)),
                 button -> {
-                    getConfigManager().getConfig().getSavedAtrees().remove(atreeList.getSelectedOptional().map(SelectableListWidget.Entry::getValue).orElse(null));
-                    getConfigManager().saveConfig();
+                    WynnBuild.getConfigManager().getConfig().getSavedAtrees().remove(atreeList.getSelectedOptional().map(SelectableListWidget.Entry::getValue).orElse(null));
+                    WynnBuild.getConfigManager().saveConfig();
                     atreeList.refresh();
                 }).width(70).build(), 2);
 
@@ -98,18 +94,18 @@ public class ImportAtreeScreen extends Screen {
 
     private class AtreeList extends SelectableListWidget<SavedBuild> {
         public AtreeList(int x, int y) {
-            super(200, 100, x, y, 28, getConfigManager().getConfig().getSavedAtrees());
+            super(200, 100, x, y, 28, WynnBuild.getConfigManager().getConfig().getSavedAtrees());
         }
 
         public void refresh() {
-            replaceEntries(getConfigManager().getConfig().getSavedAtrees().stream().map(this::create).toList());
+            replaceEntries(WynnBuild.getConfigManager().getConfig().getSavedAtrees().stream().map(this::create).toList());
         }
 
         @Override
         public void renderChild(SelectableListWidget<SavedBuild>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             context.drawTextWithShadow(textRenderer, Text.literal(entry.getValue().getName())
-                    .append(" ")
-                    .append(Text.literal(entry.getValue().getCast().name).styled(style -> style.withColor(entry.getValue().getCast() == cast ? Formatting.GREEN : Formatting.WHITE))),
+                            .append(" ")
+                            .append(Text.literal(entry.getValue().getCast().name).styled(style -> style.withColor(entry.getValue().getCast() == WynnBuild.cast ? Formatting.GREEN : Formatting.WHITE))),
                     x + 3, y + 3, 0xffffff);
             context.drawTextWithShadow(textRenderer,
                     Text.literal(entry.getValue().getCode()),

@@ -1,8 +1,8 @@
 package com.gertoxq.wynnbuild.identifications;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.Tier;
 
 import java.util.Arrays;
@@ -54,6 +54,7 @@ public final class Data {
     public static final List<String> damages = List.of("nDam", "eDam", "tDam", "wDam", "fDam", "aDam");
     public static final List<String> tiers = Arrays.stream(Tier.values()).map(Enum::name).toList();
     public static final List<String> classes = Arrays.stream(Cast.values()).map(Enum::name).toList();
+
     private Data() {
 
     }

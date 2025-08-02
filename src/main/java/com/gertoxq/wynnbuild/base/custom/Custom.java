@@ -1,10 +1,10 @@
 package com.gertoxq.wynnbuild.base.custom;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
-import com.gertoxq.wynnbuild.base.Powder;
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.base.Powder;
 import com.gertoxq.wynnbuild.base.StatMap;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.base.fields.Tier;
 import com.gertoxq.wynnbuild.base.util.BitVector;

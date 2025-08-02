@@ -1,5 +1,6 @@
+package com.gertoxq.wynnbuild.identifications;
+
 import com.gertoxq.wynnbuild.base.StatMap;
-import com.gertoxq.wynnbuild.identifications.*;
 import com.gertoxq.wynnbuild.util.StringList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

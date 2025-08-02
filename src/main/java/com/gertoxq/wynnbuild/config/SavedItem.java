@@ -1,18 +1,18 @@
 package com.gertoxq.wynnbuild.config;
 
-import com.gertoxq.wynnbuild.custom.ID;
+import com.gertoxq.wynnbuild.base.fields.ItemType;
 
 import java.util.Date;
 
 public class SavedItem {
 
     private final Date createdAt;
-    private final ID.ItemType type;
+    private final ItemType type;
     private final String hash;
     private final Integer baseItemId;
     private String name;
 
-    public SavedItem(String name, ID.ItemType type, String hash, Integer baseItemId) {
+    public SavedItem(String name, ItemType type, String hash, Integer baseItemId) {
         this.baseItemId = baseItemId;
         this.createdAt = new Date();
         this.name = name;
@@ -36,7 +36,7 @@ public class SavedItem {
         this.name = name;
     }
 
-    public ID.ItemType getType() {
+    public ItemType getType() {
         return type;
     }
 

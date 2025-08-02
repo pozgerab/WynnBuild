@@ -10,8 +10,8 @@ import net.minecraft.util.Formatting;
 
 import java.util.regex.Pattern;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.build;
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
+import static com.gertoxq.wynnbuild.WynnBuild.build;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class CharacterInfoScreen extends ContainerScreen<CharacterInfoScreenHandler> {
 

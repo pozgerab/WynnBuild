@@ -1,10 +1,10 @@
 package com.gertoxq.wynnbuild.screens.gallery;
 
-import com.gertoxq.wynnbuild.client.WynnBuildClient;
+import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.config.SavedItem;
-import com.gertoxq.wynnbuild.custom.CustomItem;
-import com.gertoxq.wynnbuild.custom.ID;
-import com.gertoxq.wynnbuild.custom.TypedID;
+import com.gertoxq.wynnbuild.identifications.ID;
+import com.gertoxq.wynnbuild.identifications.TypedID;
 import com.gertoxq.wynnbuild.screens.itemmenu.SelectableListWidget;
 import com.gertoxq.wynnbuild.util.ScreenUtils;
 import com.gertoxq.wynnbuild.util.Utils;
@@ -67,8 +67,8 @@ public class GalleryScreen extends Screen {
     }
 
     public List<GalleryItem> filterItems(String filterString) {
-        List<GalleryItem> items = new ArrayList<>(WynnBuildClient.getConfigManager().getConfig().getSavedItems().stream().map(savedItemType -> {
-            CustomItem item = CustomItem.getCustomFromHash(savedItemType.getHash());
+        List<GalleryItem> items = new ArrayList<>(WynnBuild.getConfigManager().getConfig().getSavedItems().stream().map(savedItemType -> {
+            Custom item = Custom.decodeCustom(null, savedItemType.getHash());
             return new GalleryItem(item, item.createStack());
         }).toList());
         if (!filterString.startsWith("$")) {
@@ -145,9 +145,9 @@ public class GalleryScreen extends Screen {
 
         final ButtonWidget buttonWidget;
         SavedItem savedItem;
-        CustomItem customItem;
+        Custom customItem;
         GalleryItem originalItem;
-        CustomItem originalCustom;
+        Custom originalCustom;
         boolean visible = false;
 
         public DupeInstance(ButtonWidget buttonWidget, GalleryItem originalItem, SavedItem item) {
@@ -157,7 +157,7 @@ public class GalleryScreen extends Screen {
             setItem(item);
         }
 
-        public static @NotNull Map<ID, Object> getDiff(CustomItem original, CustomItem changed) {
+        public static @NotNull Map<ID, Object> getDiff(Custom original, Custom changed) {
             if (!Objects.equals(original.getBaseItemId(), changed.getBaseItemId())) return new HashMap<>();
 
             Map<ID, Object> diffs = new HashMap<>();
@@ -181,8 +181,7 @@ public class GalleryScreen extends Screen {
 
         public void setItem(SavedItem newItem) {
             savedItem = newItem;
-            customItem = CustomItem.getCustomFromHash(savedItem.getHash());
-            if (customItem == null) return;
+            customItem = Custom.decodeCustom(null, savedItem.getHash());
 
             final Map<ID, Object> diffs = getDiff(originalCustom, customItem);
             List<Text> newTt = new ArrayList<>();
@@ -192,7 +191,7 @@ public class GalleryScreen extends Screen {
                 }
                 newTt.add(Text.literal(id.displayName.trim()).styled(style -> style.withColor(Formatting.GOLD))
                         .append(Text.literal(": "))
-                        .append(Text.literal(originalCustom.get(id).toString()))
+                        .append(Text.literal(originalCustom.statMap.get(id).toString()))
                         .append(Text.literal(" -> "))
                         .append(Text.literal(o.toString()))
                 );
@@ -201,7 +200,7 @@ public class GalleryScreen extends Screen {
         }
     }
 
-    public record GalleryItem(CustomItem customItem, ItemStack itemStack) {
+    public record GalleryItem(Custom customItem, ItemStack itemStack) {
     }
 
     record Positioner(int screenW, int screenH) implements TooltipPositioner {

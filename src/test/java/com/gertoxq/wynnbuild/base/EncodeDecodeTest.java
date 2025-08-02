@@ -1,8 +1,8 @@
 package com.gertoxq.wynnbuild.base;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.custom.Custom;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.sp.SP;
 import com.gertoxq.wynnbuild.base.sp.SkillpointList;
 import com.gertoxq.wynnbuild.build.Aspect;
@@ -46,7 +46,7 @@ class EncodeDecodeTest {
 
         int precise = 0;
         int wynnLevel = 106;
-        SkillpointList sp = SkillpointList.of(10,40,101,-10,140);
+        SkillpointList sp = SkillpointList.of(10, 40, 101, -10, 140);
         List<Integer> tomeIdsUnused = List.of(155, 156, 161, 150, 115, 62, 63, 142);
         List<Integer> tomeIds = Collections.nCopies(14, -1);
 
@@ -86,7 +86,7 @@ class EncodeDecodeTest {
         List<Custom> equipment = List.of(helmet, chestplate, leggings, boots,
                 ring1, ring2, bracelet, necklace, weapon);
 
-        SkillpointList assigned = SkillpointList.of(10,40,101,-10,140);
+        SkillpointList assigned = SkillpointList.of(10, 40, 101, -10, 140);
         SkillpointList ogsp = SP.calculateFinalSp(equipment);
 
         assertEquals(jsEncoded, EncodeDecode.encodeSp(assigned, ogsp).toB64());

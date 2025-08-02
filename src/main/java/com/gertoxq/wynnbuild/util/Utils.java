@@ -1,8 +1,9 @@
 package com.gertoxq.wynnbuild.util;
 
+import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.client.WynnBuildClient;
-import com.gertoxq.wynnbuild.custom.CustomItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
@@ -15,11 +16,25 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class Utils {
     private static int failures = 0;
+
+    public static int mod(int v, int m) {
+        return ((v % m) + m) % m;
+    }
+
+    public static <A, B> List<Map.Entry<A, B>> zip2(List<A> a, List<B> b) {
+        List<Map.Entry<A, B>> result = new ArrayList<>();
+        int size = Math.min(a.size(), b.size());
+        for (int i = 0; i < size; i++) {
+            result.add(new AbstractMap.SimpleEntry<>(a.get(i), b.get(i)));
+        }
+        return result;
+    }
 
     public static @Nullable List<Text> getLore(@NotNull ItemStack itemStack) {
         LoreComponent loreComp = itemStack.get(DataComponentTypes.LORE);
@@ -28,7 +43,7 @@ public class Utils {
     }
 
     public static String removeFormat(@NotNull String str) {
-        return str.replaceAll("§.", "");
+        return str.replaceAll("§.", "").replaceAll("\\*", "");
     }
 
     public static String removeNum(String str) {
@@ -50,7 +65,26 @@ public class Utils {
         return lore;
     }
 
-    public static Text getItemPrintTemplate(CustomItem item, String fullHash, String url) {
+    public static double log2(double n) {
+        return Math.log(n) / Math.log(2);
+    }
+
+    public static String capitalizeFirst(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    public static String capitalizeAllFirst(String string) {
+        return Arrays.stream(string.split(" ")).map(Utils::capitalizeFirst).collect(Collectors.joining(" "));
+    }
+
+    public static int bool(boolean b) {
+        return b ? 1 : 0;
+    }
+
+    public static Text getItemPrintTemplate(Custom item, String fullHash, String url) {
         return Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
                 .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getTier().format)))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
@@ -97,8 +131,6 @@ public class Utils {
 
     /**
      * Wraps a method in a try block to catch errors at screen reading
-     *
-     * @param method
      */
     public static void catchNotLoaded(Runnable method) {
         try {
@@ -106,8 +138,8 @@ public class Utils {
             failures = 0;
         } catch (Exception e) {
             failures++;
-            WynnBuildClient.client.player.sendMessage(Text.literal("Fetching failed! Press the READ button to fetch manually")
-                    .styled(style -> style.withColor(Formatting.RED)), false);
+            WynnBuild.message(Text.literal("Fetching failed! Press the READ button to fetch manually")
+                    .styled(style -> style.withColor(Formatting.RED)));
             if (failures < 2) {
                 new Task(() -> catchNotLoaded(method), WynnBuildClient.REFETCH_DELAY);
             }

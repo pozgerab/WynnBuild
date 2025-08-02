@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.atreeimport;
 
-import com.gertoxq.wynnbuild.AtreeCoder;
+import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.config.SavedBuild;
 import com.gertoxq.wynnbuild.screens.atree.AtreeNode;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreen;
@@ -13,20 +14,18 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
-
 public class ImportAtree {
 
-    static AtomicBoolean allowClick = new AtomicBoolean(true);
+    static final AtomicBoolean allowClick = new AtomicBoolean(true);
 
     public static void addBuild(String name, String code) {
 
-        getConfigManager().getConfig().getSavedAtrees().add(new SavedBuild(name, code, cast));
-        getConfigManager().saveConfig();
+        WynnBuild.getConfigManager().getConfig().getSavedAtrees().add(new SavedBuild(name, code, WynnBuild.cast));
+        WynnBuild.getConfigManager().saveConfig();
     }
 
     public static List<SavedBuild> getBuilds() {
-        return getConfigManager().getConfig().getSavedAtrees();
+        return WynnBuild.getConfigManager().getConfig().getSavedAtrees();
     }
 
     private static Runnable traverse(AtreeScreen screen, Set<Integer> applyIds, AtomicInteger counter, int max) {
@@ -47,12 +46,12 @@ public class ImportAtree {
     }
 
     public static void applyBuild(String name, AtreeScreen screen) {
-        SavedBuild build = getBuilds().stream().filter(savedBuildType -> cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
+        SavedBuild build = getBuilds().stream().filter(savedBuildType -> WynnBuild.cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
         if (build == null) {
-            displayErr("Build not found, something went wrong");
+            WynnBuild.displayErr("Build not found, something went wrong");
             return;
         }
-        Set<Integer> applyIds = AtreeCoder.decode_atree(build.getCode());
+        Set<Integer> applyIds = AtreeCoder.getAtreeCoder(build.getCast()).decode_atree(build.getCode());
         allowClick.set(false);
         ScreenMouseEvents.allowMouseClick(screen).register((screen1, mouseX, mouseY, button) -> allowClick.get());
         ScreenKeyboardEvents.allowKeyPress(screen).register((screen1, key, scancode, modifiers) -> allowClick.get());
@@ -61,7 +60,7 @@ public class ImportAtree {
         new Task(() -> {
             AtreeNode firstNode = screen.getScreenHandler().getSlots().getFirst();
             if (firstNode.isUnlockedOrUnreachable()) {
-                displayErr("Atree is not empty, reset it first");
+                WynnBuild.displayErr("Atree is not empty, reset it first");
                 allowClick.set(true);
                 return;
             }

@@ -176,15 +176,6 @@ public class BootstringEncoder {
         return sb.toString();
     }
 
-    private static class SplitResult {
-        final List<String> basic;
-        final Set<Integer> nonBasic;
-        final int encodedCount;
-
-        SplitResult(List<String> basic, Set<Integer> nonBasic, int encodedCount) {
-            this.basic = basic;
-            this.nonBasic = nonBasic;
-            this.encodedCount = encodedCount;
-        }
+    private record SplitResult(List<String> basic, Set<Integer> nonBasic, int encodedCount) {
     }
 }

@@ -92,6 +92,7 @@ public class ID {
     }
 
     public boolean isReq() {
+        if (!(this instanceof NonRolledID<?>)) return false;
         List<NonRolledID<?>> ids = List.of(IDs.LVL, IDs.CLASS_REQ, IDs.AGI_REQ, IDs.DEF_REQ, IDs.DEX_REQ, IDs.INT_REQ, IDs.STR_REQ);
         return ids.contains(this);
     }

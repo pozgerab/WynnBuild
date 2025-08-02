@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 
 import java.util.regex.Pattern;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class TomeScreen extends ContainerScreen<TomeScreenHandler> {
 

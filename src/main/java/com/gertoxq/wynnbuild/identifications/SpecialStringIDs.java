@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.identifications;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.base.fields.Tier;
 import com.gertoxq.wynnbuild.util.Range;

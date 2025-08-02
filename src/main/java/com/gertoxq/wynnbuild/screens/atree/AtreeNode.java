@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.util.Utils;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
@@ -13,9 +12,9 @@ public class AtreeNode {
 
     public final Integer id;
     final int index;
-    Slot slot = null;
     final ItemStack stack;
     final String name;
+    Slot slot = null;
 
 
     public AtreeNode(Slot slot) {

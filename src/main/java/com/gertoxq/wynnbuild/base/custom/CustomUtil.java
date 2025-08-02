@@ -41,7 +41,7 @@ public class CustomUtil {
 
     public static Custom getFromStack(ItemStack item) {
 
-        Custom custom = new Custom(new StatMap());
+        Custom custom = new Custom();
         custom.statMap.set(IDs.FIXID, true);
 
         if (item.isEmpty()) {

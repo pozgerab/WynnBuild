@@ -1,10 +1,8 @@
-package com.gertoxq.wynnbuild;
+package com.gertoxq.wynnbuild.base.fields;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
-import com.gertoxq.wynnbuild.base.fields.ItemType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class CastTest {
 

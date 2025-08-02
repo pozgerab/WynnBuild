@@ -4,8 +4,6 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.StatMap;
 import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.identifications.IDs;
-import com.gertoxq.wynnbuild.identifications.NonRolledString;
-import com.gertoxq.wynnbuild.identifications.RolledIDs;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -35,9 +33,9 @@ class WynnDataTest {
             JsonArray itemArray = jsonElement.getAsJsonArray();
 
             String hash = itemArray.get(2).getAsString();
-            Custom item = new Custom(new StatMap());
+            Custom item = new Custom();
             try {
-                 item = Custom.decodeCustom(null, hash);
+                item = Custom.decodeCustom(null, hash);
             } catch (Exception e) {
                 e.printStackTrace();
             }

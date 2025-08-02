@@ -1,7 +1,7 @@
 package com.gertoxq.wynnbuild.identifications;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.base.fields.Tier;
 import com.gertoxq.wynnbuild.util.Range;
@@ -9,6 +9,7 @@ import com.gertoxq.wynnbuild.util.StringList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class Metric {
     public static final TypedMetric PERCENT = new TypedMetric("percent");
     public static final TypedMetric RAW = new TypedMetric("raw");

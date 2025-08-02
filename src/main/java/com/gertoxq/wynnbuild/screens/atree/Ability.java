@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,8 +15,8 @@ import static com.gertoxq.wynnbuild.client.WynnBuildClient.castTreeObj;
 public record Ability(int id, String name, List<Integer> parents, List<Integer> children, @Nullable Integer pageNum,
                       @Nullable Integer slot, List<Integer> dependencies) {
 
+    final static Map<String, List<Integer>> nameToId = new HashMap<>();
     private static final Map<Integer, Ability> ABILITY_MAP = new HashMap<>();
-    static Map<String, List<Integer>> nameToId = new HashMap<>();
 
     public static Map<Integer, Ability> getAbilityMap() {
         return ABILITY_MAP;
@@ -25,9 +26,9 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
         return ABILITY_MAP.get(id);
     }
 
-    public static boolean areSameLevel(int id1, int id2) {
+    public static boolean areDifferentLevel(int id1, int id2) {
         var entry = Ability.getById(id1);
-        return entry.parents().contains(id2) && entry.children().contains(id2);
+        return !entry.parents().contains(id2) || !entry.children().contains(id2);
     }
 
     @Contract(" -> new")
@@ -47,11 +48,11 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
     }
 
     public static void refreshTree() {
-        System.out.println("Refreshing atree, should only happen when changing cast...");
+        WynnBuild.info("Refreshing atree, should only happen when changing cast...");
         ABILITY_MAP.clear();
         if (castTreeObj == null) {
             // this shouldn't be null, but if something goes wrong at initialization prevent crash
-            System.out.println("Something went wrong with ability tree casting, opening the character menu again should fix it or create an issue ??");
+            WynnBuild.error("Something went wrong with ability tree casting, opening the character menu again should fix it or create an issue ??");
             return;
         }
         for (String key : castTreeObj.keySet()) {
