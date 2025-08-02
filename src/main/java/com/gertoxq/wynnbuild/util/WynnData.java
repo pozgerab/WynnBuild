@@ -1,8 +1,13 @@
 package com.gertoxq.wynnbuild.util;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.custom.CustomItem;
-import com.gertoxq.wynnbuild.custom.ID;
+import com.gertoxq.wynnbuild.base.ItemSet;
+import com.gertoxq.wynnbuild.base.custom.Custom;
+import com.gertoxq.wynnbuild.base.fields.ItemType;
+import com.gertoxq.wynnbuild.base.sp.SP;
+import com.gertoxq.wynnbuild.identifications.ID;
+import com.gertoxq.wynnbuild.identifications.IDs;
+import com.gertoxq.wynnbuild.identifications.TypedID;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,18 +17,18 @@ import net.minecraft.util.Identifier;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.gertoxq.wynnbuild.client.WynnBuildClient.fullatree;
-import static com.gertoxq.wynnbuild.base.EncodingBitVector.ENC;
 
 public class WynnData {
 
     private static final Map<Integer, ItemData> dataMap = new HashMap<>();
     private static final Map<String, Integer> nameToId = new HashMap<>();
     private static final Map<String, Integer> tomeMap = new HashMap<>();
+    private static final Map<String, ItemSet> setMap = new HashMap<>();
+    private static final Map<Range, ItemType> modelToType = new HashMap<>();
 
     public static Map<Integer, ItemData> getData() {
         return dataMap;
@@ -33,15 +38,36 @@ public class WynnData {
         return nameToId;
     }
 
+    public static Map<Range, ItemType> getModelToType() {
+        return modelToType;
+    }
+
+    public static ItemData getItemData(String itemName) {
+        return WynnData.getData().get(WynnData.getIdMap().get(itemName));
+    }
+
+    public static ItemSet getItemSet(String setName) {
+        return setMap.get(setName);
+    }
+
+    public static Map<String, ItemSet> getSetMap() {
+        return setMap;
+    }
+
     public static Map<String, Integer> getTomeMap() {
         return tomeMap;
     }
 
-    public static void load() {
+    public static void loadAll() {
+        loadItems();
+        loadAtree();
+        loadSets();
+        loadCustomModelData();
+    }
+
+    public static void loadItems() {
         InputStream dataStream = WynnBuild.class.getResourceAsStream("/" + "dataMap.json");
-        InputStream atreeStream = WynnBuild.class.getResourceAsStream("/" + "atree.json");
         InputStream tomeStream = WynnBuild.class.getResourceAsStream("/" + "tomeIdMap.json");
-        InputStream bitcodeStream = WynnBuild.class.getResourceAsStream("/" + "bitcodemap.json");
         try {
             assert dataStream != null;
             ((JsonObject) JsonParser.parseReader(
@@ -62,35 +88,86 @@ public class WynnData {
                 JsonElement armorEl = itemArray.get(1);
                 String armorMat = armorEl.isJsonNull() ? null : armorEl.getAsString();
 
-                CustomItem item = CustomItem.getCustomFromHash(itemArray.get(2).getAsString(), a -> a
-                        .setDisplaysOf(icon, armorMat)
-                );
-
-                if (item == null) {
-                    System.out.println("item is unparsable: " + itemArray.get(2).getAsString());
+                Custom item;
+                try {
+                    item = Custom.decodeCustom(null, itemArray.get(2).getAsString());
+                } catch (Exception e) {
+                    WynnBuild.error("Failed to decode item: {}", String.valueOf(e));
                     return;
                 }
 
-                nameToId.put(item.getName(), id);
+                nameToId.put(item.statMap.get(IDs.NAME), id);
 
-                dataMap.put(id, new ItemData(id, item.getName(), item.getType(), icon, armorMat, item));
+                dataMap.put(id, new ItemData(id, item.statMap.get(IDs.NAME), item.statMap.get(IDs.TYPE), icon, armorMat, item));
             });
-
-            assert atreeStream != null;
-            fullatree = ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();
             assert tomeStream != null;
             ((JsonObject) JsonParser.parseReader(
                     new InputStreamReader(tomeStream, StandardCharsets.UTF_8))).asMap().forEach((s, jsonElement) -> tomeMap.put(s, jsonElement.getAsInt()));
 
-            assert bitcodeStream != null;
-            ENC = ((JsonObject) JsonParser.parseReader(
-                    new InputStreamReader(bitcodeStream, StandardCharsets.UTF_8)));
-
         } catch (Exception e) {
-            System.out.println("didn't finish init, something went wrong with wynnbuild");
+            WynnBuild.error("didn't finish init, something went wrong with wynnbuild: {}", e);
             e.printStackTrace();
         }
+    }
+
+    public static void loadAtree() {
+        InputStream atreeStream = WynnBuild.class.getResourceAsStream("/" + "atree.json");
+        assert atreeStream != null;
+        fullatree = ((JsonObject) JsonParser.parseReader(
+                new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void loadSets() {
+        InputStream setStream = WynnBuild.class.getResourceAsStream("/" + "sets.json");
+        assert setStream != null;
+        ((JsonObject) JsonParser.parseReader(
+                new InputStreamReader(setStream, StandardCharsets.UTF_8))).asMap().forEach((string, setElement) -> {
+            JsonObject setObject = setElement.getAsJsonObject();
+            List<Map<TypedID<Integer>, Integer>> bonuses = new ArrayList<>();
+
+            AtomicInteger legalTier = new AtomicInteger();
+            AtomicInteger i = new AtomicInteger();
+
+            setObject.getAsJsonArray("bonuses").asList().forEach(bonusMap -> {
+                Map<TypedID<Integer>, Integer> bonusTier = new HashMap<>();
+
+                bonusMap.getAsJsonObject().asMap().forEach((idName, idValueElement) -> {
+
+                    if (SP.spIds.stream().map(nonRolledInt -> nonRolledInt.name).toList().contains(idName)) {
+                        bonusTier.put((TypedID<Integer>) ID.getByName(idName), idValueElement.getAsInt());
+                    } else {
+                        if (idName.equals("illegal")) {
+                            if (legalTier.get() > 0) return;
+                            legalTier.set(i.get());
+                        }
+                        // Not sp id
+                    }
+                });
+
+                i.getAndIncrement();
+                bonuses.add(bonusTier);
+            });
+            ItemSet itemSet = new ItemSet(
+                    string,
+                    setObject.getAsJsonArray("items").asList().stream().map(JsonElement::getAsString).toList(),
+                    bonuses,
+                    legalTier.get() == 0 ? null : legalTier.get()
+            );
+            setMap.put(string, itemSet);
+        });
+    }
+
+    public static void loadCustomModelData() {
+        InputStream iconStream = WynnBuild.class.getResourceAsStream("/" + "icons.json");
+        assert iconStream != null;
+        ((JsonObject) JsonParser.parseReader(
+                new InputStreamReader(iconStream, StandardCharsets.UTF_8))).asMap().forEach((itemType, rangeElement) -> {
+            JsonObject rangeObject = rangeElement.getAsJsonObject();
+            int min = rangeObject.get("min").getAsInt();
+            int max = rangeObject.get("max").getAsInt();
+            modelToType.put(new Range(min, max), ItemType.valueOf(itemType));
+        });
     }
 
     public record Icon(Identifier id, Integer customModelData, String headId) {
@@ -99,14 +176,14 @@ public class WynnData {
         }
     }
 
-    public record ItemData(int id, String name, ID.ItemType type, Icon icon, String armorMaterial,
-                           CustomItem baseItem) {
+    public record ItemData(int id, String name, ItemType type, Icon icon, String armorMaterial,
+                           Custom baseItem) {
         public boolean isArmor() {
             return type.isArmor();
         }
 
         public boolean isCustomHead() {
-            return icon != null && icon.isHead() && type == ID.ItemType.Helmet;
+            return icon != null && icon.isHead() && type == ItemType.Helmet;
         }
 
         public boolean isWeapon() {
