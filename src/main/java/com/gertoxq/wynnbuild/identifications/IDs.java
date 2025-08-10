@@ -3,9 +3,7 @@ package com.gertoxq.wynnbuild.identifications;
 import com.gertoxq.wynnbuild.base.sp.SP;
 import com.gertoxq.wynnbuild.base.sp.SkillpointList;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class is used to browse all IDs, both rolled and non-rolled.
@@ -13,9 +11,9 @@ import java.util.stream.Collectors;
 public class IDs implements RolledIDs, NonRolledIDs {
 
     public static final ParserID<SkillpointList> SkillpointGetter = new ParserID<>("skillpoints",
-            statMap -> SkillpointList.from(SP.spIds.stream().map(statMap::get).collect(Collectors.toCollection(ArrayList::new))));
+            statMap -> SkillpointList.from(SP.spIds.stream().map(statMap::get).toList()));
     public static final ParserID<SkillpointList> RequiredSkillpointsGetter = new ParserID<>("required_skillpoints",
-            statMap -> SkillpointList.from(SP.spReqIds.stream().map(statMap::get).collect(Collectors.toCollection(ArrayList::new))));
+            statMap -> SkillpointList.from(SP.spReqIds.stream().map(statMap::get).toList()));
 
     /**
      * Does absolutely nothing, but loads this class and the ids

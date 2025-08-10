@@ -34,7 +34,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modCompileOnly files("libs/wynntils-3.1.6-fabric+MC-1.21.4.jar")
+    modCompileOnly files("libs/wynntils-3.2.0-fabric+MC-1.21.4.jar")
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'

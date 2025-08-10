@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild.util;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.base.StatMap;
 import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.identifications.IDs;
 import com.google.gson.JsonArray;

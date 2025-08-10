@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 public class Utils {
     private static int failures = 0;
 
+    public static String withSign(int number) {
+        return (number >= 0 ? "+" : "") + number;
+    }
+
     public static int mod(int v, int m) {
         return ((v % m) + m) % m;
     }

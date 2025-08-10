@@ -1,15 +1,18 @@
 package com.gertoxq.wynnbuild.identifications;
 
+import com.gertoxq.wynnbuild.identifications.metric.Metric;
+
 public class NonRolledInt extends NonRolledID<Integer> {
-    NonRolledInt(PutOn on, Integer defaultValue, String name, String displayName, Metric.TypedMetric metric) {
-        super(on, defaultValue, name, displayName, metric);
+    NonRolledInt(Integer defaultValue, String name, String displayName, Metric<Integer> metric) {
+        super(defaultValue, name, displayName, metric);
     }
 
-    NonRolledInt(PutOn on, String name) {
-        super(on, 0, name);
+    NonRolledInt(String name) {
+        super(0, name);
     }
 
-    NonRolledInt(PutOn on, String name, String displayName, Metric.TypedMetric metic) {
-        super(on, 0, name, displayName, metic);
+    NonRolledInt(String name, String displayName, Metric<Integer> metric) {
+        super(0, name, displayName, metric);
     }
+
 }

@@ -1,6 +1,8 @@
 package com.gertoxq.wynnbuild.base;
 
 import com.gertoxq.wynnbuild.base.custom.Custom;
+import com.gertoxq.wynnbuild.base.fields.ItemType;
+import com.gertoxq.wynnbuild.base.fields.Tier;
 import com.gertoxq.wynnbuild.base.sp.SP;
 import com.gertoxq.wynnbuild.base.sp.SkillpointList;
 import com.gertoxq.wynnbuild.base.util.BitVector;
@@ -17,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.gertoxq.wynnbuild.WynnBuild.ENC;
+import static com.gertoxq.wynnbuild.WynnBuild.WYNN_VERSION_ID;
 import static com.gertoxq.wynnbuild.base.Powder.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
 import static com.gertoxq.wynnbuild.util.Utils.zip2;
@@ -94,14 +97,22 @@ public class EncodeDecode {
         for (int idx = 0; idx < equipment.size(); idx++) {
 
             Custom eq = equipment.get(idx);
-            int equipmentKind = eq.statMap.get(IDs.CUSTOM) || precise ? ENC.EQUIPMENT_KIND().CUSTOM : ENC.EQUIPMENT_KIND().NORMAL;
+            if (idx < 8) {
+                eq.statMap.set(IDs.TYPE, ItemType.BUILD_ORDER.get(idx));
+            }
+
+            if (eq.statMap.get(IDs.TIER) == Tier.Crafted) {
+                eq.statMap.set(IDs.TIER, Tier.Normal); // wynnbuilder does not support custom crafted items
+            }
+
+            int equipmentKind = !eq.statMap.get(IDs.NONE) && (eq.statMap.get(IDs.CUSTOM) || eq.statMap.get(IDs.CRAFTED) || precise) ? ENC.EQUIPMENT_KIND().CUSTOM : ENC.EQUIPMENT_KIND().NORMAL;
             equipmentVec.append(equipmentKind, ENC.EQUIPMENT_KIND().BITLEN());
 
             switch (equipmentKind) {
                 case 0 -> {
                     int id = 0;
                     if (!eq.statMap.get(IDs.NONE)) {
-                        assert eq.getBaseItemId().isPresent() : "Base item ID is not present for non-custom item";
+                        assert eq.getBaseItemId().isPresent() && eq.getBaseItemId().get() > 0 : "Base item ID is not present for non-custom item";
                         id = eq.getBaseItemId().get() + 1;
                     }
                     equipmentVec.append(id, ENC.ITEM_ID_BITLEN());
@@ -114,7 +125,7 @@ public class EncodeDecode {
             }
 
             if (POWDERABLES.containsKey(idx)) {
-                equipmentVec.merge(java.util.Arrays.asList(new EncodingBitVector[]{encodePowders(powders.get(POWDERABLES.get(idx)))}));
+                equipmentVec.merge(java.util.Arrays.asList(new EncodingBitVector[]{encodePowders(equipmentKind == 0 ? powders.get(POWDERABLES.get(idx)) : List.of())}));
             }
         }
 
@@ -213,7 +224,7 @@ public class EncodeDecode {
         }).toList();
 
         BitVector[] vectors = {
-                encodeHeader(18),
+                encodeHeader(WYNN_VERSION_ID),
                 encodeEquipment(build.equipment, powderSet, precise),
                 encodeTomes(tomes),
                 encodeSp(skillpoints, SP.calculateFinalSp(build.equipment)),

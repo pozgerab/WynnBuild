@@ -12,12 +12,9 @@ import com.gertoxq.wynnbuild.base.util.BitVectorCursor;
 import com.gertoxq.wynnbuild.base.util.BootstringEncoder;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.identifications.*;
-import com.gertoxq.wynnbuild.util.Range;
-import com.gertoxq.wynnbuild.util.StringList;
-import com.gertoxq.wynnbuild.util.Utils;
+import com.gertoxq.wynnbuild.identifications.metric.Metric;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.mojang.authlib.properties.PropertyMap;
-import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.component.type.LoreComponent;
@@ -31,15 +28,13 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 
-import static com.gertoxq.wynnbuild.base.Powder.POWDER_PATTERN;
-import static com.gertoxq.wynnbuild.base.custom.CustomUtil.*;
-import static com.gertoxq.wynnbuild.util.Utils.capitalizeFirst;
-import static com.gertoxq.wynnbuild.util.Utils.log2;
+import static com.gertoxq.wynnbuild.base.custom.CustomUtil.getFromStack;
+import static com.gertoxq.wynnbuild.identifications.metric.Metrics.*;
+import static com.gertoxq.wynnbuild.util.Utils.*;
 
 public class Custom {
 
@@ -68,7 +63,7 @@ public class Custom {
     }
 
     public Custom(ItemStack item) {
-        if (item.isEmpty() || Utils.getLore(item) == null) {
+        if (item.isEmpty() || getLore(item) == null) {
             statMap = new StatMap();
             statMap.set(IDs.NONE, true);
             return;
@@ -94,8 +89,6 @@ public class Custom {
         }
 
         StatMap statMap = new StatMap();
-        //statMap.set(AllIDs.HASH, "CI-" + cursor.bitVector.sliceB64(cursor.currentIndex, cursor.endIndex));
-
         long legacy = cursor.advance();
 
         long version = cursor.advanceBy(CUSTOM_ENC.CUSTOM_VERSION_BITLEN());
@@ -145,11 +138,6 @@ public class Custom {
                 int extension = 32 - idLen;
                 idVal = cursor.advanceBy(idLen) << extension >> extension;
             }
-            if (id == IDs.MAJOR_IDS) {
-                StringList majorIds = new StringList(List.of((String) idVal));
-                statMap.set(IDs.MAJOR_IDS, majorIds);
-                continue;
-            }
             statMap.set(id, idVal);
         }
         statMap.set(IDs.CUSTOM, true);
@@ -197,23 +185,11 @@ public class Custom {
                 customVec.append(valMin & mask, idLen);
                 if (!fixedIDs) customVec.append(valMax & mask, idLen);
             } else {
-                if (id == IDs.MAJOR_IDS) {
-                    List<String> majorIds = statMap.get(IDs.MAJOR_IDS);
-                    if (!majorIds.isEmpty()) {
-                        String strVal = majorIds.getFirst();
-                        long lenMask = (1L << CUSTOM_ENC.TEXT_CHAR_LENGTH_BITLEN()) - 1;
-                        String encodedText = bootstringEncoder.encode(strVal);
-                        customVec.append(i, CUSTOM_ENC.ID_IDX_BITLEN());
-                        customVec.append(encodedText.length() & lenMask, CUSTOM_ENC.TEXT_CHAR_LENGTH_BITLEN());
-                        customVec.appendB64(encodedText);
-                    }
-                    continue;
-                }
 
                 if (id instanceof NonRolledString nonRolledString) {
                     String strVal = statMap.get(nonRolledString);
                     if (strVal == null || strVal.isEmpty()) continue;
-                    if ((nonRolledString.getMetric().equals(Metric.RANGE) && strVal.equals("0-0"))
+                    if ((nonRolledString.getMetric().equals(RANGE) && strVal.equals("0-0"))
                             || (!verbose && List.of("lore", "majorIds", "quest", "materials", "drop", "set").contains(nonRolledString.name))) {
                         continue;
                     }
@@ -236,6 +212,7 @@ public class Custom {
                     }
                 } else if (id instanceof NonRolledInt nonRolledInt) {
                     int intVal = statMap.get(nonRolledInt);
+                    if (nonRolledInt == IDs.ID) intVal = Math.max(0, intVal);
                     if (Objects.equals(intVal, 0)) continue;
 
                     customVec.append(i, CUSTOM_ENC.ID_IDX_BITLEN());
@@ -251,141 +228,54 @@ public class Custom {
         return customVec;
     }
 
-    public void setFromString(String textStr) {
-        int value = 0;
-        if (ATKSPD_PATTERN.matcher(textStr).matches()) {
-            String atkSpdString = textStr.split(" Attack Speed")[0].replace(" ", "_");
-            AtkSpd atkspd = Arrays.stream(AtkSpd.values()).filter(atkspds -> atkspds.name().equalsIgnoreCase(atkSpdString)).findAny().orElse(AtkSpd.NORMAL);
-            statMap.set(IDs.ATKSPD, atkspd);
-        } else if (BASE_STAT_REGEX.matcher(textStr).matches()) {
-            textStr = textStr.replace(":", "");
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.getLast();
-            try {
-                value = Integer.parseInt(strVal);
-            } catch (Exception ignored) {
-            }
-
-            s.removeFirst();
-            s.removeLast();
-
-            String idName = String.join(" ", s);
-            findAndSetIdentification(idName, value, RAWS_BASE);
-
-        } else if (PERX_REGEX.matcher(textStr).matches()) {
-            List<String> s;
-            if (textStr.split("/").length > 2) { // if custom /
-                List<String> strings = new ArrayList<>(List.of(textStr.split("/", 3)));
-                s = new ArrayList<>(List.of(strings.getLast().split(" ")));
-            } else {
-                s = new ArrayList<>(List.of(textStr.split(" ")));
-            }
-            String strVal = s.getFirst();
-            try {
-                value = Integer.parseInt(strVal.split("/")[0]);
-            } catch (Exception ignored) {
-            }
-
-            s.removeFirst();
-
-            String idName = String.join(" ", s);
-
-            findAndSetIdentification(idName, value, PERXS);
-
-        } else if (POWDER_PATTERN.matcher(textStr).matches()) {
-            String braces = textStr.split(" ")[0];  //  "[0/3]"
-            String slots = braces.replaceAll("[\\[\\]]", "");
-            List<String> nums = new ArrayList<>(List.of(slots.split("/")));
-            try {
-                int max = Integer.parseInt(nums.get(1));
-                statMap.set(IDs.SLOTS, max);
-            } catch (NumberFormatException ignored) {
-            }
-            setPowders(Powder.getPowderFromString(textStr));
-
-        } else if (ROLLED_PATTERN.matcher(textStr).matches()) {
-            List<String> s;
-            if (textStr.contains("/")) {
-                var strings = new ArrayList<>(List.of(textStr.split("/")));
-                s = new ArrayList<>(List.of(strings.getLast().split(" ")));
-            } else {
-                s = new ArrayList<>(List.of(textStr.split(" ")));
-            }
-            String strVal = s.getFirst();
-            List<TypedID<Integer>> potentialIds;
-            if (strVal.endsWith("%")) {
-                potentialIds = PERCENTABLE;
-            } else {
-                potentialIds = RAWS;
-            }
-            try {
-                value = Integer.parseInt(strVal.replace("%", ""));
-            } catch (Exception e) {
-                WynnBuild.warn("This should definately parse: {}. Error: {}", strVal.replace("%", ""), e.getMessage());
-            }
-
-            s.removeFirst();
-
-            String idName = String.join(" ", s);
-            findAndSetIdentification(idName, value, potentialIds);
-
-        } else if (RANGE_REGEX.matcher(textStr).matches()) {
-            textStr = textStr.replace(":", "");
-            List<String> s = new ArrayList<>(List.of(textStr.split(" ")));
-            String strVal = s.getLast();
-            int from = 0;
-            int to = 0;
-            try {
-                var split = strVal.split("-");
-                from = Integer.parseInt(split[0]);
-                to = Integer.parseInt(split[1]);
-            } catch (Exception ignored) {
-            }
-
-            s.removeFirst();
-            s.removeLast();
-
-            String idName = String.join(" ", s);
-
-            for (SpecialStringID<Range> id : RANGEDS) {
-                if (Objects.equals(id.displayName, idName)) {
-                    statMap.set(id, new Range(from, to));
-                    break;
-                }
-            }
-        } else if (textStr.contains(IDs.CLASS_REQ.displayName)) {
-            textStr = textStr.split(": ")[1];
-            String castVal = textStr.split("/")[0];
-            Optional<@Nullable Cast> itemCast = Cast.find(castVal);
-            itemCast.ifPresent(cast -> statMap.set(IDs.CLASS_REQ, cast));
-        }
-    }
-
-    private void findAndSetIdentification(String idName, int value, List<? extends ID> potential) {
-        ID id = findByNameFromList(idName, potential);
-        switch (id) {
-            case null -> WynnBuild.warn("interesting...");
-            case RolledID rolledID -> statMap.setRange(rolledID, new Range(value, value));
-            case NonRolledInt nonRolledInt -> statMap.set(nonRolledInt, value);
-            default -> WynnBuild.warn("not int?? idName={} metric={}", idName, id.metric.getName());
-        }
-
-    }
-
-    private ID findByNameFromList(String idName, List<? extends ID> potential) {
-        for (RolledID spellCostReductionId : ID.getCostReductionIDs()) {
-            if (!potential.contains(spellCostReductionId)) continue;
-            int spellIdx = Integer.parseInt(spellCostReductionId.displayName.substring(0, 1)) - 1;
-            for (Cast cast : Cast.values()) {
-                if (idName.equals(cast.abilities.get(spellIdx) + " Cost")) {
-                    return spellCostReductionId;
-                }
+    public void setFromLoreLine(Text line) {
+        String searched = removeFormat(line.getString());
+        Metric<?> metric = null;
+        Matcher matcher = null;
+        for (Metric<?> currMetric : metrics()) {
+            if (currMetric.pattern() != null) {
+                matcher = currMetric.pattern().matcher(searched);
+                if (!matcher.matches()) continue;
+                metric = currMetric;
+                break;
             }
         }
-        return potential.stream().filter(id -> Objects.equals(id.displayName, idName)).findFirst().orElseGet(() -> {
-            WynnBuild.warn("No id named {}", idName);
-            return null;
-        });
+        if (matcher == null || metric == null) return;
+
+        ID id;
+        Object value;
+
+        if (metric.fromId()) {
+            id = ID.getByName(metric.getName());
+            value = metric.getRealValue(matcher.group(1));
+        } else {
+            id = ID.getByNameFrom(matcher.group("id"), metric);
+            value = metric.getRealValue(matcher.group("value"));
+        }
+
+        if (id == null || value == null) {
+            WynnBuild.error("Skipping line: could not parse \"{}\". metric = {}, value = {}.", searched, metric.getName(), value);
+            return;
+        }
+
+        statMap.setUnknown(id, value);
+
+        if (metric == ATTACK_SPEED) {
+
+            if (!statMap.get(IDs.TYPE).isWeapon()) {
+                statMap.set(IDs.TYPE, ItemType.Spear); // will be set later
+            }
+        } else if (metric == CLASS_REQ) {
+
+            Cast cast = CLASS_REQ.parser.translator().get((String) value);
+            if (statMap.get(IDs.TYPE).isWeapon()) {
+                statMap.set(IDs.TYPE, cast.weapon);
+            }
+        } else if (metric == SLOTS) {
+
+            setPowders(Powder.getPowderFromString(searched));
+        }
+
     }
 
     public Optional<Integer> getBaseItemId() {
@@ -466,125 +356,14 @@ public class Custom {
     }
 
     public List<Text> buildLore() {
-        List<Text> lore = new ArrayList<>();
-        try {
-            ItemType type = statMap.get(IDs.TYPE);
-            Cast cast = type.getCast();
-            Tier tier = statMap.get(IDs.TIER);
-            String name = statMap.get(IDs.NAME);
-
-            lore.add(Text.literal(name).styled(style -> style.withColor(tier.format)));
-
-            if (type.isWeapon()) {
-                AtkSpd atsSpd = statMap.get(IDs.ATKSPD);
-                lore.add(Text.literal(String.join(" ", Arrays.stream(atsSpd.name().toLowerCase().split("_")).map(StringUtil::capitalize).toList()) + " Attack Speed").styled(style -> style.withColor(Formatting.GRAY)));
-                lore.add(Text.empty());
-            } else lore.add(Text.empty());
-
-            List<ID> damageIds = Data.damages.stream().map(ID::getByName).toList();
-            AtomicInteger i = new AtomicInteger();
-            damageIds.forEach(damId -> {
-                if (statMap.get(damId).equals(damId.defaultValue)) return;
-                Powder.Element element = Powder.Element.getInstance(damId.displayName.split(" ")[0]);
-                String damVal = statMap.get(damId).toString();
-                if (element == null) {
-                    lore.add(Text.literal("✣ " + damId.displayName + ": " + damVal).styled(style -> style.withColor(Formatting.GOLD)));
-                } else {
-                    lore.add(Text.literal(element.icon + " " + damId.displayName + ": ")
-                            .styled(style -> style.withColor(element.format))
-                            .append(Text.literal(damVal).styled(style -> style.withColor(Formatting.GRAY))));
-                }
-                i.incrementAndGet();
-            });
-
-            if (i.get() != 0) {
-                lore.add(Text.empty());
-                i.set(0);
-            }
-
-            ID.values().stream().filter(ids -> ids.isReq() && ids.metric == Metric.RAW).forEach(ids -> {
-                if (statMap.get(ids).equals(ids.defaultValue)) return;
-                Integer val = (Integer) statMap.get(ids);
-                lore.add(Text.literal("✔ ").styled(style -> style.withColor(Formatting.GREEN))
-                        .append(Text.literal(ids.displayName + ": " + val).styled(style -> style.withColor(Formatting.GRAY))));
-                i.incrementAndGet();
-            });
-            if (statMap.get(IDs.CLASS_REQ) != null) {
-                lore.add(Text.literal("✔ ").styled(style -> style.withColor(Formatting.GREEN))
-                        .append(Text.literal(IDs.CLASS_REQ.displayName + ": " + statMap.get(IDs.CLASS_REQ).name).styled(style -> style.withColor(Formatting.GRAY))));
-                i.incrementAndGet();
-            }
-
-            lore.add(Text.empty());
-
-            RAWS_BONUS.forEach(rawId -> {
-                if (rawId.isReq()) return;
-                if (statMap.get(rawId).equals(rawId.defaultValue)) return;
-
-                int val = statMap.get(rawId);
-
-                if (rawId.displayName.contains("&")) {
-                    int nO = Integer.parseInt(rawId.displayName.split("&")[1]) - 1;
-
-                    String abilName = cast.abilities.get(nO);
-                    lore.add(colorBySign(val, true).append(" ").append(Text.literal(abilName + " Cost").styled(style -> style.withColor(Formatting.GRAY))));
-                    i.incrementAndGet();
-                    return;
-                }
-                lore.add(colorBySign(val).append(Text.literal(" " + rawId.displayName).styled(style -> style.withColor(Formatting.GRAY))));
-                i.incrementAndGet();
-            });
-
-            if (i.get() != 0) {
-                lore.add(Text.empty());
-                i.set(0);
-            }
-
-            PERCENTABLE.forEach(ids -> {
-                if (statMap.get(ids).equals(ids.defaultValue)) return;
-                int val = statMap.get(ids);
-                if (ids.displayName.contains("&")) {
-                    int nO = Integer.parseInt(ids.displayName.split("&")[1]) - 1;
-
-                    String abilName = cast.abilities.get(nO);
-                    lore.add(colorBySign(val, true).append("% ").append(Text.literal(abilName + " Cost").styled(style -> style.withColor(Formatting.GRAY))));
-                    i.incrementAndGet();
-                    return;
-                }
-                lore.add(colorBySign(val).append("%").append(Text.literal(" " + ids.displayName).styled(style -> style.withColor(Formatting.GRAY))));
-                i.incrementAndGet();
-            });
-
-            if (i.get() != 0) {
-                lore.add(Text.empty());
-                i.set(0);
-            }
-
-            PERXS.forEach(ids -> {
-                if (statMap.get(ids).equals(ids.defaultValue)) return;
-                Integer val = statMap.get(ids);
-                lore.add(colorBySign(val).append("/ns").append(Text.literal(" " + ids.displayName).styled(style -> style.withColor(Formatting.GRAY))));
-                i.incrementAndGet();
-            });
-
-            if (i.get() != 0) {
-                lore.add(Text.empty());
-                i.set(0);
-            }
-            if (statMap.hasId(IDs.SLOTS)) {
-                lore.add(Text.literal("[0/" + statMap.get(IDs.SLOTS) + "] Powder Slots").styled(style -> style.withColor(Formatting.GRAY)));
-            }
-            lore.add(Text.literal(tier + " " + type).styled(style -> style.withColor(tier.format)));
-
-        } catch (Exception ignored) {
-        }
-        return lore;
+        //  placeholder
+        return new ArrayList<>();
     }
 
     public Text createItemShowcase(String mainString) {
         return Text.literal(mainString)
                 .styled(style -> style.withColor(getTier().format)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Utils.reduceTextList(buildLore())))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, reduceTextList(buildLore())))
                         .withUnderline(true));
     }
 

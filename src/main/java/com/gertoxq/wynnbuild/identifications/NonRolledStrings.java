@@ -1,15 +1,16 @@
 package com.gertoxq.wynnbuild.identifications;
 
+import com.gertoxq.wynnbuild.identifications.metric.Metrics;
+
 @SuppressWarnings("unused")
 public interface NonRolledStrings extends SpecialStringIDs {
 
-    NonRolledString HASH = new NonRolledString(ID.PutOn.ALL, "hash");
-    NonRolledString NAME = new NonRolledString(ID.PutOn.ALL, "", "name", "Name", Metric.OTHERSTR);
-    NonRolledString LORE = new NonRolledString(ID.PutOn.ALL, "lore");
-    NonRolledString SET = new NonRolledString(ID.PutOn.ALL, "set", "set");
-    NonRolledString MATERIAL = new NonRolledString(ID.PutOn.ALL, "material");
-    NonRolledString DROP = new NonRolledString(ID.PutOn.ALL, "never", "drop", "DROP", Metric.OTHERSTR);
-    NonRolledString QUEST = new NonRolledString(ID.PutOn.ALL, "quest");
-    NonRolledString DURABILITY = new NonRolledString(ID.PutOn.CONSUMABLE, "durability", "Durability"); //  int-int
-    NonRolledString DURATION = new NonRolledString(ID.PutOn.CONSUMABLE, "duration", "Duration"); //    int-int
+    NonRolledString HASH = new NonRolledString("hash");
+    NonRolledString NAME = new NonRolledString("", "name", "Name", Metrics.OTHERSTR);
+    NonRolledString LORE = new NonRolledString("lore");
+    NonRolledString SET = new NonRolledString("set");
+    NonRolledString MATERIAL = new NonRolledString("material");
+    NonRolledString DROP = new NonRolledString("never", "drop", "DROP", Metrics.OTHERSTR);
+    NonRolledString QUEST = new NonRolledString("quest");
+    NonRolledString MAJOR_IDS = new NonRolledString("", "majorIds", "MAJOR_IDS", Metrics.MAJOR_IDS);
 }

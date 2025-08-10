@@ -6,8 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Range;
 
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static com.gertoxq.wynnbuild.identifications.metric.Metrics.SLOTS;
 
 public class Powder {
 
@@ -95,10 +98,11 @@ public class Powder {
 
     public static List<Powder> getPowderFromString(String string) {
         List<Powder> powders = new ArrayList<>();
-        if (!POWDER_PATTERN.matcher(string).matches()) return powders;
+        Matcher matcher = SLOTS.pattern().matcher(string);
+        if (!matcher.matches()) return powders;
         for (Element element : Element.values()) {
             if (string.contains(element.icon)) {
-                powders.addAll(Collections.nCopies(StringUtils.countMatches(string, element.icon), getPowder(element, DEFAULT_POWDER_LEVEL)));
+                powders.addAll(Collections.nCopies(StringUtils.countMatches(matcher.group("powders"), element.icon), getPowder(element, DEFAULT_POWDER_LEVEL)));
             }
         }
         return powders;

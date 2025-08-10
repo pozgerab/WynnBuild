@@ -1,27 +1,25 @@
 package com.gertoxq.wynnbuild.identifications;
 
+import com.gertoxq.wynnbuild.identifications.metric.Metric;
 import com.gertoxq.wynnbuild.util.Range;
-import com.gertoxq.wynnbuild.util.StringList;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 
 public class SpecialStringID<T> extends NonRolledString {
 
     private static final List<SpecialStringID<?>> doubleIds = new ArrayList<>();
     private final Parser<T> parser;
-    private final Metric.DoubleTypedMetric<T> metric;
     private final Class<T> ogType;
-    private final T defaultParsed;
 
-    SpecialStringID(PutOn on, String name, String displayName, Metric.DoubleTypedMetric<T> metric) {
-        super(on, metric.translator.translator().parser().apply(metric.translator.value()), name, displayName, metric);
-        this.defaultParsed = metric.translator.value;
-        this.parser = metric.translator;
-        this.metric = metric;
-        this.ogType = metric.translator.workClass;
+    SpecialStringID(String name, String displayName, Metric.Advanced<T> metric) {
+        super(metric.parser.translator().parse(metric.parser.value()), name, displayName, metric);
+        this.parser = metric.parser;
+        this.ogType = metric.parser.workClass;
         doubleIds.add(this);
     }
 
@@ -29,20 +27,12 @@ public class SpecialStringID<T> extends NonRolledString {
         return doubleIds;
     }
 
-    public T getDefaultParsed() {
-        return defaultParsed;
-    }
-
     public Class<T> getParsedType() {
         return ogType;
     }
 
-    public Metric.DoubleTypedMetric<T> getMetric() {
-        return metric;
-    }
-
-    public Parser<T> getParser() {
-        return parser;
+    public Metric.Advanced<T> getMetric() {
+        return (Metric.Advanced<T>) metric;
     }
 
     public String parse(T value) {
@@ -69,10 +59,6 @@ public class SpecialStringID<T> extends NonRolledString {
             }), enumClass);
         }
 
-        public static Parser<StringList> stringListWrapperParser(StringList val) {
-            return new Parser<>(val, new Translator<>(strings -> strings.isEmpty() ? "" : strings.getFirst(), string -> new StringList(string.isEmpty() ? List.of() : List.of(string))), StringList.class);
-        }
-
         public static Parser<Range> rangeParser(Range range) {
             return new Parser<>(range, new Translator<>(Range::toString, s -> {
                 int min = 0;
@@ -87,11 +73,27 @@ public class SpecialStringID<T> extends NonRolledString {
             }), Range.class);
         }
 
+        public static Parser<Range> allowEmptyRangeParser(@Nullable Range range) {
+            return new Parser<>(range, new Translator<>(range1 -> range1 == null ? "" : range1.toString(), string -> {
+                if (string.isEmpty()) return null;
+                Matcher matcher = Range.RANGE_PATTERN.matcher(string);
+                if (!matcher.matches()) return null;
+                return new Range(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+            }), Range.class);
+        }
+
         public static Parser<Range> rangeParser() {
             return rangeParser(Range.empty());
         }
 
         public record Translator<T>(Function<T, String> parser, Function<String, T> getter) {
+            public String parse(T val) {
+                return parser.apply(val);
+            }
+
+            public T get(String val) {
+                return getter.apply(val);
+            }
         }
     }
 

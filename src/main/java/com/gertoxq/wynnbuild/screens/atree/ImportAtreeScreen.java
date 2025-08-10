@@ -105,7 +105,7 @@ public class ImportAtreeScreen extends Screen {
         public void renderChild(SelectableListWidget<SavedBuild>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             context.drawTextWithShadow(textRenderer, Text.literal(entry.getValue().getName())
                             .append(" ")
-                            .append(Text.literal(entry.getValue().getCast().name).styled(style -> style.withColor(entry.getValue().getCast() == WynnBuild.cast ? Formatting.GREEN : Formatting.WHITE))),
+                            .append(Text.literal(entry.getValue().getCast().name()).styled(style -> style.withColor(entry.getValue().getCast() == WynnBuild.cast ? Formatting.GREEN : Formatting.WHITE))),
                     x + 3, y + 3, 0xffffff);
             context.drawTextWithShadow(textRenderer,
                     Text.literal(entry.getValue().getCode()),

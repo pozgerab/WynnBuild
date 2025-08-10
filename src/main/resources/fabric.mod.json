@@ -41,7 +41,7 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "minecraft": "1.21.4",
-    "wynntils": ">=3.1.6"
+    "wynntils": ">=3.2.0"
   },
   "suggests": {
     "modmenu": ">=13.0.0"

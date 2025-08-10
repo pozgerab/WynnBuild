@@ -4,18 +4,21 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.Powder;
 import com.gertoxq.wynnbuild.base.StatMap;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.identifications.IDs;
 import com.gertoxq.wynnbuild.util.Range;
+import net.minecraft.text.Text;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.gertoxq.wynnbuild.base.Powder.POWDER_PATTERN;
 import static com.gertoxq.wynnbuild.base.custom.CustomUtil.CRAFTED_NAME_PERCENT_PATTERN;
-import static com.gertoxq.wynnbuild.base.custom.CustomUtil.ROLLED_PATTERN;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomTest {
@@ -54,10 +57,35 @@ class CustomTest {
     public void setFromString_shouldSetAllTypes() {
 
         Custom custom = new Custom();
-        String loreStr = "+39% Main Attack Damage";
-        assertTrue(ROLLED_PATTERN.matcher(loreStr).matches());
-        custom.setFromString(loreStr);
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.literal("+39% Main Attack Damage"));
+        lore.add(Text.literal("+21 Strength"));
+        lore.add(Text.literal("? Health: +2000"));
+        lore.add(Text.literal("? Neutral Damage: 200-300"));
+        lore.add(Text.literal("Super Fast Attack Speed"));
+        lore.add(Text.literal("? Class Req: Archer/Hunter"));
+        lore.add(Text.literal("? Combat Lv. Min: 105"));
+        lore.add(Text.literal("? Intelligence Min: 20"));
+        lore.add(Text.literal("-9 Totem Cost"));
+        lore.add(Text.literal("+20% 2nd Spell Cost"));
+        lore.add(Text.literal("+8/3s Mana Steal"));
+
+        for (Text text : lore) {
+            custom.setFromLoreLine(text);
+        }
+
         assertEquals(new Range(39, 39), custom.statMap.getRange(IDs.MD_PCT));
+        assertEquals(21, custom.statMap.get(IDs.STR));
+        assertEquals(2000, custom.statMap.get(IDs.HP));
+        assertEquals(new Range(200, 300), custom.statMap.get(IDs.NDAM));
+        assertEquals(AtkSpd.SUPER_FAST, custom.statMap.get(IDs.ATKSPD));
+        assertEquals(Cast.Archer, custom.statMap.get(IDs.CLASS_REQ));
+        assertEquals(ItemType.Bow, custom.statMap.get(IDs.TYPE));
+        assertEquals(20, custom.statMap.get(IDs.INT_REQ));
+        assertEquals(105, custom.statMap.get(IDs.LVL));
+        assertEquals(new Range(-9, -9), custom.statMap.getRange(IDs.SP_RAW1));
+        assertEquals(new Range(20, 20), custom.statMap.getRange(IDs.SP_PCT2));
+        assertEquals(new Range(8, 8), custom.statMap.getRange(IDs.MS));
     }
 
     @Test
@@ -67,13 +95,13 @@ class CustomTest {
                 + Stream.of(Powder.Element.EARTH, Powder.Element.FIRE, Powder.Element.THUNDER, Powder.Element.WATER)
                 .map(element -> element.icon).collect(Collectors.joining(" ", "[", "]"));
         assertTrue(POWDER_PATTERN.matcher(line).matches());
-        custom.setFromString(line);
+        custom.setFromLoreLine(Text.literal(line));
         WynnBuild.info("powders = {}", custom.getPowders());
     }
 
     @Test
     public void testCraftedNamePattern() {
-        String craftedName = "Any Crafted Item [100%]À";
+        String craftedName = "Any Crafted Item [100%]";
         assertTrue(CRAFTED_NAME_PERCENT_PATTERN.matcher(craftedName).find());
         assertEquals("Any Crafted Item", craftedName.replaceAll(CRAFTED_NAME_PERCENT_PATTERN.pattern(), ""));
     }

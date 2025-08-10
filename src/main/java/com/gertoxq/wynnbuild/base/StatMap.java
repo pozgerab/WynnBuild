@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.base;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
 import com.gertoxq.wynnbuild.identifications.*;
 import com.gertoxq.wynnbuild.util.Range;
@@ -55,6 +56,14 @@ public class StatMap extends HashMap<String, Object> {
         put(id.name, value);
     }
 
+    public void setUnknown(ID id, Object value) {
+        if (id instanceof RolledID rolledID && value instanceof Integer intval) {
+            setRange(rolledID, new Range(intval, intval));
+        } else {
+            set(id, value);
+        }
+    }
+
     public <T> void set(TypedID<T> id, T value) {
         put(id.name, value);
     }
@@ -64,6 +73,11 @@ public class StatMap extends HashMap<String, Object> {
     }
 
     public <T> T get(TypedID<T> id) {
+        if (id instanceof RolledID rolledID) {
+            if (!get(IDs.FIXID))
+                WynnBuild.warn("You are getting a rolled id while the ids are not fix. Returning minRoll for id {}", id.name);
+            return id.getType().cast(getMin(rolledID));
+        }
         return id.getType().cast(getOrDefault(id.name, id.defaultValue));
     }
 

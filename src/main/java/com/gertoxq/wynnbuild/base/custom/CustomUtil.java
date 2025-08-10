@@ -1,50 +1,40 @@
 package com.gertoxq.wynnbuild.base.custom;
 
-import com.gertoxq.wynnbuild.base.StatMap;
 import com.gertoxq.wynnbuild.base.fields.AtkSpd;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.base.fields.Tier;
-import com.gertoxq.wynnbuild.identifications.*;
+import com.gertoxq.wynnbuild.identifications.IDs;
+import com.gertoxq.wynnbuild.identifications.SpecialStringID;
+import com.gertoxq.wynnbuild.identifications.TypedID;
 import com.gertoxq.wynnbuild.util.Range;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.gertoxq.wynnbuild.util.WynnData;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.gertoxq.wynnbuild.util.Utils.removeFormat;
+import static com.gertoxq.wynnbuild.util.Utils.withSign;
 
 public class CustomUtil {
 
-    public static final Pattern BASE_STAT_REGEX = Pattern.compile("\\S [A-Z][a-zA-Z.]*(?:\\s+[A-Z][a-zA-Z.]*)*: [+-]?\\d+");
-    public static final Pattern CRAFTED_NAME_PERCENT_PATTERN = Pattern.compile(" \\[.*?]À");
-    public static final Pattern ATKSPD_PATTERN = Pattern.compile(Arrays.stream(AtkSpd.values())
-            .map(atkspds -> Pattern.quote(atkspds.getDisplayName()))
-            .collect(Collectors.joining("|", "(", ")")) + " Attack Speed");
-    public static final Pattern ROLLED_PATTERN = Pattern.compile("([+-]\\d+%?)(/\\d+%?)? ([A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*)");
-    public static final Pattern PERX_REGEX = Pattern.compile("([+-]\\d+/[35]s)(/\\d+/[35]s)? ([A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*)");
-    public static final Pattern RANGE_REGEX = Pattern.compile("\\S [A-Z][a-zA-Z]*(?:\\s+[A-Z][a-zA-Z]*)*: \\d+-\\d+");
-    public static final List<TypedID<Integer>> PERCENTABLE = ID.getByTypedMetric(Metric.PERCENT);
-    public static final List<TypedID<Integer>> RAWS = ID.getByTypedMetric(Metric.RAW);
-    public static final List<TypedID<Integer>> RAWS_BONUS = RAWS.stream().filter(integerTypedID -> integerTypedID instanceof RolledID).toList();
-    public static final List<TypedID<Integer>> RAWS_BASE = RAWS.stream().filter(integerTypedID -> !(integerTypedID instanceof RolledID)).toList();
-    public static final List<SpecialStringID<Range>> RANGEDS = ID.getByDoubleMetric(Metric.RANGE);
-    public static final List<TypedID<Integer>> PERXS = ID.getByTypedMetric(Metric.PERXS);
+    public static final Pattern CRAFTED_NAME_PERCENT_PATTERN = Pattern.compile(" \\[.*?]");
 
     public static Custom getFromStack(ItemStack item) {
 
         Custom custom = new Custom();
         custom.statMap.set(IDs.FIXID, true);
 
-        if (item.isEmpty()) {
+        if (item.isEmpty() || (item.getItem() == Items.SNOW && item.getName().getString().contains("Accessory Slot"))) {
             custom.statMap.set(IDs.NONE, true);
             return custom;
         }
@@ -53,7 +43,10 @@ public class CustomUtil {
 
         if (item.contains(DataComponentTypes.CUSTOM_MODEL_DATA)) {
             custom.modelData = item.get(DataComponentTypes.CUSTOM_MODEL_DATA).getFloat(0).intValue();
-            custom.statMap.set(IDs.TYPE, ItemType.getFromCustomModelData(custom.modelData));
+            ItemType type = ItemType.getFromCustomModelData(custom.modelData);
+            if (type != null) {
+                custom.statMap.set(IDs.TYPE, type);
+            }
         } else {
             for (ItemType type : ItemType.ARMORS) {
                 if (custom.material.toString().contains(type.name().toLowerCase())) {
@@ -63,22 +56,21 @@ public class CustomUtil {
             }
         }
 
-        TextColor nameColor = item.getName().getStyle().getColor();
-
-        Tier tier = Stream.of(Tier.values()).filter(t -> Objects.equals(TextColor.fromFormatting(t.format), nameColor)).findAny().orElse(Tier.Normal);
-        custom.statMap.set(IDs.TIER, tier);
-
         String name = removeFormat(item.getName().getString());
+        if (CRAFTED_NAME_PERCENT_PATTERN.matcher(name).find()) {
 
-        if (tier != Tier.Crafted) {
-            custom.statMap.set(IDs.ID, WynnData.getIdMap().getOrDefault(name, -1));
-            custom.statMap.set(IDs.CUSTOM, custom.getBaseItemId().isEmpty());
-        } else {
+            custom.statMap.set(IDs.TIER, Tier.Crafted);
+            name = name.replaceAll(CRAFTED_NAME_PERCENT_PATTERN.pattern(), "");
             custom.statMap.set(IDs.ID, -2);
             custom.statMap.set(IDs.CRAFTED, true);
-            if (CRAFTED_NAME_PERCENT_PATTERN.matcher(name).hasMatch()) {
-                name = name.replaceAll(CRAFTED_NAME_PERCENT_PATTERN.pattern(), "");
-            }
+
+        } else {
+            TextColor nameColor = item.getName().getStyle().getColor();
+            Tier tier = Stream.of(Tier.values()).filter(t -> Objects.equals(TextColor.fromFormatting(t.format), nameColor)).findAny().orElse(Tier.Normal);
+            custom.statMap.set(IDs.TIER, tier);
+
+            custom.statMap.set(IDs.ID, WynnData.getIdMap().getOrDefault(name, -1));
+            custom.statMap.set(IDs.CUSTOM, custom.getBaseItemId().isEmpty());
         }
 
         custom.statMap.set(IDs.NAME, name);
@@ -89,12 +81,67 @@ public class CustomUtil {
             return custom;
         }
 
-        lore.forEach(text -> {
-            String textStr = removeFormat(text.getString());
-            custom.setFromString(textStr);
-        });
+        lore.forEach(custom::setFromLoreLine);
 
         return custom;
+    }
+
+    public static Text buildRolledRaw(int value, TypedID<Integer> id) {
+        return buildRolledLikeText(value, id, false);
+    }
+
+    public static Text buildRolledPercent(int value, TypedID<Integer> id) {
+        return buildRolledLikeText(value, id, true);
+    }
+
+    private static Text buildRolledLikeText(int value, TypedID<Integer> id, boolean percent) {
+        return Text.literal(Utils.withSign(value)).append(percent ? "%" : "").styled(style -> style.withColor(id.isMorePositive() ^ (value < 0) ? Formatting.GREEN : Formatting.RED))
+                .append(" ")
+                .append(Text.literal(id.displayName).styled(style -> style.withColor(Formatting.GRAY)));
+    }
+
+    public static Text buildBaseText(Integer value, TypedID<Integer> id) {
+        return Text.literal(id.displayName).styled(style -> style.withColor(Formatting.GRAY))
+                .append(": ")
+                .append(value.toString());
+    }
+
+    public static Text buildRanged(Range rangeStr, SpecialStringID<Range> id) {
+        return Text.literal(id.displayName).append(": ").append(rangeStr.toString());
+    }
+
+    private static Text buildPerx(Integer value, TypedID<Integer> id, boolean is5) {
+        return Text.literal(withSign(value) + (is5 ? "/5s" : "/3s")).styled(style -> style.withColor(id.isMorePositive() ^ (value < 0) ? Formatting.GREEN : Formatting.RED))
+                .append(" ")
+                .append(Text.literal(id.displayName).styled(style -> style.withColor(Formatting.GRAY)));
+    }
+
+    public static Text buildPer5(Integer value, TypedID<Integer> id) {
+        return buildPerx(value, id, true);
+    }
+
+    public static Text buildPer3(Integer value, TypedID<Integer> id) {
+        return buildPerx(value, id, false);
+    }
+
+    public static Text buildCast(Cast cast) {
+        return Text.literal("Class Req: ").append(cast.name());
+    }
+
+    public static Text buildMajorId(String value) {
+        return Text.literal("+" + value).styled(style -> style.withColor(Formatting.AQUA));
+    }
+
+    public static Text buildTier(Tier value) {
+        return Text.literal(value + " Item").styled(style -> style.withColor(value.format));
+    }
+
+    public static Text buildDuration(Integer value) {
+        return Text.literal("- Duration: ").append(value.toString()).append(" Seconds");
+    }
+
+    public static Text buildAtkSpdText(AtkSpd atkSpd) {
+        return Text.literal(atkSpd.getDisplayName() + " Attack Speed").styled(style -> style.withColor(Formatting.GRAY));
     }
 
 }

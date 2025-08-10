@@ -90,7 +90,7 @@ public class GalleryScreen extends Screen {
 
             if (token.contains(":")) {
                 String keyString = token.substring(0, token.indexOf(':'));
-                TypedID<?> id = (TypedID<?>) ID.getByNameIgnoreCase(keyString);
+                TypedID<?> id = (TypedID<?>) ID.getByName(keyString);
                 if (id == null) continue;
                 String inputString = token.substring(token.indexOf(':') + 1);
 

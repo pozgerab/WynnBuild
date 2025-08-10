@@ -28,6 +28,7 @@ public enum ItemType {
     public static final List<ItemType> WEAPONS = List.of(Wand, Spear, Bow, Dagger, Relik);
     public static final List<ItemType> ACCESSORIES = List.of(Ring, Bracelet, Necklace);
     public static final List<ItemType> CONSUMABLES = List.of(Potion, Scroll, Food);
+    public static final List<ItemType> BUILD_ORDER = List.of(Helmet, Chestplate, Leggings, Boots, Ring, Ring, Bracelet, Necklace);
 
     public static ItemType getFromCustomModelData(int customModelData) {
         for (Range range : WynnData.getModelToType().keySet()) {

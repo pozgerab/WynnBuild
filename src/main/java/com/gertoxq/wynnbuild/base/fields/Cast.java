@@ -10,23 +10,21 @@ import java.util.Optional;
 
 public enum Cast {
     //  ORDER MATTERS
-    Warrior("Warrior", "Knight", List.of("Bash", "Charge", "Uppercut", "War Scream"), ItemType.Spear),
-    Assassin("Assassin", "Ninja", List.of("Spin Attack", "Dash", "Multi Hit", "Smoke Bomb"), ItemType.Dagger),
-    Mage("Mage", "Dark Wizard", List.of("Heal", "Teleport", "Meteor", "null"), ItemType.Wand),
-    Archer("Archer", "Hunter", List.of("Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"), ItemType.Bow),
-    Shaman("Shaman", "Skyseer", List.of("Totem", "Haul", "Aura", "Uproot"), ItemType.Relik);
-    public final String name;
+    Warrior("Knight", List.of("Bash", "Charge", "Uppercut", "War Scream"), ItemType.Spear),
+    Assassin("Ninja", List.of("Spin Attack", "Dash", "Multi Hit", "Smoke Bomb"), ItemType.Dagger),
+    Mage("Dark Wizard", List.of("Heal", "Teleport", "Meteor", "null"), ItemType.Wand),
+    Archer("Hunter", List.of("Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"), ItemType.Bow),
+    Shaman("Skyseer", List.of("Totem", "Haul", "Aura", "Uproot"), ItemType.Relik);
     public final List<String> aliases = new ArrayList<>();
     public final String alias;
     public final List<String> abilities;
     public final ItemType weapon;
 
-    Cast(String name, String alias, List<String> abilityNames, ItemType weapon) {
-        this.name = name;
+    Cast(String alias, List<String> abilityNames, ItemType weapon) {
         this.abilities = abilityNames;
         this.alias = alias;
         this.weapon = weapon;
-        this.aliases.add(name);
+        this.aliases.add(name());
         this.aliases.add(alias);
     }
 

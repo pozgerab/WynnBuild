@@ -1,29 +1,29 @@
 package com.gertoxq.wynnbuild.identifications;
 
-import static com.gertoxq.wynnbuild.identifications.ID.PutOn;
+import com.gertoxq.wynnbuild.identifications.metric.Metrics;
 
 @SuppressWarnings("unused")
 public interface NonRolledInts {
 
-    NonRolledInt SLOTS = new NonRolledInt(PutOn.ALL, "slots");
-    NonRolledInt HP = new NonRolledInt(PutOn.ARMOR, "hp", "Health", Metric.RAW);
-    NonRolledInt FDEF = new NonRolledInt(PutOn.ARMOR, "fDef", "Fire Defence", Metric.RAW);
-    NonRolledInt WDEF = new NonRolledInt(PutOn.ARMOR, "wDef", "Water Defence", Metric.RAW);
-    NonRolledInt ADEF = new NonRolledInt(PutOn.ARMOR, "aDef", "Air Defence", Metric.RAW);
-    NonRolledInt TDEF = new NonRolledInt(PutOn.ARMOR, "tDef", "Thunder Defence", Metric.RAW);
-    NonRolledInt EDEF = new NonRolledInt(PutOn.ARMOR, "eDef", "Earth Defence", Metric.RAW);
-    NonRolledInt LVL = new NonRolledInt(PutOn.ALL, 1, "lvl", "Combat Lv. Min", Metric.RAW);
-    NonRolledInt STR_REQ = new NonRolledInt(PutOn.ALL, "strReq", "Strength Min", Metric.RAW);
-    NonRolledInt DEX_REQ = new NonRolledInt(PutOn.ALL, "dexReq", "Dexterity Min", Metric.RAW);
-    NonRolledInt INT_REQ = new NonRolledInt(PutOn.ALL, "intReq", "Intelligence Min", Metric.RAW);
-    NonRolledInt DEF_REQ = new NonRolledInt(PutOn.ALL, "defReq", "Defence Min", Metric.RAW);
-    NonRolledInt AGI_REQ = new NonRolledInt(PutOn.ALL, "agiReq", "Agility Min", Metric.RAW);
-    NonRolledInt STR = new NonRolledInt(PutOn.ALL, "str", "Strength", Metric.RAW);
-    NonRolledInt DEX = new NonRolledInt(PutOn.ALL, 0, "dex", "Dexterity", Metric.RAW);
-    NonRolledInt INT = new NonRolledInt(PutOn.ALL, "int", "Intelligence", Metric.RAW);
-    NonRolledInt AGI = new NonRolledInt(PutOn.ALL, "agi", "Agility", Metric.RAW);
-    NonRolledInt DEF = new NonRolledInt(PutOn.ALL, "def", "Defence", Metric.RAW);
-    NonRolledInt ID = new NonRolledInt(PutOn.ALL, "id");
-    NonRolledInt CHARGES = new NonRolledInt(PutOn.CONSUMABLE, "charges", "Charges", Metric.RAW);
-    NonRolledInt RAINBOW_RAW = new NonRolledInt(PutOn.ALL, "rainbowRaw");
+    NonRolledInt SLOTS = new NonRolledInt("slots", "SLOTS", Metrics.SLOTS);
+    NonRolledInt HP = new NonRolledInt("hp", "Health", Metrics.RAW_BASE);
+    NonRolledInt FDEF = new NonRolledInt("fDef", "Fire Defence", Metrics.RAW_BASE);
+    NonRolledInt WDEF = new NonRolledInt("wDef", "Water Defence", Metrics.RAW_BASE);
+    NonRolledInt ADEF = new NonRolledInt("aDef", "Air Defence", Metrics.RAW_BASE);
+    NonRolledInt TDEF = new NonRolledInt("tDef", "Thunder Defence", Metrics.RAW_BASE);
+    NonRolledInt EDEF = new NonRolledInt("eDef", "Earth Defence", Metrics.RAW_BASE);
+    NonRolledInt LVL = new NonRolledInt(1, "lvl", "Combat Lv. Min", Metrics.REQS);
+    NonRolledInt STR_REQ = new NonRolledInt("strReq", "Strength Min", Metrics.REQS);
+    NonRolledInt DEX_REQ = new NonRolledInt("dexReq", "Dexterity Min", Metrics.REQS);
+    NonRolledInt INT_REQ = new NonRolledInt("intReq", "Intelligence Min", Metrics.REQS);
+    NonRolledInt DEF_REQ = new NonRolledInt("defReq", "Defence Min", Metrics.REQS);
+    NonRolledInt AGI_REQ = new NonRolledInt("agiReq", "Agility Min", Metrics.REQS);
+    NonRolledInt STR = new NonRolledInt("str", "Strength", Metrics.RAW_BONUS);
+    NonRolledInt DEX = new NonRolledInt("dex", "Dexterity", Metrics.RAW_BONUS);
+    NonRolledInt INT = new NonRolledInt("int", "Intelligence", Metrics.RAW_BONUS);
+    NonRolledInt AGI = new NonRolledInt("agi", "Agility", Metrics.RAW_BONUS);
+    NonRolledInt DEF = new NonRolledInt("def", "Defence", Metrics.RAW_BONUS);
+    NonRolledInt ID = new NonRolledInt("id");
+    NonRolledInt CHARGES = new NonRolledInt("charges", "Charges", Metrics.CHARGES);
+    NonRolledInt RAINBOW_RAW = new NonRolledInt("rainbowRaw");
 }

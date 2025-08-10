@@ -18,13 +18,11 @@ public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
     public static final Pattern TITLE_PATTERN = Pattern.compile("\udaff\udfea\ue000");
     public static final ScreenManager.ScreenInstanceCreater<AtreeScreenHandler, AtreeScreen> CREATOR =
             (handler1, inventory, title1) -> new AtreeScreen(new AtreeScreenHandler(handler1.syncId, inventory, handler1.getInventory()), inventory, title1);
-    public static AtreeScreen CURRENT_ATREE_SCREEN;
 
     private Button saveCurrBtn;
 
     public AtreeScreen(AtreeScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        CURRENT_ATREE_SCREEN = this;
     }
 
     @Override
@@ -58,8 +56,14 @@ public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
         AtomicInteger i = new AtomicInteger();
         ImportAtree.getBuilds().stream().filter(save -> save.getCast() == WynnBuild.cast)
                 .forEach(build -> addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.START, 100, 20, 0, i.getAndAdd(20),
-                        Text.literal("Load ").append(build.getName()),
-                        button -> ImportAtree.applyBuild(build.getName(), this),
+                        Text.literal("Load ").append(build.getName())
+                                .styled(style -> style.withStrikethrough(true))
+                        ,
+                        button -> {
+                            this.close();
+                            WynnBuild.message(Text.literal("Latest wynncraft update is not yet supported by this feature"));
+                            //ImportAtree.applyBuild(build.getName(), this);
+                        },
                         () -> WynnBuild.getConfigManager().getConfig().isShowTreeLoader())));
     }
 

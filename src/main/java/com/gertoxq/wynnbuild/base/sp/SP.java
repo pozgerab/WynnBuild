@@ -38,7 +38,7 @@ public enum SP {
         return map;
     }
 
-    public static void applySkillpoints(SkillpointList skillPoints, Custom item, Map<String, Integer> activeSetCounts) {
+    private static void applySkillpoints(SkillpointList skillPoints, Custom item, Map<String, Integer> activeSetCounts) {
         skillPoints.add(item.statMap.get(IDs.SkillpointGetter));
 
         if (!item.statMap.hasId(IDs.SET)) return;

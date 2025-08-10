@@ -9,6 +9,7 @@ import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
+import com.gertoxq.wynnbuild.screens.charinfo.CharInfoQuery;
 import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
 import com.gertoxq.wynnbuild.util.Utils;
 import net.fabricmc.api.ModInitializer;
@@ -29,6 +30,7 @@ public class WynnBuild implements ModInitializer {
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     public static final BaseEncoding ENC = new BaseEncoding();
+    public static final int WYNN_VERSION_ID = 20;
     private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
     public static SkillpointList stats = SkillpointList.empty();
     public static String atreeSuffix;
@@ -68,11 +70,11 @@ public class WynnBuild implements ModInitializer {
         return equipment;
     }
 
-    public static void buildCraftedMainHand() {
-        buildCraftedItem(client.player.getMainHandStack());
+    public static void buildMainHand() {
+        buildItemStackCustom(client.player.getMainHandStack());
     }
 
-    public static void buildCraftedItem(ItemStack itemStack) {
+    public static void buildItemStackCustom(ItemStack itemStack) {
 
         Custom item = CustomUtil.getFromStack(itemStack);
         if (item.isNone()) {
@@ -89,25 +91,24 @@ public class WynnBuild implements ModInitializer {
 
     }
 
-    public static void buildWithArgs(boolean precise) {
+    public static void buildWithArgs(boolean precise, boolean forceRefetchAtree) {
         if (client.player == null) return;
         List<Custom> equipment = getPlayerEquipment();
         if (equipment == null) return;
 
-        if (atreeState.isEmpty()) {
-            WynnBuild.message(Text.literal("No ability tree found, fetching...").styled(style -> style.withColor(Formatting.RED)));
-            new AbilityTreeQuery().queryTree();
-            return;
+        if (atreeState.isEmpty() || forceRefetchAtree) {
+            if (atreeState.isEmpty())
+                WynnBuild.message(Text.literal("No ability tree found, fetching...").styled(style -> style.withColor(Formatting.RED)));
+            new AbilityTreeQuery().queryTree(() -> CharInfoQuery.fetchStatsBeforeBuild(
+                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, List.of()).display()));
+        } else {
+            CharInfoQuery.fetchStatsBeforeBuild(
+                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, List.of()).display());
         }
-
-        Build build = new Build(equipment, precise, stats, wynnLevel, tomeIds,
-                atreeState,
-                List.of());
-        build.display();
     }
 
     public static int build() {
-        buildWithArgs(getConfigManager().getConfig().getPrecision() == 1);
+        buildWithArgs(getConfigManager().getConfig().getPrecision() == 1, false);
         return 1;
     }
 

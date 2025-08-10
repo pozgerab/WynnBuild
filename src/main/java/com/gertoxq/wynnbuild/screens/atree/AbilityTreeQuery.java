@@ -29,9 +29,9 @@ import static com.gertoxq.wynnbuild.WynnBuild.atreeSuffix;
 
 public class AbilityTreeQuery {
 
+    public static final int PREVIOUS_PAGE_SLOT = 57;
+    public static final int NEXT_PAGE_SLOT = 59;
     static final int ABILITY_TREE_SLOT = 9;
-    static final int PREVIOUS_PAGE_SLOT = 57;
-    static final int NEXT_PAGE_SLOT = 59;
     static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
@@ -41,6 +41,11 @@ public class AbilityTreeQuery {
     }
 
     public void queryTree() {
+        queryTree(() -> {
+        });
+    }
+
+    public void queryTree(Runnable after) {
         AtreeFetcher processor = new AtreeFetcher();
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("wynnbuild.treequery")
                 .onError(err -> WynntilsMod.warn("wynnbuild.treequery: " + err))
@@ -73,6 +78,7 @@ public class AbilityTreeQuery {
                                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveatree " + atreeSuffix)))).styled(style -> style.withColor(Formatting.GOLD)));
                     WynnBuild.getConfigManager().getConfig().setAtreeEncoding(atreeSuffix);
                 })
+                .execute(after)
                 .build();
 
         query.executeQuery();
