@@ -74,7 +74,7 @@ public class Metrics {
             SpecialStringID.Parser.enumParser(Tier.Normal));
 
     public static final Metric<Integer> SLOTS = Metric.uniqueInt("slots",
-            Pattern.compile("\\[\\s*[0-9]{1,2}\\s*/\\s*([0-9]{1,2})\\s*] Powder Slots \\[\\s*(?<powders>[✤✦❉✹❋](?:\\s*[✤✦❉✹❋]){0,23})?\\s*]"));
+            Pattern.compile("\\[\\d+/(\\d+)] Powder Slots(?: \\[.*])?"));
 
     public static List<Metric<?>> metrics() {
         return List.copyOf(Metric.allMetric);

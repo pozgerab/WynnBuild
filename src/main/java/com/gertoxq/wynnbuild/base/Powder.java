@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.base;
 
-import com.gertoxq.wynnbuild.base.util.Base64;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Range;
@@ -69,40 +68,13 @@ public class Powder {
         return getPowder(element.ordinal() * MAX_POWDER_LEVEL + level - 1);
     }
 
-    public static String getPowderString(List<List<Powder>> allPowders) {
-        StringBuilder buildString = new StringBuilder();
-
-        for (List<Powder> powders : allPowders) {
-            int nBits = (int) Math.ceil((double) powders.size() / 6);
-            buildString.append(Base64.fromIntN(nBits, 1));
-
-            List<Integer> powderset = powders.stream().map(element -> element.id).toList();
-            while (!powderset.isEmpty()) {
-
-                List<Integer> firstSix = new ArrayList<>(powderset.subList(0, Math.min(6, powderset.size())));
-                Collections.reverse(firstSix);
-
-                int powderHash = 0;
-                for (Integer powder : firstSix) {
-                    powderHash = (powderHash << 5) + 1 + powder;
-                }
-
-                buildString.append(Base64.fromIntN(powderHash, 5));
-
-                powderset = powderset.subList(Math.min(6, powderset.size()), powderset.size());
-            }
-        }
-
-        return buildString.toString();
-    }
-
     public static List<Powder> getPowderFromString(String string) {
         List<Powder> powders = new ArrayList<>();
         Matcher matcher = SLOTS.pattern().matcher(string);
         if (!matcher.matches()) return powders;
         for (Element element : Element.values()) {
-            if (string.contains(element.icon)) {
-                powders.addAll(Collections.nCopies(StringUtils.countMatches(matcher.group("powders"), element.icon), getPowder(element, DEFAULT_POWDER_LEVEL)));
+            if (string.contains(element.symbol)) {
+                powders.addAll(Collections.nCopies(StringUtils.countMatches(string, element.symbol), getPowder(element, DEFAULT_POWDER_LEVEL)));
             }
         }
         return powders;
@@ -114,16 +86,18 @@ public class Powder {
     }
 
     public enum Element {
-        EARTH("✤", Formatting.DARK_GREEN),
-        THUNDER("✦", Formatting.YELLOW),
-        WATER("❉", Formatting.AQUA),
-        FIRE("✹", Formatting.RED),
-        AIR("❋", Formatting.WHITE);
+        EARTH("✤", "\uE001", Formatting.DARK_GREEN),
+        THUNDER("✦", "\uE003", Formatting.YELLOW),
+        WATER("❉", "\uE004", Formatting.AQUA),
+        FIRE("✹", "\uE002", Formatting.RED),
+        AIR("❋", "\uE000", Formatting.WHITE);
         public final String icon;
+        public final String symbol;
         public final Formatting format;
 
-        Element(String icon, Formatting format) {
+        Element(String icon, String symbol, Formatting format) {
             this.icon = icon;
+            this.symbol = symbol;
             this.format = format;
         }
 
