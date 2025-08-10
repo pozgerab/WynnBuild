@@ -10,16 +10,17 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.slot.SlotActionType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.tomeIds;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
+import static com.gertoxq.wynnbuild.WynnBuild.tomeIds;
 import static com.gertoxq.wynnbuild.util.Utils.removeFormat;
 
 public class TomeScreenHandler extends ContainerScreenHandler {
 
-    public static final List<Integer> EMPTY_IDS = List.of(61, 61, 62, 62, 62, 62, 63, 93);
-    public static List<Integer> tomeSlots = List.of(11, 19, 22, 30, 31, 32, 4, 49);
+    public static final List<Integer> EMPTY_IDS = Collections.nCopies(14, -1);
+    public static final List<Integer> tomeSlots = List.of(11, 19, 22, 30, 31, 32, 4, 49, 15, 25, 28, 38, 34, 42);
 
     public TomeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(syncId, playerInventory, inventory, 6);
@@ -49,9 +50,9 @@ public class TomeScreenHandler extends ContainerScreenHandler {
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);
             if (WynnData.getTomeMap().containsKey(name)) {
-                ids.add(WynnData.getTomeMap().getOrDefault(name, EMPTY_IDS.get(i)));
+                ids.add(WynnData.getTomeMap().get(name));
             } else {
-                //  idk why some tomes have a symbol at the end but substring them then
+                //  IDK why some tomes have a symbol at the end but substring them then
                 ids.add(WynnData.getTomeMap().getOrDefault(name.substring(0, name.length() - 1), EMPTY_IDS.get(i)));
             }
         }

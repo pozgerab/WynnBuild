@@ -1,10 +1,12 @@
 package com.gertoxq.wynnbuild.screens.itemmenu;
 
-import com.gertoxq.wynnbuild.client.WynnBuildClient;
-import com.gertoxq.wynnbuild.config.SavedItemType;
-import com.gertoxq.wynnbuild.custom.AllIDs;
-import com.gertoxq.wynnbuild.custom.CustomItem;
-import com.gertoxq.wynnbuild.custom.ID;
+import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.base.custom.Custom;
+import com.gertoxq.wynnbuild.base.custom.CustomUtil;
+import com.gertoxq.wynnbuild.base.fields.ItemType;
+import com.gertoxq.wynnbuild.base.fields.Tier;
+import com.gertoxq.wynnbuild.config.SavedItem;
+import com.gertoxq.wynnbuild.identifications.IDs;
 import com.gertoxq.wynnbuild.screens.Button;
 import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.WynnData;
@@ -26,9 +28,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
-import static com.gertoxq.wynnbuild.custom.CustomItem.getCustomFromHash;
-import static com.gertoxq.wynnbuild.custom.CustomItem.getItem;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class SavedItemsScreen extends Screen {
     private static TextWidget info;
@@ -95,17 +95,12 @@ public class SavedItemsScreen extends Screen {
                     new Task(() -> info.setMessage(Text.empty()), 100);
                     return;
                 }
-                CustomItem customItem = CustomItem.getCustomFromHash(code);
-                if (customItem == null) {
-                    info.setMessage(Text.literal("Invalid hash").styled(style -> style.withColor(Formatting.RED)));
-                    new Task(() -> info.setMessage(Text.empty()), 100);
-                    return;
-                }
-                SavedItemType savedItem = new SavedItemType(
+                Custom customItem = Custom.decodeCustom(null, code);
+                SavedItem savedItem = new SavedItem(
                         nameInput.getText(),
-                        customItem.get(AllIDs.TYPE),
+                        customItem.getType(),
                         code,
-                        WynnData.getIdMap().getOrDefault(customItem.get(AllIDs.NAME), -1)
+                        WynnData.getIdMap().getOrDefault(customItem.getName(), -1)
                 );
                 var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
                 if (exisiting == null) {
@@ -113,12 +108,12 @@ public class SavedItemsScreen extends Screen {
                     getConfigManager().getConfig().getSavedItems().add(savedItem);
                     getConfigManager().saveConfig();
                 } else {
-                    client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
-                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))), false);
+                    WynnBuild.message(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
+                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
             } catch (Exception ignored) {
-                client.player.sendMessage(Text.literal("Failed to save").styled(style -> style.withColor(Formatting.RED)), false);
+                WynnBuild.message(Text.literal("Failed to save").styled(style -> style.withColor(Formatting.RED)));
                 client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
             }
             init();
@@ -132,16 +127,13 @@ public class SavedItemsScreen extends Screen {
             }
             try {
                 ItemStack item = client.player.getMainHandStack();
-                CustomItem customItem = getItem(item);
-                if (customItem == null) {
-                    throw new Exception("customItem = null");
-                }
-                ID.ItemType type = customItem.getType();
-                SavedItemType savedItem = new SavedItemType(
+                Custom customItem = CustomUtil.getFromStack(item);
+                ItemType type = customItem.getType();
+                SavedItem savedItem = new SavedItem(
                         nameInput.getText(),
                         type,
-                        customItem.encodeCustom(true),
-                        WynnData.getIdMap().getOrDefault(customItem.get(AllIDs.NAME), -1)
+                        customItem.encodeCustom(true).toB64(),
+                        WynnData.getIdMap().getOrDefault(customItem.getName(), -1)
                 );
                 var exisiting = getConfigManager().addSavedOrReturnExisting(savedItem);
                 if (exisiting == null) {
@@ -149,8 +141,8 @@ public class SavedItemsScreen extends Screen {
                     getConfigManager().getConfig().getSavedItems().add(savedItem);
                     getConfigManager().saveConfig();
                 } else {
-                    client.player.sendMessage(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
-                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))), false);
+                    WynnBuild.message(Text.literal("You already have this item saved ( ").append(customItem.createItemShowcase())
+                            .append(" ) under the name of: ").append(Text.literal(exisiting.getName()).styled(style -> style.withBold(true))));
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
                 }
             } catch (Exception e) {
@@ -165,18 +157,16 @@ public class SavedItemsScreen extends Screen {
     public class SavedItemListWidget extends AlwaysSelectedEntryListWidget<SavedItemListWidget.Entry> {
 
         public SavedItemListWidget(int width, int height, int top, int left, int itemHeight) {
-            super(WynnBuildClient.client, width, height, top, itemHeight);
+            super(WynnBuild.client, width, height, top, itemHeight);
             this.setX(left);
-            getConfigManager().getConfig().getSavedItems().forEach(savedItemType -> {
-                addEntry(new Entry(savedItemType));
-            });
+            getConfigManager().getConfig().getSavedItems().forEach(savedItemType -> addEntry(new Entry(savedItemType)));
             addDrawableChild(new Button(left - 100, top, 100, 20, Text.literal("Copy Hash"), button -> {
                 if (getSelectedOrNull() == null) return;
-                SavedItemType item = getSelectedOrNull().item;
-                CustomItem customItem = CustomItem.getCustomFromHash(item.getHash());
+                SavedItem item = getSelectedOrNull().item;
+                Custom customItem = Custom.decodeCustom(null, item.getHash());
                 client.keyboard.setClipboard(getSelectedOrNull().item.getHash());
-                client.player.sendMessage(Text.literal("Copied hash of ")
-                        .append(customItem.createItemShowcase()), false);
+                WynnBuild.message(Text.literal("Copied hash of ")
+                        .append(customItem.createItemShowcase()));
             }));
             //addDrawableChild(new Button(left - 100, top + 22, 100, 20, Text.literal("Builder"), button -> client.execute(() -> client.setScreen(new BuildScreen()))));
             addDrawableChild(new Button(left - 100, top + 44, 100, 20, Text.literal("DELETE").styled(style -> style.withColor(Formatting.DARK_RED)), button -> {
@@ -191,9 +181,9 @@ public class SavedItemsScreen extends Screen {
                                     Objects.equals(savedItemType.getName(), getSelectedOrNull().item.getName()));
                     getConfigManager().saveConfig();
                     removeEntry(getSelectedOrNull());
-                    client.player.sendMessage(Text.literal("Deleted ").append(Text.literal(name)
+                    WynnBuild.message(Text.literal("Deleted ").append(Text.literal(name)
                             .styled(style -> style.withUnderline(true).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("CLICK TO COPY: ").append(hash)))
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, hash)))).append("  ==  ").append(getCustomFromHash(hash).createItemShowcase()), false);
+                                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, hash)))).append("  ==  ").append(Custom.decodeCustom(null, hash).createItemShowcase()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -217,13 +207,13 @@ public class SavedItemsScreen extends Screen {
         }
 
         public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
-            final SavedItemType item;
-            final CustomItem custom;
+            final SavedItem item;
+            final Custom custom;
             final ItemStack displayStack;
 
-            protected Entry(SavedItemType item) {
+            protected Entry(SavedItem item) {
                 this.item = item;
-                this.custom = CustomItem.getCustomFromHash(item.getHash());
+                this.custom = Custom.decodeCustom(null, item.getHash());
                 if (item.getBaseItemId() != null) {
                     this.displayStack = custom.createStack();
                 } else displayStack = null;
@@ -247,8 +237,8 @@ public class SavedItemsScreen extends Screen {
 
             @Override
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                ID.Tier tier = custom.get(AllIDs.TIER);
-                context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getName() + ": " + custom.get(AllIDs.NAME)), x + 2, y + 5, Formatting.WHITE.getColorValue());
+                Tier tier = custom.getTier();
+                context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getName() + ": " + custom.statMap.get(IDs.NAME)), x + 2, y + 5, Formatting.WHITE.getColorValue());
                 context.drawTextWithShadow(SavedItemsScreen.this.textRenderer, Text.literal(item.getType().name()).styled(style -> style.withColor(tier.format)), x + 2, y + 15, Formatting.WHITE.getColorValue());
                 if (displayStack != null) {
                     float width = 16;

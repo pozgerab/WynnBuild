@@ -28,7 +28,8 @@ Ability tree presets are also configurable (**/build saveatree**).
 
 
 ## Custom / Crafted Items
-You can now use crafted items in your builds. The mod detects crafted items automatically and use them in the build.
+You can use crafted items in your builds. The mod detects crafted items automatically and use them in the build, however crafted items with custom rolls are not supported by wynnbuilder,
+so their rarity is set to Normal while encoding. Crafted item ingredient recognition system is being worked on, coming soon!
 
 ## Ability Tree Presets
 You can create or delete ability tree presets in the new menu opened by **/saveatrees** or **/build saveatrees**.

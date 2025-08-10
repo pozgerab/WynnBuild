@@ -29,14 +29,14 @@ public class Atrouter {
                 dependencies.put(node, ability.dependencies().stream().filter(nodesToVisit::contains).collect(Collectors.toSet()));
 
                 atreeGraph.put(node, ability.children().stream().filter(child -> {
-                    if (nodesToVisit.contains(child) && !Ability.areSameLevel(node, child)) {
+                    if (nodesToVisit.contains(child) && Ability.areDifferentLevel(node, child)) {
                         nodesWithoutParents.remove(child);
                         return true;
                     }
                     return false;
                 }).collect(Collectors.toSet()));
 
-                if (ability.parents().stream().noneMatch(parent -> !Ability.areSameLevel(node, parent) && !nodesToVisit.contains(parent) && allNodes.contains(parent))) {
+                if (ability.parents().stream().noneMatch(parent -> Ability.areDifferentLevel(node, parent) && !nodesToVisit.contains(parent) && allNodes.contains(parent))) {
                     nodesWithoutParents.remove(node);
                 }
             }

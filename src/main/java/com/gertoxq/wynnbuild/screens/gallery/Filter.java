@@ -1,9 +1,10 @@
 package com.gertoxq.wynnbuild.screens.gallery;
 
-import com.gertoxq.wynnbuild.custom.AllIDs;
-import com.gertoxq.wynnbuild.custom.CustomItem;
-import com.gertoxq.wynnbuild.custom.DoubleID;
-import com.gertoxq.wynnbuild.custom.TypedID;
+import com.gertoxq.wynnbuild.base.custom.Custom;
+import com.gertoxq.wynnbuild.identifications.IDs;
+import com.gertoxq.wynnbuild.identifications.SpecialStringID;
+import com.gertoxq.wynnbuild.identifications.TypedID;
+import com.gertoxq.wynnbuild.util.Range;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class Filter<T> {
         this.string = string;
     }
 
-    public boolean parseString(CustomItem item) {
+    public boolean parseString(Custom item) {
         return false;
     }
 
@@ -31,12 +32,12 @@ public class Filter<T> {
     public static class NameFilter extends Filter<String> {
 
         public NameFilter(String string) {
-            super(AllIDs.NAME, string);
+            super(IDs.NAME, string);
         }
 
         @Override
-        public boolean parseString(CustomItem item) {
-            return item.get(watchedId).toLowerCase().contains(string.toLowerCase());
+        public boolean parseString(Custom item) {
+            return item.statMap.get(watchedId).toLowerCase().contains(string.toLowerCase());
         }
     }
 
@@ -49,16 +50,16 @@ public class Filter<T> {
         }
 
         @Override
-        public boolean parseString(CustomItem item) {
+        public boolean parseString(Custom item) {
             try {
-                if (watchedId instanceof DoubleID<?, ?> doubleWatched) {
-                    if (doubleWatched.getParsedType() == DoubleID.Range.class) {
+                if (watchedId instanceof SpecialStringID<?> doubleWatched) {
+                    if (doubleWatched.getParsedType() == Range.class) {
                         @SuppressWarnings("unchecked")
-                        DoubleID<DoubleID.Range, String> doubleId = (DoubleID<DoubleID.Range, String>) doubleWatched;
+                        SpecialStringID<Range> doubleId = (SpecialStringID<Range>) doubleWatched;
 
                         try {
                             int value = Integer.parseInt(string);
-                            return item.get(doubleId).contains(value);
+                            return item.statMap.get(doubleId).contains(value);
                         } catch (Exception ignored) {
                         }
 
@@ -80,7 +81,7 @@ public class Filter<T> {
                                 int min = Integer.parseInt(strings.size() == 3 && Objects.equals(strings.getFirst(), "") ? "-" + strings.get(1) : strings.get(0));
                                 int max = Integer.parseInt(strings.size() == 4 && Objects.equals(strings.get(2), "") ? "-" + strings.get(3) : strings.get(1));
                                 if (max < min) throw new Exception("min > max ??");
-                                return rangeCase(new DoubleID.Range(min, max), item, doubleId);
+                                return rangeCase(new Range(min, max), item, doubleId);
                             } catch (Exception ignored) {
                             }
                         }
@@ -89,7 +90,7 @@ public class Filter<T> {
                 }
             } catch (Exception ignored) {
             }
-            return item.get(watchedId).equalsIgnoreCase(string);
+            return item.statMap.get(watchedId).equalsIgnoreCase(string);
         }
 
         @Override
@@ -97,19 +98,19 @@ public class Filter<T> {
             return true;
         }
 
-        public boolean inequalityCase(int value, String sign, CustomItem item, DoubleID<DoubleID.Range, String> id) {
+        public boolean inequalityCase(int value, String sign, Custom item, SpecialStringID<Range> id) {
 
             return switch (sign) {
-                case ">" -> item.get(id).max() > value;
-                case "<" -> item.get(id).min() < value;
-                case ">=" -> item.get(id).max() >= value;
-                case "<=" -> item.get(id).min() <= value;
+                case ">" -> item.statMap.get(id).max() > value;
+                case "<" -> item.statMap.get(id).min() < value;
+                case ">=" -> item.statMap.get(id).max() >= value;
+                case "<=" -> item.statMap.get(id).min() <= value;
                 default -> false;
-            } && item.hasIdentification(id);
+            } && item.statMap.hasId(id);
         }
 
-        public boolean rangeCase(DoubleID.Range range, CustomItem item, DoubleID<DoubleID.Range, String> id) {
-            DoubleID.Range itemRange = item.get(id);
+        public boolean rangeCase(Range range, Custom item, SpecialStringID<Range> id) {
+            Range itemRange = item.statMap.get(id);
             return itemRange.contains(range.max()) || itemRange.contains(range.min())
                     || range.contains(itemRange.max()) || range.contains(itemRange.min());
         }
@@ -158,9 +159,9 @@ public class Filter<T> {
         }
 
         @Override
-        public boolean parseString(CustomItem item) {
+        public boolean parseString(Custom item) {
 
-            if (string.equals("*")) return item.hasIdentification(watchedId);
+            if (string.equals("*")) return item.statMap.hasId(watchedId);
 
             try {
                 return strictCase(Integer.parseInt(string), item);
@@ -184,30 +185,30 @@ public class Filter<T> {
                     int min = Integer.parseInt(strings.size() == 3 && Objects.equals(strings.getFirst(), "") ? "-" + strings.get(1) : strings.get(0));
                     int max = Integer.parseInt(strings.size() == 4 && Objects.equals(strings.get(2), "") ? "-" + strings.get(3) : strings.get(1));
                     if (max < min) throw new Exception("min > max ??");
-                    return rangeCase(new DoubleID.Range(min, max), item);
+                    return rangeCase(new Range(min, max), item);
                 } catch (Exception ignored) {
                 }
             }
             return false;
         }
 
-        public boolean rangeCase(DoubleID.Range range, CustomItem item) {
-            return item.hasIdentification(watchedId) && range.contains(item.get(watchedId));
+        public boolean rangeCase(Range range, Custom item) {
+            return item.statMap.hasId(watchedId) && range.contains(item.statMap.get(watchedId));
         }
 
-        public boolean strictCase(int value, CustomItem item) {
-            return item.hasIdentification(watchedId) && item.get(watchedId) == value;
+        public boolean strictCase(int value, Custom item) {
+            return item.statMap.hasId(watchedId) && item.statMap.get(watchedId) == value;
         }
 
-        public boolean inequalityCase(int value, String sign, CustomItem item) {
+        public boolean inequalityCase(int value, String sign, Custom item) {
 
             return switch (sign) {
-                case ">" -> item.get(watchedId) > value;
-                case "<" -> item.get(watchedId) < value;
-                case ">=" -> item.get(watchedId) >= value;
-                case "<=" -> item.get(watchedId) <= value;
+                case ">" -> item.statMap.get(watchedId) > value;
+                case "<" -> item.statMap.get(watchedId) < value;
+                case ">=" -> item.statMap.get(watchedId) >= value;
+                case "<=" -> item.statMap.get(watchedId) <= value;
                 default -> false;
-            } && item.hasIdentification(watchedId);
+            } && item.statMap.hasId(watchedId);
         }
     }
 }

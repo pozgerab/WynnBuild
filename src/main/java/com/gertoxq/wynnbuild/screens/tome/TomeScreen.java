@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.screens.tome;
 
-import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ContainerScreen;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
 import com.gertoxq.wynnbuild.util.Task;
@@ -8,8 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 
 import java.util.regex.Pattern;
-
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
 
 public class TomeScreen extends ContainerScreen<TomeScreenHandler> {
 
@@ -25,9 +22,5 @@ public class TomeScreen extends ContainerScreen<TomeScreenHandler> {
     protected void init() {
         super.init();
         new Task(() -> getScreenHandler().saveTomeInfo(), 2);
-        addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, 0, 0,
-                Text.literal("Read"),
-                button -> getScreenHandler().saveTomeInfo(),
-                () -> getConfigManager().getConfig().isShowButtons()));
     }
 }

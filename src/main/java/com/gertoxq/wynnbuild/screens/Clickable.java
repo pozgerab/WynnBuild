@@ -8,7 +8,6 @@ import net.minecraft.text.Text;
 import java.util.function.BooleanSupplier;
 
 public record Clickable(BooleanSupplier condition) {
-    public static Clickable DEF = new Clickable(() -> true);
 
     public void addTo(Screen screen, AXISPOS xAxis, AXISPOS yAxis, int width, int height, int xOffset, int yOffset, Text message, PressAction action) {
         if (condition.getAsBoolean()) {

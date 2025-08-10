@@ -10,7 +10,7 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.SlotActionType;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.client;
+import static com.gertoxq.wynnbuild.WynnBuild.client;
 
 public class ContainerScreenHandler extends GenericContainerScreenHandler {
     public ContainerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, int rows) {

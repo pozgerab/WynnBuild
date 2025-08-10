@@ -11,18 +11,24 @@ import java.util.Optional;
 public class AtreeNode {
 
     public final Integer id;
-    final Slot slot;
+    final int index;
     final ItemStack stack;
     final String name;
+    Slot slot = null;
 
 
     public AtreeNode(Slot slot) {
+        this(slot.getStack(), slot.getIndex());
         this.slot = slot;
-        this.stack = slot.getStack();
-        this.name = Utils.removeNum(Utils.removeFormat(stack.getName().getString()
+    }
+
+    public AtreeNode(ItemStack itemStack, int index) {
+        this.index = index;
+        this.stack = itemStack;
+        this.name = Utils.removeNum(Utils.removeFormat(itemStack.getName().getString()
                 .replace("Unlock ", "")
                 .replace(" ability", "").trim()));
-        this.id = Ability.getIdByNameAndSlot(name, slot.getIndex()).orElse(null);
+        this.id = Ability.getIdByNameAndSlot(name, index).orElse(null);
     }
 
     public Optional<Integer> getId() {

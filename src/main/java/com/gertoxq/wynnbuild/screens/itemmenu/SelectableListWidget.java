@@ -1,6 +1,6 @@
 package com.gertoxq.wynnbuild.screens.itemmenu;
 
-import com.gertoxq.wynnbuild.client.WynnBuildClient;
+import com.gertoxq.wynnbuild.WynnBuild;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.text.Text;
@@ -14,7 +14,7 @@ public abstract class SelectableListWidget<T> extends AlwaysSelectedEntryListWid
     private final int right;
 
     public SelectableListWidget(int width, int height, int x, int y, int itemHeight, List<T> items) {
-        super(WynnBuildClient.client, width, height, y, itemHeight);
+        super(WynnBuild.client, width, height, y, itemHeight);
         this.setX(x);
         this.right = x + width;
         items.forEach(t -> addEntry(new Entry(t)));

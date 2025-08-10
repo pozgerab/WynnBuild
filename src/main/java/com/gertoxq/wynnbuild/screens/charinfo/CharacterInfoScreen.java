@@ -3,15 +3,14 @@ package com.gertoxq.wynnbuild.screens.charinfo;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ContainerScreen;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
-import com.gertoxq.wynnbuild.util.Task;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.util.regex.Pattern;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.build;
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.getConfigManager;
+import static com.gertoxq.wynnbuild.WynnBuild.build;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class CharacterInfoScreen extends ContainerScreen<CharacterInfoScreenHandler> {
 
@@ -26,12 +25,6 @@ public class CharacterInfoScreen extends ContainerScreen<CharacterInfoScreenHand
     @Override
     protected void init() {
         super.init();
-        new Task(() -> getScreenHandler().saveCharInfo(), 2);
-
-        addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, 0, -20,
-                Text.literal("Read"),
-                button -> getScreenHandler().saveCharInfo(),
-                () -> getConfigManager().getConfig().isShowButtons()));
         addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, 0, 0,
                 Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)),
                 button -> build(),
