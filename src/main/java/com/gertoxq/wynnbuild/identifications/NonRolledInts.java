@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.identifications;
 
 import com.gertoxq.wynnbuild.identifications.metric.Metrics;
+import com.gertoxq.wynnbuild.util.Range;
 
 @SuppressWarnings("unused")
 public interface NonRolledInts {
@@ -25,5 +26,7 @@ public interface NonRolledInts {
     NonRolledInt DEF = new NonRolledInt("def", "Defence", Metrics.RAW_BONUS);
     NonRolledInt ID = new NonRolledInt("id");
     NonRolledInt CHARGES = new NonRolledInt("charges", "Charges", Metrics.CHARGES);
+    NonRolledInt DURABILITY = new NonRolledInt("durability", "Durability", Metrics.DURABILITY);
+    NonRolledInt DURATION = new NonRolledInt("duration", "Duration", Metrics.DURATION);
     NonRolledInt RAINBOW_RAW = new NonRolledInt("rainbowRaw");
 }

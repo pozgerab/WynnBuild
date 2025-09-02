@@ -22,6 +22,4 @@ public interface SpecialStringIDs {
     SpecialStringID<AtkSpd> ATKSPD = new SpecialStringID<>("atkSpd", " Attack Speed", Metrics.ATTACK_SPEED);
 
     SpecialStringID<Cast> CLASS_REQ = new SpecialStringID<>("classReq", "Class Req", Metrics.CLASS_REQ);
-    SpecialStringID<Range> DURABILITY = new SpecialStringID<>("durability", "Durability", Metrics.DURABILITY);
-    SpecialStringID<Range> DURATION = new SpecialStringID<>("duration", "Duration", Metrics.DURATION);
 }

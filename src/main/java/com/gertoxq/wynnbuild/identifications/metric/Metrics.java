@@ -61,11 +61,11 @@ public class Metrics {
                     + Arrays.stream(Cast.values()).map(cast -> Pattern.quote(cast.alias)).collect(Collectors.joining("|", "(?:", ")"))),
             SpecialStringID.Parser.enumNullableParser("", Cast.class));
 
-    public static final Metric.Advanced<Range> DURATION = Metric.parsedUnique("duration",
-            Pattern.compile("- Duration: (\\d)+ Seconds"), SpecialStringID.Parser.allowEmptyRangeParser(null));
+    public static final Metric<Integer> DURATION = Metric.uniqueInt("duration",
+            Pattern.compile("- Duration: (\\d)+ Seconds"));
 
-    public static final Metric.Advanced<Range> DURABILITY = Metric.parsedUnique("durability",
-            Pattern.compile(".* \\[\\d+/(\\d+) Durability]"), SpecialStringID.Parser.allowEmptyRangeParser(null));
+    public static final Metric<Integer> DURABILITY = Metric.uniqueInt("durability",
+            Pattern.compile(".* \\[\\d+/(\\d+) Durability]"));
 
     public static final Metric<Integer> CHARGES = Metric.uniqueInt("charges", null);
 

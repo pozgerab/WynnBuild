@@ -65,7 +65,7 @@ public class StatMap extends HashMap<String, Object> {
     }
 
     public <T> void set(TypedID<T> id, T value) {
-        put(id.name, value);
+        set((ID) id, value);
     }
 
     public Object get(ID id) {
@@ -82,7 +82,7 @@ public class StatMap extends HashMap<String, Object> {
     }
 
     public <K> void set(SpecialStringID<K> id, K value) {
-        put(id.name, id.parse(value));
+        set(id, id.parse(value));
     }
 
     public <K> K get(SpecialStringID<K> id) {

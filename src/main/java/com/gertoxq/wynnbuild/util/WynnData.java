@@ -1,9 +1,13 @@
 package com.gertoxq.wynnbuild.util;
 
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.base.IngredientStatMap;
 import com.gertoxq.wynnbuild.base.ItemSet;
 import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
+import com.gertoxq.wynnbuild.base.ing.Ingredient;
+import com.gertoxq.wynnbuild.base.ing.PosMod;
+import com.gertoxq.wynnbuild.base.ing.Profession;
 import com.gertoxq.wynnbuild.base.sp.SP;
 import com.gertoxq.wynnbuild.identifications.ID;
 import com.gertoxq.wynnbuild.identifications.IDs;
@@ -29,6 +33,8 @@ public class WynnData {
     private static final Map<String, Integer> tomeMap = new HashMap<>();
     private static final Map<String, ItemSet> setMap = new HashMap<>();
     private static final Map<Range, ItemType> modelToType = new HashMap<>();
+    private static final Map<String, Ingredient> ingMap = new HashMap<>();
+    private static final Map<Integer, Ingredient> ingIDMap = new HashMap<>();
 
     public static Map<Integer, ItemData> getData() {
         return dataMap;
@@ -58,11 +64,24 @@ public class WynnData {
         return tomeMap;
     }
 
+    public static Map<String, Ingredient> getIngMap() {
+        return Map.copyOf(ingMap);
+    }
+
+    public static Map<Integer, Ingredient> getIngIDMap() {
+        return Map.copyOf(ingIDMap);
+    }
+
+    public static List<Ingredient> ingredients() {
+        return ingMap.values().stream().toList();
+    }
+
     public static void loadAll() {
         loadItems();
         loadAtree();
         loadSets();
         loadCustomModelData();
+        loadIngredients();
     }
 
     public static void loadItems() {
@@ -98,7 +117,7 @@ public class WynnData {
 
                 nameToId.put(item.statMap.get(IDs.NAME), id);
 
-                dataMap.put(id, new ItemData(id, item.statMap.get(IDs.NAME), item.statMap.get(IDs.TYPE), icon, armorMat, item));
+                dataMap.put(id, new ItemData(id, item.statMap.get(IDs.NAME), icon, armorMat, item));
             });
             assert tomeStream != null;
             ((JsonObject) JsonParser.parseReader(
@@ -170,33 +189,48 @@ public class WynnData {
         });
     }
 
-    public record Icon(Identifier id, Integer customModelData, String headId) {
-        public boolean isHead() {
-            return headId != null;
-        }
+    public static void loadIngredients() {
+        InputStream ingStream = WynnBuild.class.getResourceAsStream("/" + "ingredients.json");
+        assert ingStream != null;
+        JsonParser.parseReader(new InputStreamReader(ingStream, StandardCharsets.UTF_8)).getAsJsonArray().forEach(ingred -> {
+            var ingObj = ingred.getAsJsonObject();
+            int id = ingObj.get("id").getAsInt();
+            int lvl = ingObj.get("lvl").getAsInt();
+            String name = ingObj.get("displayName").getAsString();
+            List<Profession> skills = ingObj.getAsJsonArray("skills")
+                    .asList().stream()
+                    .map(jsonElement -> Profession.valueOf(jsonElement.getAsString()))
+                    .toList();
+
+            Map<PosMod, Integer> posMods = new HashMap<>();
+            ingObj.getAsJsonObject("posMods").asMap().forEach((key, jsonElement) ->
+                    posMods.put(PosMod.valueOf(key.toUpperCase()), jsonElement.getAsInt()));
+
+            IngredientStatMap statMap = new IngredientStatMap();
+            JsonObject itemIDs = ingObj.getAsJsonObject("itemIDs");
+            JsonObject ids = ingObj.getAsJsonObject("ids");
+            JsonObject consumableIDs = ingObj.getAsJsonObject("consumableIDs");
+            if (itemIDs != null) {
+                itemIDs.asMap().forEach((key, jsonElement) -> statMap.put(key.equals("dura") ? "durability" : key, jsonElement.getAsInt()));
+            }
+            if (ids != null) {
+                ids.asMap().forEach((key, jsonElement) -> statMap.put(key, jsonElement.getAsInt()));
+            }
+            if (consumableIDs != null) {
+                consumableIDs.asMap().forEach((key, jsonElement) -> statMap.put(key.equals("dura") ? "duration" : key, jsonElement.getAsInt()));
+            }
+
+            Ingredient ingredient = new Ingredient(id, name, lvl, skills, statMap, posMods);
+            ingMap.put(name, ingredient);
+            ingIDMap.put(id, ingredient);
+        });
     }
 
-    public record ItemData(int id, String name, ItemType type, Icon icon, String armorMaterial,
+    public record Icon(Identifier id, Integer customModelData, String headId) {
+    }
+
+    public record ItemData(int id, String name, Icon icon, String armorMaterial,
                            Custom baseItem) {
-        public boolean isArmor() {
-            return type.isArmor();
-        }
-
-        public boolean isCustomHead() {
-            return icon != null && icon.isHead() && type == ItemType.Helmet;
-        }
-
-        public boolean isWeapon() {
-            return type.isWeapon();
-        }
-
-        public boolean hasIcon() {
-            return this.icon != null;
-        }
-
-        public boolean hasMaterial() {
-            return this.armorMaterial != null;
-        }
     }
 
 }
