@@ -6,6 +6,7 @@ import com.gertoxq.wynnbuild.base.custom.CustomUtil;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.config.ConfigScreen;
 import com.gertoxq.wynnbuild.config.SavedItem;
+import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
 import com.gertoxq.wynnbuild.screens.atree.ImportAtreeScreen;
 import com.gertoxq.wynnbuild.screens.components.DropdownScreen;
@@ -34,7 +35,10 @@ public class CommandRegistry {
             dispatcher.register(literal("build").then(literal("withAtreeRefresh").executes(context -> {
                                 WynnBuild.buildWithArgs(WynnBuild.getConfigManager().getConfig().getPrecision() == 1, true);
                                 return 1;
-                            })).executes(context -> WynnBuild.build())
+            })).executes(context -> {
+                                WynnBuild.build();
+                                return 1;
+                            })
                             .then(literal("help").executes(context -> {
                                 WynnBuild.message(Text.literal("\tWelcome to WynnBuild! Instructions ")
                                         .append(Text.literal("HERE").styled(style -> style.withUnderline(true)
@@ -62,6 +66,10 @@ public class CommandRegistry {
                             }))
                             .then(literal("readtree").executes(context -> {
                                 client.execute(() -> new AbilityTreeQuery().queryTree());
+                                return 1;
+                            }))
+                            .then(literal("readaspects").executes(context -> {
+                                client.execute(AspectInfo::queryAspectInfo);
                                 return 1;
                             }))
             );

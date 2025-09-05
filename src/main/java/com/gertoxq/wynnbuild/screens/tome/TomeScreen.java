@@ -21,6 +21,6 @@ public class TomeScreen extends ContainerScreen<TomeScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        new Task(() -> getScreenHandler().saveTomeInfo(), 2);
+        //client.execute(() -> getScreenHandler().saveTomeInfo());
     }
 }

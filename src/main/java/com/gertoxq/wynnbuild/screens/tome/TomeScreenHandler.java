@@ -1,25 +1,29 @@
 package com.gertoxq.wynnbuild.screens.tome;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.screens.ContainerScreenHandler;
-import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.items.items.game.TomeItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
-import static com.gertoxq.wynnbuild.WynnBuild.tomeIds;
-import static com.gertoxq.wynnbuild.util.Utils.removeFormat;
+import static com.gertoxq.wynnbuild.WynnBuild.*;
 
 public class TomeScreenHandler extends ContainerScreenHandler {
 
-    public static final List<Integer> EMPTY_IDS = Collections.nCopies(14, -1);
+    public static final int EMPTY_ID = -1;
+    public static final List<Integer> EMPTY_IDS = Collections.nCopies(14, EMPTY_ID);
     public static final List<Integer> tomeSlots = List.of(11, 19, 22, 30, 31, 32, 4, 49, 15, 25, 28, 38, 34, 42);
 
     public TomeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -28,7 +32,6 @@ public class TomeScreenHandler extends ContainerScreenHandler {
 
     public void saveTomeInfo() {
         Utils.catchNotLoaded(() -> {
-            tomeIds = getIds();
             getConfigManager().getConfig().setTomeIds(tomeIds);
             getConfigManager().saveConfig();
         });
@@ -37,25 +40,24 @@ public class TomeScreenHandler extends ContainerScreenHandler {
     @Override
     public void onSlotClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
         super.onSlotClick(slotIndex, button, actionType, player);
-        new Task(this::saveTomeInfo, 2);
+        client.execute(this::saveTomeInfo);
+        WynnBuild.message(Text.literal("Saved Tome Info")); // TODO: REMOVE
     }
 
-    public List<String> getTomeNames() {
-        return tomeSlots.stream().map(index -> removeFormat(slots.get(index).getStack().getName().getString())).toList();
-    }
-
-    public List<Integer> getIds() {
-        List<String> names = getTomeNames();
+    public static List<Integer> getTomeIds(List<ItemStack> items) {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < names.size(); i++) {
-            String name = names.get(i);
-            if (WynnData.getTomeMap().containsKey(name)) {
-                ids.add(WynnData.getTomeMap().get(name));
-            } else {
-                //  IDK why some tomes have a symbol at the end but substring them then
-                ids.add(WynnData.getTomeMap().getOrDefault(name.substring(0, name.length() - 1), EMPTY_IDS.get(i)));
+        tomeSlots.forEach(index -> {
+            Optional<TomeItem> optionalTome = Models.Item.asWynnItem(items.get(index), TomeItem.class);
+            if (optionalTome.isEmpty()) {
+                ids.add(EMPTY_ID);
+                return;
             }
-        }
+            if (WynnData.getTomeMap().containsKey(optionalTome.get().getName())) {
+                ids.add(WynnData.getTomeMap().get(optionalTome.get().getName()));
+            } else {
+                WynnBuild.warn("Tome not found: " + optionalTome.get().getName());
+            }
+        });
         return ids;
     }
 }

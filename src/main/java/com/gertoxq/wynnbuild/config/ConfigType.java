@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.config;
 
+import com.gertoxq.wynnbuild.build.Aspect;
 import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
@@ -15,8 +16,16 @@ public class ConfigType {
     private List<Integer> tomeIds = new ArrayList<>();
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private List<SavedItem> savedItems = new ArrayList<>();
-    private int atreeIdleTime = 10;
     private @Range(from = 0, to = 1) int precision = 0;
+    private List<SavedAspect> aspects = new ArrayList<>();
+
+    public List<SavedAspect> getAspects() {
+        return aspects;
+    }
+
+    public void setAspects(List<SavedAspect> aspects) {
+        this.aspects = aspects;
+    }
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -32,14 +41,6 @@ public class ConfigType {
 
     public void setShowButtons(boolean showButtons) {
         this.showButtons = showButtons;
-    }
-
-    public int getAtreeIdleTime() {
-        return atreeIdleTime;
-    }
-
-    public void setAtreeIdleTime(int atreeIdleTime) {
-        this.atreeIdleTime = atreeIdleTime;
     }
 
     public List<SavedBuild> getSavedAtrees() {
@@ -112,14 +113,20 @@ public class ConfigType {
                 && tomeIds == modConfig.tomeIds
                 && defaultPowderLevel == modConfig.defaultPowderLevel
                 && savedItems == modConfig.savedItems
-                && atreeIdleTime == modConfig.atreeIdleTime
-                && precision == modConfig.precision;
+                && precision == modConfig.precision
+                && aspects == modConfig.aspects;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(showButtons, atreeEncoding,
                 cast, savedAtrees, showTreeLoader,
-                tomeIds, defaultPowderLevel, savedItems, atreeIdleTime, precision);
+                tomeIds, defaultPowderLevel, savedItems, precision, aspects);
+    }
+
+    public record SavedAspect(int id, int tier) {
+        public static SavedAspect fromAspect(Aspect aspect) {
+            return new SavedAspect(aspect.id, aspect.tier);
+        }
     }
 }

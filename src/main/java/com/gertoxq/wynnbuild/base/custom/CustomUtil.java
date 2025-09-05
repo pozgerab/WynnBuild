@@ -10,6 +10,8 @@ import com.gertoxq.wynnbuild.identifications.TypedID;
 import com.gertoxq.wynnbuild.util.Range;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.items.items.game.GearItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,6 +21,7 @@ import net.minecraft.util.Formatting;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 

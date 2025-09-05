@@ -3,8 +3,10 @@ package com.gertoxq.wynnbuild.util;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.ItemSet;
 import com.gertoxq.wynnbuild.base.custom.Custom;
+import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.base.sp.SP;
+import com.gertoxq.wynnbuild.build.Aspect;
 import com.gertoxq.wynnbuild.identifications.ID;
 import com.gertoxq.wynnbuild.identifications.IDs;
 import com.gertoxq.wynnbuild.identifications.TypedID;
@@ -29,6 +31,8 @@ public class WynnData {
     private static final Map<String, Integer> tomeMap = new HashMap<>();
     private static final Map<String, ItemSet> setMap = new HashMap<>();
     private static final Map<Range, ItemType> modelToType = new HashMap<>();
+    private static final Map<Cast, Map<Integer, String>> aspectNameMap = new HashMap<>();
+    private static final Map<Cast, Map<String, Integer>> aspectIdMap = new HashMap<>();
 
     public static Map<Integer, ItemData> getData() {
         return dataMap;
@@ -58,11 +62,30 @@ public class WynnData {
         return tomeMap;
     }
 
+    public static Optional<String> getAspectName(Cast cast, int id) {
+        if (!aspectNameMap.containsKey(cast)) return Optional.empty();
+        return Optional.ofNullable(aspectNameMap.get(cast).get(id));
+    }
+
+    public static Optional<Integer> getAspectId(Cast cast, String name) {
+        if (!aspectIdMap.containsKey(cast)) return Optional.empty();
+        return Optional.ofNullable(aspectIdMap.get(cast).get(name));
+    }
+
+    public static Map<Cast, Map<Integer, String>> getAspectNameMap() {
+        return aspectNameMap;
+    }
+
+    public static Map<Cast, Map<String, Integer>> getAspectIdMap() {
+        return aspectIdMap;
+    }
+
     public static void loadAll() {
         loadItems();
         loadAtree();
         loadSets();
         loadCustomModelData();
+        loadAspects();
     }
 
     public static void loadItems() {
@@ -167,6 +190,26 @@ public class WynnData {
             int min = rangeObject.get("min").getAsInt();
             int max = rangeObject.get("max").getAsInt();
             modelToType.put(new Range(min, max), ItemType.valueOf(itemType));
+        });
+    }
+
+    public static void loadAspects() {
+        InputStream aspectStream = WynnBuild.class.getResourceAsStream("/" + "aspects.json");
+        assert aspectStream != null;
+        ((JsonObject) JsonParser.parseReader(
+                new InputStreamReader(aspectStream, StandardCharsets.UTF_8))).asMap().forEach((castKey, jsonElement) -> {
+            Cast cast = Cast.valueOf(castKey);
+            JsonObject aspectObj = jsonElement.getAsJsonObject();
+            Map<Integer, String> castNames = new HashMap<>();
+            Map<String, Integer> castIds = new HashMap<>();
+            aspectObj.asMap().forEach((intKey, aspectName) -> {
+                int id = Integer.parseInt(intKey);
+                String aspectNameStr = aspectName.getAsString();
+                castNames.put(id, aspectNameStr);
+                castIds.put(aspectNameStr, id);
+            });
+            aspectNameMap.put(cast, castNames);
+            aspectIdMap.put(cast, castIds);
         });
     }
 

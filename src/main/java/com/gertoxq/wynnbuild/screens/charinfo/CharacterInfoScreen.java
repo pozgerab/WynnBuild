@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.screens.charinfo;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ContainerScreen;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
@@ -9,7 +10,6 @@ import net.minecraft.util.Formatting;
 
 import java.util.regex.Pattern;
 
-import static com.gertoxq.wynnbuild.WynnBuild.build;
 import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class CharacterInfoScreen extends ContainerScreen<CharacterInfoScreenHandler> {
@@ -27,7 +27,10 @@ public class CharacterInfoScreen extends ContainerScreen<CharacterInfoScreenHand
         super.init();
         addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, 0, 0,
                 Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)),
-                button -> build(),
+                button -> {
+                    this.close();
+                    client.execute(WynnBuild::build);
+                },
                 () -> getConfigManager().getConfig().isShowButtons()));
     }
 }

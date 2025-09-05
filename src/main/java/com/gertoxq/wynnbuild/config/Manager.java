@@ -2,8 +2,10 @@ package com.gertoxq.wynnbuild.config;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.fields.Cast;
+import com.gertoxq.wynnbuild.build.Aspect;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
+import com.gertoxq.wynnbuild.util.WynnData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -40,11 +42,11 @@ public class Manager {
                     WynnBuild.cast = Cast.Warrior;
                 }
                 castTreeObj = fullatree.get(WynnBuild.cast.name()).getAsJsonObject();
-                ATREE_IDLE = config.getAtreeIdleTime();
                 WynnBuild.tomeIds = config.getTomeIds().size() == TomeScreenHandler.EMPTY_IDS.size() ? config.getTomeIds() : TomeScreenHandler.EMPTY_IDS;
                 WynnBuild.atreeSuffix = config.getAtreeEncoding();
                 WynnBuild.atreeState = AtreeCoder.getAtreeCoder(WynnBuild.cast).decode_atree(WynnBuild.atreeSuffix);
                 DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
+                WynnBuild.aspects = config.getAspects().stream().map(savedAspect -> new Aspect(WynnBuild.cast, WynnData.getAspectName(WynnBuild.cast, savedAspect.id()).get(), savedAspect.tier(), savedAspect.id())).toList();
                 reader.close();
             }
         } catch (IOException e) {

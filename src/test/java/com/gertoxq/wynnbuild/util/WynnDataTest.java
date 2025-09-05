@@ -51,4 +51,9 @@ class WynnDataTest {
     void testloadCustomModelData() {
         assertDoesNotThrow(WynnData::loadCustomModelData);
     }
+
+    @Test
+    void testloadAspects() {
+        assertDoesNotThrow(WynnData::loadAspects);
+    }
 }

@@ -5,6 +5,7 @@ import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.base.custom.CustomUtil;
 import com.gertoxq.wynnbuild.base.fields.Cast;
 import com.gertoxq.wynnbuild.base.sp.SkillpointList;
+import com.gertoxq.wynnbuild.build.Aspect;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.Manager;
@@ -33,6 +34,7 @@ public class WynnBuild implements ModInitializer {
     public static final int WYNN_VERSION_ID = 20;
     private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
     public static SkillpointList stats = SkillpointList.empty();
+    public static List<Aspect> aspects = new ArrayList<>();
     public static String atreeSuffix;
     public static MinecraftClient client;
     public static List<Integer> tomeIds = TomeScreenHandler.EMPTY_IDS;
@@ -100,16 +102,15 @@ public class WynnBuild implements ModInitializer {
             if (atreeState.isEmpty())
                 WynnBuild.message(Text.literal("No ability tree found, fetching...").styled(style -> style.withColor(Formatting.RED)));
             new AbilityTreeQuery().queryTree(() -> CharInfoQuery.fetchStatsBeforeBuild(
-                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, List.of()).display()));
+                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, aspects).display()));
         } else {
             CharInfoQuery.fetchStatsBeforeBuild(
-                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, List.of()).display());
+                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, aspects).display());
         }
     }
 
-    public static int build() {
+    public static void build() {
         buildWithArgs(getConfigManager().getConfig().getPrecision() == 1, false);
-        return 1;
     }
 
     public static void displayErr(String errorMessage) {
