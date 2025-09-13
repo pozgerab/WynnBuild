@@ -1,12 +1,11 @@
 package com.gertoxq.wynnbuild.identifications;
 
-import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.base.fields.AtkSpd;
-import com.gertoxq.wynnbuild.base.fields.Cast;
-import com.gertoxq.wynnbuild.base.fields.Tier;
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public final class Data {
     public static final List<String> ci_save_order = List.of("name", "lore", "tier", "set", "slots", "type",
@@ -40,20 +39,42 @@ public final class Data {
             "mainAttackRange", "kb", "weakenEnemy", "slowEnemy",
             "rDefPct"
     );
-    public static final List<ID> ci_save_order_ids = ci_save_order.stream().map(string -> {
-        ID id = ID.getByName(string);
-        if (id == null && !string.endsWith("_")) {
-            WynnBuild.error("Invalid id string: {}", string);
-        }
-        return id;
-    }).toList();
+
+    public static final Set<String> rolledIDs = Set.of("hprPct", "mr",
+            "sdPct", "mdPct", "ls", "ms", "xpb", "lb", "ref", "thorns", "expd", "spd", "atkTier", "poison", "hpBonus", "spRegen", "eSteal",
+            "hprRaw", "sdRaw", "mdRaw", "fDamPct", "wDamPct", "aDamPct", "tDamPct", "eDamPct", "fDefPct", "wDefPct", "aDefPct",
+            "tDefPct", "eDefPct", "spPct1", "spRaw1", "spPct2", "spRaw2", "spPct3", "spRaw3", "spPct4", "spRaw4", "rSdRaw", "sprint",
+            "sprintReg", "jh", "lq", "gXp", "gSpd", "eMdPct", "eMdRaw", "eSdPct", "eSdRaw", "eDamRaw", "eDamAddMin", "eDamAddMax", "tMdPct",
+            "tMdRaw", "tSdPct", "tSdRaw", "tDamRaw", "tDamAddMin", "tDamAddMax", "wMdPct", "wMdRaw", "wSdPct", "wSdRaw", "wDamRaw",
+            "wDamAddMin", "wDamAddMax", "fMdPct", "fMdRaw", "fSdPct", "fSdRaw", "fDamRaw", "fDamAddMin", "fDamAddMax", "aMdPct",
+            "aMdRaw", "aSdPct", "aSdRaw", "aDamRaw", "aDamAddMin", "aDamAddMax", "nMdPct", "nMdRaw", "nSdPct", "nSdRaw", "nDamPct",
+            "nDamRaw", "nDamAddMin", "nDamAddMax", "damPct", "damRaw", "damAddMin", "damAddMax", "rMdPct", "rMdRaw",
+            "rSdPct", "rDamPct", "rDamRaw", "rDamAddMin", "rDamAddMax", "critDamPct", "spPct1Final", "spPct2Final",
+            "spPct3Final", "spPct4Final", "healPct", "kb", "weakenEnemy", "slowEnemy", "rDefPct", "maxMana",
+            "mainAttackRange");
+
+    public static final Set<String> nonRolledIDs = Set.of(
+            "name", "lore", "displayName", "tier", "set", "slots", "type", "material", "drop",
+            "quest", "restrict", "nDam", "fDam", "wDam", "aDam", "tDam", "eDam", "atkSpd", "hp", "fDef", "wDef", "aDef", "tDef", "eDef", "lvl",
+            "classReq", "strReq", "dexReq", "intReq", "defReq", "agiReq", "str", "dex", "int", "agi", "def", "fixID", "category",
+            "id", "skillpoints", "reqs", "nDam_", "fDam_", "wDam_", "aDam_", "tDam_", "eDam_", "majorIds", "damMobs", "defMobs");
+
+    public static final Set<String> nonRolledStrings = Set.of(
+            "name", "lore", "tier", "set", "type", "material", "drop", "quest", "majorIds", "classReq", "atkSpd", "displayName", "nDam",
+            "fDam", "wDam", "aDam", "tDam", "eDam", "nDam_", "fDam_", "wDam_", "aDam_", "tDam_", "eDam_", "durability", "duration");
+
     public static final List<String> all_types = List.of("Helmet", "Chestplate", "Leggings", "Boots",
             "Ring", "Bracelet", "Necklace", "Wand", "Spear", "Bow", "Dagger", "Relik", "Potion", "Scroll", "Food",
             "WeaponTome", "ArmorTome", "GuildTome", "LootrunTome", "GatherXpTome", "DungeonXpTome", "MobXpTome");
-    public static final List<String> attackSpeeds = Arrays.stream(AtkSpd.values()).map(Enum::name).toList();
+
+    public static final List<GearTier> gearTiers = List.of(GearTier.NORMAL, GearTier.UNIQUE, GearTier.RARE, GearTier.LEGENDARY, GearTier.FABLED, GearTier.MYTHIC, GearTier.CRAFTED);
+
+    public static final List<GearType> gearTypes = List.of(GearType.HELMET, GearType.CHESTPLATE, GearType.LEGGINGS, GearType.BOOTS,
+            GearType.RING, GearType.BRACELET, GearType.NECKLACE, GearType.WAND, GearType.SPEAR, GearType.BOW, GearType.DAGGER, GearType.RELIK);
+
+    public static final List<ClassType> classTypes = List.of(ClassType.WARRIOR, ClassType.ASSASSIN, ClassType.MAGE, ClassType.ARCHER, ClassType.SHAMAN);
+
     public static final List<String> damages = List.of("nDam", "eDam", "tDam", "wDam", "fDam", "aDam");
-    public static final List<String> tiers = Arrays.stream(Tier.values()).map(Enum::name).toList();
-    public static final List<String> classes = Arrays.stream(Cast.values()).map(Enum::name).toList();
 
     private Data() {
 

@@ -22,7 +22,10 @@ public class CommandRegistry {
             dispatcher.register(literal("build").then(literal("withAtreeRefresh").executes(context -> {
                                 WynnBuild.buildWithArgs(WynnBuild.getConfigManager().getConfig().getPrecision() == 1, true);
                                 return 1;
-                            })).executes(context -> WynnBuild.build())
+                            })).executes(context -> {
+                                WynnBuild.build();
+                                return 1;
+                            })
                             .then(literal("help").executes(context -> {
                                 WynnBuild.message(Text.literal("\tWelcome to WynnBuild! Instructions ")
                                         .append(Text.literal("HERE").styled(style -> style.withUnderline(true)

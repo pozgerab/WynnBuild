@@ -3,7 +3,6 @@ package com.gertoxq.wynnbuild.client;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.event.WorldChangeTreeRefresh;
-import com.gertoxq.wynnbuild.identifications.IDs;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
 import com.gertoxq.wynnbuild.util.Task;
@@ -26,7 +25,6 @@ public class WynnBuildClient implements ClientModInitializer {
 
         WynnBuild.client = MinecraftClient.getInstance();
         Task.init();
-        IDs.load();
         WynnData.loadAll();
         ScreenManager.register();
 
@@ -37,14 +35,16 @@ public class WynnBuildClient implements ClientModInitializer {
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (screen instanceof InventoryScreen screen1) {
-                BUTTON.addTo(screen1, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> WynnBuild.build());
+                BUTTON.addTo(screen1, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> {
+                    screen.close();
+                    client.execute(WynnBuild::build);
+                });
             }
         });
 
         CommandRegistry.init(WynnBuild.client);
 
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            WynntilsMod.registerEventListener(new WorldChangeTreeRefresh());
-        });
+        ClientLifecycleEvents.CLIENT_STARTED.register(client ->
+                WynntilsMod.registerEventListener(new WorldChangeTreeRefresh()));
     }
 }

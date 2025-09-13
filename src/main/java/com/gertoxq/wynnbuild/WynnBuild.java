@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild;
 
-import com.gertoxq.wynnbuild.base.custom.Custom;
-import com.gertoxq.wynnbuild.base.custom.CustomUtil;
+import com.gertoxq.wynnbuild.base.custom.CustomCoder;
 import com.gertoxq.wynnbuild.base.sp.Skillpoint;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
@@ -12,15 +11,18 @@ import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.mc.McUtils;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,7 @@ public class WynnBuild implements ModInitializer {
     public static List<Integer> tomeIds = TomeQuery.EMPTY_IDS;
     public static Manager configManager;
     public static Set<Integer> atreeState = new HashSet<>();
-    public static boolean debug = true;
+    public static final boolean debug = false;
     public static Integer dataReads = null;
     public static Boolean currentPrecision = null;
     public static Boolean currentForceRefetchAtree = null;
@@ -45,27 +47,25 @@ public class WynnBuild implements ModInitializer {
         return configManager;
     }
 
-    public static List<Custom> getPlayerEquipment() {
-        assert client.player != null : "Player is null";
-        ClientPlayerEntity player = client.player;
-        Custom mainHand = CustomUtil.getFromStack(player.getMainHandStack());
-        if (mainHand.isNone() || !mainHand.getType().isWeapon()) {
-            displayErr("Hold a weapon");
+    public static List<ItemStack> getPlayerEquipment() {
+        List<ItemStack> equipment = new ArrayList<>(McUtils.inventory().armor);
+        Collections.reverse(equipment);
+
+        for (int i : InventoryAccessory.getSlots()) {
+            int baseSize = 0;
+            if (McUtils.player().shouldCloseHandledScreenOnRespawn()) {
+                baseSize = McUtils.player().currentScreenHandler.getStacks().size();
+            }
+            equipment.add(McUtils.inventory().getStack(i + baseSize));
+        }
+
+        Optional<GearItem> handItemOpt = Models.Item.asWynnItem(McUtils.player().getStackInHand(Hand.MAIN_HAND), GearItem.class);
+        if (handItemOpt.isPresent() && handItemOpt.get().meetsActualRequirements() && handItemOpt.get().getGearType().isWeapon()) {
+            equipment.add(McUtils.player().getStackInHand(Hand.MAIN_HAND));
+        } else {
+            WynnBuild.displayErr("Hold a weapon");
             return null;
         }
-        //  Armor list BOOTS -> HELM
-        List<ItemStack> items = new ArrayList<>(player.getInventory().armor);
-        //  Reverse: HELM -> BOOTS
-        Collections.reverse(items);
-        List<Custom> equipment = new ArrayList<>(items.stream().map(CustomUtil::getFromStack).toList());
-
-        //  Add equipment: Slots 9 to 12
-
-        for (int i = 9; i < 13; i++) {
-            equipment.add(CustomUtil.getFromStack(player.getInventory().main.get(i)));
-        }
-
-        equipment.add(mainHand);
 
         return equipment;
     }
@@ -76,18 +76,14 @@ public class WynnBuild implements ModInitializer {
 
     public static void buildItemStackCustom(ItemStack itemStack) {
 
-        Custom item = CustomUtil.getFromStack(itemStack);
-        if (item.isNone()) {
-            displayErr("Couldn't encode this item");
-            return;
-        }
-
-        String customHash = item.encodeCustom(true).toB64();
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
+        String customHash = CustomCoder.encode(gearItemOpt.get()).toB64();
 
         String url = WYNNCUSTOM_DOMAIN + customHash;
         String fullHash = "CI-" + customHash;
 
-        WynnBuild.message(Utils.getItemPrintTemplate(item, fullHash, url));
+        WynnBuild.message(Utils.getItemPrintTemplate(gearItemOpt.get(), fullHash, url));
 
     }
 
@@ -111,15 +107,14 @@ public class WynnBuild implements ModInitializer {
         List<Integer> totalSp = Arrays.stream(Skill.values()).map(Models.SkillPoint::getTotalSkillPoints).toList();
         List<Integer> manualPoints = Arrays.stream(Skill.values()).map(Skillpoint::getManualPoints).toList();
 
-        List<Custom> equipment = getPlayerEquipment();
+        List<ItemStack> equipment = getPlayerEquipment();
         if (equipment == null) return;
         new Build(equipment, currentPrecision, totalSp, manualPoints, Models.CharacterStats.getLevel(), tomeIds, atreeState, List.of()).display();
         WynnBuild.currentPrecision = null;
     }
 
-    public static int build() {
+    public static void build() {
         buildWithArgs(getConfigManager().getConfig().getPrecision() == 1, false);
-        return 1;
     }
 
     public static void displayErr(String errorMessage) {

@@ -18,8 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class ImportAtreeScreen extends Screen {
-    @Nullable String nameVal;
-    @Nullable String codeVal;
+    @Nullable final String nameVal;
+    @Nullable final String codeVal;
 
     public ImportAtreeScreen(Screen parent) {
         this(parent, null, null);

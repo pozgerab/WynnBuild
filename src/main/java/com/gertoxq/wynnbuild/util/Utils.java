@@ -1,15 +1,12 @@
 package com.gertoxq.wynnbuild.util;
 
-import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.build.Build;
-import com.gertoxq.wynnbuild.client.WynnBuildClient;
+import com.wynntils.models.items.items.game.GearItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +18,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class Utils {
-    private static int failures = 0;
 
     public static String withSign(int number) {
         return (number >= 0 ? "+" : "") + number;
@@ -57,18 +53,6 @@ public class Utils {
         return news.get();
     }
 
-    public static MutableText reduceTextList(List<Text> original) {
-        MutableText lore = Text.empty();
-        for (int i = 0; i < original.size(); i++) {
-            Text line = original.get(i);
-            lore.append(line);
-            if (i != original.size() - 1) {
-                lore.append("\n");
-            }
-        }
-        return lore;
-    }
-
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
     }
@@ -84,13 +68,9 @@ public class Utils {
         return Arrays.stream(string.split(" ")).map(Utils::capitalizeFirst).collect(Collectors.joining(" "));
     }
 
-    public static int bool(boolean b) {
-        return b ? 1 : 0;
-    }
-
-    public static Text getItemPrintTemplate(Custom item, String fullHash, String url) {
+    public static Text getItemPrintTemplate(GearItem item, String fullHash, String url) {
         return Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
-                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getTier().format)))
+                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getGearTier().getChatFormatting())))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
                 .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url)))
@@ -105,10 +85,6 @@ public class Utils {
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(fullHash)))
                         .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullHash))
                         .withUnderline(true)))
-                //.append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                //.append(Text.literal("SAVE").styled(style -> style.withColor(Formatting.GOLD)
-                //        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Clicking this will open a menu where you can save items allowing you to use it in later builds")))
-                //        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems"))))
                 .append("\n").styled(style -> style.withBold(true));
     }
 
@@ -133,21 +109,4 @@ public class Utils {
                         .append("\n").styled(style -> style.withBold(true)));
     }
 
-    /**
-     * Wraps a method in a try block to catch errors at screen reading
-     */
-    public static void catchNotLoaded(Runnable method) {
-        try {
-            method.run();
-            failures = 0;
-        } catch (Exception e) {
-            failures++;
-            WynnBuild.message(Text.literal("Fetching failed! Press the READ button to fetch manually")
-                    .styled(style -> style.withColor(Formatting.RED)));
-            if (failures < 2) {
-                new Task(() -> catchNotLoaded(method), WynnBuildClient.REFETCH_DELAY);
-            }
-            e.printStackTrace();
-        }
-    }
 }

@@ -10,7 +10,6 @@ public class ConfigType {
     private final List<SavedBuild> savedAtrees = new ArrayList<>();
     private boolean showButtons = true;
     private boolean showTreeLoader = true;
-    private List<Integer> tomeIds = new ArrayList<>();
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private @Range(from = 0, to = 1) int precision = 0;
 
@@ -32,14 +31,6 @@ public class ConfigType {
 
     public List<SavedBuild> getSavedAtrees() {
         return savedAtrees;
-    }
-
-    public List<Integer> getTomeIds() {
-        return tomeIds;
-    }
-
-    public void setTomeIds(List<Integer> tomeIds) {
-        this.tomeIds = tomeIds;
     }
 
     public int getDefaultPowderLevel() {
@@ -67,14 +58,12 @@ public class ConfigType {
         return Objects.equals(savedAtrees, modConfig.savedAtrees)
                 && showButtons == modConfig.showButtons
                 && showTreeLoader == modConfig.showTreeLoader
-                && tomeIds == modConfig.tomeIds
                 && defaultPowderLevel == modConfig.defaultPowderLevel
                 && precision == modConfig.precision;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, savedAtrees, showTreeLoader,
-                tomeIds, defaultPowderLevel, precision);
+        return Objects.hash(showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision);
     }
 }
