@@ -7,6 +7,7 @@ import com.gertoxq.wynnbuild.screens.atree.AtreeNode;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreen;
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreenHandler;
 import com.gertoxq.wynnbuild.util.Task;
+import com.wynntils.core.components.Models;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 
@@ -20,7 +21,7 @@ public class ImportAtree {
 
     public static void addBuild(String name, String code) {
 
-        WynnBuild.getConfigManager().getConfig().getSavedAtrees().add(new SavedBuild(name, code, WynnBuild.cast));
+        WynnBuild.getConfigManager().getConfig().getSavedAtrees().add(new SavedBuild(name, code, Models.Character.getClassType()));
         WynnBuild.getConfigManager().saveConfig();
     }
 
@@ -46,7 +47,7 @@ public class ImportAtree {
     }
 
     public static void applyBuild(String name, AtreeScreen screen) {
-        SavedBuild build = getBuilds().stream().filter(savedBuildType -> WynnBuild.cast == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
+        SavedBuild build = getBuilds().stream().filter(savedBuildType -> Models.Character.getClassType() == savedBuildType.getCast() && Objects.equals(name, savedBuildType.getName())).findFirst().orElse(null);
         if (build == null) {
             WynnBuild.displayErr("Build not found, something went wrong");
             return;

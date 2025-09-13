@@ -1,10 +1,9 @@
 package com.gertoxq.wynnbuild.base;
 
+import com.gertoxq.wynnbuild.base.bitcodemaps.BaseEncoding;
 import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.base.fields.ItemType;
 import com.gertoxq.wynnbuild.base.fields.Tier;
-import com.gertoxq.wynnbuild.base.sp.SP;
-import com.gertoxq.wynnbuild.base.sp.SkillpointList;
 import com.gertoxq.wynnbuild.base.util.BitVector;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.build.Aspect;
@@ -18,16 +17,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.gertoxq.wynnbuild.WynnBuild.ENC;
 import static com.gertoxq.wynnbuild.WynnBuild.WYNN_VERSION_ID;
 import static com.gertoxq.wynnbuild.base.Powder.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
-import static com.gertoxq.wynnbuild.util.Utils.zip2;
 
 
 public class EncodeDecode {
 
     public static final Map<Integer, Integer> POWDERABLES = Map.of(0, 0, 1, 1, 2, 2, 3, 3, 8, 4);
+    public static final BaseEncoding ENC = new BaseEncoding();
     static final byte VECTOR_FLAG = 0xC;
     static final int VERSION_BITLEN = 10;
     static final int CUSTOM_STR_LENGTH_BITLEN = 12;
@@ -132,11 +130,10 @@ public class EncodeDecode {
         return equipmentVec;
     }
 
-    public static EncodingBitVector encodeSp(List<Integer> finalSp, List<Integer> originalSp) {
-        List<Integer> spDeltas = zip2(finalSp, originalSp).stream().map(pair -> pair.getKey() - pair.getValue()).toList();
+    public static EncodingBitVector encodeSp(List<Integer> finalSp, List<Integer> assigned) {
         EncodingBitVector spVec = new EncodingBitVector(0, 0);
 
-        if (spDeltas.stream().allMatch(x -> x == 0)) {
+        if (assigned.stream().allMatch(x -> x == 0)) {
             spVec.appendFlag(ENC.SP_FLAG(), ENC.SP_FLAG().AUTOMATIC);
         } else {
             spVec.appendFlag(ENC.SP_FLAG(), ENC.SP_FLAG().ASSIGNED);
@@ -144,7 +141,7 @@ public class EncodeDecode {
             for (int i = 0; i < finalSp.size(); i++) {
                 int sp = finalSp.get(i);
 
-                if (spDeltas.get(i) == 0) {
+                if (assigned.get(i) == 0) {
                     spVec.appendFlag(ENC.SP_ELEMENT_FLAG(), ENC.SP_ELEMENT_FLAG().ELEMENT_UNASSIGNED);
                 } else {
                     spVec.appendFlag(ENC.SP_ELEMENT_FLAG(), ENC.SP_ELEMENT_FLAG().ELEMENT_ASSIGNED);
@@ -206,7 +203,7 @@ public class EncodeDecode {
         return aspectVec;
     }
 
-    public static EncodingBitVector encodeBuild(boolean precise, Build build, SkillpointList skillpoints, List<Aspect> aspects, Set<Integer> atreeState) {
+    public static EncodingBitVector encodeBuild(boolean precise, Build build, List<Integer> finalSkillPoints, List<Integer> assignedSkillpoints, List<Aspect> aspects, Set<Integer> atreeState) {
 
         EncodingBitVector finalVec = new EncodingBitVector(0, 0);
 
@@ -227,7 +224,7 @@ public class EncodeDecode {
                 encodeHeader(WYNN_VERSION_ID),
                 encodeEquipment(build.equipment, powderSet, precise),
                 encodeTomes(tomes),
-                encodeSp(skillpoints, SP.calculateFinalSp(build.equipment)),
+                encodeSp(finalSkillPoints, assignedSkillpoints),
                 encodeLevel(build.wynnLevel),
                 encodeAspects(aspects),
                 AtreeCoder.getAtreeCoder(build.cast).encode_atree(atreeState)

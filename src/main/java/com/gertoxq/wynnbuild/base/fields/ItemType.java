@@ -3,6 +3,7 @@ package com.gertoxq.wynnbuild.base.fields;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.util.Range;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.wynntils.models.character.type.ClassType;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public enum ItemType {
         return null;
     }
 
-    public Cast getCast() {
+    public ClassType getCast() {
         return Cast.findByWeapon(this);
     }
 

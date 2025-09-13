@@ -1,23 +1,24 @@
 package com.gertoxq.wynnbuild;
 
-import com.gertoxq.wynnbuild.base.bitcodemaps.BaseEncoding;
 import com.gertoxq.wynnbuild.base.custom.Custom;
 import com.gertoxq.wynnbuild.base.custom.CustomUtil;
-import com.gertoxq.wynnbuild.base.fields.Cast;
-import com.gertoxq.wynnbuild.base.sp.SkillpointList;
+import com.gertoxq.wynnbuild.base.sp.Skillpoint;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
-import com.gertoxq.wynnbuild.screens.charinfo.CharInfoQuery;
-import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
+import com.gertoxq.wynnbuild.screens.tome.TomeQuery;
 import com.gertoxq.wynnbuild.util.Utils;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.elements.type.Skill;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.slf4j.Logger;
@@ -29,17 +30,16 @@ public class WynnBuild implements ModInitializer {
     public static final String DOMAIN = "https://wynnbuilder.github.io/";
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
-    public static final BaseEncoding ENC = new BaseEncoding();
     public static final int WYNN_VERSION_ID = 20;
     private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
-    public static SkillpointList stats = SkillpointList.empty();
-    public static String atreeSuffix;
     public static MinecraftClient client;
-    public static List<Integer> tomeIds = TomeScreenHandler.EMPTY_IDS;
-    public static int wynnLevel;
+    public static List<Integer> tomeIds = TomeQuery.EMPTY_IDS;
     public static Manager configManager;
     public static Set<Integer> atreeState = new HashSet<>();
-    public static Cast cast = Cast.Warrior;
+    public static boolean debug = true;
+    public static Integer dataReads = null;
+    public static Boolean currentPrecision = null;
+    public static Boolean currentForceRefetchAtree = null;
 
     public static Manager getConfigManager() {
         return configManager;
@@ -93,18 +93,28 @@ public class WynnBuild implements ModInitializer {
 
     public static void buildWithArgs(boolean precise, boolean forceRefetchAtree) {
         if (client.player == null) return;
-        List<Custom> equipment = getPlayerEquipment();
-        if (equipment == null) return;
-
-        if (atreeState.isEmpty() || forceRefetchAtree) {
+        currentPrecision = precise;
+        currentForceRefetchAtree = forceRefetchAtree;
+        if (atreeState.isEmpty() || currentForceRefetchAtree) {
+            dataReads = 0;
+            currentForceRefetchAtree = null;
             if (atreeState.isEmpty())
                 WynnBuild.message(Text.literal("No ability tree found, fetching...").styled(style -> style.withColor(Formatting.RED)));
-            new AbilityTreeQuery().queryTree(() -> CharInfoQuery.fetchStatsBeforeBuild(
-                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, List.of()).display()));
+            Managers.TickScheduler.scheduleNextTick(() -> new AbilityTreeQuery().queryTree());
         } else {
-            CharInfoQuery.fetchStatsBeforeBuild(
-                    () -> new Build(equipment, precise, stats, wynnLevel, tomeIds, atreeState, List.of()).display());
+            dataReads = 1;
+            Managers.TickScheduler.scheduleNextTick(() -> new TomeQuery().queryTomeInfo());
         }
+    }
+
+    public static void buildAfterSp() {
+        List<Integer> totalSp = Arrays.stream(Skill.values()).map(Models.SkillPoint::getTotalSkillPoints).toList();
+        List<Integer> manualPoints = Arrays.stream(Skill.values()).map(Skillpoint::getManualPoints).toList();
+
+        List<Custom> equipment = getPlayerEquipment();
+        if (equipment == null) return;
+        new Build(equipment, currentPrecision, totalSp, manualPoints, Models.CharacterStats.getLevel(), tomeIds, atreeState, List.of()).display();
+        WynnBuild.currentPrecision = null;
     }
 
     public static int build() {
@@ -118,7 +128,11 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static AtreeCoder getAtreeCoder() {
-        return AtreeCoder.getAtreeCoder(cast);
+        return AtreeCoder.getAtreeCoder(Models.Character.getClassType());
+    }
+
+    public static String getAtreeSuffix() {
+        return getAtreeCoder().encode_atree(atreeState).toB64();
     }
 
     public static void warn(String format, Object... args) {
@@ -131,6 +145,18 @@ public class WynnBuild implements ModInitializer {
 
     public static void error(String format, Object... args) {
         LOGGER.error(format, args);
+    }
+
+    public static void debug(String format, Object... args) {
+        if (debug) {
+            info(format, args);
+        }
+    }
+
+    public static void debugClient(String message) {
+        if (debug) {
+            message(Text.literal("[DEBUG] ").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(Text.literal(message).styled(style -> Style.EMPTY)));
+        }
     }
 
     public static void message(Text text) {

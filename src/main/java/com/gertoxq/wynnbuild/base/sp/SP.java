@@ -8,7 +8,6 @@ import com.gertoxq.wynnbuild.util.WynnData;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public enum SP {
@@ -18,8 +17,8 @@ public enum SP {
     DEFENSE(IDs.DEF, IDs.DEF_REQ),
     AGILITY(IDs.AGI, IDs.AGI_REQ);
 
-    public static final List<NonRolledInt> spIds = Arrays.stream(SP.values()).map(sp -> sp.id).toList();
-    public static final List<NonRolledInt> spReqIds = Arrays.stream(SP.values()).map(sp -> sp.reqId).toList();
+    public static final java.util.List<NonRolledInt> spIds = Arrays.stream(SP.values()).map(sp -> sp.id).toList();
+    public static final java.util.List<NonRolledInt> spReqIds = Arrays.stream(SP.values()).map(sp -> sp.reqId).toList();
     final NonRolledInt id;
     final NonRolledInt reqId;
 
@@ -61,14 +60,13 @@ public enum SP {
         }
     }
 
-    public static SkillpointList calculateFinalSp(List<Custom> equipment) {
+    public static SkillpointList calculateFinalSp(java.util.List<Custom> equipment) {
 
         SkillpointList skillPoints = SkillpointList.empty();
         Map<String, Integer> activeSetCounts = new HashMap<>();
 
         for (Custom item : equipment) {
             SkillpointList reqs = item.statMap.get(IDs.RequiredSkillpointsGetter);
-            String set = item.statMap.get(IDs.SET);
 
             for (int i = 0; i < 5; i++) {
                 if (skillPoints.get(i) < reqs.get(i) && reqs.get(i) > 0) {

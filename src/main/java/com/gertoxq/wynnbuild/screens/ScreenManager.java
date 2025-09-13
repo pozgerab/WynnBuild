@@ -1,8 +1,6 @@
 package com.gertoxq.wynnbuild.screens;
 
 import com.gertoxq.wynnbuild.screens.atree.AtreeScreen;
-import com.gertoxq.wynnbuild.screens.charinfo.CharacterInfoScreen;
-import com.gertoxq.wynnbuild.screens.tome.TomeScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.text.Text;
@@ -23,8 +21,6 @@ public class ScreenManager {
 
     public static void register() {
         registerScreen(AtreeScreen.TITLE_PATTERN, AtreeScreen.CREATOR);
-        registerScreen(CharacterInfoScreen.TITLE_PATTERN, CharacterInfoScreen.CREATOR);
-        registerScreen(TomeScreen.TITLE_PATTERN, TomeScreen.CREATOR);
     }
 
     public static void changeScreen(GenericContainerScreenHandler handler, PlayerInventory inventory, Text title) {

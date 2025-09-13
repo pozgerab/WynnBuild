@@ -1,13 +1,13 @@
 package com.gertoxq.wynnbuild.config;
 
-import com.gertoxq.wynnbuild.base.fields.Cast;
+import com.wynntils.models.character.type.ClassType;
 
 public class SavedBuild {
     private String name;
     private String value;
-    private Cast cast;
+    private ClassType cast;
 
-    public SavedBuild(String name, String value, Cast cast) {
+    public SavedBuild(String name, String value, ClassType cast) {
         this.cast = cast;
         this.name = name;
         this.value = value;
@@ -29,11 +29,11 @@ public class SavedBuild {
         this.value = value;
     }
 
-    public Cast getCast() {
+    public ClassType getCast() {
         return cast;
     }
 
-    public void setCast(Cast cast) {
+    public void setCast(ClassType cast) {
         this.cast = cast;
     }
 }

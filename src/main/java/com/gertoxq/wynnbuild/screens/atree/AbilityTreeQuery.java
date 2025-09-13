@@ -8,7 +8,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -19,13 +18,14 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.WynnBuild.atreeState;
-import static com.gertoxq.wynnbuild.WynnBuild.atreeSuffix;
 
 public class AbilityTreeQuery {
 
@@ -61,22 +61,15 @@ public class AbilityTreeQuery {
                 .reprocess(processor::processPage)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
-                                c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME),
+                                c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME) && processor.doContinue(),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
-                .repeat(
-                        c -> {
-                            this.pageCount++;
-                            return this.pageCount != AbilityTreeModel.ABILITY_TREE_PAGES;
-                        },
-                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT))
                 .execute(() -> {
                     BitVector encodedTree = WynnBuild.getAtreeCoder().encode_atree(atreeState);
-                    atreeSuffix = encodedTree.toB64();
+                    String suffix = encodedTree.toB64();
                     McUtils.sendMessageToClient(Text.literal("Ability tree fetched, click to save ")
-                            .append(Text.literal(atreeSuffix).styled(style -> style.withColor(Formatting.DARK_GRAY).withItalic(true)
+                            .append(Text.literal(suffix).styled(style -> style.withColor(Formatting.DARK_GRAY).withItalic(true)
                                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Click to save")))
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveatree " + atreeSuffix)))).styled(style -> style.withColor(Formatting.GOLD)));
-                    WynnBuild.getConfigManager().getConfig().setAtreeEncoding(atreeSuffix);
+                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveatree " + suffix)))).styled(style -> style.withColor(Formatting.GOLD)));
                 })
                 .execute(after)
                 .build();
@@ -86,36 +79,69 @@ public class AbilityTreeQuery {
 
     public static class AtreeFetcher {
         private int page = 1;
+        private boolean doContinue = true;
 
         protected void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
-            Set<AtreeNode> allPageNodes = new HashSet<>();
+            Set<AtreeNode> allPossibleNodes = new HashSet<>();
 
-            for (int i = 0; i < 54; i++) {
-                ItemStack stack = items.get(i);
+            WynnBuild.debug("Processing ability tree page {}", page);
+            WynnBuild.debug("Existing nodes {}", Arrays.toString(atreeState.toArray()));
+
+            for (AtomicInteger i = new AtomicInteger(0); i.get() < 54; i.getAndIncrement()) {
+                ItemStack stack = items.get(i.get());
                 if (stack.isEmpty()) continue;
                 if (Utils.getLore(stack) == null || Utils.getLore(stack).isEmpty()) continue;
 
-                AtreeNode node = new AtreeNode(stack, i);
+
+                AtreeNode node = new AtreeNode(stack, i.get());
+                WynnBuild.debug("Found node at {}", String.valueOf(i.get()));
+                WynnBuild.debug("Processing node {}", node.getName());
                 if (node.getId().isEmpty()) {
+                    WynnBuild.debug("No ability id found for node {}", i.get() + ":" + node.getName());
                     continue;
                 }
-                allPageNodes.add(node);
+                if (!node.isUnlockedOrUnreachable()) {
+                    WynnBuild.debug("Unreachable node");
+                    continue;
+                }
+                allPossibleNodes.add(node);
             }
+            Set<Integer> pageUnlocked = findUnlocked(allPossibleNodes.stream().map(atreeNode -> atreeNode.id).collect(Collectors.toSet()));
+            if (pageUnlocked.isEmpty()) doContinue = false;
+            WynnBuild.debug("Unlocked nodes on page {}", Arrays.toString(pageUnlocked.toArray()));
+            atreeState.addAll(pageUnlocked);
+            WynnBuild.debug("Nodes at page end {}", Arrays.toString(atreeState.toArray()));
+        }
 
-            allPageNodes.stream().sorted(Comparator.comparingInt(o -> o.id)).forEach(node -> {
-                if (!node.isUnlockedOrUnreachable()) return;
-                int id = node.id;
+        public boolean doContinue() {
+            return doContinue;
+        }
 
-                if (id == 0) {
-                    atreeState.add(id);
-                }
-
+        private Set<Integer> roots(Set<Integer> all) {
+            return all.stream().filter(id -> {
+                if (id == 0) return true;
                 List<Integer> parents = Ability.getById(id).parents();
-                if (parents.stream().anyMatch(atreeState::contains)) {
-                    atreeState.add(id);
-                }
-            });
+                return parents.stream().anyMatch(atreeState::contains);
+            }).collect(Collectors.toSet());
+        }
+
+        private Set<Integer> findUnlocked(Set<Integer> all) {
+            Set<Integer> roots = roots(all);
+
+            Set<Integer> unlocked = new HashSet<>(roots);
+            roots.forEach(root -> recurseNodes(root, all, unlocked));
+
+            return unlocked;
+        }
+
+        private void recurseNodes(int id, Set<Integer> allNodes, Set<Integer> unlocked) {
+            Ability.getById(id).children().stream()
+                    .filter(child -> allNodes.contains(child) && !unlocked.contains(child))
+                    .forEach(child -> {
+                        unlocked.add(child);
+                        recurseNodes(child, allNodes, unlocked);
+                    });
         }
 
         protected void processPage(ContainerContent content) {

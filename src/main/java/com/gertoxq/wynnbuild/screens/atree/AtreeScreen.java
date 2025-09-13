@@ -6,6 +6,7 @@ import com.gertoxq.wynnbuild.screens.Button;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ContainerScreen;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
+import com.wynntils.core.components.Models;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -37,7 +38,7 @@ public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
         addSelectableChild(saveCurrBtn = new Button(width / 3 * 2, 70, 100, 20, Text.literal("Save Current"), button -> {
             if (getScreenHandler().readCurrent) {
                 this.close();
-                client.execute(() -> client.setScreen(new ImportAtreeScreen(null, null, WynnBuild.atreeSuffix)));
+                client.execute(() -> client.setScreen(new ImportAtreeScreen(null, null, WynnBuild.getAtreeCoder().encode_atree(WynnBuild.atreeState).toB64())));
             }
         }));
         addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.END,
@@ -54,7 +55,7 @@ public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
 
     public void renderSaveButtons() {
         AtomicInteger i = new AtomicInteger();
-        ImportAtree.getBuilds().stream().filter(save -> save.getCast() == WynnBuild.cast)
+        ImportAtree.getBuilds().stream().filter(save -> save.getCast() == Models.Character.getClassType())
                 .forEach(build -> addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.START, 100, 20, 0, i.getAndAdd(20),
                         Text.literal("Load ").append(build.getName())
                                 .styled(style -> style.withStrikethrough(true))

@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.screens;
 
-import com.gertoxq.wynnbuild.screens.itemmenu.SelectableListWidget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;

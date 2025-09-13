@@ -4,7 +4,8 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.atreeimport.ImportAtree;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.config.SavedBuild;
-import com.gertoxq.wynnbuild.screens.itemmenu.SelectableListWidget;
+import com.gertoxq.wynnbuild.screens.SelectableListWidget;
+import com.wynntils.core.components.Models;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -105,7 +106,7 @@ public class ImportAtreeScreen extends Screen {
         public void renderChild(SelectableListWidget<SavedBuild>.Entry entry, DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             context.drawTextWithShadow(textRenderer, Text.literal(entry.getValue().getName())
                             .append(" ")
-                            .append(Text.literal(entry.getValue().getCast().name()).styled(style -> style.withColor(entry.getValue().getCast() == WynnBuild.cast ? Formatting.GREEN : Formatting.WHITE))),
+                            .append(Text.literal(entry.getValue().getCast().name()).styled(style -> style.withColor(entry.getValue().getCast() == Models.Character.getClassType() ? Formatting.GREEN : Formatting.WHITE))),
                     x + 3, y + 3, 0xffffff);
             context.drawTextWithShadow(textRenderer,
                     Text.literal(entry.getValue().getCode()),

@@ -1,11 +1,9 @@
 package com.gertoxq.wynnbuild.base.sp;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-public class SkillpointList extends ArrayList<Integer> implements List<Integer> {
+public class SkillpointList extends ArrayList<Integer> implements java.util.List<Integer> {
 
     private SkillpointList() {
         super(5);
@@ -23,7 +21,7 @@ public class SkillpointList extends ArrayList<Integer> implements List<Integer> 
     }
 
     public static SkillpointList of(int sp1, int sp2, int sp3, int sp4, int sp5) {
-        return new SkillpointList(List.of(sp1, sp2, sp3, sp4, sp5));
+        return new SkillpointList(java.util.List.of(sp1, sp2, sp3, sp4, sp5));
     }
 
     public static SkillpointList from(Collection<Integer> skillpoints) {
@@ -32,16 +30,6 @@ public class SkillpointList extends ArrayList<Integer> implements List<Integer> 
 
     public static SkillpointList empty() {
         return new SkillpointList();
-    }
-
-    public static SkillpointList combine(SkillpointList... spLists) {
-        return Arrays.stream(spLists).reduce((integers, integers2) -> {
-            SkillpointList sps = empty();
-            for (int i = 0; i < 5; i++) {
-                sps.set(i, integers.get(i) + integers2.get(i));
-            }
-            return sps;
-        }).orElse(empty());
     }
 
     @Override

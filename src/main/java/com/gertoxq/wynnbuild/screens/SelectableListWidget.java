@@ -1,4 +1,4 @@
-package com.gertoxq.wynnbuild.screens.itemmenu;
+package com.gertoxq.wynnbuild.screens;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import net.minecraft.client.gui.DrawContext;

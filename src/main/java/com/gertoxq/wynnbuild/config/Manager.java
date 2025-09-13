@@ -1,9 +1,7 @@
 package com.gertoxq.wynnbuild.config;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.base.fields.Cast;
-import com.gertoxq.wynnbuild.build.AtreeCoder;
-import com.gertoxq.wynnbuild.screens.tome.TomeScreenHandler;
+import com.gertoxq.wynnbuild.screens.tome.TomeQuery;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,12 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Objects;
 
 import static com.gertoxq.wynnbuild.base.Powder.DEFAULT_POWDER_LEVEL;
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.*;
-import static com.gertoxq.wynnbuild.screens.itemmenu.SavedItemsScreen.getNotUsedName;
 
 public class Manager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -33,17 +27,7 @@ public class Manager {
             } else {
                 BufferedReader reader = Files.newBufferedReader(CONFIG_PATH);
                 config = GSON.fromJson(reader, ConfigType.class);
-                try {
-                    WynnBuild.cast = Cast.valueOf(config.getCast());
-                } catch (Exception e) {
-                    WynnBuild.warn("Invalid Cast value: {}. Err: {}", config.getCast(), e);
-                    WynnBuild.cast = Cast.Warrior;
-                }
-                castTreeObj = fullatree.get(WynnBuild.cast.name()).getAsJsonObject();
-                ATREE_IDLE = config.getAtreeIdleTime();
-                WynnBuild.tomeIds = config.getTomeIds().size() == TomeScreenHandler.EMPTY_IDS.size() ? config.getTomeIds() : TomeScreenHandler.EMPTY_IDS;
-                WynnBuild.atreeSuffix = config.getAtreeEncoding();
-                WynnBuild.atreeState = AtreeCoder.getAtreeCoder(WynnBuild.cast).decode_atree(WynnBuild.atreeSuffix);
+                WynnBuild.tomeIds = config.getTomeIds().size() == TomeQuery.EMPTY_IDS.size() ? config.getTomeIds() : TomeQuery.EMPTY_IDS;
                 DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
                 reader.close();
             }
@@ -77,14 +61,4 @@ public class Manager {
         saveConfig();
     }
 
-    public SavedItem addSavedOrReturnExisting(SavedItem savedItem) {
-        List<SavedItem> sameItems = WynnBuild.getConfigManager().getConfig().getSavedItems().stream().filter(si -> Objects.equals(si.getHash(), savedItem.getHash())).toList();
-        if (sameItems.isEmpty()) {
-            savedItem.setName(getNotUsedName(savedItem.getName()));
-            WynnBuild.getConfigManager().getConfig().getSavedItems().add(savedItem);
-            WynnBuild.getConfigManager().saveConfig();
-            return null;
-        }
-        return sameItems.getFirst();
-    }
 }

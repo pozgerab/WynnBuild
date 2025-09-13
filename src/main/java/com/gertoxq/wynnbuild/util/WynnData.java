@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.gertoxq.wynnbuild.client.WynnBuildClient.fullatree;
+import static com.gertoxq.wynnbuild.screens.atree.Ability.fullatree;
 
 public class WynnData {
 
