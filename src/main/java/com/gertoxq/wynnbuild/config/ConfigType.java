@@ -12,6 +12,8 @@ public class ConfigType {
     private boolean showTreeLoader = true;
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private @Range(from = 0, to = 1) int precision = 0;
+    private boolean includeTomes = true;
+    private boolean includeAspects = true;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -50,6 +52,22 @@ public class ConfigType {
         this.precision = precision;
     }
 
+    public boolean isIncludeTomes() {
+        return includeTomes;
+    }
+
+    public void setIncludeTomes(boolean includeTomes) {
+        this.includeTomes = includeTomes;
+    }
+
+    public boolean isIncludeAspects() {
+        return includeAspects;
+    }
+
+    public void setIncludeAspects(boolean includeAspects) {
+        this.includeAspects = includeAspects;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -59,11 +77,13 @@ public class ConfigType {
                 && showButtons == modConfig.showButtons
                 && showTreeLoader == modConfig.showTreeLoader
                 && defaultPowderLevel == modConfig.defaultPowderLevel
-                && precision == modConfig.precision;
+                && precision == modConfig.precision
+                && includeTomes == modConfig.includeTomes
+                && includeAspects == modConfig.includeAspects;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision);
+        return Objects.hash(showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision, includeTomes, includeAspects);
     }
 }

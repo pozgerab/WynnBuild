@@ -43,7 +43,7 @@ public class TomeQuery {
         tomeQuery.executeQuery();
     }
 
-    private void processTomes(ContainerContent content) {
+    public void processTomes(ContainerContent content) {
         WynnBuild.tomeIds = getTomeIds(content);
     }
 

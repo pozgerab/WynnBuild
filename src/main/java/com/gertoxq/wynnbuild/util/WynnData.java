@@ -3,6 +3,7 @@ package com.gertoxq.wynnbuild.util;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wynntils.models.character.type.ClassType;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,6 +19,7 @@ public class WynnData {
     private static final Map<String, Integer> tomeMap = new HashMap<>();
     private static final Map<String, String> apiBuilderMap = new HashMap<>();
     private static final Map<String, String> majorIdMap = new HashMap<>();
+    private static final Map<ClassType, Map<String, Integer>> aspectIdsMaps = new HashMap<>();
 
     public static Map<String, Integer> getIdMap() {
         return nameToId;
@@ -35,11 +37,16 @@ public class WynnData {
         return majorIdMap;
     }
 
+    public static Map<String, Integer> getAspectMap(ClassType classType) {
+        return aspectIdsMaps.get(classType);
+    }
+
     public static void loadAll() {
         loadItems();
         loadAtree();
         loadApiBuilderMapping();
         loadMajorIds();
+        loadAspects();
     }
 
     public static void loadItems() {
@@ -84,9 +91,26 @@ public class WynnData {
         InputStream majorIdsStream = WynnBuild.class.getResourceAsStream("/" + "major_ids.json");
         assert majorIdsStream != null;
         ((JsonObject) JsonParser.parseReader(
-                new InputStreamReader(majorIdsStream, StandardCharsets.UTF_8))).asMap().forEach((displayName, codeNameEl) -> {
-                    majorIdMap.put(displayName, codeNameEl.getAsString());
+                new InputStreamReader(majorIdsStream, StandardCharsets.UTF_8))).asMap().forEach((displayName, codeNameEl) ->
+                majorIdMap.put(displayName, codeNameEl.getAsString()));
+    }
+
+    public static void loadAspects() {
+        InputStream aspectStream = WynnBuild.class.getResourceAsStream("/" + "aspects.json");
+        assert aspectStream != null;
+        ((JsonObject) JsonParser.parseReader(
+                new InputStreamReader(aspectStream, StandardCharsets.UTF_8))).asMap().forEach((castKey, jsonElement) -> {
+            ClassType cast = ClassType.fromName(castKey);
+            JsonObject aspectObj = jsonElement.getAsJsonObject();
+            Map<String, Integer> castIds = new HashMap<>();
+            aspectObj.asMap().forEach((intKey, aspectName) -> {
+                int id = Integer.parseInt(intKey);
+                String aspectNameStr = aspectName.getAsString();
+                castIds.put(aspectNameStr, id);
+            });
+            aspectIdsMaps.put(cast, castIds);
         });
     }
+
 
 }

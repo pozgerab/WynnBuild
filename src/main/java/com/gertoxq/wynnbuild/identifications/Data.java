@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 public final class Data {
-    public static final List<String> ci_save_order = List.of("name", "lore", "tier", "set", "slots", "type",
+    public static final List<String> ci_save_order = List.of(
+            "name", "lore", "tier", "set", "slots", "type",
             "material", "drop", "quest",
             "nDam", "fDam", "wDam", "aDam", "tDam", "eDam",
             "atkSpd", "hp",
@@ -52,20 +53,6 @@ public final class Data {
             "rSdPct", "rDamPct", "rDamRaw", "rDamAddMin", "rDamAddMax", "critDamPct", "spPct1Final", "spPct2Final",
             "spPct3Final", "spPct4Final", "healPct", "kb", "weakenEnemy", "slowEnemy", "rDefPct", "maxMana",
             "mainAttackRange");
-
-    public static final Set<String> nonRolledIDs = Set.of(
-            "name", "lore", "displayName", "tier", "set", "slots", "type", "material", "drop",
-            "quest", "restrict", "nDam", "fDam", "wDam", "aDam", "tDam", "eDam", "atkSpd", "hp", "fDef", "wDef", "aDef", "tDef", "eDef", "lvl",
-            "classReq", "strReq", "dexReq", "intReq", "defReq", "agiReq", "str", "dex", "int", "agi", "def", "fixID", "category",
-            "id", "skillpoints", "reqs", "nDam_", "fDam_", "wDam_", "aDam_", "tDam_", "eDam_", "majorIds", "damMobs", "defMobs");
-
-    public static final Set<String> nonRolledStrings = Set.of(
-            "name", "lore", "tier", "set", "type", "material", "drop", "quest", "majorIds", "classReq", "atkSpd", "displayName", "nDam",
-            "fDam", "wDam", "aDam", "tDam", "eDam", "nDam_", "fDam_", "wDam_", "aDam_", "tDam_", "eDam_", "durability", "duration");
-
-    public static final List<String> all_types = List.of("Helmet", "Chestplate", "Leggings", "Boots",
-            "Ring", "Bracelet", "Necklace", "Wand", "Spear", "Bow", "Dagger", "Relik", "Potion", "Scroll", "Food",
-            "WeaponTome", "ArmorTome", "GuildTome", "LootrunTome", "GatherXpTome", "DungeonXpTome", "MobXpTome");
 
     public static final List<GearTier> gearTiers = List.of(GearTier.NORMAL, GearTier.UNIQUE, GearTier.RARE, GearTier.LEGENDARY, GearTier.FABLED, GearTier.MYTHIC, GearTier.CRAFTED);
 

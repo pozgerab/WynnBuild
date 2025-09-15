@@ -5,15 +5,17 @@ import com.gertoxq.wynnbuild.base.bitcodemaps.BaseEncoding;
 import com.gertoxq.wynnbuild.base.custom.CustomCoder;
 import com.gertoxq.wynnbuild.base.util.BitVector;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
-import com.gertoxq.wynnbuild.build.Aspect;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
+import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -64,7 +66,7 @@ public class EncodeDecode {
 
         AtomicReference<Integer> previousPowder = new AtomicReference<>(-1);
         collectedPowders.forEach((powder, amount) -> {
-            int powderId = PowderUtil.getId(powder, MAX_POWDER_LEVEL);
+            int powderId = PowderUtil.getId(powder, WynnBuild.getConfig().getDefaultPowderLevel());
             if (previousPowder.get() != -1) {
                 powderVec.appendFlag(ENC.POWDER_REPEAT_OP(), ENC.POWDER_REPEAT_OP().NO_REPEAT);
                 if (powderId % MAX_POWDER_LEVEL == previousPowder.get() % MAX_POWDER_LEVEL) {
@@ -125,7 +127,7 @@ public class EncodeDecode {
                     if (crafted != null) {
                         hash = CustomCoder.encode(crafted).toB64();
                     } else {
-                         hash = CustomCoder.encode(gear).toB64();
+                        hash = CustomCoder.encode(gear).toB64();
                     }
                     equipmentVec.append(hash.length(), CUSTOM_STR_LENGTH_BITLEN);
                     equipmentVec.appendB64(hash);
@@ -174,14 +176,14 @@ public class EncodeDecode {
         return levelVec;
     }
 
-    public static EncodingBitVector encodeTomes(List<Integer> tomes) {
+    public static EncodingBitVector encodeTomes(@Nullable List<@NotNull Integer> tomes) {
         EncodingBitVector tomesVec = new EncodingBitVector(0, 0);
-        if (tomes.stream().allMatch(integer -> integer == 0)) {
+        if (tomes == null) {
             tomesVec.appendFlag(ENC.TOMES_FLAG(), ENC.TOMES_FLAG().NO_TOMES);
         } else {
             tomesVec.appendFlag(ENC.TOMES_FLAG(), ENC.TOMES_FLAG().HAS_TOMES);
             for (Integer tomeId : tomes) {
-                if (tomeId == null) {
+                if (tomeId == -1) {
                     tomesVec.appendFlag(ENC.TOME_SLOT_FLAG(), ENC.TOME_SLOT_FLAG().UNUSED);
                 } else {
                     tomesVec.appendFlag(ENC.TOME_SLOT_FLAG(), ENC.TOME_SLOT_FLAG().USED);
@@ -192,28 +194,34 @@ public class EncodeDecode {
         return tomesVec;
     }
 
-    public static EncodingBitVector encodeAspects(List<Aspect> aspects) {
+    public static EncodingBitVector encodeAspects(@Nullable List<@Nullable AspectItem> aspects) {
 
         EncodingBitVector aspectVec = new EncodingBitVector(0, 0);
 
-        if (aspects.stream().allMatch(aspect -> aspect.id < 0)) {
+        if (aspects == null) {
             aspectVec.appendFlag(ENC.ASPECTS_FLAG(), ENC.ASPECTS_FLAG().NO_ASPECTS);
         } else {
             aspectVec.appendFlag(ENC.ASPECTS_FLAG(), ENC.ASPECTS_FLAG().HAS_ASPECTS);
-            for (Aspect aspect : aspects) {
-                if (aspect.id < 0) {
+            for (AspectItem aspect : aspects) {
+                if (aspect == null) {
                     aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().UNUSED);
                 } else {
+                    Integer id = AspectInfo.aspectMap.get(aspect.getName());
+                    if (id == null) {
+                        WynnBuild.warn("Unknown aspect: {}", aspect.getName());
+                        aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().UNUSED);
+                        continue;
+                    }
                     aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().USED);
-                    aspectVec.append(aspect.id, ENC.ASPECT_ID_BITLEN());
-                    aspectVec.append(aspect.tier - 1, ENC.ASPECT_TIER_BITLEN());
+                    aspectVec.append(id, ENC.ASPECT_ID_BITLEN());
+                    aspectVec.append(aspect.getTier() - 1, ENC.ASPECT_TIER_BITLEN());
                 }
             }
         }
         return aspectVec;
     }
 
-    public static EncodingBitVector encodeBuild(boolean precise, Build build, List<Integer> finalSkillPoints, List<Integer> assignedSkillpoints, List<Aspect> aspects, Set<Integer> atreeState) {
+    public static EncodingBitVector encodeBuild(boolean precise, Build build, List<Integer> finalSkillPoints, List<Integer> assignedSkillpoints, List<AspectItem> aspects, Set<Integer> atreeState) {
 
         EncodingBitVector finalVec = new EncodingBitVector(0, 0);
 

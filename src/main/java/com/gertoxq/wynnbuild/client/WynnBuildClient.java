@@ -2,6 +2,7 @@ package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.config.Manager;
+import com.gertoxq.wynnbuild.event.ScreenClosed;
 import com.gertoxq.wynnbuild.event.WorldChangeTreeRefresh;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.screens.ScreenManager;
@@ -18,7 +19,6 @@ import net.minecraft.util.Formatting;
 
 public class WynnBuildClient implements ClientModInitializer {
     public static Clickable BUTTON;
-    public static int REFETCH_DELAY = 40;
 
     @Override
     public void onInitializeClient() {
@@ -29,9 +29,9 @@ public class WynnBuildClient implements ClientModInitializer {
         ScreenManager.register();
 
         WynnBuild.configManager = new Manager();
-        WynnBuild.configManager.loadConfig();
+        WynnBuild.getConfigManager().loadConfig();
 
-        BUTTON = new Clickable(() -> WynnBuild.configManager.getConfig().isShowButtons());
+        BUTTON = new Clickable(() -> WynnBuild.getConfig().isShowButtons());
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (screen instanceof InventoryScreen screen1) {
@@ -44,7 +44,9 @@ public class WynnBuildClient implements ClientModInitializer {
 
         CommandRegistry.init(WynnBuild.client);
 
-        ClientLifecycleEvents.CLIENT_STARTED.register(client ->
-                WynntilsMod.registerEventListener(new WorldChangeTreeRefresh()));
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            WynntilsMod.registerEventListener(new WorldChangeTreeRefresh());
+            WynntilsMod.registerEventListener(new ScreenClosed());
+        });
     }
 }

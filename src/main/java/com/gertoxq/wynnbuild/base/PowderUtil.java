@@ -9,7 +9,6 @@ public class PowderUtil {
 
     public static final int MAX_POWDER_LEVEL = 6;
     private final static Map<Integer, Powder> powderMap = new HashMap<>();
-    public static int DEFAULT_POWDER_LEVEL = 6;
 
     static {
         int powderID = 0;

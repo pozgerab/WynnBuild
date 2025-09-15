@@ -13,7 +13,10 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.items.properties.*;
+import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.utils.type.Pair;
@@ -63,7 +66,9 @@ public class CustomCoder {
                 appendRolled(customVec, statActualValue.statType().calculateAsInverted() ? -value : value, i);
             } else {
                 appendInt(customVec, value, i);
-                WynnBuild.warn("builderKey {}, apiKey {} not rolled", builderKey, apiKey);
+                if (!List.of("str", "dex", "int", "def", "agi").contains(builderKey)) {
+                    WynnBuild.warn("builderKey {}, apiKey {} is not rolled", builderKey, apiKey);
+                }
             }
         });
 
@@ -166,6 +171,7 @@ public class CustomCoder {
     }
 
     private static void appendInt(EncodingBitVector customVec, int value, int i) {
+        if (Objects.equals(value, 0)) return;
         customVec.append(i, CUSTOM_ENC.ID_IDX_BITLEN());
         int len = (int) Math.min(32, Math.floor(log2(Math.abs(value))) + 2);
         long mask = (1L << len) - 1;

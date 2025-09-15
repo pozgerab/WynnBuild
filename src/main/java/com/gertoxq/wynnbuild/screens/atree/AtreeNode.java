@@ -11,7 +11,6 @@ import java.util.Optional;
 public class AtreeNode {
 
     public final Integer id;
-    final int index;
     final ItemStack stack;
     final String name;
     Slot slot = null;
@@ -23,7 +22,6 @@ public class AtreeNode {
     }
 
     public AtreeNode(ItemStack itemStack, int index) {
-        this.index = index;
         this.stack = itemStack;
         this.name = Utils.removeNum(Utils.removeFormat(itemStack.getName().getString()
                 .replace("Unlock ", "")
@@ -37,10 +35,6 @@ public class AtreeNode {
 
     public Slot getSlot() {
         return slot;
-    }
-
-    public ItemStack getStack() {
-        return stack;
     }
 
     public String getName() {

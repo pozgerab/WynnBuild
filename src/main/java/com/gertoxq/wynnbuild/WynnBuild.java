@@ -4,14 +4,14 @@ import com.gertoxq.wynnbuild.base.custom.CustomCoder;
 import com.gertoxq.wynnbuild.base.sp.Skillpoint;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
+import com.gertoxq.wynnbuild.config.ConfigType;
 import com.gertoxq.wynnbuild.config.Manager;
-import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
-import com.gertoxq.wynnbuild.screens.tome.TomeQuery;
+import com.gertoxq.wynnbuild.screens.QueryStack;
 import com.gertoxq.wynnbuild.util.Utils;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.McUtils;
 import net.fabricmc.api.ModInitializer;
@@ -19,7 +19,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -34,17 +33,29 @@ public class WynnBuild implements ModInitializer {
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     public static final int WYNN_VERSION_ID = 20;
     private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
+    private static final boolean debug = false;
     public static MinecraftClient client;
-    public static List<Integer> tomeIds = TomeQuery.EMPTY_IDS;
     public static Manager configManager;
+    public static List<Integer> tomeIds = null;
+    public static List<AspectItem> aspects = null;
     public static Set<Integer> atreeState = new HashSet<>();
-    public static final boolean debug = false;
-    public static Integer dataReads = null;
-    public static Boolean currentPrecision = null;
-    public static Boolean currentForceRefetchAtree = null;
+    public static List<ItemStack> currentGear = null;
+    private static QueryStack currentQuery = null;
 
     public static Manager getConfigManager() {
         return configManager;
+    }
+
+    public static ConfigType getConfig() {
+        return getConfigManager().getConfig();
+    }
+
+    public static Optional<QueryStack> getQuery() {
+        return Optional.ofNullable(currentQuery);
+    }
+
+    public static void setQuery(QueryStack query) {
+        currentQuery = query;
     }
 
     public static List<ItemStack> getPlayerEquipment() {
@@ -71,7 +82,7 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static void buildMainHand() {
-        buildItemStackCustom(client.player.getMainHandStack());
+        buildItemStackCustom(McUtils.player().getStackInHand(Hand.MAIN_HAND));
     }
 
     public static void buildItemStackCustom(ItemStack itemStack) {
@@ -87,34 +98,41 @@ public class WynnBuild implements ModInitializer {
 
     }
 
-    public static void buildWithArgs(boolean precise, boolean forceRefetchAtree) {
+    public static void buildWithArgs(boolean forceRefetchAtree) {
         if (client.player == null) return;
-        currentPrecision = precise;
-        currentForceRefetchAtree = forceRefetchAtree;
-        if (atreeState.isEmpty() || currentForceRefetchAtree) {
-            dataReads = 0;
-            currentForceRefetchAtree = null;
-            if (atreeState.isEmpty())
-                WynnBuild.message(Text.literal("No ability tree found, fetching...").styled(style -> style.withColor(Formatting.RED)));
-            Managers.TickScheduler.scheduleNextTick(() -> new AbilityTreeQuery().queryTree());
-        } else {
-            dataReads = 1;
-            Managers.TickScheduler.scheduleNextTick(() -> new TomeQuery().queryTomeInfo());
+
+        currentGear = getPlayerEquipment();
+        if (currentGear == null) {
+            return;
         }
+
+        boolean tomesEnabled = getConfig().isIncludeTomes();
+        boolean aspectsEnabled = getConfig().isIncludeAspects();
+
+        QueryStack.Builder query = QueryStack.builder();
+
+        if (tomesEnabled && tomeIds == null) query.next(QueryStack.ContainerType.TOME);
+        if (aspectsEnabled && aspects == null) query.next(QueryStack.ContainerType.ASPECTS);
+
+        if (atreeState.isEmpty() || forceRefetchAtree) {
+            if (atreeState.isEmpty())
+                WynnBuild.message(Text.literal("Querying ability tree...").styled(style -> style.withColor(Formatting.GRAY)));
+            query.next(QueryStack.ContainerType.SKILLPOINTS).next(QueryStack.ContainerType.ATREE).next(QueryStack.ContainerType.BUILD);
+        } else {
+            query.next(QueryStack.ContainerType.SKILLPOINTS).next(QueryStack.ContainerType.BUILD);
+        }
+        query.runQuery();
     }
 
     public static void buildAfterSp() {
         List<Integer> totalSp = Arrays.stream(Skill.values()).map(Models.SkillPoint::getTotalSkillPoints).toList();
         List<Integer> manualPoints = Arrays.stream(Skill.values()).map(Skillpoint::getManualPoints).toList();
-
-        List<ItemStack> equipment = getPlayerEquipment();
-        if (equipment == null) return;
-        new Build(equipment, currentPrecision, totalSp, manualPoints, Models.CharacterStats.getLevel(), tomeIds, atreeState, List.of()).display();
-        WynnBuild.currentPrecision = null;
+        new Build(currentGear, getConfig().getPrecision() == 1, totalSp, manualPoints, Models.CharacterStats.getLevel(),
+                tomeIds, atreeState, aspects).display();
     }
 
     public static void build() {
-        buildWithArgs(getConfigManager().getConfig().getPrecision() == 1, false);
+        buildWithArgs(false);
     }
 
     public static void displayErr(String errorMessage) {
@@ -150,13 +168,13 @@ public class WynnBuild implements ModInitializer {
 
     public static void debugClient(String message) {
         if (debug) {
-            message(Text.literal("[DEBUG] ").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(Text.literal(message).styled(style -> Style.EMPTY)));
+            message(Text.literal("[DEBUG] ").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(Text.literal(message).styled(style -> style.withBold(false).withColor(Formatting.WHITE))));
         }
     }
 
     public static void message(Text text) {
-        assert client.player != null : "Cannot send message, there is no player";
-        client.player.sendMessage(text, false);
+        assert McUtils.player() != null : "Cannot send message, there is no player";
+        McUtils.player().sendMessage(text, false);
     }
 
     @Override

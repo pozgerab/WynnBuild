@@ -25,14 +25,6 @@ public class AtreeScreen extends ContainerScreen<AtreeScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        addDrawableChild(createButton(Clickable.AXISPOS.END, Clickable.AXISPOS.END,
-                100, 20, 0, 0,
-                Text.literal("Read"),
-                button -> {
-                    this.close();
-                    client.execute(() -> new AbilityTreeQuery().queryTree());
-                },
-                () -> WynnBuild.getConfigManager().getConfig().isShowButtons()));
 
         renderSaveButtons();
     }

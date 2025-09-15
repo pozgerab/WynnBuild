@@ -1,21 +1,23 @@
 package com.gertoxq.wynnbuild.util;
 
-import com.gertoxq.wynnbuild.build.Build;
 import com.wynntils.models.items.items.game.GearItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class Utils {
 
@@ -68,6 +70,20 @@ public class Utils {
         return Arrays.stream(string.split(" ")).map(Utils::capitalizeFirst).collect(Collectors.joining(" "));
     }
 
+    public static String escapeToUnicode(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            if (c < 128) {
+                sb.append(c);
+            } else {
+                sb.append(String.format("\\u%04X", (int) c));
+            }
+        }
+        return sb.toString();
+    }
+
     public static Text getItemPrintTemplate(GearItem item, String fullHash, String url) {
         return Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
                 .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getGearTier().getChatFormatting())))
@@ -88,14 +104,10 @@ public class Utils {
                 .append("\n").styled(style -> style.withBold(true));
     }
 
-    public static Text getBuildTemplate(String url, @Range(from = 0, to = 3) boolean precise) {
-        int precision = precise ? 1 : 0;
+    public static Text getBuildTemplate(String url) {
         return Text.literal("\n(").styled(style -> style.withColor(Formatting.DARK_GRAY))
-                .append(Text.literal(Build.PRECISION_OPTIONS.get(precision)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true).withUnderline(true)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Text.literal("Precision Option: ").append(Build.PRECISION_OPTIONS.get(precision)).append("\n").append(Build.PRECISION_TOOLTIPS.get(precision)).append("\n\n")
-                                        .append(Text.literal("CLICK TO CHANGE PRECISION (/build config)").styled(style1 -> style1.withColor(Formatting.GREEN)))))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build config"))))
+                .append(Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, optionsTooltip())).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build config"))))
                 .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
                 .append(Text.literal(" Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
                         .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
@@ -107,6 +119,21 @@ public class Utils {
                                 .withUnderline(true)
                                 .withColor(Formatting.RED)))
                         .append("\n").styled(style -> style.withBold(true)));
+    }
+
+    public static MutableText optionsTooltip() {
+        return Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA))
+                .append("\n\n")
+                .append(Text.literal("Precision: ").styled(style -> style.withColor(Formatting.GRAY))
+                        .append(Text.literal(getConfigManager().getConfig().getPrecision() == 1 ? "ON" : "OFF").styled(style -> style.withColor(getConfig().getPrecision() == 1 ? Formatting.GREEN : Formatting.RED))))
+                .append("\n")
+                .append(Text.literal("Include Tomes: ").styled(style -> style.withColor(Formatting.GRAY))
+                        .append(Text.literal(getConfigManager().getConfig().isIncludeTomes() ? "ON" : "OFF").styled(style -> style.withColor(getConfig().isIncludeTomes() ? Formatting.GREEN : Formatting.RED))))
+                .append("\n")
+                .append(Text.literal("Include Aspects: ").styled(style -> style.withColor(Formatting.GRAY))
+                        .append(Text.literal(getConfigManager().getConfig().isIncludeAspects() ? "ON" : "OFF").styled(style -> style.withColor(getConfig().isIncludeAspects() ? Formatting.GREEN : Formatting.RED))))
+                .append("\n\n")
+                .append(Text.literal("Click to change (/build config)").styled(style -> style.withColor(Formatting.DARK_GRAY)));
     }
 
 }

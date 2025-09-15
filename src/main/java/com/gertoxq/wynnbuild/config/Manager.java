@@ -11,8 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.gertoxq.wynnbuild.base.PowderUtil.DEFAULT_POWDER_LEVEL;
-
 public class Manager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = Paths.get("config/wynnbuild.json");
@@ -26,7 +24,6 @@ public class Manager {
             } else {
                 BufferedReader reader = Files.newBufferedReader(CONFIG_PATH);
                 config = GSON.fromJson(reader, ConfigType.class);
-                DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
                 reader.close();
             }
         } catch (IOException e) {

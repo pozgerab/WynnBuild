@@ -5,8 +5,6 @@ import com.gertoxq.wynnbuild.util.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.components.Models;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -30,11 +28,6 @@ public record Ability(int id, String name, List<Integer> parents, List<Integer> 
     public static boolean areDifferentLevel(int id1, int id2) {
         var entry = Ability.getById(id1);
         return !entry.parents().contains(id2) || !entry.children().contains(id2);
-    }
-
-    @Contract(" -> new")
-    public static @NotNull Ability empty() {
-        return new Ability(-1, "Empty", List.of(), List.of(), -1, -1, List.of());
     }
 
     public static Optional<Integer> getIdByNameAndSlot(String name, int slot) {
