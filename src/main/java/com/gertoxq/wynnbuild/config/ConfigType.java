@@ -10,9 +10,10 @@ public class ConfigType {
     private final List<SavedBuild> savedAtrees = new ArrayList<>();
     private boolean showButtons = true;
     private boolean showTreeLoader = true;
-    private List<Integer> tomeIds = new ArrayList<>();
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private @Range(from = 0, to = 1) int precision = 0;
+    private boolean includeTomes = true;
+    private boolean includeAspects = true;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -34,14 +35,6 @@ public class ConfigType {
         return savedAtrees;
     }
 
-    public List<Integer> getTomeIds() {
-        return tomeIds;
-    }
-
-    public void setTomeIds(List<Integer> tomeIds) {
-        this.tomeIds = tomeIds;
-    }
-
     public int getDefaultPowderLevel() {
         return defaultPowderLevel;
     }
@@ -59,6 +52,22 @@ public class ConfigType {
         this.precision = precision;
     }
 
+    public boolean isIncludeTomes() {
+        return includeTomes;
+    }
+
+    public void setIncludeTomes(boolean includeTomes) {
+        this.includeTomes = includeTomes;
+    }
+
+    public boolean isIncludeAspects() {
+        return includeAspects;
+    }
+
+    public void setIncludeAspects(boolean includeAspects) {
+        this.includeAspects = includeAspects;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -67,14 +76,14 @@ public class ConfigType {
         return Objects.equals(savedAtrees, modConfig.savedAtrees)
                 && showButtons == modConfig.showButtons
                 && showTreeLoader == modConfig.showTreeLoader
-                && tomeIds == modConfig.tomeIds
                 && defaultPowderLevel == modConfig.defaultPowderLevel
-                && precision == modConfig.precision;
+                && precision == modConfig.precision
+                && includeTomes == modConfig.includeTomes
+                && includeAspects == modConfig.includeAspects;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, savedAtrees, showTreeLoader,
-                tomeIds, defaultPowderLevel, precision);
+        return Objects.hash(showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision, includeTomes, includeAspects);
     }
 }

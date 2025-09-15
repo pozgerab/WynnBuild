@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.base.util.BitVector;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
@@ -13,8 +12,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -31,7 +28,7 @@ public class AbilityTreeQuery {
 
     public static final int PREVIOUS_PAGE_SLOT = 57;
     public static final int NEXT_PAGE_SLOT = 59;
-    static final int ABILITY_TREE_SLOT = 9;
+    public static final int ABILITY_TREE_SLOT = 9;
     static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
@@ -64,12 +61,12 @@ public class AbilityTreeQuery {
                                 c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME) && processor.doContinue(),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
                 .execute(() -> {
-                    BitVector encodedTree = WynnBuild.getAtreeCoder().encode_atree(atreeState);
-                    String suffix = encodedTree.toB64();
-                    McUtils.sendMessageToClient(Text.literal("Ability tree fetched, click to save ")
-                            .append(Text.literal(suffix).styled(style -> style.withColor(Formatting.DARK_GRAY).withItalic(true)
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Click to save")))
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveatree " + suffix)))).styled(style -> style.withColor(Formatting.GOLD)));
+                    //BitVector encodedTree = WynnBuild.getAtreeCoder().encode_atree(atreeState);
+                    //String suffix = encodedTree.toB64();
+                    McUtils.sendMessageToClient(Text.literal("Ability tree fetched").styled(style -> style.withColor(Formatting.GRAY)));
+                    //.append(Text.literal(suffix).styled(style -> style.withColor(Formatting.DARK_GRAY).withItalic(true)
+                    //        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Click to save")))
+                    //        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveatree " + suffix)))));
                 })
                 .execute(after)
                 .build();

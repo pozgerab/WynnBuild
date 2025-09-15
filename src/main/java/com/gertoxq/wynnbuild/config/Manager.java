@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild.config;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.screens.tome.TomeQuery;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,8 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static com.gertoxq.wynnbuild.base.Powder.DEFAULT_POWDER_LEVEL;
 
 public class Manager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -27,12 +24,10 @@ public class Manager {
             } else {
                 BufferedReader reader = Files.newBufferedReader(CONFIG_PATH);
                 config = GSON.fromJson(reader, ConfigType.class);
-                WynnBuild.tomeIds = config.getTomeIds().size() == TomeQuery.EMPTY_IDS.size() ? config.getTomeIds() : TomeQuery.EMPTY_IDS;
-                DEFAULT_POWDER_LEVEL = config.getDefaultPowderLevel();
                 reader.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            WynnBuild.error(e.getMessage());
         }
     }
 
@@ -45,7 +40,7 @@ public class Manager {
             GSON.toJson(config, writer);
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            WynnBuild.error(e.getMessage());
         }
     }
 

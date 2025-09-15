@@ -38,14 +38,12 @@ public class TomeQuery {
                                 .expectContainerTitle(ContainerModel.MASTERY_TOMES_NAME)
                                 .verifyContentChange(this::verifyChange)
                                 .processIncomingContainer(this::processTomes))
-                .execute(() -> {
-                    WynnBuild.info("Read tomes: {}", WynnBuild.tomeIds);
-                })
+                .execute(() -> WynnBuild.info("Read tomes: {}", WynnBuild.tomeIds))
                 .build();
         tomeQuery.executeQuery();
     }
 
-    private void processTomes(ContainerContent content) {
+    public void processTomes(ContainerContent content) {
         WynnBuild.tomeIds = getTomeIds(content);
     }
 
