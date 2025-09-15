@@ -153,6 +153,9 @@ public class BitVector {
             this.tailIdx++;
 //            if (prePos != 0) {
             long partial = v >>> (32 - prePos);
+            if (this.tailIdx - 1 >= this.bits.length()) {
+                checkResize(1);
+            }
             long nextVal = (this.tailIdx - 1 < this.bits.length()) ? this.bits.get(this.tailIdx - 1) : 0;
             this.bits.set(this.tailIdx - 1, nextVal | partial);
 //            }

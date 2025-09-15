@@ -3,11 +3,12 @@
   "minVersion": "0.8",
   "package": "com.gertoxq.wynnbuild.mixins",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "HighlightEntryListHover",
-    "ScreenReplacerMixin"
-  ],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "QueryStackHandlerMixin",
+    "ScreenReplacerMixin"
+  ]
 }

@@ -1,9 +1,6 @@
 package com.gertoxq.wynnbuild.util;
 
-import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.base.custom.Custom;
-import com.gertoxq.wynnbuild.build.Build;
-import com.gertoxq.wynnbuild.client.WynnBuildClient;
+import com.wynntils.models.items.items.game.GearItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
@@ -14,14 +11,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
+
 public class Utils {
-    private static int failures = 0;
 
     public static String withSign(int number) {
         return (number >= 0 ? "+" : "") + number;
@@ -57,18 +55,6 @@ public class Utils {
         return news.get();
     }
 
-    public static MutableText reduceTextList(List<Text> original) {
-        MutableText lore = Text.empty();
-        for (int i = 0; i < original.size(); i++) {
-            Text line = original.get(i);
-            lore.append(line);
-            if (i != original.size() - 1) {
-                lore.append("\n");
-            }
-        }
-        return lore;
-    }
-
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
     }
@@ -84,13 +70,23 @@ public class Utils {
         return Arrays.stream(string.split(" ")).map(Utils::capitalizeFirst).collect(Collectors.joining(" "));
     }
 
-    public static int bool(boolean b) {
-        return b ? 1 : 0;
+    public static String escapeToUnicode(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            if (c < 128) {
+                sb.append(c);
+            } else {
+                sb.append(String.format("\\u%04X", (int) c));
+            }
+        }
+        return sb.toString();
     }
 
-    public static Text getItemPrintTemplate(Custom item, String fullHash, String url) {
+    public static Text getItemPrintTemplate(GearItem item, String fullHash, String url) {
         return Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
-                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getTier().format)))
+                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getGearTier().getChatFormatting())))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
                 .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url)))
@@ -105,21 +101,13 @@ public class Utils {
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(fullHash)))
                         .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullHash))
                         .withUnderline(true)))
-                //.append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                //.append(Text.literal("SAVE").styled(style -> style.withColor(Formatting.GOLD)
-                //        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Clicking this will open a menu where you can save items allowing you to use it in later builds")))
-                //        .withUnderline(true).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveditems"))))
                 .append("\n").styled(style -> style.withBold(true));
     }
 
-    public static Text getBuildTemplate(String url, @Range(from = 0, to = 3) boolean precise) {
-        int precision = precise ? 1 : 0;
+    public static Text getBuildTemplate(String url) {
         return Text.literal("\n(").styled(style -> style.withColor(Formatting.DARK_GRAY))
-                .append(Text.literal(Build.PRECISION_OPTIONS.get(precision)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true).withUnderline(true)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                Text.literal("Precision Option: ").append(Build.PRECISION_OPTIONS.get(precision)).append("\n").append(Build.PRECISION_TOOLTIPS.get(precision)).append("\n\n")
-                                        .append(Text.literal("CLICK TO CHANGE PRECISION (/build config)").styled(style1 -> style1.withColor(Formatting.GREEN)))))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build config"))))
+                .append(Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, optionsTooltip())).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build config"))))
                 .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
                 .append(Text.literal(" Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
                         .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
@@ -133,21 +121,19 @@ public class Utils {
                         .append("\n").styled(style -> style.withBold(true)));
     }
 
-    /**
-     * Wraps a method in a try block to catch errors at screen reading
-     */
-    public static void catchNotLoaded(Runnable method) {
-        try {
-            method.run();
-            failures = 0;
-        } catch (Exception e) {
-            failures++;
-            WynnBuild.message(Text.literal("Fetching failed! Press the READ button to fetch manually")
-                    .styled(style -> style.withColor(Formatting.RED)));
-            if (failures < 2) {
-                new Task(() -> catchNotLoaded(method), WynnBuildClient.REFETCH_DELAY);
-            }
-            e.printStackTrace();
-        }
+    public static MutableText optionsTooltip() {
+        return Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA))
+                .append("\n\n")
+                .append(Text.literal("Precision: ").styled(style -> style.withColor(Formatting.GRAY))
+                        .append(Text.literal(getConfigManager().getConfig().getPrecision() == 1 ? "ON" : "OFF").styled(style -> style.withColor(getConfig().getPrecision() == 1 ? Formatting.GREEN : Formatting.RED))))
+                .append("\n")
+                .append(Text.literal("Include Tomes: ").styled(style -> style.withColor(Formatting.GRAY))
+                        .append(Text.literal(getConfigManager().getConfig().isIncludeTomes() ? "ON" : "OFF").styled(style -> style.withColor(getConfig().isIncludeTomes() ? Formatting.GREEN : Formatting.RED))))
+                .append("\n")
+                .append(Text.literal("Include Aspects: ").styled(style -> style.withColor(Formatting.GRAY))
+                        .append(Text.literal(getConfigManager().getConfig().isIncludeAspects() ? "ON" : "OFF").styled(style -> style.withColor(getConfig().isIncludeAspects() ? Formatting.GREEN : Formatting.RED))))
+                .append("\n\n")
+                .append(Text.literal("Click to change (/build config)").styled(style -> style.withColor(Formatting.DARK_GRAY)));
     }
+
 }

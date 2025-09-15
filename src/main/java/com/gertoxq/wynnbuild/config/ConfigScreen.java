@@ -45,8 +45,8 @@ public class ConfigScreen extends Screen {
                         }));
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 48, 100, 20, Text.literal("Atree code: "), textRenderer));
 
-        var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(getConfigManager().getConfig().getAtreeEncoding()));
-        input.setText(getConfigManager().getConfig().getAtreeEncoding());
+        var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(WynnBuild.getAtreeSuffix()));
+        input.setText(WynnBuild.getAtreeSuffix());
         input.setEditable(false);
         addDrawableChild(input);
 
@@ -84,7 +84,23 @@ public class ConfigScreen extends Screen {
 
         addDrawableChild(help);
 
-        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 122, 100, 20,
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("OFF").styled(style -> style.withColor(Formatting.RED))).initially(getConfigManager().getConfig().isIncludeTomes())
+                .build(this.width / 2 - 100, this.height / 4 + 122, 200, 20, Text.literal("Include Tomes"),
+                        (button, value) -> {
+                            getConfigManager().getConfig().setIncludeTomes(value);
+                            getConfigManager().saveConfig();
+                        }));
+
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("OFF").styled(style -> style.withColor(Formatting.RED))).initially(getConfigManager().getConfig().isIncludeAspects())
+                .build(this.width / 2 - 100, this.height / 4 + 148, 200, 20, Text.literal("Include Aspects"),
+                        (button, value) -> {
+                            getConfigManager().getConfig().setIncludeAspects(value);
+                            getConfigManager().saveConfig();
+                        }));
+
+        addDrawableChild(new Button(this.width / 2 - 50, this.height / 4 + 176, 100, 20,
                 Text.literal("Close"),
                 button -> client.setScreen(parent)));
     }

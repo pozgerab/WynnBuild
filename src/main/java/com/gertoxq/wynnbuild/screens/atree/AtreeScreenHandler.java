@@ -15,8 +15,6 @@ import java.util.Set;
 public class AtreeScreenHandler extends ContainerScreenHandler {
     static final Set<Integer> readCache = new HashSet<>();
 
-    public boolean readCurrent = false;
-
     public AtreeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(syncId, playerInventory, inventory, 6);
     }

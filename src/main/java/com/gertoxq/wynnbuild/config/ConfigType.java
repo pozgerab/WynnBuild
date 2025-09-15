@@ -7,16 +7,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class ConfigType {
+    private final List<SavedBuild> savedAtrees = new ArrayList<>();
     private boolean showButtons = true;
-    private String atreeEncoding = "0";
     private boolean showTreeLoader = true;
-    private String cast = "Warrior";
-    private List<SavedBuild> savedAtrees = new ArrayList<>();
-    private List<Integer> tomeIds = new ArrayList<>();
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
-    private List<SavedItem> savedItems = new ArrayList<>();
-    private int atreeIdleTime = 10;
     private @Range(from = 0, to = 1) int precision = 0;
+    private boolean includeTomes = true;
+    private boolean includeAspects = true;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -34,52 +31,8 @@ public class ConfigType {
         this.showButtons = showButtons;
     }
 
-    public int getAtreeIdleTime() {
-        return atreeIdleTime;
-    }
-
-    public void setAtreeIdleTime(int atreeIdleTime) {
-        this.atreeIdleTime = atreeIdleTime;
-    }
-
     public List<SavedBuild> getSavedAtrees() {
         return savedAtrees;
-    }
-
-    public void setSavedAtrees(List<SavedBuild> savedAtrees) {
-        this.savedAtrees = savedAtrees;
-    }
-
-    public String getCast() {
-        return cast;
-    }
-
-    public void setCast(String cast) {
-        this.cast = cast;
-    }
-
-    public String getAtreeEncoding() {
-        return atreeEncoding;
-    }
-
-    public void setAtreeEncoding(String atreeEncoding) {
-        this.atreeEncoding = atreeEncoding;
-    }
-
-    public List<Integer> getTomeIds() {
-        return tomeIds;
-    }
-
-    public void setTomeIds(List<Integer> tomeIds) {
-        this.tomeIds = tomeIds;
-    }
-
-    public List<SavedItem> getSavedItems() {
-        return savedItems;
-    }
-
-    public void setSavedItems(List<SavedItem> savedItems) {
-        this.savedItems = savedItems;
     }
 
     public int getDefaultPowderLevel() {
@@ -99,27 +52,38 @@ public class ConfigType {
         this.precision = precision;
     }
 
+    public boolean isIncludeTomes() {
+        return includeTomes;
+    }
+
+    public void setIncludeTomes(boolean includeTomes) {
+        this.includeTomes = includeTomes;
+    }
+
+    public boolean isIncludeAspects() {
+        return includeAspects;
+    }
+
+    public void setIncludeAspects(boolean includeAspects) {
+        this.includeAspects = includeAspects;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         ConfigType modConfig = (ConfigType) object;
-        return savedAtrees == modConfig.savedAtrees
+        return Objects.equals(savedAtrees, modConfig.savedAtrees)
                 && showButtons == modConfig.showButtons
-                && Objects.equals(atreeEncoding, modConfig.atreeEncoding)
-                && Objects.equals(cast, modConfig.cast)
                 && showTreeLoader == modConfig.showTreeLoader
-                && tomeIds == modConfig.tomeIds
                 && defaultPowderLevel == modConfig.defaultPowderLevel
-                && savedItems == modConfig.savedItems
-                && atreeIdleTime == modConfig.atreeIdleTime
-                && precision == modConfig.precision;
+                && precision == modConfig.precision
+                && includeTomes == modConfig.includeTomes
+                && includeAspects == modConfig.includeAspects;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, atreeEncoding,
-                cast, savedAtrees, showTreeLoader,
-                tomeIds, defaultPowderLevel, savedItems, atreeIdleTime, precision);
+        return Objects.hash(showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision, includeTomes, includeAspects);
     }
 }
