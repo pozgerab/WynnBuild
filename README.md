@@ -1,43 +1,39 @@
 # WynnBuild
-_A mod for generating [WynnBuilder](https://wynnbuilder.github.io/builder/) urls in-game._
+_A simple mod that lets you generate [WynnBuilder](https://wynnbuilder.github.io/builder/) links directly in-game._
 
-## Usage
-Opening your character info gui or ability tree will gather your info for your build. If you make changes to your ability tree, make sure to manually fetch the info again with the **Read** button on the right bottom side of your screen.
+## How to Use
+You can quickly create a WynnBuilder link for your build in two ways:
+- Press the **BUILD** button at the bottom-right of your character info screen (you can turn this button off in settings if you want).
+- Or, more reliably, just run the **/build** command.
 
-Pressing the **BUILD** button in the bottom right side of your screen (or the **/build** command) will generate and output your build url to the chat that you can copy and share.
+Pressing the **BUILD** button in the bottom right side of your character info screen (this button can be disabled) or preferrably running the **/build** command will generate and output your build url to the chat that you can copy and share.
 
-You can customize how precise your stats of your build will be with the **Precision** option inside the config menu (**/build config**):
-### Precision options
-- **OFF** - The item is passed to the builder as a default item (meaning item with average rols)
-- **ON** - The item is passed as a custom item (uses exact rolls, most precision)
+![Generated Build](https://cdn.modrinth.com/data/1RCjAAcr/images/0fbf7df3d536bcb112874406d64fb4b8a31afbe3.png)
 
-> Note that using precision mode will count the powders' stats into the base stats as it is hard to determine how much stats the powders actually give
+### Precision Settings
+You can control how detailed your build stats are through the Precision option in **/build config**:
+- **OFF** - Items are treated as average (default rolls)
+- **ON** - Items use your exact rolls for maximum accuracy.
 
-![Precision Option](https://cdn.modrinth.com/data/cached_images/978aa614f487f251566ff5479e8c6132f2e392cc.png)
+### Tomes & Aspects
+Tomes and aspects are supported. You can choose whether to include them in your builds via the config menu.
 
-## Powders
-As it isn't possible to tell what tier is a powder on an item, you can set a default value for it in the config screen. For specifying each powder level, you'll need to do that in the actual builder.
+## Crafted Items
+Crafted items are automatically detected and included in your build. However, since WynnBuilder doesn’t support crafted items with custom rolls, they’ll show up as a **Normal rarity custom item**.
 
-Using precision mode will not include powders in the powder section, instead in base stats
+## Standalone Items
+To share just one item with its exact rolls use the /build buildcustomitem command to generate a [WynnCustom](https://wynnbuilder.github.io/custom/) link.
 
-## Config
-You can configure the mod with **/build config** command. You can disable all buttons or access the encoded value of your current atree.
-Ability tree presets are also configurable (**/build saveatree**).
+![Generated Custom Item](https://cdn.modrinth.com/data/1RCjAAcr/images/1d2a338548f582b52d5cb35edae1468430de1544.png)
 
-![Config Screen](https://cdn.modrinth.com/data/cached_images/7a539d812c3d0e00a1c7d3fe0f77a2d5c3f2e9cb_0.webp)
+## Config Options
+Open the config with /build config. From here, you can:
+- Enable/disable buttons
+- Access your encoded ability tree value
+- Toggle tomes and aspects
+- Set default powder level
 
+![Config Screen](https://cdn.modrinth.com/data/1RCjAAcr/images/1656e55ed72c6ea2104f88da2fc69df903c2d42d.png)
 
-## Custom / Crafted Items
-You can use crafted items in your builds. The mod detects crafted items automatically and use them in the build, however crafted items with custom rolls are not supported by wynnbuilder,
-so their rarity is set to Normal while encoding. Crafted item ingredient recognition system is being worked on, coming soon!
-
-## Ability Tree Presets
-You can create or delete ability tree presets in the new menu opened by **/saveatrees** or **/build saveatrees**.
-Your current class will be assigned for the saved builds.
-You can also access the config in the `.minecraft/config/wynnbuild.json` file.
-
-After saving your first preset, in the abilty tree menu, the names of your classes' available saves will appear. Clicking the **Load {savename}** button will set your ability tree to the saved atree. (Make sure to reset your atree before doing this). This may take up to half a minute or more, but don't close the inventory during the process.
-
-You can disable the preset loader buttons in the main config screen (**/build config**).
-
-#### _All the data (items, tomes, etc...) are from [hppeng-wynn](https://github.com/hppeng-wynn/hppeng-wynn.github.io) repo_
+#### _All item, tome, and aspect encoding logic comes from the [wynnbuilder](https://github.com/wynnbuilder/wynnbuilder.github.io) repo_
+#### _In-game info gathering is done by [Wynntils](https://github.com/Wynntils/Wynntils)_

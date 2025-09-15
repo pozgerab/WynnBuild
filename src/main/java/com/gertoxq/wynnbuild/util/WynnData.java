@@ -66,7 +66,6 @@ public class WynnData {
 
         } catch (Exception e) {
             WynnBuild.error("didn't finish init, something went wrong with wynnbuild: {}", e);
-            e.printStackTrace();
         }
     }
 
