@@ -5,8 +5,6 @@ import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.event.ScreenClosed;
 import com.gertoxq.wynnbuild.event.WorldChangeTreeRefresh;
 import com.gertoxq.wynnbuild.screens.Clickable;
-import com.gertoxq.wynnbuild.screens.ScreenManager;
-import com.gertoxq.wynnbuild.util.Task;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.wynntils.core.WynntilsMod;
 import net.fabricmc.api.ClientModInitializer;
@@ -24,9 +22,7 @@ public class WynnBuildClient implements ClientModInitializer {
     public void onInitializeClient() {
 
         WynnBuild.client = MinecraftClient.getInstance();
-        Task.init();
         WynnData.loadAll();
-        ScreenManager.register();
 
         WynnBuild.configManager = new Manager();
         WynnBuild.getConfigManager().loadConfig();

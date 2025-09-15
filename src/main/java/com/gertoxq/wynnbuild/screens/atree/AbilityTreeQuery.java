@@ -60,14 +60,8 @@ public class AbilityTreeQuery {
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME) && processor.doContinue(),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
-                .execute(() -> {
-                    //BitVector encodedTree = WynnBuild.getAtreeCoder().encode_atree(atreeState);
-                    //String suffix = encodedTree.toB64();
-                    McUtils.sendMessageToClient(Text.literal("Ability tree fetched").styled(style -> style.withColor(Formatting.GRAY)));
-                    //.append(Text.literal(suffix).styled(style -> style.withColor(Formatting.DARK_GRAY).withItalic(true)
-                    //        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Click to save")))
-                    //        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build saveatree " + suffix)))));
-                })
+                .execute(() ->
+                        McUtils.sendMessageToClient(Text.literal("Ability tree fetched").styled(style -> style.withColor(Formatting.GRAY))))
                 .execute(after)
                 .build();
 
