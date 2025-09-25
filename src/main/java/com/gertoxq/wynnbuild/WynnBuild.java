@@ -89,7 +89,7 @@ public class WynnBuild implements ModInitializer {
 
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return;
-        String customHash = CustomCoder.encode(gearItemOpt.get()).toB64();
+        String customHash = CustomCoder.encode(gearItemOpt.get(), null).toB64();
 
         String url = WYNNCUSTOM_DOMAIN + customHash;
         String fullHash = "CI-" + customHash;
