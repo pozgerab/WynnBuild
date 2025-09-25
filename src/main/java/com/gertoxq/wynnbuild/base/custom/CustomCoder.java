@@ -5,11 +5,9 @@ import com.gertoxq.wynnbuild.base.util.BootstringEncoder;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.identifications.Data;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Element;
-import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.GearRequirements;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.*;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -38,6 +36,7 @@ public class CustomCoder {
             & GearTierItemProperty & GearTypeItemProperty
             & PowderedItemProperty & NamedItemProperty>
     EncodingBitVector encode(
+            GearType safeType,
             List<StatActualValue> identifications,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
@@ -96,6 +95,13 @@ public class CustomCoder {
 
         int typeBit = Data.gearTypes.indexOf(item.getGearType());
         appendIdIdx(customVec, "type");
+        if (safeType == null) {
+            if (item.getGearType().isWeapon()) {
+                typeBit = Data.gearTypes.indexOf(GearType.fromClassType(Models.Character.getClassType()));
+            }
+        } else {
+            typeBit = Data.gearTypes.indexOf(safeType);
+        }
         customVec.append(typeBit, CUSTOM_ENC.ITEM_TYPE_BITLEN());
 
         if (attackSpeed != null) {
@@ -115,13 +121,14 @@ public class CustomCoder {
         return customVec;
     }
 
-    public static EncodingBitVector encode(GearItem gearItem) {
+    public static EncodingBitVector encode(GearItem gearItem, GearType safeType) {
 
         Optional<GearInstance> gearOptional = gearItem.getItemInstance();
         if (gearOptional.isEmpty()) throw new RuntimeException("Somehow does not have instance");
         GearInstance gearInstance = gearOptional.get();
 
         EncodingBitVector customVec = encode(
+                safeType,
                 gearInstance.identifications(),
                 gearItem.getItemInfo().fixedStats().damages(),
                 gearItem.getItemInfo().fixedStats().defences(),
@@ -144,9 +151,10 @@ public class CustomCoder {
         return customVec;
     }
 
-    public static EncodingBitVector encode(CraftedGearItem craftedItem) {
+    public static EncodingBitVector encode(CraftedGearItem craftedItem, GearType safeType) {
 
         return encode(
+                safeType,
                 craftedItem.getIdentifications(),
                 craftedItem.getDamages(),
                 craftedItem.getDefences(),

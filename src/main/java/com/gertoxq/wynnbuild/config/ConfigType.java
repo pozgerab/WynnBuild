@@ -12,8 +12,8 @@ public class ConfigType {
     private boolean showTreeLoader = true;
     private @Range(from = 1, to = 6) int defaultPowderLevel = 6;
     private @Range(from = 0, to = 1) int precision = 0;
-    private boolean includeTomes = true;
-    private boolean includeAspects = true;
+    private boolean includeTomes = false;
+    private boolean includeAspects = false;
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;

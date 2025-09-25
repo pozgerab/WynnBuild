@@ -11,6 +11,7 @@ import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -29,6 +30,7 @@ import static com.gertoxq.wynnbuild.util.Utils.mod;
 public class EncodeDecode {
 
     public static final Map<Integer, Integer> POWDERABLES = Map.of(0, 0, 1, 1, 2, 2, 3, 3, 8, 4);
+    public static final List<GearType> EQUIPMENT_ORDER = List.of(GearType.HELMET, GearType.CHESTPLATE, GearType.LEGGINGS, GearType.BOOTS, GearType.RING, GearType.RING, GearType.BRACELET, GearType.NECKLACE);
     public static final BaseEncoding ENC = new BaseEncoding();
     static final byte VECTOR_FLAG = 0xC;
     static final int VERSION_BITLEN = 10;
@@ -124,10 +126,11 @@ public class EncodeDecode {
                 }
                 case 2 -> {
                     String hash;
+                    GearType safeType = idx < 8 ? EQUIPMENT_ORDER.get(idx) : null;
                     if (crafted != null) {
-                        hash = CustomCoder.encode(crafted).toB64();
+                        hash = CustomCoder.encode(crafted, safeType).toB64();
                     } else {
-                        hash = CustomCoder.encode(gear).toB64();
+                        hash = CustomCoder.encode(gear, safeType).toB64();
                     }
                     equipmentVec.append(hash.length(), CUSTOM_STR_LENGTH_BITLEN);
                     equipmentVec.appendB64(hash);
