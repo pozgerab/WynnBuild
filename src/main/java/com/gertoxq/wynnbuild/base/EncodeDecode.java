@@ -107,7 +107,14 @@ public class EncodeDecode {
             Optional<CraftedGearItem> craftedOpt = Models.Item.asWynnItem(equipment.get(idx), CraftedGearItem.class);
             CraftedGearItem crafted = craftedOpt.orElse(null);
 
-            int equipmentKind = crafted != null || (gear != null && precise) ? ENC.EQUIPMENT_KIND().CUSTOM : ENC.EQUIPMENT_KIND().NORMAL;
+            int equipmentKind;
+            if (gearOpt.isPresent() && gearOpt.get().getItemInfo().metaInfo().preIdentified()) {
+                equipmentKind = ENC.EQUIPMENT_KIND().NORMAL;
+            } else if (craftedOpt.isPresent() || (gearOpt.isPresent() && precise)) {
+                equipmentKind = ENC.EQUIPMENT_KIND().CUSTOM;
+            } else {
+                equipmentKind = ENC.EQUIPMENT_KIND().NORMAL;
+            }
             equipmentVec.append(equipmentKind, ENC.EQUIPMENT_KIND().BITLEN());
 
             switch (equipmentKind) {
