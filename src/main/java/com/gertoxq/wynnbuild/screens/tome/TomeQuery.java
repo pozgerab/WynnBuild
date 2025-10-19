@@ -15,13 +15,12 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class TomeQuery {
 
-    public static final List<Integer> EMPTY_IDS = Collections.nCopies(14, -1);
+    public static final List<Integer> EMPTY_IDS = List.of(61, 61, 62, 62, 62, 62, 63, 93, 162, 162, 163, 163, 164, 164);
     public static final List<Integer> TOME_SLOTS = List.of(11, 19, 22, 30, 31, 32, 4, 49, 15, 25, 28, 38, 34, 42);
     private static final int TOME_SLOT = 8;
     private static final int TOME_MENU_CONTENT_BOOK_SLOT = 89;
@@ -49,15 +48,16 @@ public class TomeQuery {
 
     private List<Integer> getTomeIds(ContainerContent content) {
         return TOME_SLOTS.stream().map(slot -> {
+            int emptyID = EMPTY_IDS.get(TOME_SLOTS.indexOf(slot));
             Optional<TomeItem> tomeOptional = Models.Item.asWynnItem(content.items().get(slot), TomeItem.class);
             if (tomeOptional.isEmpty()) {
-                return -1;
+                return emptyID;
             }
             Optional<Integer> optionalId = Optional.ofNullable(WynnData.getTomeMap().get(tomeOptional.get().getName()));
             if (optionalId.isEmpty()) {
                 WynnBuild.warn("Unknown tome: name={}", tomeOptional.get().getName());
             }
-            return optionalId.orElse(-1);
+            return optionalId.orElse(emptyID);
         }).toList();
     }
 

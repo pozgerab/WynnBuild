@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.gertoxq.wynnbuild.WynnBuild.WYNN_VERSION_ID;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
 import static com.gertoxq.wynnbuild.base.PowderUtil.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
 
@@ -250,13 +251,16 @@ public class EncodeDecode {
 
         //  TODO    Tome types dont fit in 4 bits, third-party bug, wait for fix
 
+        boolean tomesEnabled = getConfig().isIncludeTomes();
+        boolean aspectsEnabled = getConfig().isIncludeAspects();
+
         BitVector[] vectors = {
                 encodeHeader(WYNN_VERSION_ID),
                 encodeEquipment(build.equipment, powderSet, precise),
-                encodeTomes(build.tomeIDs),
+                encodeTomes(tomesEnabled ? build.tomeIDs : null),
                 encodeSp(finalSkillPoints, assignedSkillpoints),
                 encodeLevel(build.wynnLevel),
-                encodeAspects(aspects),
+                encodeAspects(aspectsEnabled ? aspects : null),
                 AtreeCoder.getAtreeCoder(build.cast).encode_atree(atreeState)
         };
 
