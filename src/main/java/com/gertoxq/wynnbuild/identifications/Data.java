@@ -54,7 +54,7 @@ public final class Data {
             "spPct3Final", "spPct4Final", "healPct", "kb", "weakenEnemy", "slowEnemy", "rDefPct", "maxMana",
             "mainAttackRange");
 
-    public static final List<GearTier> gearTiers = List.of(GearTier.NORMAL, GearTier.UNIQUE, GearTier.RARE, GearTier.LEGENDARY, GearTier.FABLED, GearTier.MYTHIC, GearTier.CRAFTED);
+    public static final List<GearTier> gearTiers = List.of(GearTier.NORMAL, GearTier.UNIQUE, GearTier.RARE, GearTier.LEGENDARY, GearTier.FABLED, GearTier.MYTHIC, GearTier.SET, GearTier.CRAFTED);
 
     public static final List<GearType> gearTypes = List.of(GearType.HELMET, GearType.CHESTPLATE, GearType.LEGGINGS, GearType.BOOTS,
             GearType.RING, GearType.BRACELET, GearType.NECKLACE, GearType.WAND, GearType.SPEAR, GearType.BOW, GearType.DAGGER, GearType.RELIK);
