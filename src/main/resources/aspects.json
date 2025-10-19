@@ -46,9 +46,9 @@
     "22": "Aspect of the Unstoppable Force",
     "23": "Aspect of Visual Distortion",
     "24": "Aspect of Flamboyance",
-    "25": "Aspect of Athlethicism",
     "26": "Aspect of Enduring Illusions",
-    "27": "Trickster's Embodiment of Malevolent Mischief"
+    "27": "Trickster's Embodiment of Malevolent Mischief",
+    "28": "Aspect of Athleticism"
   },
   "Mage": {
     "0": "Aspect of Runic Extravagance",
@@ -76,7 +76,6 @@
     "1": "Aspect of Extreme Current",
     "2": "Aspect of the Inexhaustible Quiver",
     "3": "Aspect of the Poltergeist",
-    "4": "Aspect of the Great Escape",
     "5": "Aspect of Undercrank",
     "6": "Aspect of Fragmentation Rounds",
     "8": "Aspect of Clinging Lichen",
@@ -93,7 +92,8 @@
     "19": "Aspect of the Steadying Hand",
     "20": "Aspect of Illegal Explosives",
     "21": "Aspect of a Thunderbolt",
-    "22": "Aspect of the Iron String"
+    "22": "Aspect of the Iron String",
+    "23": "Aspect of the Heavenly Mandate"
   },
   "Shaman": {
     "0": "Aspect of Stances",
