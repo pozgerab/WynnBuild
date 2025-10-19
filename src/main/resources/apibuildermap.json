@@ -38,7 +38,7 @@
   "rawDefence": "def",
   "rawAgility": "agi",
   "healthRegenRaw": "hprRaw",
-  "rawAttackSpeed": "atkSpd",
+  "rawAttackSpeed": "atkTier",
   "rawStrength": "str",
   "healthRegen": "hprPct",
   "rawSpellDamage": "sdRaw",
@@ -111,6 +111,6 @@
   "lootQuality": "lq",
   "neutralSpellDamage": "nSdPct",
   "rawMaxMana": "maxMana",
-  "mainAttackRange": "NOTIMPL",
+  "mainAttackRange": "mainAttackRange",
   "criticalDamageBonus": "critDamPct"
 }
