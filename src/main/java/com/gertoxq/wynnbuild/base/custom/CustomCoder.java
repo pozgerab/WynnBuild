@@ -5,6 +5,7 @@ import com.gertoxq.wynnbuild.base.util.BootstringEncoder;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.identifications.Data;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.gear.type.*;
@@ -140,7 +141,7 @@ public class CustomCoder {
         );
 
         gearItem.getItemInfo().fixedStats().majorIds().ifPresent(gearMajorId -> {
-            String majorId = WynnData.getMajorIdMap().get(gearMajorId.name());
+            String majorId = Providers.MajorIds.data().get(gearMajorId.name());
             if (majorId == null) {
                 WynnBuild.warn("Skipping unknown majorId: {}", gearMajorId.name());
             } else {

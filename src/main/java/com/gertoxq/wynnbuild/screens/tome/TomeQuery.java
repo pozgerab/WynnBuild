@@ -2,6 +2,7 @@ package com.gertoxq.wynnbuild.screens.tome;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
@@ -53,7 +54,7 @@ public class TomeQuery {
             if (tomeOptional.isEmpty()) {
                 return emptyID;
             }
-            Optional<Integer> optionalId = Optional.ofNullable(WynnData.getTomeMap().get(tomeOptional.get().getName()));
+            Optional<Integer> optionalId = Optional.ofNullable(Providers.Tomes.data().get(tomeOptional.get().getName()));
             if (optionalId.isEmpty()) {
                 WynnBuild.warn("Unknown tome: name={}", tomeOptional.get().getName());
             }
