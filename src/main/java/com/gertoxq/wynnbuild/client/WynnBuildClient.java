@@ -6,6 +6,7 @@ import com.gertoxq.wynnbuild.event.ScreenClosed;
 import com.gertoxq.wynnbuild.event.WorldChangeTreeRefresh;
 import com.gertoxq.wynnbuild.screens.Clickable;
 import com.gertoxq.wynnbuild.util.WynnData;
+import com.gertoxq.wynnbuild.webquery.BuilderDataManager;
 import com.wynntils.core.WynntilsMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -26,6 +27,8 @@ public class WynnBuildClient implements ClientModInitializer {
 
         WynnBuild.configManager = new Manager();
         WynnBuild.getConfigManager().loadConfig();
+
+        BuilderDataManager.initBuilderData();
 
         BUTTON = new Clickable(() -> WynnBuild.getConfig().isShowButtons());
 

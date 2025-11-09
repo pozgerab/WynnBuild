@@ -8,7 +8,7 @@ import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
-import com.gertoxq.wynnbuild.util.WynnData;
+import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearType;
@@ -22,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.gertoxq.wynnbuild.WynnBuild.WYNN_VERSION_ID;
 import static com.gertoxq.wynnbuild.base.PowderUtil.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
+import static com.gertoxq.wynnbuild.webquery.BuilderDataManager.WYNN_VERSION_ID;
 
 
 public class EncodeDecode {
@@ -121,7 +121,7 @@ public class EncodeDecode {
                 case 0 -> {
                     Integer id = 0;
                     if (gear != null) {
-                        id = WynnData.getIdMap().get(gear.getName());
+                        id = Providers.Items.data().get(gear.getName());
                         if (id == null) {
                             WynnBuild.warn("Unknown item: {}", gear.getName());
                             id = 0;
