@@ -1,8 +1,8 @@
 package com.gertoxq.wynnbuild.webquery.providers;
 
 import com.gertoxq.wynnbuild.webquery.DataProvider;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class TomeProvider extends DataProvider<Integer> {
 
     public TomeProvider() {
-        super("tomes");
+        super("tomes", new TypeToken<Map<String, Integer>>() {}.getType());
     }
 
     @Override

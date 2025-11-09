@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild.webquery;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Arrays;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.regex.Pattern;
 
 public class BuilderDataManager {
 
-    public static boolean queriedVersion = false;
     public static String LATEST_WYNNBUILDER_VERSION;
     public static int WYNN_VERSION_ID;
     private static final Pattern VERSION_STRING_PATTERN = Pattern.compile("'((?:\\d+\\.){3}\\d+)'");
@@ -37,23 +35,24 @@ public class BuilderDataManager {
                     BuilderDataManager.WYNN_VERSION_ID = count - 1;
                     BuilderDataManager.LATEST_WYNNBUILDER_VERSION = last;
 
-                    queriedVersion = true;
-
-                    WynnBuild.info("Wynnbuilder latest version: {}", BuilderDataManager.LATEST_WYNNBUILDER_VERSION);
-                    WynnBuild.info("Wynnbuilder latest version id: {}", BuilderDataManager.WYNN_VERSION_ID);
+                    WynnBuild.info("Wynnbuilder version: {} (id: {})", BuilderDataManager.LATEST_WYNNBUILDER_VERSION, BuilderDataManager.WYNN_VERSION_ID);
 
                     Arrays.stream(Providers.class.getDeclaredFields()).forEach(field -> {
-
-                        field.setAccessible(true);
                         try {
+                            WynnBuild.info("Trying to load provider from field: {}", field.getName());
+
+                            field.setAccessible(true);
+
                             DataProvider<?> provider = (DataProvider<?>) field.get(null);
                             processProvider(provider, ignoreCache);
-
-                        } catch (IllegalAccessException e) {
-                            WynnBuild.error("Failed to access field. Err: {}", e.getMessage());
+                        } catch (Exception e) {
+                            WynnBuild.error("Failed to load provider from field {}. Error: {}", field.getName(), e.getMessage());
                         }
                     });
 
+                }).exceptionally(throwable -> {
+                    WynnBuild.error("Failed to get latest version file. Error: {}", throwable.getMessage());
+                    return null;
                 });
 
     }
@@ -65,20 +64,23 @@ public class BuilderDataManager {
                 Optional<Map<String, T>> cacheDataOpt = provider.getCacheData();
                 if (cacheDataOpt.isPresent()) {
                     provider.setData(cacheDataOpt.get());
-                    WynnBuild.info("Loaded cached entries for provider {}", provider.data());
+                    WynnBuild.info("Loaded cached entries for provider {}", provider.getClass().getSimpleName());
                     return;
                 }
             }
         }
         HttpHelper.get(provider.url(BuilderDataManager.LATEST_WYNNBUILDER_VERSION))
                 .thenApply(providerRes -> {
-                    JsonObject jsonObject = JsonParser.parseString(providerRes.body()).getAsJsonObject();
-                    provider.setCache(jsonObject, BuilderDataManager.LATEST_WYNNBUILDER_VERSION);
-                    return provider.transformData(jsonObject);
+                    Map<String, T> dataMap = provider.transformData(JsonParser.parseString(providerRes.body()).getAsJsonObject());
+                    provider.setCache(dataMap, BuilderDataManager.LATEST_WYNNBUILDER_VERSION);
+                    return dataMap;
                 })
                 .thenAccept(stringTMap -> {
                     provider.setData(stringTMap);
-                    WynnBuild.info("Loaded entries for provider {}", provider.data());
+                    WynnBuild.info("Loaded web entries for provider {}", provider.getClass().getSimpleName());
+                }).exceptionally(throwable -> {
+                    WynnBuild.error("Failed to load entries for provider {}. Err: {}", provider.getClass().getSimpleName(), throwable.getMessage());
+                    return null;
                 });
     }
 

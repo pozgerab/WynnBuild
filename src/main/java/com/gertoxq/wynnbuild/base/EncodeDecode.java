@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.gertoxq.wynnbuild.WynnBuild.WYNN_VERSION_ID;
 import static com.gertoxq.wynnbuild.base.PowderUtil.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
 import static com.gertoxq.wynnbuild.webquery.BuilderDataManager.WYNN_VERSION_ID;

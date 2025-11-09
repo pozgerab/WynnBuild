@@ -2,6 +2,7 @@ package com.gertoxq.wynnbuild.webquery.providers;
 
 import com.gertoxq.wynnbuild.webquery.DataProvider;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
 public class ItemProvider extends DataProvider<Integer> {
 
     public ItemProvider() {
-        super("items");
+        super("items", new TypeToken<Map<String, Integer>>() {}.getType());
     }
 
     @Override
