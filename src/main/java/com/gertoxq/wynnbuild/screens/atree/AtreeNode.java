@@ -13,20 +13,16 @@ public class AtreeNode {
     public final Integer id;
     final ItemStack stack;
     final String name;
+    final int page;
     Slot slot = null;
 
-
-    public AtreeNode(Slot slot) {
-        this(slot.getStack(), slot.getIndex());
-        this.slot = slot;
-    }
-
-    public AtreeNode(ItemStack itemStack, int index) {
+    public AtreeNode(ItemStack itemStack, int index, int page) {
         this.stack = itemStack;
         this.name = Utils.removeNum(Utils.removeFormat(itemStack.getName().getString()
                 .replace("Unlock ", "")
                 .replace(" ability", "").trim()));
-        this.id = Ability.getIdByNameAndSlot(name, index).orElse(null);
+        this.id = Ability.getIdByNameSlotPage(name, index, page).orElse(null);
+        this.page = page;
     }
 
     public Optional<Integer> getId() {

@@ -1,6 +1,6 @@
 package com.gertoxq.wynnbuild.webquery.providers;
 
-import com.gertoxq.wynnbuild.webquery.DataProvider;
+import com.gertoxq.wynnbuild.webquery.BuilderDataProvider;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.models.character.type.ClassType;
@@ -8,7 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AspectProvider extends DataProvider<Map<String, Integer>> {
+public class AspectProvider extends BuilderDataProvider<Map<String, Integer>> {
     public AspectProvider() {
         super("aspects", new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
     }
