@@ -2,7 +2,6 @@ package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.util.Utils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -10,31 +9,20 @@ import java.util.Optional;
 
 public class AtreeNode {
 
-    public final Integer id;
     final ItemStack stack;
     final String name;
-    Slot slot = null;
+    final Ability ability;
 
-
-    public AtreeNode(Slot slot) {
-        this(slot.getStack(), slot.getIndex());
-        this.slot = slot;
-    }
-
-    public AtreeNode(ItemStack itemStack, int index) {
+    public AtreeNode(ItemStack itemStack, int index, int page) {
         this.stack = itemStack;
         this.name = Utils.removeNum(Utils.removeFormat(itemStack.getName().getString()
                 .replace("Unlock ", "")
                 .replace(" ability", "").trim()));
-        this.id = Ability.getIdByNameAndSlot(name, index).orElse(null);
+        this.ability = Ability.getAbilityByPageSlot(page, index).orElse(null);
     }
 
     public Optional<Integer> getId() {
-        return Optional.ofNullable(id);
-    }
-
-    public Slot getSlot() {
-        return slot;
+        return Optional.of(ability.id());
     }
 
     public String getName() {

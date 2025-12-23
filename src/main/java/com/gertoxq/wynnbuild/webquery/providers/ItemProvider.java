@@ -1,13 +1,13 @@
 package com.gertoxq.wynnbuild.webquery.providers;
 
-import com.gertoxq.wynnbuild.webquery.DataProvider;
+import com.gertoxq.wynnbuild.webquery.BuilderDataProvider;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemProvider extends DataProvider<Integer> {
+public class ItemProvider extends BuilderDataProvider<Integer> {
 
     public ItemProvider() {
         super("items", new TypeToken<Map<String, Integer>>() {}.getType());
