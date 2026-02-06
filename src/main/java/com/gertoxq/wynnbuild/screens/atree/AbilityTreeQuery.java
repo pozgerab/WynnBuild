@@ -43,6 +43,12 @@ public class AbilityTreeQuery {
     }
 
     public void queryTree(Runnable after) {
+
+        if (Ability.getAbilityMap().isEmpty()) {
+            WynnBuild.message(Text.literal("Ability data is still loading, please wait a moment and try again."));
+            return;
+        }
+
         AtreeFetcher processor = new AtreeFetcher();
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("wynnbuild.treequery")
                 .onError(err -> WynntilsMod.warn("wynnbuild.treequery: " + err))
@@ -85,7 +91,7 @@ public class AbilityTreeQuery {
                 if (Utils.getLore(stack) == null || Utils.getLore(stack).isEmpty()) continue;
 
 
-                AtreeNode node = new AtreeNode(stack, i.get());
+                AtreeNode node = new AtreeNode(stack, i.get(), page);
                 WynnBuild.debug("Found node at {}", String.valueOf(i.get()));
                 WynnBuild.debug("Processing node {}", node.getName());
                 if (node.getId().isEmpty()) {
@@ -98,7 +104,7 @@ public class AbilityTreeQuery {
                 }
                 allPossibleNodes.add(node);
             }
-            Set<Integer> pageUnlocked = findUnlocked(allPossibleNodes.stream().map(atreeNode -> atreeNode.id).collect(Collectors.toSet()));
+            Set<Integer> pageUnlocked = findUnlocked(allPossibleNodes.stream().map(atreeNode -> atreeNode.ability.id()).collect(Collectors.toSet()));
             if (pageUnlocked.isEmpty()) doContinue = false;
             WynnBuild.debug("Unlocked nodes on page {}", Arrays.toString(pageUnlocked.toArray()));
             atreeState.addAll(pageUnlocked);

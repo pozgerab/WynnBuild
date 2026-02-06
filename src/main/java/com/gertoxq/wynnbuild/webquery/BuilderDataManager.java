@@ -2,8 +2,8 @@ package com.gertoxq.wynnbuild.webquery;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.google.gson.JsonParser;
+
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,7 +44,7 @@ public class BuilderDataManager {
                             field.setAccessible(true);
 
                             DataProvider<?> provider = (DataProvider<?>) field.get(null);
-                            processProvider(provider, ignoreCache);
+                            processBuilderProvider(provider, ignoreCache || provider instanceof ApiDataProvider);
                         } catch (Exception e) {
                             WynnBuild.error("Failed to load provider from field {}. Error: {}", field.getName(), e.getMessage());
                         }
@@ -57,11 +57,11 @@ public class BuilderDataManager {
 
     }
 
-    private static <T> void processProvider(DataProvider<T> provider, boolean ignoreCache) {
+    private static <T> void processBuilderProvider(DataProvider<T> provider, boolean ignoreCache) {
         if (!ignoreCache) {
             Optional<String> cacheVerOpt = provider.getCacheVersion();
             if (cacheVerOpt.isPresent() && cacheVerOpt.get().equals(BuilderDataManager.LATEST_WYNNBUILDER_VERSION)) {
-                Optional<Map<String, T>> cacheDataOpt = provider.getCacheData();
+                Optional<T> cacheDataOpt = provider.getCacheData();
                 if (cacheDataOpt.isPresent()) {
                     provider.setData(cacheDataOpt.get());
                     WynnBuild.info("Loaded cached entries for provider {}", provider.getClass().getSimpleName());
@@ -69,9 +69,9 @@ public class BuilderDataManager {
                 }
             }
         }
-        HttpHelper.get(provider.url(BuilderDataManager.LATEST_WYNNBUILDER_VERSION))
+        HttpHelper.get(provider.url())
                 .thenApply(providerRes -> {
-                    Map<String, T> dataMap = provider.transformData(JsonParser.parseString(providerRes.body()).getAsJsonObject());
+                    T dataMap = provider.transformData(JsonParser.parseString(providerRes.body()).getAsJsonObject());
                     provider.setCache(dataMap, BuilderDataManager.LATEST_WYNNBUILDER_VERSION);
                     return dataMap;
                 })

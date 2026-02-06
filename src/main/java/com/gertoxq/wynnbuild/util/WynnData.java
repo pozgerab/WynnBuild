@@ -10,8 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.gertoxq.wynnbuild.screens.atree.Ability.fullatree;
-
 public class WynnData {
 
     private static final Map<String, String> apiBuilderMap = new HashMap<>();
@@ -21,15 +19,7 @@ public class WynnData {
     }
 
     public static void loadAll() {
-        loadAtree();
         loadApiBuilderMapping();
-    }
-
-    public static void loadAtree() {
-        InputStream atreeStream = WynnBuild.class.getResourceAsStream("/" + "atree.json");
-        assert atreeStream != null;
-        fullatree = ((JsonObject) JsonParser.parseReader(
-                new InputStreamReader(atreeStream, StandardCharsets.UTF_8))).asMap();
     }
 
     public static void loadApiBuilderMapping() {

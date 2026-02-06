@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.webquery;
 
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.screens.atree.Ability;
 import com.google.gson.*;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -10,62 +11,58 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import com.google.gson.JsonParseException;
+import static com.gertoxq.wynnbuild.webquery.ApiDataProvider.fullApiAtree;
 
-public abstract class DataProvider<V> {
+public abstract class DataProvider<T> {
 
-    private static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + "wynnbuild");
-    private static final String dataFolderUrl = "https://raw.githubusercontent.com/wynnbuilder/wynnbuilder.github.io/refs/heads/master/data/";
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static Set<String> loadedProviders = new HashSet<>();
 
-    private final String name;
-    private Map<String, V> data;
-    private final File cacheFile;
-    private final Type dataType;
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + "wynnbuild");
+    protected final File cacheFile;
+    protected final Type dataType;
+    protected final String name;
+    protected T data;
 
     public DataProvider(String name, Type dataType) {
-        this.name = name;
         this.cacheFile = new File(cacheDir, name + ".json");
         this.dataType = dataType;
+        this.name = name;
     }
 
-    public Map<String, V> data() {
+    private static void loaded(String name) {
+        loadedProviders.add(name);
+        if (DataProvider.loadedProviders.containsAll(List.of("archer", "warrior", "assassin", "mage", "shaman", "atree"))) {
+            Ability.FULL_ABILITY_MAP = MergeTrees.merge(Providers.Atree.data(), fullApiAtree);
+            Ability.refreshTree();
+        }
+    }
+
+    public T data() {
         return data;
     }
 
-    public String url(String version) {
-        return dataFolderUrl + version + "/" + name + ".json";
+    protected JsonElement toJson(T data) {
+        return DataProvider.gson.toJsonTree(data);
     }
 
-    protected abstract Map<String, V> transformData(JsonObject jsonObject);
+    protected abstract T transformData(JsonObject jsonObject);
 
-    public void setData(Map<String, V> data) {
+    public void setData(T data) {
         this.data = data;
+        loaded(name);
     }
 
-    public void setCache(Map<String, V> dataMap, String version) {
-        if (!cacheDir.exists()) {
-            cacheDir.mkdirs();
-        }
-        if (!cacheFile.exists()) {
-            FileUtils.createNewFile(cacheFile);
-        }
-
-        JsonObject cacheObject = new JsonObject();
-        cacheObject.addProperty("version", version);
-        cacheObject.add("data", gson.toJsonTree(dataMap));
-
-        try {
-            Files.writeString(cacheFile.toPath(), gson.toJson(cacheObject));
-        } catch (IOException e) {
-            WynnBuild.warn("Failed to write cache. Error: {}", e.getMessage());
-        }
+    protected T fromJson(JsonElement dataElement) {
+        return DataProvider.gson.fromJson(dataElement, this.dataType);
     }
 
-    private Optional<JsonObject> readCacheFile() {
+    protected Optional<JsonObject> readCacheFile() {
         if (!cacheFile.exists()) {
             return Optional.empty();
         }
@@ -82,6 +79,14 @@ public abstract class DataProvider<V> {
         }
     }
 
+    public Optional<T> getCacheData() {
+        Optional<JsonObject> cacheDataOpt = readCacheFile();
+        if (cacheDataOpt.isEmpty()) return Optional.empty();
+        JsonObject cacheData = cacheDataOpt.get();
+
+        return Optional.ofNullable(fromJson(cacheData.get("data")));
+    }
+
     public Optional<String> getCacheVersion() {
         return readCacheFile()
                 .map(cacheData -> cacheData.get("version"))
@@ -89,11 +94,24 @@ public abstract class DataProvider<V> {
                 .map(JsonElement::getAsString);
     }
 
-    public Optional<Map<String, V>> getCacheData() {
-        Optional<JsonObject> cacheDataOpt = readCacheFile();
-        if (cacheDataOpt.isEmpty()) return Optional.empty();
-        JsonObject cacheData = cacheDataOpt.get();
+    public void setCache(T dataMap, String version) {
+        if (!DataProvider.cacheDir.exists()) {
+            DataProvider.cacheDir.mkdirs();
+        }
+        if (!cacheFile.exists()) {
+            FileUtils.createNewFile(cacheFile);
+        }
 
-        return Optional.ofNullable(gson.fromJson(cacheData.get("data"), this.dataType));
+        JsonObject cacheObject = new JsonObject();
+        cacheObject.addProperty("version", version);
+        cacheObject.add("data", toJson(dataMap));
+
+        try {
+            Files.writeString(cacheFile.toPath(), DataProvider.gson.toJson(cacheObject));
+        } catch (IOException e) {
+            WynnBuild.warn("Failed to write cache. Error: {}", e.getMessage());
+        }
     }
+
+    public abstract String url();
 }
