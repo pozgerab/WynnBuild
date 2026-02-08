@@ -30,14 +30,18 @@ public class ConfigScreen extends Screen {
     public void init() {
         super.init();
 
-        addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)), Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)))
-                .initially(getConfigManager().getConfig().isShowButtons())
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(
+                Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)),
+                        getConfigManager().getConfig().isShowButtons())
                 .build(this.width / 2 - 100, this.height / 4, 200, 20, Text.literal("Buttons"), (button, value) -> {
                     getConfigManager().getConfig().setShowButtons(value);
                     getConfigManager().saveConfig();
                 }));
-        addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)), Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)))
-                .initially(getConfigManager().getConfig().isShowTreeLoader())
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(
+                Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)),
+                        getConfigManager().getConfig().isShowTreeLoader())
                 .build(this.width / 2 - 100, this.height / 4 + 24, 200, 20, Text.literal("Atree Presets"),
                         (button, value) -> {
                             getConfigManager().getConfig().setShowTreeLoader(value);
@@ -52,9 +56,9 @@ public class ConfigScreen extends Screen {
 
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 72, 100, 20, Text.literal("Powder level: "), textRenderer));
 
-        addDrawableChild(CyclingButtonWidget.<Integer>builder(val -> Text.literal(String.valueOf(val)))
+        addDrawableChild(CyclingButtonWidget.builder(val -> Text.literal(String.valueOf(val)),
+                        getConfigManager().getConfig().getDefaultPowderLevel())
                 .values(1, 2, 3, 4, 5, 6)
-                .initially(getConfigManager().getConfig().getDefaultPowderLevel())
                 .omitKeyText()
                 .build(this.width / 2, this.height / 4 + 72, 30, 20, Text.empty(),
                         (button, value) -> {
@@ -72,9 +76,8 @@ public class ConfigScreen extends Screen {
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))
                 .size(20, 20).build();
 
-        addDrawableChild(CyclingButtonWidget.onOffBuilder()
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(getConfigManager().getConfig().getPrecision() == 1)
                 .values(false, true)
-                .initially(getConfigManager().getConfig().getPrecision() == 1)
                 .build(this.width / 2 - 100, this.height / 4 + 96, 179, 20, Text.literal("Build Precision"),
                         (button, value) -> {
                             help.setTooltip(helpFactory.apply(value ? 1 : 0));
@@ -84,16 +87,20 @@ public class ConfigScreen extends Screen {
 
         addDrawableChild(help);
 
-        addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
-                        Text.literal("OFF").styled(style -> style.withColor(Formatting.RED))).initially(getConfigManager().getConfig().isIncludeTomes())
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(
+                Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("OFF").styled(style -> style.withColor(Formatting.RED)),
+                        getConfigManager().getConfig().isIncludeTomes())
                 .build(this.width / 2 - 100, this.height / 4 + 120, 200, 20, Text.literal("Include Tomes"),
                         (button, value) -> {
                             getConfigManager().getConfig().setIncludeTomes(value);
                             getConfigManager().saveConfig();
                         }));
 
-        addDrawableChild(CyclingButtonWidget.onOffBuilder(Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
-                        Text.literal("OFF").styled(style -> style.withColor(Formatting.RED))).initially(getConfigManager().getConfig().isIncludeAspects())
+        addDrawableChild(CyclingButtonWidget.onOffBuilder(
+                Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("OFF").styled(style -> style.withColor(Formatting.RED)),
+                        getConfigManager().getConfig().isIncludeAspects())
                 .build(this.width / 2 - 100, this.height / 4 + 144, 200, 20, Text.literal("Include Aspects"),
                         (button, value) -> {
                             getConfigManager().getConfig().setIncludeAspects(value);

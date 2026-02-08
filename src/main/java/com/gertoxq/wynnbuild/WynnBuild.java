@@ -17,6 +17,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -58,8 +59,11 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static List<ItemStack> getPlayerEquipment() {
-        List<ItemStack> equipment = new ArrayList<>(McUtils.inventory().armor);
-        Collections.reverse(equipment);
+        List<ItemStack> equipment = new ArrayList<>(List.of(
+                McUtils.player().getEquippedStack(EquipmentSlot.HEAD),
+                McUtils.player().getEquippedStack(EquipmentSlot.CHEST),
+                McUtils.player().getEquippedStack(EquipmentSlot.LEGS),
+                McUtils.player().getEquippedStack(EquipmentSlot.FEET)));
 
         for (int i : InventoryAccessory.getSlots()) {
             int baseSize = 0;
@@ -136,7 +140,7 @@ public class WynnBuild implements ModInitializer {
 
     public static void displayErr(String errorMessage) {
         WynnBuild.message(Text.literal(errorMessage).styled(style -> style.withColor(Formatting.RED)));
-        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+        client.getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_ANVIL_LAND));
     }
 
     public static AtreeCoder getAtreeCoder() {

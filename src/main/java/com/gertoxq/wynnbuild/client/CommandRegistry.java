@@ -12,6 +12,8 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.net.URI;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class CommandRegistry {
@@ -28,8 +30,8 @@ public class CommandRegistry {
                             .then(literal("help").executes(context -> {
                                 WynnBuild.message(Text.literal("\tWelcome to WynnBuild! Instructions ")
                                         .append(Text.literal("HERE").styled(style -> style.withUnderline(true)
-                                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Click for Modrinth page")))
-                                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/wynnbuild"))))
+                                                .withHoverEvent(new HoverEvent.ShowText(Text.literal("Click for Modrinth page")))
+                                                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/wynnbuild")))))
                                         .styled(style -> style.withColor(Formatting.GOLD)));
                                 return 1;
                             }))

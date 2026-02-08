@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -23,7 +23,7 @@ repositories {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/wynnbuild.accesswidener")
+    //accessWidenerPath = file("src/main/resources/wynnbuild.accesswidener")
 }
 
 dependencies {
@@ -32,13 +32,12 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation files("libs/wynntils-3.3.1-fabric+MC-1.21.4.jar")
+    modImplementation files("libs/wynntils-4.0.0-beta.4-fabric+MC-1.21.11.jar")
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
 }
 
 test {
@@ -57,8 +56,6 @@ processResources {
                 "loader_version": project.loader_version
     }
 }
-
-
 
 def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
@@ -85,7 +82,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.archives_base_name}" }
     }
 }
 
