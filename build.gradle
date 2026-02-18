@@ -33,7 +33,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation files("libs/wynntils-4.0.0-beta.4-fabric+MC-1.21.11.jar")
+    modImplementation files("libs/wynntils-4.0.0-fabric+MC-1.21.11.jar")
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
