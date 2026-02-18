@@ -64,6 +64,11 @@ public class CommandRegistry {
                                 BuilderDataManager.reloadBuilderData(true);
                                 return 1;
                             }))
+                            .then(literal("debug").executes(context -> {
+                                WynnBuild.toggleDebug();
+                                WynnBuild.message(Text.literal("Debug mode is now " + (WynnBuild.isDebug() ? "enabled" : "disabled")).styled(style -> style.withColor(WynnBuild.isDebug() ? Formatting.GREEN : Formatting.RED)));
+                                return 1;
+                            }))
             );
 
             dispatcher.register(literal("buildcustomitem").executes(context -> {

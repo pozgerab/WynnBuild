@@ -33,7 +33,7 @@ public class WynnBuild implements ModInitializer {
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
-    private static final boolean debug = false;
+    private static boolean debug = false;
     public static MinecraftClient client;
     public static Manager configManager;
     public static List<Integer> tomeIds = null;
@@ -151,6 +151,12 @@ public class WynnBuild implements ModInitializer {
         return getAtreeCoder().encode_atree(atreeState).toB64();
     }
 
+    public static Optional<String> getCachedAtree() {
+        String cached = getConfig().getProfileIdAtreeCache().get(Models.Character.getId());
+        if (cached == null) return Optional.empty();
+        return Optional.of(cached);
+    }
+
     public static void warn(String format, Object... args) {
         LOGGER.warn(format, args);
     }
@@ -173,6 +179,14 @@ public class WynnBuild implements ModInitializer {
         if (debug) {
             message(Text.literal("[DEBUG] ").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(Text.literal(message).styled(style -> style.withBold(false).withColor(Formatting.WHITE))));
         }
+    }
+
+    public static void toggleDebug() {
+        debug = !debug;
+    }
+
+    public static boolean isDebug() {
+        return debug;
     }
 
     public static void message(Text text) {
