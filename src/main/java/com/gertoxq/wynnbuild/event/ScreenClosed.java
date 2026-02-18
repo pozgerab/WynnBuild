@@ -18,6 +18,10 @@ public class ScreenClosed {
     @SubscribeEvent
     public void screenOpenedPre(MenuEvent.MenuOpenedEvent.Pre event) {
 
+        processContainerClose();
+    }
+
+    public static void processContainerClose() {
         if (Models.Container.getCurrentContainer() instanceof AspectsContainer aspectsContainer) {
             ContainerContent content = new ContainerContent(ImmutableList.copyOf(McUtils.containerMenu().getStacks()),
                     Text.empty(), ScreenHandlerType.GENERIC_9X6, aspectsContainer.getContainerId());

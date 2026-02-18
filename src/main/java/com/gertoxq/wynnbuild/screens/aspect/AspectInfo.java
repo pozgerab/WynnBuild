@@ -62,16 +62,20 @@ public class AspectInfo {
                     WynnBuild.warn("Could not find aspect id for {} {}", foundAspect.getRequiredClass().getName(), foundAspect.getName());
                     return;
                 }
-                aspects.add(aspectOpt.get());
+                aspects.add(aspectOpt.orElse(null));
             }, () -> aspects.add(null));
         });
         WynnBuild.aspects = aspects;
+        WynnBuild.debug("Processed aspects: {}", WynnBuild.aspects.stream().map(aspect -> aspect == null ? "empty" : aspect.getName()).collect(Collectors.joining(", ")));
     }
 
     public boolean verifyValidAspectContainer(ContainerContent content) {
-        return ASPECT_SLOTS.stream().allMatch(slot ->
+
+        boolean match = ASPECT_SLOTS.stream().allMatch(slot ->
                 Models.Item.asWynnItem(content.items().get(slot), AspectItem.class).isPresent()
                         || EMPTY_ASPECT_PATTERN.matcher(content.items().get(slot).getName().getString()).matches()
                         || LOCKED_ASPECT_PATTERN.matcher(content.items().get(slot).getName().getString()).matches());
+        if (!match) WynnBuild.warn("Cannot process aspects, container does not match expected aspect layout");
+        return match;
     }
 }
