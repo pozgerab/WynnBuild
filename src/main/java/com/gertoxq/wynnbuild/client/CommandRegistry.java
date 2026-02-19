@@ -69,6 +69,22 @@ public class CommandRegistry {
                                 WynnBuild.message(Text.literal("Debug mode is now " + (WynnBuild.isDebug() ? "enabled" : "disabled")).styled(style -> style.withColor(WynnBuild.isDebug() ? Formatting.GREEN : Formatting.RED)));
                                 return 1;
                             }))
+                            .then(literal("issue").executes(context -> {
+                                WynnBuild.message(Text.literal("If your build did not generate correctly, try ")
+                                        .append(Text.literal("reloading the cache").styled(style -> style.withUnderline(true).withClickEvent(
+                                                new ClickEvent.SuggestCommand("/build reloadcache"))))
+                                        .append(" or ")
+                                        .append(Text.literal("fetching the ability tree").styled(style -> style.withUnderline(true).withClickEvent(
+                                                new ClickEvent.SuggestCommand("/build readtree")
+                                        )))
+                                        .append(" and try again. If neither work or you have other issues, ")
+                                        .append(Text.literal("open an issue on github").styled(style -> style.withUnderline(true).withClickEvent(
+                                                        new ClickEvent.OpenUrl(URI.create("https://github.com/pozgerab/WynnBuild/issues/new")))
+                                                .withHoverEvent(
+                                                        new HoverEvent.ShowText(Text.literal("https://github.com/pozgerab/WynnBuild/issues/new"))))
+                                        ).styled(style -> style.withColor(Formatting.GRAY)));
+                                return 1;
+                            }))
             );
 
             dispatcher.register(literal("buildcustomitem").executes(context -> {
