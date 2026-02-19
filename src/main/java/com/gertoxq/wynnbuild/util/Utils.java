@@ -56,6 +56,10 @@ public class Utils {
         return news.get();
     }
 
+    public static boolean between(int num1, int num2, int target) {
+        return num1 <= target && target <= num2;
+    }
+
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
     }
