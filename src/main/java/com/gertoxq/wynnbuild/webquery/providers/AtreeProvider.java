@@ -11,7 +11,28 @@ import java.util.*;
 public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbilitySchema>> {
 
     public AtreeProvider() {
-        super("atree", new TypeToken<Map<String, Map<Integer, BuilderAbilitySchema>>>(){}.getType());
+        super("atree", new TypeToken<Map<String, Map<Integer, BuilderAbilitySchema>>>() {}.getType());
+    }
+
+    private static @NotNull Map<Integer, BuilderAbilitySchema> getMappedAbilities(List<BuilderAbilitySchema> list) {
+        Map<Integer, BuilderAbilitySchema> mapped = new HashMap<>();
+
+        for (BuilderAbilitySchema abil : list) {
+            BuilderAbilitySchema temp = new BuilderAbilitySchema(
+                    abil.id(),
+                    abil.display_name()
+                            .replace("1", "I")
+                            .replace("2", "II")
+                            .replace("3", "III"),
+                    new ArrayList<>(abil.parents()),
+                    new ArrayList<>(abil.dependencies()),
+                    new ArrayList<>(),
+                    abil.archetype(),
+                    abil.archetype_req()
+            );
+            mapped.put(temp.id(), temp);
+        }
+        return mapped;
     }
 
     @Override
@@ -50,25 +71,6 @@ public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbili
         }
 
         return atreeMap;
-    }
-
-    private static @NotNull Map<Integer, BuilderAbilitySchema> getMappedAbilities(List<BuilderAbilitySchema> list) {
-        Map<Integer, BuilderAbilitySchema> mapped = new HashMap<>();
-
-        for (BuilderAbilitySchema abil : list) {
-            BuilderAbilitySchema temp = new BuilderAbilitySchema(
-                    abil.id(),
-                    abil.display_name()
-                            .replace("1", "I")
-                            .replace("2", "II")
-                            .replace("3", "III"),
-                    new ArrayList<>(abil.parents()),
-                    new ArrayList<>(abil.dependencies()),
-                    new ArrayList<>()
-            );
-            mapped.put(temp.id(), temp);
-        }
-        return mapped;
     }
 
 }

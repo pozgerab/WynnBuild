@@ -29,6 +29,9 @@ public class AtreeCoder {
         return ret_vec;
     }
 
+    //  TODO    nem veszi figyelembe a archetype req-et es ezert nem lehet ugy hasznalni az atree changre,
+    //          kell egy komplex verzio amit csak a click-eventnel hasznalunk hogy lecsekkoljuk a treet
+
     private void traverse(int id, Set<Integer> atree_state, Set<Integer> visited, BitVector ret) {
         if (classTreeMap == null) {
             WynnBuild.error("CastTree is null");
@@ -41,6 +44,33 @@ public class AtreeCoder {
             if (atree_state.contains(childId)) {
                 ret.append(1, 1);
                 traverse(childId, atree_state, visited, ret);
+            } else {
+                ret.append(0, 1);
+            }
+        }
+    }
+
+    public BitVector encode_atree_reqs(Set<Integer> atree_state) {
+        BitVector ret_vec = new BitVector(0, 0);
+
+        traverse_reqs(0, atree_state, new HashSet<>(), ret_vec);
+        return ret_vec;
+    }
+
+    //  TODO    kell egy queue ami a vegere teszi azokat amiknek nagy a req-je es elore ami ad archetypeot
+
+    private void traverse_reqs(int id, Set<Integer> atree_state, Set<Integer> visited, BitVector ret) {
+        if (classTreeMap == null) {
+            WynnBuild.error("CastTree is null");
+            return;
+        }
+        var head = classTreeMap.get(id);
+        for (var childId : head.children()) {
+            if (visited.contains(childId)) continue;
+            visited.add(childId);
+            if (atree_state.contains(childId)) {
+                ret.append(1, 1);
+                traverse_reqs(childId, atree_state, visited, ret);
             } else {
                 ret.append(0, 1);
             }

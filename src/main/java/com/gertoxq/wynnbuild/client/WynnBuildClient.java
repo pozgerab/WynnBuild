@@ -2,9 +2,11 @@ package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.config.Manager;
+import com.gertoxq.wynnbuild.event.AbilityNodeChange;
 import com.gertoxq.wynnbuild.event.ScreenClosed;
 import com.gertoxq.wynnbuild.event.WorldChangeTreeRefresh;
 import com.gertoxq.wynnbuild.screens.Clickable;
+import com.gertoxq.wynnbuild.util.DebugContainer;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.gertoxq.wynnbuild.webquery.BuilderDataManager;
 import com.wynntils.core.WynntilsMod;
@@ -12,6 +14,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -39,6 +42,10 @@ public class WynnBuildClient implements ClientModInitializer {
                     client.execute(WynnBuild::build);
                 });
             }
+            if (screen instanceof GenericContainerScreen screen1)
+                BUTTON.addTo(screen1, Clickable.AXISPOS.START, Clickable.AXISPOS.END, 100, 20, Text.literal("read"), button -> {
+                    DebugContainer.snapshotContainer(screen1);
+                });
         });
 
         CommandRegistry.init(WynnBuild.client);
@@ -46,6 +53,7 @@ public class WynnBuildClient implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             WynntilsMod.registerEventListener(new WorldChangeTreeRefresh());
             WynntilsMod.registerEventListener(new ScreenClosed());
+            WynntilsMod.registerEventListener(new AbilityNodeChange());
         });
     }
 }

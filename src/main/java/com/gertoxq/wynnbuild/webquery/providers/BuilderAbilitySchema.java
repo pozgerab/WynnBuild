@@ -7,5 +7,8 @@ public record BuilderAbilitySchema(
         String display_name,
         List<Integer> parents,
         List<Integer> dependencies,
-        List<Integer> children
-) {}
+        List<Integer> children,
+        String archetype,
+        int archetype_req
+) {
+}

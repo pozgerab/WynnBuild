@@ -31,7 +31,7 @@ public class ConfigScreen extends Screen {
         super.init();
 
         addDrawableChild(CyclingButtonWidget.onOffBuilder(
-                Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)),
                         Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)),
                         getConfigManager().getConfig().isShowButtons())
                 .build(this.width / 2 - 100, this.height / 4, 200, 20, Text.literal("Buttons"), (button, value) -> {
@@ -39,7 +39,7 @@ public class ConfigScreen extends Screen {
                     getConfigManager().saveConfig();
                 }));
         addDrawableChild(CyclingButtonWidget.onOffBuilder(
-                Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("Shown").styled(style -> style.withColor(Formatting.GREEN)),
                         Text.literal("Hidden").styled(style -> style.withColor(Formatting.RED)),
                         getConfigManager().getConfig().isShowTreeLoader())
                 .build(this.width / 2 - 100, this.height / 4 + 24, 200, 20, Text.literal("Atree Presets"),
@@ -88,7 +88,7 @@ public class ConfigScreen extends Screen {
         addDrawableChild(help);
 
         addDrawableChild(CyclingButtonWidget.onOffBuilder(
-                Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
                         Text.literal("OFF").styled(style -> style.withColor(Formatting.RED)),
                         getConfigManager().getConfig().isIncludeTomes())
                 .build(this.width / 2 - 100, this.height / 4 + 120, 200, 20, Text.literal("Include Tomes"),
@@ -98,7 +98,7 @@ public class ConfigScreen extends Screen {
                         }));
 
         addDrawableChild(CyclingButtonWidget.onOffBuilder(
-                Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
+                        Text.literal("ON").styled(style -> style.withColor(Formatting.GREEN)),
                         Text.literal("OFF").styled(style -> style.withColor(Formatting.RED)),
                         getConfigManager().getConfig().isIncludeAspects())
                 .build(this.width / 2 - 100, this.height / 4 + 144, 200, 20, Text.literal("Include Aspects"),

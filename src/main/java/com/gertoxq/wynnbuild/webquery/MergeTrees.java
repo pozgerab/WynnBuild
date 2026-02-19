@@ -74,7 +74,9 @@ public class MergeTrees {
                                     builderAbility.children(),
                                     apiAbility.pageNumber(),
                                     apiAbility.slot(),
-                                    builderAbility.dependencies()
+                                    builderAbility.dependencies(),
+                                    builderAbility.archetype(),
+                                    builderAbility.archetype_req()
                             );
 
                             usedAbilities.add(apiAbility.id());

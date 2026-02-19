@@ -20,10 +20,9 @@ import static com.gertoxq.wynnbuild.webquery.ApiDataProvider.fullApiAtree;
 
 public abstract class DataProvider<T> {
 
-    public static Set<String> loadedProviders = new HashSet<>();
-
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + "wynnbuild");
+    public static Set<String> loadedProviders = new HashSet<>();
     protected final File cacheFile;
     protected final Type dataType;
     protected final String name;

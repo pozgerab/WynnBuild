@@ -1,10 +1,9 @@
 package com.gertoxq.wynnbuild.config;
 
+import com.wynntils.core.components.Models;
 import org.jetbrains.annotations.Range;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ConfigType {
     private final List<SavedBuild> savedAtrees = new ArrayList<>();
@@ -14,6 +13,7 @@ public class ConfigType {
     private @Range(from = 0, to = 1) int precision = 0;
     private boolean includeTomes = false;
     private boolean includeAspects = false;
+    private Map<String, String> profileIdAtreeCache = new HashMap<>();
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -66,6 +66,18 @@ public class ConfigType {
 
     public void setIncludeAspects(boolean includeAspects) {
         this.includeAspects = includeAspects;
+    }
+
+    public Map<String, String> getProfileIdAtreeCache() {
+        return profileIdAtreeCache;
+    }
+
+    public void setProfileIdAtreeCache(Map<String, String> profileIdAtreeCache) {
+        this.profileIdAtreeCache = profileIdAtreeCache;
+    }
+
+    public void addTreeCache(String atree) {
+        profileIdAtreeCache.put(Models.Character.getId(), atree);
     }
 
     @Override

@@ -33,13 +33,13 @@ public class WynnBuild implements ModInitializer {
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
-    private static boolean debug = false;
     public static MinecraftClient client;
     public static Manager configManager;
     public static List<Integer> tomeIds = null;
     public static List<AspectItem> aspects = null;
     public static Set<Integer> atreeState = new HashSet<>();
     public static List<ItemStack> currentGear = null;
+    private static boolean debug = false;
     private static QueryStack currentQuery = null;
 
     public static Manager getConfigManager() {
@@ -145,6 +145,11 @@ public class WynnBuild implements ModInitializer {
 
     public static AtreeCoder getAtreeCoder() {
         return AtreeCoder.getAtreeCoder(Models.Character.getClassType());
+    }
+
+    public static void saveAtreeCache() {
+        getConfigManager().getConfig().addTreeCache(getAtreeCoder().encode_atree(atreeState).toB64());
+        getConfigManager().saveConfig();
     }
 
     public static String getAtreeSuffix() {

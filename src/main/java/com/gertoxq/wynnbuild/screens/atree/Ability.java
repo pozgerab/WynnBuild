@@ -1,9 +1,13 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.webquery.MergeTrees;
 import com.wynntils.core.components.Models;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public record Ability(
         int id,
@@ -12,7 +16,9 @@ public record Ability(
         List<Integer> children,
         Integer pageNumber,
         Integer slot,
-        List<Integer> dependencies
+        List<Integer> dependencies,
+        String archetype,
+        int archetypeReq
 ) {
 
     public static Map<String, Map<Integer, Ability>> FULL_ABILITY_MAP;
@@ -30,6 +36,12 @@ public record Ability(
 
     public static Optional<Ability> getAbilityByPageSlot(int page, int slot) {
         return Optional.ofNullable(MULTI_PAGE_ABILITY_MAP.get(page * 55 + slot));
+    }
+
+    public static Optional<Ability> getByNameSlot(String name, int slot) {
+        return ABILITY_MAP.values().stream()
+                .filter(ability -> ability.slot == slot && (ability.displayName().equals(name) || MergeTrees.isSame(ability.displayName, name)))
+                .findFirst();
     }
 
     public static void refreshTree() {

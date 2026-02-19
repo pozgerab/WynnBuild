@@ -3,7 +3,6 @@ package com.gertoxq.wynnbuild.event;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
-import com.gertoxq.wynnbuild.util.WynnData;
 import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -19,7 +18,7 @@ public class WorldChangeTreeRefresh {
         if (event.getNewState() == WorldState.WORLD) {
             Ability.refreshTree();
             AspectInfo.aspectMap = Providers.Aspects.getClassAspects(Models.Character.getClassType());
-            WynnBuild.atreeState = new HashSet<>();
+            WynnBuild.atreeState = WynnBuild.getCachedAtree().map(treeCode -> WynnBuild.getAtreeCoder().decode_atree(treeCode)).orElse(new HashSet<>());
             WynnBuild.tomeIds = null;
             WynnBuild.aspects = null;
         }
