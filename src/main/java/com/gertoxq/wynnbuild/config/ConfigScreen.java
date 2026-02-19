@@ -68,10 +68,7 @@ public class ConfigScreen extends Screen {
 
         var help = ButtonWidget.builder(
                         Text.literal("?"),
-                        button -> {
-                            if (client.player == null) return;
-                            WynnBuild.message(Text.literal("Precision options:\n").styled(style -> style.withColor(Formatting.GOLD)).append(Build.precisionTooltip));
-                        })
+                        button -> {})
                 .position(this.width / 2 + 80, this.height / 4 + 96)
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))
                 .size(20, 20).build();
