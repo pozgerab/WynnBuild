@@ -59,10 +59,10 @@ public class AbilityNodeChange {
                         Set<Integer> pre = Set.copyOf(WynnBuild.atreeState);
 
                         WynnBuild.atreeState.remove(ability.id());
-                        String encoded = WynnBuild.getAtreeCoder().encode_atree(WynnBuild.atreeState).toB64();
+                        String encoded = WynnBuild.getAtreeCoder().encode_atree_reqs(WynnBuild.atreeState).toB64();
                         WynnBuild.atreeState = WynnBuild.getAtreeCoder().decode_atree(encoded);
 
-                        WynnBuild.debug("Removed an ability {} with id {}, removed ids: {}", ability.displayName(), ability.id(), Sets.difference(WynnBuild.atreeState, pre));
+                        WynnBuild.debug("Removed an ability {} with id {}, removed ids: {}", ability.displayName(), ability.id(), Sets.difference(pre, WynnBuild.atreeState));
 
                     }
                 }

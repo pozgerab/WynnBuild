@@ -4,10 +4,9 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.util.BitVector;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
 import com.wynntils.models.character.type.ClassType;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AtreeCoder {
@@ -29,8 +28,9 @@ public class AtreeCoder {
         return ret_vec;
     }
 
-    //  TODO    nem veszi figyelembe a archetype req-et es ezert nem lehet ugy hasznalni az atree changre,
-    //          kell egy komplex verzio amit csak a click-eventnel hasznalunk hogy lecsekkoljuk a treet
+    public BitVector encode_atree_reqs(Set<Integer> atree_state) {
+        return encode_atree(validate(atree_state));
+    }
 
     private void traverse(int id, Set<Integer> atree_state, Set<Integer> visited, BitVector ret) {
         if (classTreeMap == null) {
@@ -50,30 +50,117 @@ public class AtreeCoder {
         }
     }
 
-    public BitVector encode_atree_reqs(Set<Integer> atree_state) {
-        BitVector ret_vec = new BitVector(0, 0);
+    public Set<Integer> validate(Set<Integer> atree_state) {
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        queue.add(0);
 
-        traverse_reqs(0, atree_state, new HashSet<>(), ret_vec);
-        return ret_vec;
+        Map<String, Integer> archetypePoints = new HashMap<>();
+        Map<String, PriorityQueue<AbilityAndReq>> pendingAbilities = new HashMap<>();
+
+        Map<Integer, Set<Integer>> dependencyMap = new HashMap<>(); // key = dependency, value = abilities that depend on key
+
+        Set<Integer> visited = new HashSet<>();
+
+        while (!queue.isEmpty()) {
+            int id = queue.poll();
+            WynnBuild.debug("id {}", id);
+            if (!atree_state.contains(id)) continue;
+            if (visited.contains(id)) continue;
+            Ability ability = Ability.getById(id);
+            WynnBuild.debug("ability found");
+
+            if (!ability.dependencies().isEmpty()) {
+
+                if (!visited.containsAll(ability.dependencies())) {
+                    ability.dependencies().forEach(dependency -> {
+                        if (visited.contains(dependency)) return;
+                        Set<Integer> alreadyDepends = dependencyMap.getOrDefault(dependency, new HashSet<>());
+                        alreadyDepends.add(id);
+                        WynnBuild.debug("missing dependency {}", id);
+                        dependencyMap.put(dependency, alreadyDepends);
+                    });
+                    continue;
+                }
+            }
+
+            if (ability.archetype() != null) {
+
+                String archetype = ability.archetype();
+                if (ability.archetypeReq() <= archetypePoints.getOrDefault(archetype, 0)) {
+                    WynnBuild.debug("archetype req met, adding children, adding archetype point");
+                    queue.addAll(ability.children());
+                    visited.add(id);
+                    if (dependencyMap.containsKey(id)) {
+                        WynnBuild.debug("found dependant for this");
+                        dependencyMap.get(id).forEach(dependant -> {
+                            Ability dependantAbility = Ability.getById(dependant);
+                            if (visited.containsAll(dependantAbility.dependencies())) {
+
+                                WynnBuild.debug("all dependencies met for {}, adding to queue", dependant);
+                                queue.addFirst(dependant);
+                            }
+                        });
+                    }
+
+                    int points = archetypePoints.getOrDefault(archetype, 0) + 1;
+
+                    archetypePoints.put(archetype, points);
+
+                    PriorityQueue<AbilityAndReq> pending = pendingAbilities.getOrDefault(archetype, new PriorityQueue<>());
+                    if (pending.isEmpty()) continue;
+
+                    WynnBuild.debug("searching for pending archetype");
+
+                    while (!pending.isEmpty()) {
+                        AbilityAndReq pendingAbility = pending.peek();
+                        int pendingId = pendingAbility.id();
+                        int req = pendingAbility.req();
+
+                        WynnBuild.debug("ability {} in line", pendingId);
+
+                        if (req > points) break;
+                        WynnBuild.debug("met req, adding to queue");
+
+                        queue.addFirst(pendingId);
+                        pending.poll();
+                    }
+
+                    continue;
+                }
+
+                WynnBuild.debug("archetype req not met, adding to pending");
+
+                PriorityQueue<AbilityAndReq> pending = pendingAbilities.getOrDefault(archetype, new PriorityQueue<>());
+                pending.add(new AbilityAndReq(id, ability.archetypeReq()));
+                pendingAbilities.put(archetype, pending);
+
+
+            } else {
+                WynnBuild.debug("no archetype req, adding children");
+                queue.addAll(ability.children());
+                visited.add(id);
+                if (dependencyMap.containsKey(id)) {
+                    WynnBuild.debug("found dependant for this");
+                    dependencyMap.get(id).forEach(dependant -> {
+                        Ability dependantAbility = Ability.getById(dependant);
+                        if (visited.containsAll(dependantAbility.dependencies())) {
+
+                            WynnBuild.debug("all dependencies met for {}, adding to queue", dependant);
+                            queue.addFirst(dependant);
+                        }
+                    });
+                }
+            }
+        }
+
+        return visited;
     }
 
-    //  TODO    kell egy queue ami a vegere teszi azokat amiknek nagy a req-je es elore ami ad archetypeot
+    record AbilityAndReq(int id, int req) implements Comparable<AbilityAndReq> {
 
-    private void traverse_reqs(int id, Set<Integer> atree_state, Set<Integer> visited, BitVector ret) {
-        if (classTreeMap == null) {
-            WynnBuild.error("CastTree is null");
-            return;
-        }
-        var head = classTreeMap.get(id);
-        for (var childId : head.children()) {
-            if (visited.contains(childId)) continue;
-            visited.add(childId);
-            if (atree_state.contains(childId)) {
-                ret.append(1, 1);
-                traverse_reqs(childId, atree_state, visited, ret);
-            } else {
-                ret.append(0, 1);
-            }
+        @Override
+        public int compareTo(@NotNull AbilityAndReq other) {
+            return Integer.compare(req, other.req);
         }
     }
 

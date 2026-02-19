@@ -47,17 +47,9 @@ public class AtreeNode {
     }
 
     public AbilityNodeState getState() {
-        float customModelDataFloat = stack.getComponents().get(DataComponentTypes.CUSTOM_MODEL_DATA).floats().get(0);
+        float customModelDataFloat = stack.getComponents().get(DataComponentTypes.CUSTOM_MODEL_DATA).floats().getFirst();
         int customModelData = (int) customModelDataFloat;
 
-        int remainder = customModelData - AbilityNodeType.getType(customModelData).unreachable();
-
-        return switch (remainder) {
-            case 0 -> AbilityNodeState.LOCKED;
-            case 1 -> AbilityNodeState.UNLOCKABLE;
-            case 2 -> AbilityNodeState.UNLOCKED;
-            case 3 -> AbilityNodeState.BLOCKED;
-            default -> null; // impossible
-        };
+        return AbilityNodeState.getType(customModelData);
     }
 }
