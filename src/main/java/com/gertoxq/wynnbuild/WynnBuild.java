@@ -32,7 +32,8 @@ public class WynnBuild implements ModInitializer {
     public static final String DOMAIN = "https://wynnbuilder.github.io/";
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
-    private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
+    public static final String MOD_ID = "wynnbuild";
+    private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static MinecraftClient client;
     public static Manager configManager;
     public static List<Integer> tomeIds = null;

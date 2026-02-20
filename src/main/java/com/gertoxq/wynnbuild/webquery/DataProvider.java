@@ -21,7 +21,7 @@ import static com.gertoxq.wynnbuild.webquery.ApiDataProvider.fullApiAtree;
 public abstract class DataProvider<T> {
 
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + "wynnbuild");
+    static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + WynnBuild.MOD_ID);
     public static Set<String> loadedProviders = new HashSet<>();
     protected final File cacheFile;
     protected final Type dataType;
