@@ -44,6 +44,7 @@ public class DebugContainer {
         }
 
         JsonObject root = new JsonObject();
+        root.addProperty("title", Utils.escapeToUnicode(screen.getTitle().getString()));
         root.addProperty("container_size", handler.slots.size());
         root.add("items", itemsArray);
 
