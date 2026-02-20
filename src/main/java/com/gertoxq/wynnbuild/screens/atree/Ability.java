@@ -4,19 +4,16 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.webquery.MergeTrees;
 import com.wynntils.core.components.Models;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public record Ability(
         int id,
         String displayName,
-        List<Integer> parents,
-        List<Integer> children,
+        Set<Integer> parents,
+        TreeSet<Integer> children,
         Integer pageNumber,
         Integer slot,
-        List<Integer> dependencies,
+        Set<Integer> dependencies,
         String archetype,
         int archetypeReq
 ) {

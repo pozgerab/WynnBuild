@@ -3,6 +3,7 @@ package com.gertoxq.wynnbuild.build;
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.util.BitVector;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
+import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.models.character.type.ClassType;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,10 +29,6 @@ public class AtreeCoder {
         return ret_vec;
     }
 
-    public BitVector encode_atree_reqs(Set<Integer> atree_state) {
-        return encode_atree(validate(atree_state));
-    }
-
     private void traverse(int id, Set<Integer> atree_state, Set<Integer> visited, BitVector ret) {
         if (classTreeMap == null) {
             WynnBuild.error("CastTree is null");
@@ -50,14 +47,23 @@ public class AtreeCoder {
         }
     }
 
+    /**
+     * builds a tree that is possible in-game regardless of the extra ids in atree_state
+     */
+    public BitVector encode_atree_reqs(Set<Integer> atree_state) {
+        return encode_atree(validate(atree_state));
+    }
+
     public Set<Integer> validate(Set<Integer> atree_state) {
         ArrayDeque<Integer> queue = new ArrayDeque<>();
+        if (!atree_state.contains(0)) return new HashSet<>();
         queue.add(0);
 
         Map<String, Integer> archetypePoints = new HashMap<>();
         Map<String, PriorityQueue<AbilityAndReq>> pendingAbilities = new HashMap<>();
 
         Map<Integer, Set<Integer>> dependencyMap = new HashMap<>(); // key = dependency, value = abilities that depend on key
+        // blocked abilities are not important bc this represents how the in game gui works, and you can't activate them anyway
 
         Set<Integer> visited = new HashSet<>();
 
@@ -71,16 +77,17 @@ public class AtreeCoder {
 
             if (!ability.dependencies().isEmpty()) {
 
-                if (!visited.containsAll(ability.dependencies())) {
-                    ability.dependencies().forEach(dependency -> {
-                        if (visited.contains(dependency)) return;
-                        Set<Integer> alreadyDepends = dependencyMap.getOrDefault(dependency, new HashSet<>());
-                        alreadyDepends.add(id);
-                        WynnBuild.debug("missing dependency {}", id);
-                        dependencyMap.put(dependency, alreadyDepends);
+                Set<Integer> notMetDependencies = Utils.difference(ability.dependencies(), visited);
+
+                notMetDependencies.forEach(dependency -> {
+
+                    dependencyMap.merge(dependency, new HashSet<>(Set.of(id)), (oldSet, newSet) -> {
+                        oldSet.addAll(newSet);
+                        return oldSet;
                     });
-                    continue;
-                }
+
+                    WynnBuild.debug("missing dependency {}", id);
+                });
             }
 
             if (ability.archetype() != null) {
@@ -88,23 +95,10 @@ public class AtreeCoder {
                 String archetype = ability.archetype();
                 if (ability.archetypeReq() <= archetypePoints.getOrDefault(archetype, 0)) {
                     WynnBuild.debug("archetype req met, adding children, adding archetype point");
-                    queue.addAll(ability.children());
-                    visited.add(id);
-                    if (dependencyMap.containsKey(id)) {
-                        WynnBuild.debug("found dependant for this");
-                        dependencyMap.get(id).forEach(dependant -> {
-                            Ability dependantAbility = Ability.getById(dependant);
-                            if (visited.containsAll(dependantAbility.dependencies())) {
 
-                                WynnBuild.debug("all dependencies met for {}, adding to queue", dependant);
-                                queue.addFirst(dependant);
-                            }
-                        });
-                    }
+                    queueChildrenCheckPendingDependants(ability, dependencyMap, visited, queue);
 
-                    int points = archetypePoints.getOrDefault(archetype, 0) + 1;
-
-                    archetypePoints.put(archetype, points);
+                    int points = archetypePoints.merge(archetype, 1, Integer::sum);
 
                     PriorityQueue<AbilityAndReq> pending = pendingAbilities.getOrDefault(archetype, new PriorityQueue<>());
                     if (pending.isEmpty()) continue;
@@ -130,30 +124,41 @@ public class AtreeCoder {
 
                 WynnBuild.debug("archetype req not met, adding to pending");
 
-                PriorityQueue<AbilityAndReq> pending = pendingAbilities.getOrDefault(archetype, new PriorityQueue<>());
-                pending.add(new AbilityAndReq(id, ability.archetypeReq()));
-                pendingAbilities.put(archetype, pending);
+                pendingAbilities.merge(archetype,
+                        new PriorityQueue<>(List.of(new AbilityAndReq(id, ability.archetypeReq()))),
+                        (oldQueue, newQueue) -> {
+                    oldQueue.addAll(newQueue);
+                    return oldQueue;
+                });
 
 
             } else {
                 WynnBuild.debug("no archetype req, adding children");
-                queue.addAll(ability.children());
-                visited.add(id);
-                if (dependencyMap.containsKey(id)) {
-                    WynnBuild.debug("found dependant for this");
-                    dependencyMap.get(id).forEach(dependant -> {
-                        Ability dependantAbility = Ability.getById(dependant);
-                        if (visited.containsAll(dependantAbility.dependencies())) {
-
-                            WynnBuild.debug("all dependencies met for {}, adding to queue", dependant);
-                            queue.addFirst(dependant);
-                        }
-                    });
-                }
+                queueChildrenCheckPendingDependants(ability, dependencyMap, visited, queue);
             }
         }
 
         return visited;
+    }
+
+    private void queueChildrenCheckPendingDependants(
+            Ability ability, Map<Integer, Set<Integer>> dependencyMap,
+            Set<Integer> visited, ArrayDeque<Integer> queue) {
+
+        queue.addAll(ability.children());
+        visited.add(ability.id());
+        if (dependencyMap.containsKey(ability.id())) {
+            WynnBuild.debug("found dependant for this");
+            dependencyMap.get(ability.id()).forEach(dependant -> {
+                Ability dependantAbility = Ability.getById(dependant);
+                if (visited.containsAll(dependantAbility.dependencies())) {
+
+                    WynnBuild.debug("all dependencies met for {}, adding to queue", dependant);
+                    queue.addFirst(dependant);
+                }
+            });
+        }
+
     }
 
     record AbilityAndReq(int id, int req) implements Comparable<AbilityAndReq> {

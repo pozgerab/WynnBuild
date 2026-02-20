@@ -24,9 +24,9 @@ public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbili
                             .replace("1", "I")
                             .replace("2", "II")
                             .replace("3", "III"),
-                    new ArrayList<>(abil.parents()),
-                    new ArrayList<>(abil.dependencies()),
-                    new ArrayList<>(),
+                    new HashSet<>(abil.parents()),
+                    new HashSet<>(abil.dependencies()),
+                    new TreeSet<>(),
                     abil.archetype(),
                     abil.archetype_req()
             );
@@ -61,11 +61,8 @@ public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbili
                 for (Integer parentId : abil.parents()) {
 
                     BuilderAbilitySchema parent = abilities.get(parentId);
-                    List<Integer> children = parent.children();
-                    if (!children.contains(abil.id())) {
-                        children.add(abil.id());
-                        Collections.sort(children);
-                    }
+                    TreeSet<Integer> children = parent.children();
+                    children.add(abil.id());
                 }
             }
         }
