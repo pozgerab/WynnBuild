@@ -14,6 +14,7 @@ import com.wynntils.core.WynntilsMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -56,6 +57,20 @@ public class WynnBuildClient implements ClientModInitializer {
             WynntilsMod.registerEventListener(new ScreenClosed());
             WynntilsMod.registerEventListener(new AbilityNodeChange());
             WynntilsMod.registerEventListener(new AtreeReset());
+
+            checkNewVersion();
         });
+    }
+
+    private void checkNewVersion() {
+        String currentVersion = FabricLoader.getInstance().getModContainer(WynnBuild.MOD_ID).get().getMetadata().getVersion().getFriendlyString();
+        if (!WynnBuild.getConfigManager().getConfig().getLatestVersion().equals(currentVersion)) {
+
+            WynnBuild.info("New wynnbuilder version detected, reloading data and cache just in case.");
+            BuilderDataManager.reloadBuilderData(true);
+
+            WynnBuild.getConfigManager().getConfig().setLatestVersion(currentVersion);
+            WynnBuild.getConfigManager().saveConfig();
+        }
     }
 }
