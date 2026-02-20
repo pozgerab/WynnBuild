@@ -20,10 +20,9 @@ import static com.gertoxq.wynnbuild.webquery.ApiDataProvider.fullApiAtree;
 
 public abstract class DataProvider<T> {
 
-    public static Set<String> loadedProviders = new HashSet<>();
-
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + "wynnbuild");
+    static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + WynnBuild.MOD_ID);
+    public static Set<String> loadedProviders = new HashSet<>();
     protected final File cacheFile;
     protected final Type dataType;
     protected final String name;
@@ -80,11 +79,10 @@ public abstract class DataProvider<T> {
     }
 
     public Optional<T> getCacheData() {
-        Optional<JsonObject> cacheDataOpt = readCacheFile();
-        if (cacheDataOpt.isEmpty()) return Optional.empty();
-        JsonObject cacheData = cacheDataOpt.get();
-
-        return Optional.ofNullable(fromJson(cacheData.get("data")));
+        return readCacheFile()
+                .map(cacheData -> cacheData.get("data"))
+                .filter(element -> !element.isJsonNull() && !element.isJsonPrimitive())
+                .map(this::fromJson);
     }
 
     public Optional<String> getCacheVersion() {
@@ -92,6 +90,13 @@ public abstract class DataProvider<T> {
                 .map(cacheData -> cacheData.get("version"))
                 .filter(element -> !element.isJsonNull() && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString())
                 .map(JsonElement::getAsString);
+    }
+
+    protected JsonObject createCacheObject(T dataMap, String version) {
+        JsonObject cacheObject = new JsonObject();
+        cacheObject.addProperty("version", version);
+        cacheObject.add("data", toJson(dataMap));
+        return cacheObject;
     }
 
     public void setCache(T dataMap, String version) {
@@ -102,9 +107,7 @@ public abstract class DataProvider<T> {
             FileUtils.createNewFile(cacheFile);
         }
 
-        JsonObject cacheObject = new JsonObject();
-        cacheObject.addProperty("version", version);
-        cacheObject.add("data", toJson(dataMap));
+        JsonObject cacheObject = createCacheObject(dataMap, version);
 
         try {
             Files.writeString(cacheFile.toPath(), DataProvider.gson.toJson(cacheObject));

@@ -1,7 +1,6 @@
 package com.gertoxq.wynnbuild.screens.tome;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.util.WynnData;
 import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -45,6 +44,8 @@ public class TomeQuery {
 
     public void processTomes(ContainerContent content) {
         WynnBuild.tomeIds = getTomeIds(content);
+        WynnBuild.debug("Processed tomes: {}", WynnBuild.tomeIds);
+
     }
 
     private List<Integer> getTomeIds(ContainerContent content) {

@@ -1,12 +1,14 @@
 package com.gertoxq.wynnbuild.config;
 
+import com.gertoxq.wynnbuild.WynnBuild;
+import com.wynntils.core.components.Models;
+import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.Range;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ConfigType {
+    private String latestVersion = FabricLoader.getInstance().getModContainer(WynnBuild.MOD_ID).get().getMetadata().getVersion().getFriendlyString();
     private final List<SavedBuild> savedAtrees = new ArrayList<>();
     private boolean showButtons = true;
     private boolean showTreeLoader = true;
@@ -14,6 +16,15 @@ public class ConfigType {
     private @Range(from = 0, to = 1) int precision = 0;
     private boolean includeTomes = false;
     private boolean includeAspects = false;
+    private Map<String, String> profileIdAtreeCache = new HashMap<>();
+
+    public String getLatestVersion() {
+        return latestVersion;
+    }
+
+    public void setLatestVersion(String latestVersion) {
+        this.latestVersion = latestVersion;
+    }
 
     public boolean isShowTreeLoader() {
         return showTreeLoader;
@@ -68,12 +79,25 @@ public class ConfigType {
         this.includeAspects = includeAspects;
     }
 
+    public Map<String, String> getProfileIdAtreeCache() {
+        return profileIdAtreeCache;
+    }
+
+    public void setProfileIdAtreeCache(Map<String, String> profileIdAtreeCache) {
+        this.profileIdAtreeCache = profileIdAtreeCache;
+    }
+
+    public void addTreeCache(String atree) {
+        profileIdAtreeCache.put(Models.Character.getId(), atree);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         ConfigType modConfig = (ConfigType) object;
         return Objects.equals(savedAtrees, modConfig.savedAtrees)
+                && Objects.equals(latestVersion, modConfig.latestVersion)
                 && showButtons == modConfig.showButtons
                 && showTreeLoader == modConfig.showTreeLoader
                 && defaultPowderLevel == modConfig.defaultPowderLevel
@@ -84,6 +108,6 @@ public class ConfigType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision, includeTomes, includeAspects);
+        return Objects.hash(latestVersion, showButtons, savedAtrees, showTreeLoader, defaultPowderLevel, precision, includeTomes, includeAspects);
     }
 }

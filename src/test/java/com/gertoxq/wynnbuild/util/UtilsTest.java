@@ -17,4 +17,9 @@ class UtilsTest {
         assertEquals("+0", Utils.withSign(0));
         assertEquals("-3", Utils.withSign(-3));
     }
+
+    @Test
+    void removeNumTest() {
+        assertEquals("Cheaper Ice Snake", Utils.removeNum("Cheaper Ice Snake II"));
+    }
 }

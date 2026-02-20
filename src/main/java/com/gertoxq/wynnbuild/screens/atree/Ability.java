@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.webquery.MergeTrees;
 import com.wynntils.core.components.Models;
 
 import java.util.*;
@@ -8,11 +9,13 @@ import java.util.*;
 public record Ability(
         int id,
         String displayName,
-        List<Integer> parents,
-        List<Integer> children,
+        Set<Integer> parents,
+        TreeSet<Integer> children,
         Integer pageNumber,
         Integer slot,
-        List<Integer> dependencies
+        Set<Integer> dependencies,
+        String archetype,
+        int archetypeReq
 ) {
 
     public static Map<String, Map<Integer, Ability>> FULL_ABILITY_MAP;
@@ -32,8 +35,14 @@ public record Ability(
         return Optional.ofNullable(MULTI_PAGE_ABILITY_MAP.get(page * 55 + slot));
     }
 
+    public static Optional<Ability> getByNameSlot(String name, int slot) {
+        return ABILITY_MAP.values().stream()
+                .filter(ability -> ability.slot == slot && (ability.displayName().equals(name) || MergeTrees.isSame(ability.displayName, name)))
+                .findFirst();
+    }
+
     public static void refreshTree() {
-        WynnBuild.info("Refreshing atree, should only happen when changing cast...");
+        WynnBuild.info("Refreshing atree, should only happen when changing class...");
 
         String classTypeKey = Models.Character.getClassType().getName();
         if (!FULL_ABILITY_MAP.containsKey(classTypeKey)) {

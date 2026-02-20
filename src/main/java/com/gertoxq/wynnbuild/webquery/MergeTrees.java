@@ -74,7 +74,9 @@ public class MergeTrees {
                                     builderAbility.children(),
                                     apiAbility.pageNumber(),
                                     apiAbility.slot(),
-                                    builderAbility.dependencies()
+                                    builderAbility.dependencies(),
+                                    builderAbility.archetype(),
+                                    builderAbility.archetype_req()
                             );
 
                             usedAbilities.add(apiAbility.id());
@@ -95,7 +97,7 @@ public class MergeTrees {
             }
             mergedTree.put(className, mergedClassTree);
         }
-        WynnBuild.warn("{}", mergedTree);
+        WynnBuild.debug("{}", mergedTree);
         return mergedTree;
     }
 

@@ -1,19 +1,15 @@
 package com.gertoxq.wynnbuild.util;
 
 import com.wynntils.models.items.items.game.GearItem;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.net.URI;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
@@ -29,6 +25,12 @@ public class Utils {
         return ((v % m) + m) % m;
     }
 
+    public static <T> Set<T> difference(Set<T> a, Set<T> b) {
+        Set<T> copy = new HashSet<>(a);
+        copy.removeAll(b);
+        return copy;
+    }
+
     public static <A, B> List<Map.Entry<A, B>> zip2(List<A> a, List<B> b) {
         List<Map.Entry<A, B>> result = new ArrayList<>();
         int size = Math.min(a.size(), b.size());
@@ -38,21 +40,16 @@ public class Utils {
         return result;
     }
 
-    public static @Nullable List<Text> getLore(@NotNull ItemStack itemStack) {
-        LoreComponent loreComp = itemStack.get(DataComponentTypes.LORE);
-        if (loreComp == null) return null;
-        return loreComp.lines();
-    }
-
     public static String removeFormat(@NotNull String str) {
         return str.replaceAll("§.", "").replaceAll("\\*", "");
     }
 
     public static String removeNum(String str) {
-        var rep = List.of(" 1", " 2", " 3", " III", " II", " I");
-        AtomicReference<String> news = new AtomicReference<>(str);
-        rep.forEach(s -> news.set(news.get().replace(s, "")));
-        return news.get();
+        return str.replaceAll("\\s(I|II|III)$", "");
+    }
+
+    public static boolean between(int num1, int num2, int target) {
+        return num1 <= target && target <= num2;
     }
 
     public static double log2(double n) {
@@ -89,17 +86,17 @@ public class Utils {
                 .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getGearTier().getChatFormatting())))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
                 .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url)))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.literal(url)))
+                        .withClickEvent(new ClickEvent.CopyToClipboard(url))
                         .withUnderline(true)))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
-                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))
+                .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(URI.create(url)))
                         .withUnderline(true)
                         .withColor(Formatting.RED)))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
                 .append(Text.literal("COPY HASH").styled(style -> style.withColor(Formatting.YELLOW)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(fullHash)))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullHash))
+                        .withHoverEvent(new HoverEvent.ShowText(Text.literal(fullHash)))
+                        .withClickEvent(new ClickEvent.CopyToClipboard(fullHash))
                         .withUnderline(true)))
                 .append("\n").styled(style -> style.withBold(true));
     }
@@ -107,15 +104,20 @@ public class Utils {
     public static Text getBuildTemplate(String url) {
         return Text.literal("\n(").styled(style -> style.withColor(Formatting.DARK_GRAY))
                 .append(Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, optionsTooltip())).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/build config"))))
+                        .withHoverEvent(new HoverEvent.ShowText(optionsTooltip())).withClickEvent(new ClickEvent.RunCommand("/build config"))))
+                .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
+                .append(Text.literal(" (").styled(style -> style.withColor(Formatting.DARK_GRAY)))
+                .append(Text.literal("Help").styled(style -> style.withColor(Formatting.RED).withBold(true)
+                                .withHoverEvent(new HoverEvent.ShowText(Text.literal("Click for help").styled(style1 -> style1.withColor(Formatting.GRAY))))
+                                .withClickEvent(new ClickEvent.RunCommand("/build issue"))))
                 .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
                 .append(Text.literal(" Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
                         .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(url)))
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, url))
+                                .withHoverEvent(new HoverEvent.ShowText(Text.literal(url)))
+                                .withClickEvent(new ClickEvent.CopyToClipboard(url))
                                 .withUnderline(true)))
                         .append("  ")
-                        .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))
+                        .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(URI.create(url)))
                                 .withUnderline(true)
                                 .withColor(Formatting.RED)))
                         .append("\n").styled(style -> style.withBold(true)));

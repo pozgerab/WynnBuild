@@ -12,6 +12,8 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.net.URI;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class CommandRegistry {
@@ -28,8 +30,8 @@ public class CommandRegistry {
                             .then(literal("help").executes(context -> {
                                 WynnBuild.message(Text.literal("\tWelcome to WynnBuild! Instructions ")
                                         .append(Text.literal("HERE").styled(style -> style.withUnderline(true)
-                                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Click for Modrinth page")))
-                                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/wynnbuild"))))
+                                                .withHoverEvent(new HoverEvent.ShowText(Text.literal("Click for Modrinth page")))
+                                                .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/wynnbuild")))))
                                         .styled(style -> style.withColor(Formatting.GOLD)));
                                 return 1;
                             }))
@@ -60,6 +62,27 @@ public class CommandRegistry {
                             }))
                             .then(literal("reloadcache").executes(context -> {
                                 BuilderDataManager.reloadBuilderData(true);
+                                return 1;
+                            }))
+                            .then(literal("debug").executes(context -> {
+                                WynnBuild.toggleDebug();
+                                WynnBuild.message(Text.literal("Debug mode is now " + (WynnBuild.isDebug() ? "enabled" : "disabled")).styled(style -> style.withColor(WynnBuild.isDebug() ? Formatting.GREEN : Formatting.RED)));
+                                return 1;
+                            }))
+                            .then(literal("issue").executes(context -> {
+                                WynnBuild.message(Text.literal("If your build did not generate correctly, try ")
+                                        .append(Text.literal("reloading the cache").styled(style -> style.withUnderline(true).withClickEvent(
+                                                new ClickEvent.SuggestCommand("/build reloadcache"))))
+                                        .append(" or ")
+                                        .append(Text.literal("fetching the ability tree").styled(style -> style.withUnderline(true).withClickEvent(
+                                                new ClickEvent.SuggestCommand("/build readtree")
+                                        )))
+                                        .append(" and try again. If neither work or you have other issues, ")
+                                        .append(Text.literal("open an issue on github").styled(style -> style.withUnderline(true).withClickEvent(
+                                                        new ClickEvent.OpenUrl(URI.create("https://github.com/pozgerab/WynnBuild/issues/new")))
+                                                .withHoverEvent(
+                                                        new HoverEvent.ShowText(Text.literal("https://github.com/pozgerab/WynnBuild/issues/new"))))
+                                        ).styled(style -> style.withColor(Formatting.GRAY)));
                                 return 1;
                             }))
             );

@@ -17,6 +17,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -31,14 +32,15 @@ public class WynnBuild implements ModInitializer {
     public static final String DOMAIN = "https://wynnbuilder.github.io/";
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
-    private static final Logger LOGGER = LoggerFactory.getLogger("wynnbuild");
-    private static final boolean debug = false;
+    public static final String MOD_ID = "wynnbuild";
+    private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static MinecraftClient client;
     public static Manager configManager;
     public static List<Integer> tomeIds = null;
     public static List<AspectItem> aspects = null;
     public static Set<Integer> atreeState = new HashSet<>();
     public static List<ItemStack> currentGear = null;
+    private static boolean debug = false;
     private static QueryStack currentQuery = null;
 
     public static Manager getConfigManager() {
@@ -58,8 +60,11 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static List<ItemStack> getPlayerEquipment() {
-        List<ItemStack> equipment = new ArrayList<>(McUtils.inventory().armor);
-        Collections.reverse(equipment);
+        List<ItemStack> equipment = new ArrayList<>(List.of(
+                McUtils.player().getEquippedStack(EquipmentSlot.HEAD),
+                McUtils.player().getEquippedStack(EquipmentSlot.CHEST),
+                McUtils.player().getEquippedStack(EquipmentSlot.LEGS),
+                McUtils.player().getEquippedStack(EquipmentSlot.FEET)));
 
         for (int i : InventoryAccessory.getSlots()) {
             int baseSize = 0;
@@ -136,15 +141,26 @@ public class WynnBuild implements ModInitializer {
 
     public static void displayErr(String errorMessage) {
         WynnBuild.message(Text.literal(errorMessage).styled(style -> style.withColor(Formatting.RED)));
-        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_ANVIL_LAND, 1.0F, 1.0F));
+        client.getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_ANVIL_LAND));
     }
 
     public static AtreeCoder getAtreeCoder() {
         return AtreeCoder.getAtreeCoder(Models.Character.getClassType());
     }
 
+    public static void saveAtreeCache() {
+        getConfigManager().getConfig().addTreeCache(getAtreeCoder().encode_atree(atreeState).toB64());
+        getConfigManager().saveConfig();
+    }
+
     public static String getAtreeSuffix() {
         return getAtreeCoder().encode_atree(atreeState).toB64();
+    }
+
+    public static Optional<String> getCachedAtree() {
+        String cached = getConfig().getProfileIdAtreeCache().get(Models.Character.getId());
+        if (cached == null) return Optional.empty();
+        return Optional.of(cached);
     }
 
     public static void warn(String format, Object... args) {
@@ -169,6 +185,14 @@ public class WynnBuild implements ModInitializer {
         if (debug) {
             message(Text.literal("[DEBUG] ").styled(style -> style.withBold(true).withColor(Formatting.GOLD)).append(Text.literal(message).styled(style -> style.withBold(false).withColor(Formatting.WHITE))));
         }
+    }
+
+    public static void toggleDebug() {
+        debug = !debug;
+    }
+
+    public static boolean isDebug() {
+        return debug;
     }
 
     public static void message(Text text) {
