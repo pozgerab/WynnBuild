@@ -97,7 +97,7 @@ public class MergeTrees {
             }
             mergedTree.put(className, mergedClassTree);
         }
-        WynnBuild.warn("{}", mergedTree);
+        WynnBuild.debug("{}", mergedTree);
         return mergedTree;
     }
 
