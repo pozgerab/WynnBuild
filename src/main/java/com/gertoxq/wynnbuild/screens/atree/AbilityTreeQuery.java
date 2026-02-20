@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.WynnBuild.atreeState;
 
@@ -111,32 +110,6 @@ public class AbilityTreeQuery {
 
         public boolean doContinue() {
             return doContinue;
-        }
-
-        private Set<Integer> roots(Set<Integer> all) {
-            return all.stream().filter(id -> {
-                if (id == 0) return true;
-                List<Integer> parents = Ability.getById(id).parents();
-                return parents.stream().anyMatch(atreeState::contains);
-            }).collect(Collectors.toSet());
-        }
-
-        private Set<Integer> findUnlocked(Set<Integer> all) {
-            Set<Integer> roots = roots(all);
-
-            Set<Integer> unlocked = new HashSet<>(roots);
-            roots.forEach(root -> recurseNodes(root, all, unlocked));
-
-            return unlocked;
-        }
-
-        private void recurseNodes(int id, Set<Integer> allNodes, Set<Integer> unlocked) {
-            Ability.getById(id).children().stream()
-                    .filter(child -> allNodes.contains(child) && !unlocked.contains(child))
-                    .forEach(child -> {
-                        unlocked.add(child);
-                        recurseNodes(child, allNodes, unlocked);
-                    });
         }
 
         protected void processPage(ContainerContent content) {
