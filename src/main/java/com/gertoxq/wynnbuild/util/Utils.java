@@ -1,20 +1,15 @@
 package com.gertoxq.wynnbuild.util;
 
 import com.wynntils.models.items.items.game.GearItem;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
@@ -30,6 +25,12 @@ public class Utils {
         return ((v % m) + m) % m;
     }
 
+    public static <T> Set<T> difference(Set<T> a, Set<T> b) {
+        Set<T> copy = new HashSet<>(a);
+        copy.removeAll(b);
+        return copy;
+    }
+
     public static <A, B> List<Map.Entry<A, B>> zip2(List<A> a, List<B> b) {
         List<Map.Entry<A, B>> result = new ArrayList<>();
         int size = Math.min(a.size(), b.size());
@@ -39,21 +40,12 @@ public class Utils {
         return result;
     }
 
-    public static @Nullable List<Text> getLore(@NotNull ItemStack itemStack) {
-        LoreComponent loreComp = itemStack.get(DataComponentTypes.LORE);
-        if (loreComp == null) return null;
-        return loreComp.lines();
-    }
-
     public static String removeFormat(@NotNull String str) {
         return str.replaceAll("§.", "").replaceAll("\\*", "");
     }
 
     public static String removeNum(String str) {
-        var rep = List.of(" 1", " 2", " 3", " III", " II", " I");
-        AtomicReference<String> news = new AtomicReference<>(str);
-        rep.forEach(s -> news.set(news.get().replace(s, "")));
-        return news.get();
+        return str.replaceAll("\\s(I|II|III)$", "");
     }
 
     public static boolean between(int num1, int num2, int target) {
