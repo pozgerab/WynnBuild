@@ -42,7 +42,7 @@ public record Ability(
     }
 
     public static void refreshTree() {
-        WynnBuild.info("Refreshing atree, should only happen when changing cast...");
+        WynnBuild.info("Refreshing atree, should only happen when changing class...");
 
         String classTypeKey = Models.Character.getClassType().getName();
         if (!FULL_ABILITY_MAP.containsKey(classTypeKey)) {

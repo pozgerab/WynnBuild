@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class AspectProvider extends BuilderDataProvider<Map<String, Integer>> {
     public AspectProvider() {
-        super("aspects", new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
+        super("aspects", "ASPECT", new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
     }
 
     public Map<String, Integer> getClassAspects(ClassType classType) {
