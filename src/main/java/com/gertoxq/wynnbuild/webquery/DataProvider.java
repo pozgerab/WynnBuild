@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.webquery;
 
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.client.WynnBuildClient;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
 import com.google.gson.*;
 import com.wynntils.utils.FileUtils;
@@ -38,7 +39,6 @@ public abstract class DataProvider<T> {
         loadedProviders.add(name);
         if (DataProvider.loadedProviders.containsAll(List.of("archer", "warrior", "assassin", "mage", "shaman", "atree"))) {
             Ability.FULL_ABILITY_MAP = MergeTrees.merge(Providers.Atree.data(), fullApiAtree);
-            Ability.refreshTree();
         }
     }
 
