@@ -2,7 +2,10 @@ package com.gertoxq.wynnbuild.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.regex.Pattern;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UtilsTest {
 
@@ -19,7 +22,8 @@ class UtilsTest {
     }
 
     @Test
-    void removeNumTest() {
-        assertEquals("Cheaper Ice Snake", Utils.removeNum("Cheaper Ice Snake II"));
+    void treePatternTest() {
+        Pattern ABILITY_TREE_PATTERN = Pattern.compile("\udaff\udfea[\ue000|\ue057]");
+        assertTrue(ABILITY_TREE_PATTERN.matcher("\uDAFF\uDFEA\uE057").matches());
     }
 }

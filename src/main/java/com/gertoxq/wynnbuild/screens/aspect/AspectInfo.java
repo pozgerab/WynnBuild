@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery.ABILITY_TREE_SLOT;
+import static com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery.ABILITY_TREE_TITLE;
 
 public class AspectInfo {
 
@@ -34,9 +35,9 @@ public class AspectInfo {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("wynnbuild.fetchaspect")
                 .onError(string -> WynnBuild.warn("Error querying aspect info: {}", Utils.escapeToUnicode(string)))
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
-                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainerTitle(ContainerModel.ABILITY_TREE_PATTERN.pattern()))
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainerTitle(ABILITY_TREE_TITLE))
                 .then(QueryStep.clickOnSlot(86)
-                        .expectContainerTitle(ContainerModel.ABILITY_TREE_PATTERN.pattern()))
+                        .expectContainerTitle(ABILITY_TREE_TITLE))
                 .then(QueryStep.clickOnSlot(0).verifyContentChange(this::verifyChange)
                         .expectContainerTitle(ASPECT_TITLE_PATTERN.pattern())
                         .processIncomingContainer(this::processAspects))
