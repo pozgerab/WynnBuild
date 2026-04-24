@@ -70,6 +70,7 @@ public class WynnBuildClient implements ClientModInitializer {
             WynntilsMod.registerEventListener(new ScreenClosed());
             WynntilsMod.registerEventListener(new AbilityNodeChange());
             WynntilsMod.registerEventListener(new AtreeReset());
+            //WynntilsMod.registerEventListener(new DebugMenuOpen());
 
             checkNewVersion();
         });
