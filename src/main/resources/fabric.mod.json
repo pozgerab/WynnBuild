@@ -16,7 +16,8 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.modrinth": "https://modrinth.com/mod/wynnbuild"
+        "modmenu.modrinth": "https://modrinth.com/mod/wynnbuild",
+        "modmenu.discord": "https://discord.gg/5aPfDYGMKm"
       }
     }
   },
@@ -41,7 +42,7 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "minecraft": "1.21.11",
-    "wynntils": ">=4.0.0-beta.4"
+    "wynntils": ">=4.1.5"
   },
   "suggests": {
     "modmenu": ">=13.0.0"
