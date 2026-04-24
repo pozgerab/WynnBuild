@@ -10,8 +10,10 @@ import com.gertoxq.wynnbuild.screens.QueryStack;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.McUtils;
 import net.fabricmc.api.ModInitializer;
@@ -29,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class WynnBuild implements ModInitializer {
-    public static final String DOMAIN = "https://wynnbuilder.github.io/";
+    public static final String DOMAIN = "https://wynnbuilder-beta.github.io/";
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     public static final String MOD_ID = "wynnbuild";
@@ -91,19 +93,32 @@ public class WynnBuild implements ModInitializer {
 
     public static void buildItemStackCustom(ItemStack itemStack) {
 
+        String customHash;
+        GearTier tier;
+        String name;
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-        if (gearItemOpt.isEmpty()) return;
-        String customHash = CustomCoder.encode(gearItemOpt.get(), null).toB64();
+        if (gearItemOpt.isPresent()) {
+            customHash = CustomCoder.encode(gearItemOpt.get(), null).toB64();
+            tier = gearItemOpt.get().getGearTier();
+            name = gearItemOpt.get().getName();
+        } else {
+            Optional<CraftedGearItem> craftedGearItemOpt = Models.Item.asWynnItem(itemStack, CraftedGearItem.class);
+            if (craftedGearItemOpt.isEmpty()) return;
+            customHash = CustomCoder.encode(craftedGearItemOpt.get(), null).toB64();
+            tier = craftedGearItemOpt.get().getGearTier();
+            name = craftedGearItemOpt.get().getName();
+        }
 
         String url = WYNNCUSTOM_DOMAIN + customHash;
         String fullHash = "CI-" + customHash;
 
-        WynnBuild.message(Utils.getItemPrintTemplate(gearItemOpt.get(), fullHash, url));
+        WynnBuild.message(Utils.getItemPrintTemplate(name, tier, fullHash, url));
 
     }
 
     public static void buildWithArgs(boolean forceRefetchAtree) {
         if (client.player == null) return;
+        updateAtreeState();
 
         currentGear = getPlayerEquipment();
         if (currentGear == null) {
@@ -198,6 +213,10 @@ public class WynnBuild implements ModInitializer {
     public static void message(Text text) {
         assert McUtils.player() != null : "Cannot send message, there is no player";
         McUtils.player().sendMessage(text, false);
+    }
+
+    public static void updateAtreeState() {
+        atreeState = WynnBuild.getCachedAtree().map(treeCode -> WynnBuild.getAtreeCoder().decode_atree(treeCode)).orElse(new HashSet<>());
     }
 
     @Override
