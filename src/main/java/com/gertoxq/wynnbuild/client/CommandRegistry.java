@@ -39,15 +39,6 @@ public class CommandRegistry {
                                 client.send(() -> client.setScreen(new ConfigScreen(client.currentScreen)));
                                 return 1;
                             }))
-                            /*.then(literal("saveatree")
-                                    .then(argument("hash", StringArgumentType.word()).executes(context -> {
-                                        client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen, "", StringArgumentType.getString(context, "hash"))));
-                                        return 1;
-                                    }))
-                                    .executes(context -> {
-                                        client.send(() -> client.setScreen(new ImportAtreeScreen(client.currentScreen)));
-                                        return 1;
-                                    }))*/
                             .then(literal("buildcustomitem").executes(context -> {
                                 WynnBuild.buildMainHand();
                                 return 1;
@@ -68,7 +59,12 @@ public class CommandRegistry {
                                 WynnBuild.toggleDebug();
                                 WynnBuild.message(Text.literal("Debug mode is now " + (WynnBuild.isDebug() ? "enabled" : "disabled")).styled(style -> style.withColor(WynnBuild.isDebug() ? Formatting.GREEN : Formatting.RED)));
                                 return 1;
-                            }))
+                            }).then(literal("clearatreestate").executes(commandContext -> {
+                                WynnBuild.atreeState.clear();
+                                WynnBuild.saveAtreeCache();
+                                WynnBuild.message(Text.literal("Cleared current ability tree"));
+                                return 1;
+                            })))
                             .then(literal("issue").executes(context -> {
                                 WynnBuild.message(Text.literal("If your build did not generate correctly, try ")
                                         .append(Text.literal("reloading the cache").styled(style -> style.withUnderline(true).withClickEvent(
@@ -78,10 +74,10 @@ public class CommandRegistry {
                                                 new ClickEvent.SuggestCommand("/build readtree")
                                         )))
                                         .append(" and try again. If neither work or you have other issues, ")
-                                        .append(Text.literal("open an issue on github").styled(style -> style.withUnderline(true).withClickEvent(
-                                                        new ClickEvent.OpenUrl(URI.create("https://github.com/pozgerab/WynnBuild/issues/new")))
+                                        .append(Text.literal("join the discord").styled(style -> style.withUnderline(true).withClickEvent(
+                                                        new ClickEvent.OpenUrl(URI.create("https://discord.gg/5aPfDYGMKm")))
                                                 .withHoverEvent(
-                                                        new HoverEvent.ShowText(Text.literal("https://github.com/pozgerab/WynnBuild/issues/new"))))
+                                                        new HoverEvent.ShowText(Text.literal("https://discord.gg/5aPfDYGMKm"))))
                                         ).styled(style -> style.withColor(Formatting.GRAY)));
                                 return 1;
                             }))

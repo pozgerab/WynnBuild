@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.base.bitcodemaps;
 
-import com.gertoxq.wynnbuild.base.PowderUtil;
 import com.wynntils.models.elements.type.Element;
 
 import java.util.Arrays;
@@ -29,7 +28,7 @@ public interface BitMapEncoding {
     }
 
     default int POWDER_TIERS() {
-        return PowderUtil.MAX_POWDER_LEVEL;
+        return 7;
     }
 
     default int POWDER_WRAPPER_BITLEN() {
@@ -37,7 +36,7 @@ public interface BitMapEncoding {
     }
 
     default int POWDER_ID_BITLEN() {
-        return 5;
+        return 6;
     }
 
     default PowderRepeatOp POWDER_REPEAT_OP() {
@@ -109,7 +108,7 @@ public interface BitMapEncoding {
     }
 
     default int MAX_LEVEL() {
-        return 106;
+        return 121;
     }
 
     default int LEVEL_BITLEN() {

@@ -13,16 +13,22 @@ import com.gertoxq.wynnbuild.webquery.BuilderDataManager;
 import com.wynntils.core.WynntilsMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 public class WynnBuildClient implements ClientModInitializer {
     public static Clickable BUTTON;
+    public static KeyBinding SAVE_ITEM_JSON_KEYBIND;
+    private static final KeyBinding.Category DEBUG = new KeyBinding.Category(Identifier.of("wynnbuild", "debug"));
 
     @Override
     public void onInitializeClient() {
@@ -36,6 +42,13 @@ public class WynnBuildClient implements ClientModInitializer {
         BuilderDataManager.initBuilderData();
 
         BUTTON = new Clickable(() -> WynnBuild.getConfig().isShowButtons());
+
+        SAVE_ITEM_JSON_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.wynnbuild.save_item_json",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                DEBUG
+        ));
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (screen instanceof InventoryScreen screen1) {
