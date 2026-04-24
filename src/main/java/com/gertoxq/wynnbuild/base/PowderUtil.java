@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class PowderUtil {
 
-    public static final int MAX_POWDER_LEVEL = 6;
+    public static final int MAX_POWDER_LEVEL = EncodeDecode.ENC.POWDER_TIERS();
     private final static Map<Integer, Powder> powderMap = new HashMap<>();
 
     static {

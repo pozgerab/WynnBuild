@@ -129,7 +129,7 @@ public class CustomCoder {
         GearInstance gearInstance = gearOptional.get();
 
         EncodingBitVector customVec = encode(
-                safeType,
+                safeType == null ? gearItem.getGearType() : safeType,
                 gearInstance.identifications(),
                 gearItem.getItemInfo().fixedStats().damages(),
                 gearItem.getItemInfo().fixedStats().defences(),

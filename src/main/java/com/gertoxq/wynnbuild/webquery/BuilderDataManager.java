@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class BuilderDataManager {
 
     private static final Pattern VERSION_STRING_PATTERN = Pattern.compile("'((?:\\d+\\.){3}\\d+)'");
-    private static final String VERSION_FILE_URL = "https://raw.githubusercontent.com/wynnbuilder/wynnbuilder.github.io/refs/heads/master/js/load_item.js";
+    private static final String VERSION_FILE_URL = BuilderDataProvider.masterUrl + "js/load_item.js";
     public static String LATEST_WYNNBUILDER_VERSION;
     public static int WYNN_VERSION_ID;
 

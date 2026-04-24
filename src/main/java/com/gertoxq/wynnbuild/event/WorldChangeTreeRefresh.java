@@ -7,13 +7,14 @@ import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.HashSet;
 
 public class WorldChangeTreeRefresh {
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) {
             Ability.refreshTree();

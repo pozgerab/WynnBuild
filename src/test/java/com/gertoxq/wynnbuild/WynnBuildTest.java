@@ -9,7 +9,7 @@ class WynnBuildTest {
     @Test
     public void onBuild_notlocalhost() {
         WynnBuild.info("DOMAIN = {}", WynnBuild.DOMAIN);
-        assertEquals(WynnBuild.DOMAIN, "https://wynnbuilder.github.io/");
+        assertEquals(WynnBuild.DOMAIN, "https://wynnbuilder-beta.github.io/");
     }
 
 }

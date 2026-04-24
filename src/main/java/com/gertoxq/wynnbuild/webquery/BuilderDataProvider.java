@@ -14,6 +14,7 @@ public abstract class BuilderDataProvider<V> extends DataProvider<Map<String, V>
 
     private Integer dbVersion;
     private final String dbName;
+    public static final String masterUrl = "https://raw.githubusercontent.com/wynnbuilder-beta/wynnbuilder-beta.github.io/refs/heads/master/";
 
     public BuilderDataProvider(String name, String dbName, Type dataType) {
         super(name, dataType);
@@ -33,7 +34,7 @@ public abstract class BuilderDataProvider<V> extends DataProvider<Map<String, V>
     }
 
     public String getDbUrl() {
-        String jsFolderUrl = "https://raw.githubusercontent.com/wynnbuilder/wynnbuilder.github.io/refs/heads/master/js/";
+        String jsFolderUrl = masterUrl + "js/";
         return jsFolderUrl + "load_" + dbName.toLowerCase() + ".js";
     }
 
@@ -57,7 +58,7 @@ public abstract class BuilderDataProvider<V> extends DataProvider<Map<String, V>
 
     @Override
     public String url() {
-        String dataFolderUrl = "https://raw.githubusercontent.com/wynnbuilder/wynnbuilder.github.io/refs/heads/master/data/";
+        String dataFolderUrl = masterUrl + "data/";
         return dataFolderUrl + LATEST_WYNNBUILDER_VERSION + "/" + name + ".json";
     }
 }

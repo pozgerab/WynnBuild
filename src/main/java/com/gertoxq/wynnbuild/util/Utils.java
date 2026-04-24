@@ -1,19 +1,14 @@
 package com.gertoxq.wynnbuild.util;
 
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.gear.type.GearTier;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
-import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
 
 public class Utils {
 
@@ -40,14 +35,6 @@ public class Utils {
         return result;
     }
 
-    public static String removeFormat(@NotNull String str) {
-        return str.replaceAll("§.", "").replaceAll("\\*", "");
-    }
-
-    public static String removeNum(String str) {
-        return str.replaceAll("\\s(I|II|III)$", "");
-    }
-
     public static boolean between(int num1, int num2, int target) {
         return num1 <= target && target <= num2;
     }
@@ -72,7 +59,7 @@ public class Utils {
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
 
-            if (c < 128) {
+            if (c < 128 || c == '§') {
                 sb.append(c);
             } else {
                 sb.append(String.format("\\u%04X", (int) c));
@@ -81,9 +68,9 @@ public class Utils {
         return sb.toString();
     }
 
-    public static Text getItemPrintTemplate(GearItem item, String fullHash, String url) {
+    public static Text getItemPrintTemplate(String name, GearTier tier, String fullHash, String url) {
         return Text.literal("\nItem is generated   ").styled(style -> style.withColor(Formatting.DARK_AQUA))
-                .append(Text.literal(item.getName()).styled(style -> style.withColor(item.getGearTier().getChatFormatting())))
+                .append(Text.literal(name).styled(style -> style.withColor(tier.getChatFormatting())))
                 .append(Text.literal("\n\n - ").styled(style -> style.withColor(Formatting.GRAY)))
                 .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
                         .withHoverEvent(new HoverEvent.ShowText(Text.literal(url)))
@@ -99,43 +86,6 @@ public class Utils {
                         .withClickEvent(new ClickEvent.CopyToClipboard(fullHash))
                         .withUnderline(true)))
                 .append("\n").styled(style -> style.withBold(true));
-    }
-
-    public static Text getBuildTemplate(String url) {
-        return Text.literal("\n(").styled(style -> style.withColor(Formatting.DARK_GRAY))
-                .append(Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true)
-                        .withHoverEvent(new HoverEvent.ShowText(optionsTooltip())).withClickEvent(new ClickEvent.RunCommand("/build config"))))
-                .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
-                .append(Text.literal(" (").styled(style -> style.withColor(Formatting.DARK_GRAY)))
-                .append(Text.literal("Help").styled(style -> style.withColor(Formatting.RED).withBold(true)
-                                .withHoverEvent(new HoverEvent.ShowText(Text.literal("Click for help").styled(style1 -> style1.withColor(Formatting.GRAY))))
-                                .withClickEvent(new ClickEvent.RunCommand("/build issue"))))
-                .append(Text.literal(")").styled(style -> style.withColor(Formatting.DARK_GRAY)))
-                .append(Text.literal(" Your build is generated   ").styled(style -> style.withColor(Formatting.GOLD))
-                        .append(Text.literal("COPY").styled(style -> style.withColor(Formatting.GREEN)
-                                .withHoverEvent(new HoverEvent.ShowText(Text.literal(url)))
-                                .withClickEvent(new ClickEvent.CopyToClipboard(url))
-                                .withUnderline(true)))
-                        .append("  ")
-                        .append(Text.literal("OPEN").styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(URI.create(url)))
-                                .withUnderline(true)
-                                .withColor(Formatting.RED)))
-                        .append("\n").styled(style -> style.withBold(true)));
-    }
-
-    public static MutableText optionsTooltip() {
-        return Text.literal("Options").styled(style -> style.withColor(Formatting.DARK_AQUA))
-                .append("\n\n")
-                .append(Text.literal("Precision: ").styled(style -> style.withColor(Formatting.GRAY))
-                        .append(Text.literal(getConfigManager().getConfig().getPrecision() == 1 ? "ON" : "OFF").styled(style -> style.withColor(getConfig().getPrecision() == 1 ? Formatting.GREEN : Formatting.RED))))
-                .append("\n")
-                .append(Text.literal("Include Tomes: ").styled(style -> style.withColor(Formatting.GRAY))
-                        .append(Text.literal(getConfigManager().getConfig().isIncludeTomes() ? "ON" : "OFF").styled(style -> style.withColor(getConfig().isIncludeTomes() ? Formatting.GREEN : Formatting.RED))))
-                .append("\n")
-                .append(Text.literal("Include Aspects: ").styled(style -> style.withColor(Formatting.GRAY))
-                        .append(Text.literal(getConfigManager().getConfig().isIncludeAspects() ? "ON" : "OFF").styled(style -> style.withColor(getConfig().isIncludeAspects() ? Formatting.GREEN : Formatting.RED))))
-                .append("\n\n")
-                .append(Text.literal("Click to change (/build config)").styled(style -> style.withColor(Formatting.DARK_GRAY)));
     }
 
 }
