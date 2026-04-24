@@ -5,14 +5,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.models.character.type.ClassType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ApiDataProvider extends DataProvider<List<ApiAbilitySchema>> {
 
     public static Map<String, List<ApiAbilitySchema>> fullApiAtree = new HashMap<>();
 
     public ApiDataProvider(ClassType classType) {
-        super(classType.getName().toLowerCase(), new TypeToken<List<ApiAbilitySchema>>() {}.getType());
+        super(classType.getName().toLowerCase(), new TypeToken<List<ApiAbilitySchema>>() {
+        }.getType());
     }
 
     @Override
@@ -39,7 +43,6 @@ public class ApiDataProvider extends DataProvider<List<ApiAbilitySchema>> {
                 assert abilityObj.has("slot") : "missing slot";
 
                 ApiAbilitySchema apiAbility = new ApiAbilitySchema(
-                        -1,
                         abilityObj.get("page").getAsInt(),
                         abilityObj.get("name").getAsString().replaceAll("<[^>]+>", ""),
                         abilityObj.get("slot").getAsInt()
@@ -47,16 +50,6 @@ public class ApiDataProvider extends DataProvider<List<ApiAbilitySchema>> {
 
                 apiTree.add(apiAbility);
             }
-        }
-
-        apiTree = new ArrayList<>(apiTree.stream().sorted(Comparator.comparingInt(apiAbility -> apiAbility.pageNumber() * 55 + apiAbility.slot())).toList());
-
-        for (int i = 0; i < apiTree.size(); i++) {
-            ApiAbilitySchema original = apiTree.get(i);
-            ApiAbilitySchema idAnnotated = new ApiAbilitySchema(
-                    i, original.pageNumber(), original.name(), original.slot()
-            );
-            apiTree.set(i, idAnnotated);
         }
 
         return apiTree;

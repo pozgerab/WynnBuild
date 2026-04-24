@@ -1,9 +1,10 @@
 package com.gertoxq.wynnbuild.webquery;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.client.WynnBuildClient;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
+import com.gertoxq.wynnbuild.webquery.providers.BuilderAbilitySchema;
 import com.google.gson.*;
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 
@@ -17,11 +18,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.gertoxq.wynnbuild.webquery.ApiDataProvider.fullApiAtree;
-
 public abstract class DataProvider<T> {
 
-    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final List<String> KEYS_FOR_FULL_ATREE = List.of("atree", "archer", "warrior", "mage", "assassin", "shaman");
+
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .registerTypeAdapter(BuilderAbilitySchema.class, new AbilityDeserializer()).create();
     static final File cacheDir = new File(McUtils.mc().runDirectory, "cache/" + WynnBuild.MOD_ID);
     public static Set<String> loadedProviders = new HashSet<>();
     protected final File cacheFile;
@@ -37,8 +39,14 @@ public abstract class DataProvider<T> {
 
     private static void loaded(String name) {
         loadedProviders.add(name);
-        if (DataProvider.loadedProviders.containsAll(List.of("archer", "warrior", "assassin", "mage", "shaman", "atree"))) {
-            Ability.FULL_ABILITY_MAP = MergeTrees.merge(Providers.Atree.data(), fullApiAtree);
+        if (loadedProviders.containsAll(KEYS_FOR_FULL_ATREE)) {
+            loadedProviders.clear();
+            Ability.FULL_ABILITY_MAP = TreeManager.matchTrees(Providers.Atree.data(), ApiDataProvider.fullApiAtree);
+            try {
+                if (Models.WorldState.onWorld()) Ability.refreshTree();
+            } catch (Exception e) {
+                WynnBuild.info("Coundn't refresh atree after full ability map loaded");
+            }
         }
     }
 
@@ -50,15 +58,15 @@ public abstract class DataProvider<T> {
         return DataProvider.gson.toJsonTree(data);
     }
 
-    protected abstract T transformData(JsonObject jsonObject);
+    protected abstract T transformData(JsonObject jsonObject); // transforms from url
 
     public void setData(T data) {
         this.data = data;
         loaded(name);
     }
 
-    protected T fromJson(JsonElement dataElement) {
-        return DataProvider.gson.fromJson(dataElement, this.dataType);
+    protected T fromJson(JsonElement dataElement) { // caching method
+        return gson.fromJson(dataElement, this.dataType);
     }
 
     protected Optional<JsonObject> readCacheFile() {

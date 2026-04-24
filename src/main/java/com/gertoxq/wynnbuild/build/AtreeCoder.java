@@ -127,9 +127,9 @@ public class AtreeCoder {
                 pendingAbilities.merge(archetype,
                         new PriorityQueue<>(List.of(new AbilityAndReq(id, ability.archetypeReq()))),
                         (oldQueue, newQueue) -> {
-                    oldQueue.addAll(newQueue);
-                    return oldQueue;
-                });
+                            oldQueue.addAll(newQueue);
+                            return oldQueue;
+                        });
 
 
             } else {
@@ -174,6 +174,7 @@ public class AtreeCoder {
         AtomicInteger i = new AtomicInteger();
         Set<Integer> ret = new HashSet<>();
         ret.add(0);
+        if (encoded.isEmpty()) return ret; // if character ID is not recognized
         traverse(0, new HashSet<>(), ret, bits, i);
         return ret;
     }

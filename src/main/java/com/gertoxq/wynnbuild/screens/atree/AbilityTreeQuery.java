@@ -6,9 +6,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -18,7 +20,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.gertoxq.wynnbuild.WynnBuild.atreeState;
 
@@ -30,6 +31,7 @@ public class AbilityTreeQuery {
     static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
+    public static final String ABILITY_TREE_TITLE = "\uDAFF\uDFEA[\ue000\uE057]";
 
     public AbilityTreeQuery() {
         atreeState = new HashSet<>();
@@ -53,17 +55,21 @@ public class AbilityTreeQuery {
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT)
-                        .expectContainerTitle(ContainerModel.ABILITY_TREE_PATTERN.pattern()))
+                        .expectContainerTitle(ABILITY_TREE_TITLE))
                 .execute(() -> this.pageCount = 0)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
-                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT).processIncomingContainer(c -> this.pageCount++))
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                                .expectContainerTitle(ABILITY_TREE_TITLE).processIncomingContainer(c -> this.pageCount++)
+                                .verifyContentChange(processor::verifyChangeOnReverse))
                 .reprocess(processor::processPage)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME) && processor.doContinue(),
-                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .expectContainerTitle(ABILITY_TREE_TITLE).verifyContentChange((processor::verifyChange))
+                                .processIncomingContainer(processor::processPage))
                 .execute(() -> {
                     McUtils.sendMessageToClient(Text.literal("Ability tree fetched").styled(style -> style.withColor(Formatting.GRAY)));
                     WynnBuild.saveAtreeCache();
@@ -77,25 +83,34 @@ public class AbilityTreeQuery {
     public static class AtreeFetcher {
         private int page = 1;
         private boolean doContinue = true;
+        private List<Ability> pageAbilities = Ability.getPage(page);
+        private List<Integer> requiredSlots = pageAbilities.stream().map(Ability::slot).toList();
+
+        Set<Integer> changedSlots = new HashSet<>();
 
         protected void processPage(ContainerContent content, int page) {
+
+            changedSlots = new HashSet<>();
+
             List<ItemStack> items = content.items();
             Set<Integer> unlockedIds = new HashSet<>();
 
             WynnBuild.debug("Processing ability tree page {}", page);
             WynnBuild.debug("Existing nodes {}", Arrays.toString(atreeState.toArray()));
 
-            for (AtomicInteger i = new AtomicInteger(0); i.get() < 54; i.getAndIncrement()) {
-                ItemStack stack = items.get(i.get());
-                if (!AtreeNode.isValidNode(stack, i.get())) continue;
+            for (Ability ability : pageAbilities) {
 
-                AtreeNode node = new AtreeNode(stack, i.get(), page);
-                WynnBuild.debug("Found node at {}", String.valueOf(i.get()));
-                WynnBuild.debug("Processing node {}", node.getName());
-                if (node.getId().isEmpty()) {
-                    WynnBuild.debug("No ability id found for node {}: {}", i.get(), node.getName());
-                    continue;
+                int slot = ability.slot();
+
+                ItemStack stack = items.get(slot);
+                if (!AtreeNode.isValidNode(stack, slot)) {
+                    throw new RuntimeException("Expected ability node at slot " + slot + " on page " + page + ", but found invalid item: " + stack.getName().getString());
                 }
+
+                AtreeNode node = new AtreeNode(stack, ability);
+                WynnBuild.debug("Found node at {}", String.valueOf(slot));
+                WynnBuild.debug("Processing node {}", node.getName());
+
                 if (node.getState() != AbilityNodeState.UNLOCKED) {
                     WynnBuild.debug("Skipping not unlocked");
                     continue;
@@ -115,6 +130,49 @@ public class AbilityTreeQuery {
         protected void processPage(ContainerContent content) {
             processPage(content, page);
             page++;
+
+            pageAbilities = Ability.getPage(page);
+
+            requiredSlots = pageAbilities.stream().map(Ability::slot).toList();
+        }
+
+        /*
+         *   ORDER: (this is bs)
+         *   1. Next Page on slot 59
+         *   2. Abilities in order
+         *   3. Previous Page on slot 57
+         *   4. Ability points on slot 58
+         *   5. Next Page AGAIN on slot 59
+         *   6. Archetypes in order: 74, 76, 78
+         */
+        public boolean verifyChange(ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType containerContentChangeType) {
+
+            WynnBuild.debug("Change incoming: {}", containerContentChangeType.name());
+
+            if (containerContentChangeType != ContainerContentChangeType.SET_SLOT) return false;
+
+            changedSlots.addAll(changes.keySet());
+            WynnBuild.debug("Changed slot: {}, {}", changes.keySet(), changes.values());
+
+            return !content.items().get(NEXT_PAGE_SLOT).isEmpty() && changedSlots.containsAll(requiredSlots);
+        }
+
+        public boolean verifyChangeOnReverse(ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType containerContentChangeType) {
+            WynnBuild.debug("Query backwards change: {}", containerContentChangeType);
+
+            boolean hasPrevPage = !content.items().get(PREVIOUS_PAGE_SLOT).isEmpty();
+            boolean hasNextPage = !content.items().get(NEXT_PAGE_SLOT).isEmpty();
+            boolean loadedReqSlots = requiredSlots.stream().allMatch(slot -> AtreeNode.isValidNode(content.items().get(slot), slot));
+
+            WynnBuild.debug("hasPrevPage = {}, hasNextPage = {}, loadedReqSlots = {}", hasPrevPage, hasNextPage, loadedReqSlots);
+
+            // IMPORTANT    hasNext is required bc the item is only loaded once and if we skip that we won't be
+            //              able to navigate back. hasPrev is also required to be able to navigate, the only
+            //              time we do not is when we're on the first page, so the loadedSlots is fulfilled
+            boolean pass = hasNextPage && (hasPrevPage || loadedReqSlots);
+
+            WynnBuild.debug("pass = {}", pass);
+            return pass;
         }
     }
 }

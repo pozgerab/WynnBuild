@@ -9,21 +9,27 @@ public enum AbilityNodeState {
     UNLOCKED, UNLOCKABLE, LOCKED, BLOCKED;
 
     public static AbilityNodeState getType(int customModelData) {
-        if (!between(158, 192, customModelData)) {
+        if (!between(158, 192, customModelData) && !between(218, 272, customModelData)) {
             WynnBuild.error("Invalid custom model data for ability node: " + customModelData);
             return LOCKED;
-        } else if (178 <= customModelData) {
+        } else if (between(178, 192, customModelData)) { // ability nodes
             return switch (customModelData % 3) {
                 case 0 -> UNLOCKED;
                 case 2 -> UNLOCKABLE;
                 default -> LOCKED; // case 1
             };
-        } else {
+        } else if (between(158, 177, customModelData)) { // normal nodes
             return switch (customModelData % 4) {
                 case 3 -> UNLOCKABLE;
                 case 0 -> UNLOCKED;
                 case 1 -> BLOCKED;
                 default -> LOCKED; // case 2
+            };
+        } else { // ultimate nodes
+            return switch (customModelData % 4) {
+                case 3 -> UNLOCKABLE;
+                case 0 -> UNLOCKED;
+                default -> LOCKED;
             };
         }
     }

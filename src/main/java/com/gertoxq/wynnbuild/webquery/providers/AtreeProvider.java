@@ -1,50 +1,37 @@
 package com.gertoxq.wynnbuild.webquery.providers;
 
 import com.gertoxq.wynnbuild.webquery.BuilderDataProvider;
-import com.gertoxq.wynnbuild.webquery.DataProvider;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
-public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbilitySchema>> {
+public class AtreeProvider extends BuilderDataProvider<List<BuilderAbilitySchema>> {
 
     public AtreeProvider() {
-        super("atree", new TypeToken<Map<String, Map<Integer, BuilderAbilitySchema>>>() {}.getType());
+        super("atree", new TypeToken<Map<String, List<BuilderAbilitySchema>>>() {
+        }.getType());
     }
 
     private static @NotNull Map<Integer, BuilderAbilitySchema> getMappedAbilities(List<BuilderAbilitySchema> list) {
         Map<Integer, BuilderAbilitySchema> mapped = new HashMap<>();
 
-        for (BuilderAbilitySchema abil : list) {
-            BuilderAbilitySchema temp = new BuilderAbilitySchema(
-                    abil.id(),
-                    abil.display_name()
-                            .replace("1", "I")
-                            .replace("2", "II")
-                            .replace("3", "III"),
-                    new HashSet<>(abil.parents()),
-                    new HashSet<>(abil.dependencies()),
-                    new TreeSet<>(),
-                    abil.archetype(),
-                    abil.archetype_req()
-            );
-            mapped.put(temp.id(), temp);
+        for (BuilderAbilitySchema ability : list) {
+            mapped.put(ability.id(), ability);
         }
         return mapped;
     }
 
     @Override
-    public void setData(Map<String, Map<Integer, BuilderAbilitySchema>> data) {
-        super.setData(data);
-    }
+    public Map<String, List<BuilderAbilitySchema>> transformData(JsonObject atreeObj) {
 
-    @Override
-    public Map<String, Map<Integer, BuilderAbilitySchema>> transformData(JsonObject atreeObj) {
-
-        Map<String, List<BuilderAbilitySchema>> originalSerialized = DataProvider.gson.fromJson(
-                atreeObj, new TypeToken<Map<String, List<BuilderAbilitySchema>>>(){}.getType()
+        Map<String, List<BuilderAbilitySchema>> originalSerialized = gson.fromJson(
+                atreeObj, new TypeToken<Map<String, List<BuilderAbilitySchema>>>() {
+                }.getType()
         );
 
         Map<String, Map<Integer, BuilderAbilitySchema>> atreeMap = new HashMap<>();
@@ -53,6 +40,8 @@ public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbili
             String cast = entry.getKey();
             atreeMap.put(cast, getMappedAbilities(entry.getValue()));
         }
+
+        // appending children-parents relationships
 
         for (Map<Integer, BuilderAbilitySchema> abilities : atreeMap.values()) {
 
@@ -67,7 +56,14 @@ public class AtreeProvider extends BuilderDataProvider<Map<Integer, BuilderAbili
             }
         }
 
-        return atreeMap;
+        Map<String, List<BuilderAbilitySchema>> abilities = new HashMap<>();
+
+        for (String key : atreeMap.keySet()) {
+
+            abilities.put(key, atreeMap.get(key).values().stream().toList());
+        }
+
+        return abilities;
     }
 
 }

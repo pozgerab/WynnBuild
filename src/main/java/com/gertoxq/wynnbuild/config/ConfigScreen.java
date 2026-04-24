@@ -15,6 +15,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
+import static com.gertoxq.wynnbuild.WynnBuild.updateAtreeState;
 
 public class ConfigScreen extends Screen {
     private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(Build.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
@@ -24,6 +25,8 @@ public class ConfigScreen extends Screen {
     public ConfigScreen(Screen parent) {
         super(Text.literal("Wynnbuild Config"));
         this.parent = parent;
+        getConfigManager().loadConfig();
+        updateAtreeState();
     }
 
     @Override
@@ -68,7 +71,8 @@ public class ConfigScreen extends Screen {
 
         var help = ButtonWidget.builder(
                         Text.literal("?"),
-                        button -> {})
+                        button -> {
+                        })
                 .position(this.width / 2 + 80, this.height / 4 + 96)
                 .tooltip(helpFactory.apply(getConfigManager().getConfig().getPrecision()))
                 .size(20, 20).build();
