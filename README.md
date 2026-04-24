@@ -6,7 +6,7 @@ You can quickly create a WynnBuilder link for your build in two ways:
 - Press the **BUILD** button at the bottom-right of your character info screen (you can turn this button off in settings if you want).
 - Or, more reliably, just run the **/build** command.
 
-![Generated Build](https://cdn.modrinth.com/data/1RCjAAcr/images/0fbf7df3d536bcb112874406d64fb4b8a31afbe3.png)
+![Generated Build](https://cdn.modrinth.com/data/cached_images/2892fe44a9165f3c25324985ea6b0d55c58e8ce8.png)
 
 ### Precision Settings
 You can control how detailed your build stats are through the Precision option in **/build config**:
