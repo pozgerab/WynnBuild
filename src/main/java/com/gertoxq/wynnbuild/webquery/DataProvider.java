@@ -42,11 +42,6 @@ public abstract class DataProvider<T> {
         if (loadedProviders.containsAll(KEYS_FOR_FULL_ATREE)) {
             loadedProviders.clear();
             Ability.FULL_ABILITY_MAP = TreeManager.matchTrees(Providers.Atree.data(), ApiDataProvider.fullApiAtree);
-            try {
-                if (Models.WorldState.onWorld()) Ability.refreshTree();
-            } catch (Exception e) {
-                WynnBuild.info("Coundn't refresh atree after full ability map loaded");
-            }
         }
     }
 
