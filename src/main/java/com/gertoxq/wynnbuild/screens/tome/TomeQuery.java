@@ -7,7 +7,8 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -29,12 +30,12 @@ public class TomeQuery {
         ScriptedContainerQuery tomeQuery = ScriptedContainerQuery.builder("wynnbuild.tomequery")
                 .onError(err -> System.out.println("wynnbuild.tomequery: " + err))
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                        .expectContainer(CharacterInfoContainer.class)
                         .processIncomingContainer(this::processTomeUnlocked))
                 .conditionalThen(
                         this::checkTomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
-                                .expectContainerTitle(ContainerModel.MASTERY_TOMES_NAME)
+                                .expectContainer(MasteryTomesContainer.class)
                                 .verifyContentChange(this::verifyChange)
                                 .processIncomingContainer(this::processTomes))
                 .execute(() -> WynnBuild.info("Read tomes: {}", WynnBuild.tomeIds))

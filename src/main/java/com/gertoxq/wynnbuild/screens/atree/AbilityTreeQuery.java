@@ -7,7 +7,8 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -31,7 +32,6 @@ public class AbilityTreeQuery {
     static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
-    public static final String ABILITY_TREE_TITLE = "\uDAFF\uDFEA[\ue000\uE057]";
 
     public AbilityTreeQuery() {
         atreeState = new HashSet<>();
@@ -53,22 +53,22 @@ public class AbilityTreeQuery {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("wynnbuild.treequery")
                 .onError(err -> WynntilsMod.warn("wynnbuild.treequery: " + err))
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
+                        .expectContainer(CharacterInfoContainer.class))
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT)
-                        .expectContainerTitle(ABILITY_TREE_TITLE))
+                        .expectContainer(AbilityTreeContainer.class))
                 .execute(() -> this.pageCount = 0)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
                         QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
-                                .expectContainerTitle(ABILITY_TREE_TITLE).processIncomingContainer(c -> this.pageCount++)
+                                .expectContainer(AbilityTreeContainer.class).processIncomingContainer(c -> this.pageCount++)
                                 .verifyContentChange(processor::verifyChangeOnReverse))
                 .reprocess(processor::processPage)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME) && processor.doContinue(),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
-                                .expectContainerTitle(ABILITY_TREE_TITLE).verifyContentChange((processor::verifyChange))
+                                .expectContainer(AbilityTreeContainer.class).verifyContentChange((processor::verifyChange))
                                 .processIncomingContainer(processor::processPage))
                 .execute(() -> {
                     McUtils.sendMessageToClient(Text.literal("Ability tree fetched").styled(style -> style.withColor(Formatting.GRAY)));

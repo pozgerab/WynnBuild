@@ -7,7 +7,9 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.AspectsContainer;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.utils.wynn.InventoryUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
@@ -21,11 +23,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery.ABILITY_TREE_SLOT;
-import static com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery.ABILITY_TREE_TITLE;
 
 public class AspectInfo {
 
-    public static final Pattern ASPECT_TITLE_PATTERN = Pattern.compile("\udaff\udfea\ue002");
     private static final List<Integer> ASPECT_SLOTS = List.of(18, 11, 4, 15, 26);
     private static final Pattern EMPTY_ASPECT_PATTERN = Pattern.compile("^(?:§.)*Empty Aspect Socket$");
     private static final Pattern LOCKED_ASPECT_PATTERN = Pattern.compile("^(?:§.)*Locked Aspect Socket$");
@@ -34,12 +34,12 @@ public class AspectInfo {
     public void queryAspectInfo() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("wynnbuild.fetchaspect")
                 .onError(string -> WynnBuild.warn("Error querying aspect info: {}", Utils.escapeToUnicode(string)))
-                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
-                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainerTitle(ABILITY_TREE_TITLE))
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainer(CharacterInfoContainer.class))
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
                 .then(QueryStep.clickOnSlot(86)
-                        .expectContainerTitle(ABILITY_TREE_TITLE))
+                        .expectContainer(AbilityTreeContainer.class))
                 .then(QueryStep.clickOnSlot(0).verifyContentChange(this::verifyChange)
-                        .expectContainerTitle(ASPECT_TITLE_PATTERN.pattern())
+                        .expectContainer(AspectsContainer.class)
                         .processIncomingContainer(this::processAspects))
                 .execute(() -> WynnBuild.info("Fetched Aspects: " + WynnBuild.aspects.stream().map(AspectItem::getName).collect(Collectors.joining(", "))))
                 .build();
