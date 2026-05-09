@@ -42,7 +42,7 @@ public class AbilityNodeChange {
 
         AbilityNodeState state = clickedNode.getState();
 
-        if (state == AbilityNodeState.LOCKED || state == AbilityNodeState.BLOCKED) {
+        if (state == AbilityNodeState.UNREACHABLE || state == AbilityNodeState.BLOCKED) {
             return;
         }
         if (state == AbilityNodeState.UNLOCKABLE) {

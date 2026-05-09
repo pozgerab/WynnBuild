@@ -45,7 +45,7 @@ public class AtreeNode {
                 || stack.getComponents().get(DataComponentTypes.CUSTOM_MODEL_DATA).floats().isEmpty()) return false;
         float customModelData = stack.getComponents().get(DataComponentTypes.CUSTOM_MODEL_DATA).floats().getFirst();
         return stack.getItem() == Items.POTION
-                && (between(158, 192, (int) customModelData) || between(218, 272, (int) customModelData))
+                && (between(73, 107, (int) customModelData) || between(127, 186, (int) customModelData))
                 && slot < 54;
     }
 
