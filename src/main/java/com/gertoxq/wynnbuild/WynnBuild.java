@@ -7,15 +7,16 @@ import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.ConfigType;
 import com.gertoxq.wynnbuild.config.Manager;
 import com.gertoxq.wynnbuild.screens.QueryStack;
+import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.inventory.type.InventoryAccessory;
-import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -126,12 +127,10 @@ public class WynnBuild implements ModInitializer {
         }
 
         boolean tomesEnabled = getConfig().isIncludeTomes();
-        boolean aspectsEnabled = getConfig().isIncludeAspects();
 
         QueryStack.Builder query = QueryStack.builder();
 
         if (tomesEnabled && tomeIds == null) query.next(QueryStack.ContainerType.TOME);
-        if (aspectsEnabled && aspects == null) query.next(QueryStack.ContainerType.ASPECTS);
 
         if (atreeState.isEmpty() || forceRefetchAtree) {
             if (atreeState.isEmpty())
@@ -144,6 +143,9 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static void buildAfterSp() {
+
+        List<Pair<Integer, Integer>> aspects = getConfig().isIncludeAspects() ? AspectInfo.getAspects() : new ArrayList<>();
+
         List<Integer> totalSp = Arrays.stream(Skill.values()).map(Models.SkillPoint::getTotalSkillPoints).toList();
         List<Integer> manualPoints = Arrays.stream(Skill.values()).map(Skillpoint::getManualPoints).toList();
         new Build(currentGear, getConfig().getPrecision() == 1, totalSp, manualPoints, Models.CharacterStats.getLevel(),

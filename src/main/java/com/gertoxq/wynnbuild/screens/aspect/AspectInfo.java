@@ -1,82 +1,44 @@
 package com.gertoxq.wynnbuild.screens.aspect;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.container.scriptedquery.QueryStep;
-import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
-import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.handlers.container.type.ContainerContentChangeType;
-import com.wynntils.models.containers.containers.AbilityTreeContainer;
-import com.wynntils.models.containers.containers.AspectsContainer;
-import com.wynntils.models.containers.containers.CharacterInfoContainer;
-import com.wynntils.models.items.items.game.AspectItem;
-import com.wynntils.utils.wynn.InventoryUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
-import net.minecraft.item.ItemStack;
+import com.wynntils.utils.type.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import static com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery.ABILITY_TREE_SLOT;
 
 public class AspectInfo {
 
-    private static final List<Integer> ASPECT_SLOTS = List.of(18, 11, 4, 15, 26);
-    private static final Pattern EMPTY_ASPECT_PATTERN = Pattern.compile("^(?:§.)*Empty Aspect Socket$");
-    private static final Pattern LOCKED_ASPECT_PATTERN = Pattern.compile("^(?:§.)*Locked Aspect Socket$");
     public static Map<String, Integer> aspectMap;
 
-    public void queryAspectInfo() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("wynnbuild.fetchaspect")
-                .onError(string -> WynnBuild.warn("Error querying aspect info: {}", Utils.escapeToUnicode(string)))
-                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainer(CharacterInfoContainer.class))
-                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
-                .then(QueryStep.clickOnSlot(86)
-                        .expectContainer(AbilityTreeContainer.class))
-                .then(QueryStep.clickOnSlot(0).verifyContentChange(this::verifyChange)
-                        .expectContainer(AspectsContainer.class)
-                        .processIncomingContainer(this::processAspects))
-                .execute(() -> WynnBuild.info("Fetched Aspects: " + WynnBuild.aspects.stream().map(AspectItem::getName).collect(Collectors.joining(", "))))
-                .build();
-        query.executeQuery();
+    public static List<Pair<Integer, Integer>> getAspects() {
+
+        List<Pair<Integer, Integer>> aspects = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Optional<String> iasp = Models.Aspect.getEquippedAspect(i);
+            if (iasp.isEmpty()) break;
+
+            Optional<Integer> tier = Models.Aspect.getAspectTierByName(iasp.get());
+            if (tier.isEmpty())
+                throw new RuntimeException("Equipped aspect couldn't be found in owned aspects: " + iasp.get());
+
+            aspects.add(new Pair<>(getAspectId(iasp.get()), tier.get()));
+
+        }
+
+        return aspects;
     }
 
-    private boolean verifyChange(
-            ContainerContent content,
-            Int2ObjectFunction<ItemStack> changes,
-            ContainerContentChangeType changeType) {
-        return changes.containsKey(54);
-    }
+    public static Integer getAspectId(String aspect) {
 
-    public void processAspects(ContainerContent content) {
-        List<AspectItem> aspects = new ArrayList<>();
-        ASPECT_SLOTS.forEach(slot -> {
-            Optional<AspectItem> aspectOpt = Models.Item.asWynnItem(content.items().get(slot), AspectItem.class);
-            aspectOpt.ifPresentOrElse(foundAspect -> {
-                Integer aspectId = aspectMap.get(foundAspect.getName());
-                if (aspectId == null) {
-                    WynnBuild.warn("Could not find aspect id for {} {}", foundAspect.getRequiredClass().getName(), foundAspect.getName());
-                    return;
-                }
-                aspects.add(aspectOpt.orElse(null));
-            }, () -> aspects.add(null));
-        });
-        WynnBuild.aspects = aspects;
-        WynnBuild.debug("Processed aspects: {}", WynnBuild.aspects.stream().map(aspect -> aspect == null ? "empty" : aspect.getName()).collect(Collectors.joining(", ")));
-    }
+        Integer id = aspectMap.get(aspect);
 
-    public boolean verifyValidAspectContainer(ContainerContent content) {
+        if (id == null) {
+            WynnBuild.warn("Could not find aspect id for {}", aspect);
+        }
 
-        boolean match = ASPECT_SLOTS.stream().allMatch(slot ->
-                Models.Item.asWynnItem(content.items().get(slot), AspectItem.class).isPresent()
-                        || EMPTY_ASPECT_PATTERN.matcher(content.items().get(slot).getName().getString()).matches()
-                        || LOCKED_ASPECT_PATTERN.matcher(content.items().get(slot).getName().getString()).matches());
-        if (!match) WynnBuild.warn("Cannot process aspects, container does not match expected aspect layout");
-        return match;
+        return id;
     }
 }

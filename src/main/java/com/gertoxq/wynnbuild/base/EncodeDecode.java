@@ -7,14 +7,14 @@ import com.gertoxq.wynnbuild.base.util.BitVector;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
-import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.type.Pair;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -204,34 +204,35 @@ public class EncodeDecode {
         return tomesVec;
     }
 
-    public static EncodingBitVector encodeAspects(@Nullable List<@Nullable AspectItem> aspects) {
+    public static EncodingBitVector encodeAspects(@NotNull List<Pair<Integer, Integer>> aspects) {
 
         EncodingBitVector aspectVec = new EncodingBitVector(0, 0);
 
-        if (aspects == null) {
+        if (aspects.isEmpty()) {
             aspectVec.appendFlag(ENC.ASPECTS_FLAG(), ENC.ASPECTS_FLAG().NO_ASPECTS);
-        } else {
-            aspectVec.appendFlag(ENC.ASPECTS_FLAG(), ENC.ASPECTS_FLAG().HAS_ASPECTS);
-            for (AspectItem aspect : aspects) {
-                if (aspect == null) {
-                    aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().UNUSED);
-                } else {
-                    Integer id = AspectInfo.aspectMap.get(aspect.getName());
-                    if (id == null) {
-                        WynnBuild.warn("Unknown aspect: {}", aspect.getName());
-                        aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().UNUSED);
-                        continue;
-                    }
-                    aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().USED);
-                    aspectVec.append(id, ENC.ASPECT_ID_BITLEN());
-                    aspectVec.append(aspect.getTier() - 1, ENC.ASPECT_TIER_BITLEN());
-                }
-            }
+            return aspectVec;
         }
+
+        aspectVec.appendFlag(ENC.ASPECTS_FLAG(), ENC.ASPECTS_FLAG().HAS_ASPECTS);
+
+        for (int i = 0; i < AspectsContainer.getEquippedSlots().size(); i++) {
+
+            if (i >= aspects.size()) {
+                aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().UNUSED);
+                continue;
+            }
+
+            Pair<Integer, Integer> aspect = aspects.get(i);
+
+            aspectVec.appendFlag(ENC.ASPECT_SLOT_FLAG(), ENC.ASPECT_SLOT_FLAG().USED);
+            aspectVec.append(aspect.a(), ENC.ASPECT_ID_BITLEN());
+            aspectVec.append(aspect.b() - 1, ENC.ASPECT_TIER_BITLEN());
+        }
+
         return aspectVec;
     }
 
-    public static EncodingBitVector encodeBuild(boolean precise, Build build, List<Integer> finalSkillPoints, List<Integer> assignedSkillpoints, List<AspectItem> aspects, Set<Integer> atreeState) {
+    public static EncodingBitVector encodeBuild(boolean precise, Build build, List<Integer> finalSkillPoints, List<Integer> assignedSkillpoints, List<Pair<Integer, Integer>> aspects, Set<Integer> atreeState) {
 
         EncodingBitVector finalVec = new EncodingBitVector(0, 0);
 

@@ -4,9 +4,9 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.EncodeDecode;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.type.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
@@ -25,12 +25,12 @@ public class Build {
     public final List<Integer> assignedSkillpoints;
     public final List<Integer> tomeIDs;
     public final int wynnLevel;
-    public final List<AspectItem> aspects;
+    public final List<Pair<Integer, Integer>> aspects;
     public final ClassType cast;
     final boolean precise;
     final Set<Integer> atreeState;
 
-    public Build(List<ItemStack> equipment, boolean precise, List<Integer> totalSp, List<Integer> assignedSkillpoints, int wynnLevel, List<Integer> tomeIDs, Set<Integer> atreeState, List<AspectItem> aspects) {
+    public Build(List<ItemStack> equipment, boolean precise, List<Integer> totalSp, List<Integer> assignedSkillpoints, int wynnLevel, List<Integer> tomeIDs, Set<Integer> atreeState, List<Pair<Integer, Integer>> aspects) {
 
         this.equipment = equipment;
         this.precise = precise;

@@ -21,7 +21,6 @@ public class WorldChangeTreeRefresh {
             AspectInfo.aspectMap = Providers.Aspects.getClassAspects(Models.Character.getClassType());
             WynnBuild.atreeState = WynnBuild.getCachedAtree().map(treeCode -> WynnBuild.getAtreeCoder().decode_atree(treeCode)).orElse(new HashSet<>());
             WynnBuild.tomeIds = null;
-            WynnBuild.aspects = null;
         }
     }
 }

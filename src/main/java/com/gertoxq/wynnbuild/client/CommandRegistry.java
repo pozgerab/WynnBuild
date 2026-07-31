@@ -2,7 +2,6 @@ package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.config.ConfigScreen;
-import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
 import com.gertoxq.wynnbuild.webquery.BuilderDataManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -45,10 +44,6 @@ public class CommandRegistry {
                             }))
                             .then(literal("readtree").executes(context -> {
                                 client.execute(() -> new AbilityTreeQuery().queryTree());
-                                return 1;
-                            }))
-                            .then(literal("readAspects").executes(context -> {
-                                client.execute(() -> new AspectInfo().queryAspectInfo());
                                 return 1;
                             }))
                             .then(literal("reloadcache").executes(context -> {
