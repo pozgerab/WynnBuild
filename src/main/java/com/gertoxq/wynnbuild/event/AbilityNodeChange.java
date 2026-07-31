@@ -2,11 +2,12 @@ package com.gertoxq.wynnbuild.event;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
-import com.gertoxq.wynnbuild.screens.atree.AbilityNodeState;
-import com.gertoxq.wynnbuild.screens.atree.AtreeNode;
 import com.google.common.collect.Sets;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.models.abilitytree.AbilityTreeModel;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.utils.mc.LoreUtils;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import static com.gertoxq.wynnbuild.WynnBuild.AbilityTree;
 
 public class AbilityNodeChange {
 
@@ -27,28 +30,27 @@ public class AbilityNodeChange {
         if (!(Models.Container.getCurrentContainer() instanceof AbilityTreeContainer)) return;
 
         ItemStack clicked = event.getItemStack();
-        if (!AtreeNode.isValidNode(clicked, event.getSlotNum())) return;
 
-        AtreeNode clickedNode = new AtreeNode(clicked, event.getSlotNum());
+        if (!AbilityTreeModel.ABILITY_TREE_PARSER.isNodeItem(clicked, event.getSlotNum())) return;
 
-        Optional<Ability> optionalAbility = clickedNode.getAbility();
+        Optional<Ability> nodeAbility = Ability.getFromNodeAt(clicked, event.getSlotNum());
 
-        if (optionalAbility.isEmpty()) {
-            WynnBuild.warn("Couldn't find ability for clicked node {} on slot {}", clickedNode.getName(), event.getSlotNum());
+        if (nodeAbility.isEmpty()) {                                                // not stripping unlock text doesn't matter
+            WynnBuild.warn("Couldn't find ability for clicked node {} on slot {}", clicked.getName().getString(), event.getSlotNum());
             return;
         }
 
-        Ability ability = optionalAbility.get();
+        Ability ability = nodeAbility.get();
 
-        AbilityNodeState state = clickedNode.getState();
+        AbilityTreeNodeState nodeState = AbilityTreeNodeType.fromItemStack(clicked).getState();
 
-        if (state == AbilityNodeState.UNREACHABLE || state == AbilityNodeState.BLOCKED) {
+        if (nodeState == AbilityTreeNodeState.LOCKED || nodeState == AbilityTreeNodeState.BLOCKED) {
             return;
         }
-        if (state == AbilityNodeState.UNLOCKABLE) {
-            WynnBuild.atreeState.add(ability.id());
-            WynnBuild.saveAtreeCache();
-            WynnBuild.debug("Added ability {} with id {} to atreeState", ability.displayName(), ability.id());
+        if (nodeState == AbilityTreeNodeState.UNLOCKABLE) {
+            WynnBuild.AbilityTree.addAbility(ability);
+            AbilityTree.saveCache();
+            WynnBuild.info("Added ability {} with id {} to atreeState", ability.displayName(), ability.id());
             return;
         }
         // Clicked unlocked node
@@ -60,14 +62,14 @@ public class AbilityNodeChange {
             // find children that have only this as their parent or have no connection to the root without this
             // or just encode without it and decode so unconnected nodes will be removed
 
-            Set<Integer> pre = Set.copyOf(WynnBuild.atreeState);
+            Set<Integer> pre = Set.copyOf(AbilityTree.getState());
 
-            WynnBuild.atreeState.remove(ability.id());
-            String encoded = WynnBuild.getAtreeCoder().encode_atree_reqs(WynnBuild.atreeState).toB64();
-            WynnBuild.atreeState = WynnBuild.getAtreeCoder().decode_atree(encoded);
-            WynnBuild.saveAtreeCache();
+            AbilityTree.removeAbility(ability);
+            String encoded = AbilityTree.encode();
+            AbilityTree.setFromCode(encoded);
+            AbilityTree.saveCache();
 
-            WynnBuild.debug("Removed an ability {} with id {}, removed ids: {}", ability.displayName(), ability.id(), Sets.difference(pre, WynnBuild.atreeState));
+            WynnBuild.info("Removed an ability {} with id {}, removed ids: {}", ability.displayName(), ability.id(), Sets.difference(pre, AbilityTree.getState()));
 
         }
     }

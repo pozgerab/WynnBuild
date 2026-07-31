@@ -10,8 +10,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-import java.util.HashSet;
-
 public class WorldChangeTreeRefresh {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -19,7 +17,7 @@ public class WorldChangeTreeRefresh {
         if (event.getNewState() == WorldState.WORLD) {
             Ability.refreshTree();
             AspectInfo.aspectMap = Providers.Aspects.getClassAspects(Models.Character.getClassType());
-            WynnBuild.atreeState = WynnBuild.getCachedAtree().map(treeCode -> WynnBuild.getAtreeCoder().decode_atree(treeCode)).orElse(new HashSet<>());
+            WynnBuild.AbilityTree.setFromCache();
             WynnBuild.tomeIds = null;
         }
     }

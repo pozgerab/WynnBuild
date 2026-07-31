@@ -1,11 +1,11 @@
 package com.gertoxq.wynnbuild.event;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.screens.atree.AtreeNode;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.models.abilitytree.AbilityTreeModel;
 import net.minecraft.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,7 +28,7 @@ public class DebugMenuOpen {
         List<String> names = new ArrayList<>();
         for (int i = 0; i < event.getItems().size(); i++) {
             ItemStack itemStack = event.getItems().get(i);
-            if (!AtreeNode.isValidNode(itemStack, i)) continue;
+            if (!AbilityTreeModel.ABILITY_TREE_PARSER.isNodeItem(itemStack, i)) continue;
             names.add(i + ": " + itemStack.getName().getString());
         }
 

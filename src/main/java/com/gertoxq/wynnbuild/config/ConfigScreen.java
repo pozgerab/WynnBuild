@@ -15,7 +15,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import static com.gertoxq.wynnbuild.WynnBuild.getConfigManager;
-import static com.gertoxq.wynnbuild.WynnBuild.updateAtreeState;
 
 public class ConfigScreen extends Screen {
     private static final SimpleOption.TooltipFactory<Integer> helpFactory = value -> Tooltip.of(Text.literal(Build.PRECISION_OPTIONS.get(value)).styled(style -> style.withColor(Formatting.DARK_AQUA).withBold(true))
@@ -26,7 +25,6 @@ public class ConfigScreen extends Screen {
         super(Text.literal("Wynnbuild Config"));
         this.parent = parent;
         getConfigManager().loadConfig();
-        updateAtreeState();
     }
 
     @Override
@@ -52,8 +50,8 @@ public class ConfigScreen extends Screen {
                         }));
         addDrawableChild(new TextWidget(this.width / 2 - 100, this.height / 4 + 48, 100, 20, Text.literal("Atree code: "), textRenderer));
 
-        var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(WynnBuild.getAtreeSuffix()));
-        input.setText(WynnBuild.getAtreeSuffix());
+        var input = new TextFieldWidget(textRenderer, this.width / 2, this.height / 4 + 48, 100, 20, Text.literal(WynnBuild.AbilityTree.getSuffix()));
+        input.setText(WynnBuild.AbilityTree.getSuffix());
         input.setEditable(false);
         addDrawableChild(input);
 

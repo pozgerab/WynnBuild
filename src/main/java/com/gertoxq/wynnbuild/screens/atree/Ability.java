@@ -2,6 +2,10 @@ package com.gertoxq.wynnbuild.screens.atree;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.type.StyleType;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.utils.wynn.ItemUtils;
+import net.minecraft.item.ItemStack;
 
 import java.util.*;
 
@@ -37,21 +41,37 @@ public record Ability(
         return ABILITY_MAP.get(id);
     }
 
+    public static Optional<Ability> getFromNodeAt(ItemStack item, int slot) {
+        String name = ItemUtils.getItemName(item).getString(StyleType.NONE)
+                .replace("Unlock ", "")
+                .replace(" ability", "");
+        return getByNameSlot(name, slot);
+    }
+
     public static Optional<Ability> getByNameSlot(String name, int slot) {
         return ABILITY_MAP.values().stream()
                 .filter(ability -> ability.displayName().equals(name) && ability.slot == slot)
                 .findFirst();
     }
 
+    public static int idFromNode(AbilityTreeSkillNode node) {
+        int slot = node.location().row() * 9 + node.location().col();
+        Optional<Ability> ability = Ability.getByPageAndSlot(node.location().page(), slot);
+        if (ability.isEmpty()) {
+            throw new RuntimeException("Couldn't find ability on page " + node.location().page() + " and slot " + slot);
+        }
+        return ability.get().id();
+    }
+
     public static Optional<Ability> getByPageAndSlot(int page, int slot) {
         return Optional.ofNullable(ABILITY_MULTI_PAGE_LOOKUP.get(key(page, slot)));
     }
 
-    private static int key(int page, int slot) {
+    public static int key(int page, int slot) {
         return page * 54 + slot;
     }
 
-    private int key() {
+    public int key() {
         return key(this.page, this.slot);
     }
 

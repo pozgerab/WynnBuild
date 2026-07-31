@@ -21,8 +21,7 @@ public class AtreeReset {
                 && event.getMouseButton() == 0 // Left click
                 && event.getClickType() == SlotActionType.PICKUP) {
 
-            WynnBuild.atreeState.clear();
-            WynnBuild.saveAtreeCache();
+            WynnBuild.AbilityTree.clearCache();
             WynnBuild.debug("Atree state reset");
         }
 

@@ -13,6 +13,8 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.Set;
 
+import static com.gertoxq.wynnbuild.WynnBuild.AbilityTree;
+
 public class Build {
 
     public static final List<String> PRECISION_OPTIONS = List.of("OFF", "ON");
@@ -58,8 +60,8 @@ public class Build {
 
         return new BuildState(
                 generateUrl(),
-                WynnBuild.atreeState.size(),
-                !WynnBuild.atreeState.isEmpty(),
+                AbilityTree.unlockedNodeAmount(),
+                !AbilityTree.isEmpty(),
                 equipment.stream().map(itemStack ->
                         Models.Item.asWynnItem(itemStack, GearItem.class).isPresent()
                                 || Models.Item.asWynnItem(itemStack, CraftedGearItem.class).isPresent()).toList()

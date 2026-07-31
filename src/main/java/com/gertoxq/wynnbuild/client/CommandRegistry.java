@@ -55,8 +55,7 @@ public class CommandRegistry {
                                 WynnBuild.message(Text.literal("Debug mode is now " + (WynnBuild.isDebug() ? "enabled" : "disabled")).styled(style -> style.withColor(WynnBuild.isDebug() ? Formatting.GREEN : Formatting.RED)));
                                 return 1;
                             }).then(literal("clearatreestate").executes(commandContext -> {
-                                WynnBuild.atreeState.clear();
-                                WynnBuild.saveAtreeCache();
+                                WynnBuild.AbilityTree.clearCache();
                                 WynnBuild.message(Text.literal("Cleared current ability tree"));
                                 return 1;
                             })))

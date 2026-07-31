@@ -2,10 +2,10 @@ package com.gertoxq.wynnbuild;
 
 import com.gertoxq.wynnbuild.base.custom.CustomCoder;
 import com.gertoxq.wynnbuild.base.sp.Skillpoint;
-import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.ConfigType;
 import com.gertoxq.wynnbuild.config.Manager;
+import com.gertoxq.wynnbuild.screens.AtreeManager;
 import com.gertoxq.wynnbuild.screens.QueryStack;
 import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.util.Utils;
@@ -28,7 +28,10 @@ import net.minecraft.util.Hand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class WynnBuild implements ModInitializer {
     public static final String REPO = "wynnbuilder";
@@ -39,8 +42,7 @@ public class WynnBuild implements ModInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static Manager configManager;
     public static List<Integer> tomeIds = null;
-    public static List<AspectItem> aspects = null;
-    public static Set<Integer> atreeState = new HashSet<>();
+    public static AtreeManager AbilityTree = new AtreeManager();
     public static List<ItemStack> currentGear = null;
     private static boolean debug = false;
 
@@ -121,8 +123,8 @@ public class WynnBuild implements ModInitializer {
 
         if (tomesEnabled && tomeIds == null) query.next(QueryStack.ContainerType.TOME);
 
-        if (atreeState.isEmpty() || forceRefetchAtree) {
-            if (atreeState.isEmpty())
+        if (AbilityTree.isEmpty() || forceRefetchAtree) {
+            if (AbilityTree.isEmpty())
                 WynnBuild.message(Text.literal("Querying ability tree...").styled(style -> style.withColor(Formatting.GRAY)));
             query.next(QueryStack.ContainerType.SKILLPOINTS).next(QueryStack.ContainerType.ATREE).next(QueryStack.ContainerType.BUILD);
         } else {
@@ -138,7 +140,7 @@ public class WynnBuild implements ModInitializer {
         List<Integer> totalSp = Arrays.stream(Skill.values()).map(Models.SkillPoint::getTotalSkillPoints).toList();
         List<Integer> manualPoints = Arrays.stream(Skill.values()).map(Skillpoint::getManualPoints).toList();
         new Build(currentGear, getConfig().getPrecision() == 1, totalSp, manualPoints, Models.CharacterStats.getLevel(),
-                tomeIds, atreeState, aspects).display();
+                tomeIds, WynnBuild.AbilityTree.getState(), aspects).display();
     }
 
     public static void build() {
@@ -148,25 +150,6 @@ public class WynnBuild implements ModInitializer {
     public static void displayErr(String errorMessage) {
         WynnBuild.message(Text.literal(errorMessage).styled(style -> style.withColor(Formatting.RED)));
         McUtils.mc().getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_ANVIL_LAND));
-    }
-
-    public static AtreeCoder getAtreeCoder() {
-        return AtreeCoder.getAtreeCoder(Models.Character.getClassType());
-    }
-
-    public static void saveAtreeCache() {
-        getConfigManager().getConfig().addTreeCache(getAtreeCoder().encode_atree(atreeState).toB64());
-        getConfigManager().saveConfig();
-    }
-
-    public static String getAtreeSuffix() {
-        return getAtreeCoder().encode_atree(atreeState).toB64();
-    }
-
-    public static Optional<String> getCachedAtree() {
-        String cached = getConfig().getProfileIdAtreeCache().get(Models.Character.getId());
-        if (cached == null) return Optional.empty();
-        return Optional.of(cached);
     }
 
     public static void warn(String format, Object... args) {
@@ -204,10 +187,6 @@ public class WynnBuild implements ModInitializer {
     public static void message(Text text) {
         assert McUtils.player() != null : "Cannot send message, there is no player";
         McUtils.player().sendMessage(text, false);
-    }
-
-    public static void updateAtreeState() {
-        atreeState = WynnBuild.getCachedAtree().map(treeCode -> WynnBuild.getAtreeCoder().decode_atree(treeCode)).orElse(new HashSet<>());
     }
 
     @Override
