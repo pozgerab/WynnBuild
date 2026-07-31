@@ -22,8 +22,6 @@ public class ScreenClosed {
             onAspectContainerClose();
         } else if (Models.Container.getCurrentContainer() instanceof MasteryTomesContainer) {
             onTomeContainerClose();
-        } else if (Models.Container.getCurrentContainer() instanceof AbilityTreeContainer) {
-            onAbilityTreeContainerClose();
         }
     }
 
@@ -39,10 +37,6 @@ public class ScreenClosed {
         ContainerContent content = new ContainerContent(ImmutableList.copyOf(McUtils.containerMenu().getStacks()),
                 Text.empty(), ScreenHandlerType.GENERIC_9X6, McUtils.containerMenu().syncId);
         new TomeQuery().processTomes(content);
-    }
-
-    private static void onAbilityTreeContainerClose() {
-        WynnBuild.saveAtreeCache();
     }
 
     @SubscribeEvent
