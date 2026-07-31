@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.webquery;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -14,7 +15,7 @@ public abstract class BuilderDataProvider<V> extends DataProvider<Map<String, V>
 
     private Integer dbVersion;
     private final String dbName;
-    public static final String masterUrl = "https://raw.githubusercontent.com/wynnbuilder-beta/wynnbuilder-beta.github.io/refs/heads/master/";
+    public static final String masterUrl = "https://raw.githubusercontent.com/" + WynnBuild.REPO + "/" + WynnBuild.REPO + ".github.io/refs/heads/master/";
 
     public BuilderDataProvider(String name, String dbName, Type dataType) {
         super(name, dataType);

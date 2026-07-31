@@ -4,7 +4,6 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.screens.atree.Ability;
 import com.gertoxq.wynnbuild.webquery.providers.BuilderAbilitySchema;
 import com.google.gson.*;
-import com.wynntils.core.components.Models;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 

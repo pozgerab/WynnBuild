@@ -32,7 +32,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class WynnBuild implements ModInitializer {
-    public static final String DOMAIN = "https://wynnbuilder-beta.github.io/";
+    public static final String REPO = "wynnbuilder";
+    public static final String DOMAIN = "https://" + REPO + ".github.io/";
     public static final String BUILDER_DOMAIN = DOMAIN + "builder/#";
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     public static final String MOD_ID = "wynnbuild";
