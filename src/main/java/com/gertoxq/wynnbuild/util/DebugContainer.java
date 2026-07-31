@@ -25,7 +25,7 @@ public class DebugContainer {
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
     public static void snapshotContainer(GenericContainerScreen screen) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        MinecraftClient client = McUtils.mc();
         var handler = screen.getScreenHandler();
         var registryOps = client.getNetworkHandler()
                 .getRegistryManager()
@@ -52,6 +52,7 @@ public class DebugContainer {
 
         JsonObject root = new JsonObject();
         JsonArray titleArray = new JsonArray();
+        root.addProperty("escaped_title", Utils.escapeToUnicode(screen.getTitle().getString()));
         screen.getTitle().getString().codePoints().forEach(cp -> {
             titleArray.add(String.format("U+%04X", cp));
         });

@@ -14,7 +14,7 @@
   "mainAttackDamage": "mdPct",
   "rawMainAttackDamage": "mdRaw",
   "walkSpeed": "spd",
-  "xpBonus": "xpb",
+  "combatExperience": "xpb",
   "airDamage": "aDamPct",
   "waterDefence": "wDefPct",
   "airDefence": "aDefPct",

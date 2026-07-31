@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.mixins;
 
-import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.event.ScreenClosed;
 import com.gertoxq.wynnbuild.screens.QueryStack;
 import net.minecraft.client.network.ClientCommonNetworkHandler;
@@ -19,16 +18,16 @@ public class QueryStackHandlerMixin {
 
         if (packet instanceof CloseHandledScreenC2SPacket) {
 
-            if (WynnBuild.getQuery().isPresent()) {
+            if (QueryStack.getQuery().isPresent()) {
 
-                if (WynnBuild.getQuery().get().currentQueryPart.getCloseEventAmount() > 1
-                        && WynnBuild.getQuery().get().closes++ < WynnBuild.getQuery().get().currentQueryPart.getCloseEventAmount() - 1) {
+                if (QueryStack.getQuery().get().currentQueryPart.getCloseEventAmount() > 1
+                        && QueryStack.getQuery().get().closes++ < QueryStack.getQuery().get().currentQueryPart.getCloseEventAmount() - 1) {
                     return;
                 }
-                WynnBuild.getQuery().get().closes = 0;
-                QueryStack.ContainerType next = WynnBuild.getQuery().get().poll();
+                QueryStack.getQuery().get().closes = 0;
+                QueryStack.ContainerType next = QueryStack.getQuery().get().poll();
                 if (next == null) {
-                    WynnBuild.setQuery(null);
+                    QueryStack.setQuery(null);
                 } else next.runQueryPart();
 
             } else {

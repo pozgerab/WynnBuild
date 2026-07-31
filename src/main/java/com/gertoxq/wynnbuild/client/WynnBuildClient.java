@@ -11,12 +11,12 @@ import com.gertoxq.wynnbuild.util.DebugContainer;
 import com.gertoxq.wynnbuild.util.WynnData;
 import com.gertoxq.wynnbuild.webquery.BuilderDataManager;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.utils.mc.McUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
@@ -32,8 +32,6 @@ public class WynnBuildClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
-        WynnBuild.client = MinecraftClient.getInstance();
         WynnData.loadAll();
 
         WynnBuild.configManager = new Manager();
@@ -63,7 +61,7 @@ public class WynnBuildClient implements ClientModInitializer {
                 });
         });
 
-        CommandRegistry.init(WynnBuild.client);
+        CommandRegistry.init(McUtils.mc());
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             WynntilsMod.registerEventListener(new WorldChangeTreeRefresh());

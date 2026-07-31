@@ -21,7 +21,7 @@ public class TomeProvider extends BuilderDataProvider<Integer> {
         jsonObject.getAsJsonArray("tomes").asList().forEach(tomeElement -> {
 
             JsonObject tomeObj = tomeElement.getAsJsonObject();
-            String tomeName = tomeObj.get("name").getAsString();
+            String tomeName = tomeObj.get("displayName").getAsString();
             Integer tomeId = tomeObj.get("id").getAsInt();
 
             tomeMap.put(tomeName, tomeId);

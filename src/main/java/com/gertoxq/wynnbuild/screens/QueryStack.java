@@ -1,17 +1,18 @@
 package com.gertoxq.wynnbuild.screens;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
 import com.gertoxq.wynnbuild.screens.tome.TomeQuery;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 
 public class QueryStack {
 
+    private static QueryStack currentQuery = null;
     final Queue<ContainerType> query = new LinkedList<>();
     public int closes = 0;
     public ContainerType currentQueryPart = null;
@@ -23,6 +24,14 @@ public class QueryStack {
         return new QueryStack().new Builder();
     }
 
+    public static Optional<QueryStack> getQuery() {
+        return Optional.ofNullable(currentQuery);
+    }
+
+    public static void setQuery(QueryStack query) {
+        currentQuery = query;
+    }
+
     public ContainerType poll() {
         return query.poll();
     }
@@ -30,7 +39,6 @@ public class QueryStack {
     public enum ContainerType {
         TOME(() -> new TomeQuery().queryTomeInfo()),
         ATREE(() -> new AbilityTreeQuery().queryTree()),
-        ASPECTS(() -> new AspectInfo().queryAspectInfo()),
         SKILLPOINTS((Models.SkillPoint::populateSkillPoints), 2),
         BUILD(WynnBuild::buildAfterSp);
 
@@ -40,7 +48,7 @@ public class QueryStack {
         ContainerType(Runnable runnable, int closeEventAmount) {
             this.closeEventAmount = closeEventAmount;
             this.runnable = () -> Managers.TickScheduler.scheduleNextTick(() -> {
-                WynnBuild.getQuery().get().currentQueryPart = this;
+                getQuery().get().currentQueryPart = this;
                 runnable.run();
             });
         }
@@ -65,7 +73,7 @@ public class QueryStack {
         }
 
         public void runQuery() {
-            WynnBuild.setQuery(QueryStack.this);
+            setQuery(QueryStack.this);
             QueryStack.this.poll().runQueryPart();
         }
     }

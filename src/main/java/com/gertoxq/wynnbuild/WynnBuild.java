@@ -18,7 +18,6 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -38,14 +37,12 @@ public class WynnBuild implements ModInitializer {
     public static final String WYNNCUSTOM_DOMAIN = DOMAIN + "custom/#";
     public static final String MOD_ID = "wynnbuild";
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static MinecraftClient client;
     public static Manager configManager;
     public static List<Integer> tomeIds = null;
     public static List<AspectItem> aspects = null;
     public static Set<Integer> atreeState = new HashSet<>();
     public static List<ItemStack> currentGear = null;
     private static boolean debug = false;
-    private static QueryStack currentQuery = null;
 
     public static Manager getConfigManager() {
         return configManager;
@@ -53,14 +50,6 @@ public class WynnBuild implements ModInitializer {
 
     public static ConfigType getConfig() {
         return getConfigManager().getConfig();
-    }
-
-    public static Optional<QueryStack> getQuery() {
-        return Optional.ofNullable(currentQuery);
-    }
-
-    public static void setQuery(QueryStack query) {
-        currentQuery = query;
     }
 
     public static List<ItemStack> getPlayerEquipment() {
@@ -119,8 +108,7 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static void buildWithArgs(boolean forceRefetchAtree) {
-        if (client.player == null) return;
-        updateAtreeState();
+        AbilityTree.setFromCache();
 
         currentGear = getPlayerEquipment();
         if (currentGear == null) {
@@ -159,7 +147,7 @@ public class WynnBuild implements ModInitializer {
 
     public static void displayErr(String errorMessage) {
         WynnBuild.message(Text.literal(errorMessage).styled(style -> style.withColor(Formatting.RED)));
-        client.getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_ANVIL_LAND));
+        McUtils.mc().getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_ANVIL_LAND));
     }
 
     public static AtreeCoder getAtreeCoder() {
