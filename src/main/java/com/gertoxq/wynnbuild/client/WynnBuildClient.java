@@ -16,11 +16,9 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class WynnBuildClient implements ClientModInitializer {
@@ -37,7 +35,7 @@ public class WynnBuildClient implements ClientModInitializer {
 
         BuilderDataManager.initBuilderData();
 
-        BUTTON = new Clickable(() -> WynnBuild.getConfig().isShowButtons());
+        BUTTON = new Clickable(() -> true);
 
         SAVE_ITEM_JSON_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.wynnbuild.save_item_json",
@@ -47,12 +45,6 @@ public class WynnBuildClient implements ClientModInitializer {
         ));
 
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
-            if (screen instanceof InventoryScreen screen1) {
-                BUTTON.addTo(screen1, Clickable.AXISPOS.END, Clickable.AXISPOS.END, 100, 20, Text.literal("BUILD").styled(style -> style.withBold(true).withColor(Formatting.GREEN)), button -> {
-                    screen.close();
-                    client.execute(WynnBuild::build);
-                });
-            }
             if (screen instanceof GenericContainerScreen screen1)
                 BUTTON.addTo(screen1, Clickable.AXISPOS.START, Clickable.AXISPOS.END, 100, 20, Text.literal("read"), button -> {
                     DebugContainer.snapshotContainer(screen1);
