@@ -1,6 +1,7 @@
 package com.gertoxq.wynnbuild.base.custom;
 
 import com.gertoxq.wynnbuild.WynnBuild;
+import com.gertoxq.wynnbuild.base.util.BitVectorCursor;
 import com.gertoxq.wynnbuild.base.util.BootstringEncoder;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
 import com.gertoxq.wynnbuild.identifications.Data;

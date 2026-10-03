@@ -2,8 +2,6 @@ package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.config.Manager;
-import com.gertoxq.wynnbuild.event.AbilityNodeChange;
-import com.gertoxq.wynnbuild.event.AtreeReset;
 import com.gertoxq.wynnbuild.event.ScreenClosed;
 import com.gertoxq.wynnbuild.event.WorldChangeTreeRefresh;
 import com.gertoxq.wynnbuild.screens.Clickable;
@@ -66,8 +64,6 @@ public class WynnBuildClient implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             WynntilsMod.registerEventListener(new WorldChangeTreeRefresh());
             WynntilsMod.registerEventListener(new ScreenClosed());
-            WynntilsMod.registerEventListener(new AbilityNodeChange());
-            WynntilsMod.registerEventListener(new AtreeReset());
             //WynntilsMod.registerEventListener(new DebugMenuOpen());
 
             checkNewVersion();

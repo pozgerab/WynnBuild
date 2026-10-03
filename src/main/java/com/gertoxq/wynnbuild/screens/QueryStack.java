@@ -1,8 +1,6 @@
 package com.gertoxq.wynnbuild.screens;
 
-import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.screens.atree.AbilityTreeQuery;
-import com.gertoxq.wynnbuild.screens.tome.TomeQuery;
+import com.gertoxq.wynnbuild.build.Build;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 
@@ -37,10 +35,11 @@ public class QueryStack {
     }
 
     public enum ContainerType {
-        TOME(() -> new TomeQuery().queryTomeInfo()),
-        ATREE(() -> new AbilityTreeQuery().queryTree()),
+        ATREE(() -> {
+            Models.AbilityTree.clearUnlockedAbilitesAndRescan(s -> {}, s -> {}, s -> {});
+        }),
         SKILLPOINTS((Models.SkillPoint::populateSkillPoints), 2),
-        BUILD(WynnBuild::buildAfterSp);
+        BUILD(() -> Build.current().display());
 
         final int closeEventAmount;
         final Runnable runnable;

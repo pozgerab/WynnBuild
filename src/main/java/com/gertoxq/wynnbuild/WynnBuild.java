@@ -1,25 +1,17 @@
 package com.gertoxq.wynnbuild;
 
 import com.gertoxq.wynnbuild.base.custom.CustomCoder;
-import com.gertoxq.wynnbuild.base.sp.Skillpoint;
-import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.ConfigType;
 import com.gertoxq.wynnbuild.config.Manager;
-import com.gertoxq.wynnbuild.screens.AtreeManager;
 import com.gertoxq.wynnbuild.screens.QueryStack;
-import com.gertoxq.wynnbuild.screens.aspect.AspectInfo;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -28,9 +20,6 @@ import net.minecraft.util.Hand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public class WynnBuild implements ModInitializer {
@@ -41,9 +30,6 @@ public class WynnBuild implements ModInitializer {
     public static final String MOD_ID = "wynnbuild";
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static Manager configManager;
-    public static List<Integer> tomeIds = null;
-    public static AtreeManager AbilityTree = new AtreeManager();
-    public static List<ItemStack> currentGear = null;
     private static boolean debug = false;
 
     public static Manager getConfigManager() {
@@ -52,32 +38,6 @@ public class WynnBuild implements ModInitializer {
 
     public static ConfigType getConfig() {
         return getConfigManager().getConfig();
-    }
-
-    public static List<ItemStack> getPlayerEquipment() {
-        List<ItemStack> equipment = new ArrayList<>(List.of(
-                McUtils.player().getEquippedStack(EquipmentSlot.HEAD),
-                McUtils.player().getEquippedStack(EquipmentSlot.CHEST),
-                McUtils.player().getEquippedStack(EquipmentSlot.LEGS),
-                McUtils.player().getEquippedStack(EquipmentSlot.FEET)));
-
-        for (int i : InventoryAccessory.getSlots()) {
-            int baseSize = 0;
-            if (McUtils.player().shouldCloseHandledScreenOnRespawn()) {
-                baseSize = McUtils.player().currentScreenHandler.getStacks().size();
-            }
-            equipment.add(McUtils.inventory().getStack(i + baseSize));
-        }
-
-        Optional<GearItem> handItemOpt = Models.Item.asWynnItem(McUtils.player().getStackInHand(Hand.MAIN_HAND), GearItem.class);
-        if (handItemOpt.isPresent() && handItemOpt.get().meetsActualRequirements() && handItemOpt.get().getGearType().isWeapon()) {
-            equipment.add(McUtils.player().getStackInHand(Hand.MAIN_HAND));
-        } else {
-            WynnBuild.displayErr("Hold a weapon");
-            return null;
-        }
-
-        return equipment;
     }
 
     public static void buildMainHand() {
@@ -110,37 +70,22 @@ public class WynnBuild implements ModInitializer {
     }
 
     public static void buildWithArgs(boolean forceRefetchAtree) {
-        AbilityTree.setFromCache();
 
-        currentGear = getPlayerEquipment();
-        if (currentGear == null) {
+        Optional<GearItem> weapon = Models.Item.asWynnItem(McUtils.player().getStackInHand(Hand.MAIN_HAND), GearItem.class);
+        if (weapon.isEmpty()) {
+            WynnBuild.displayErr("Hold a weapon");
             return;
         }
 
-        boolean tomesEnabled = getConfig().isIncludeTomes();
+        QueryStack.Builder query = QueryStack.builder().next(QueryStack.ContainerType.SKILLPOINTS);
 
-        QueryStack.Builder query = QueryStack.builder();
-
-        if (tomesEnabled && tomeIds == null) query.next(QueryStack.ContainerType.TOME);
-
-        if (AbilityTree.isEmpty() || forceRefetchAtree) {
-            if (AbilityTree.isEmpty())
+        if (Models.AbilityTree.getUnlockedAbilities().isEmpty() || forceRefetchAtree) {
+            if (Models.AbilityTree.getUnlockedAbilities().isEmpty()) {
                 WynnBuild.message(Text.literal("Querying ability tree...").styled(style -> style.withColor(Formatting.GRAY)));
-            query.next(QueryStack.ContainerType.SKILLPOINTS).next(QueryStack.ContainerType.ATREE).next(QueryStack.ContainerType.BUILD);
-        } else {
-            query.next(QueryStack.ContainerType.SKILLPOINTS).next(QueryStack.ContainerType.BUILD);
+            }
+            query.next(QueryStack.ContainerType.ATREE);
         }
-        query.runQuery();
-    }
-
-    public static void buildAfterSp() {
-
-        List<Pair<Integer, Integer>> aspects = getConfig().isIncludeAspects() ? AspectInfo.getAspects() : new ArrayList<>();
-
-        List<Integer> totalSp = Arrays.stream(Skill.values()).map(Models.SkillPoint::getTotalSkillPoints).toList();
-        List<Integer> manualPoints = Arrays.stream(Skill.values()).map(Skillpoint::getManualPoints).toList();
-        new Build(currentGear, getConfig().getPrecision() == 1, totalSp, manualPoints, Models.CharacterStats.getLevel(),
-                tomeIds, WynnBuild.AbilityTree.getState(), aspects).display();
+        query.next(QueryStack.ContainerType.BUILD).runQuery();
     }
 
     public static void build() {

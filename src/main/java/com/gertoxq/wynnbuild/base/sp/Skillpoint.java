@@ -9,9 +9,4 @@ public class Skillpoint {
         return Models.SkillPoint.getTotalSkillPoints(skill) - Models.SkillPoint.getStatusEffectSkillPoints(skill);
     }
 
-    public static int getManualPoints(Skill skill) {
-        return getTotalSkillpoints(skill) - Models.SkillPoint.getGearSkillPoints(skill)
-                - Models.SkillPoint.getCraftedSkillPoints(skill) - Models.SkillPoint.getTomeSkillPoints(skill) - Models.SkillPoint.getSetBonusSkillPoints(skill);
-    }
-
 }
