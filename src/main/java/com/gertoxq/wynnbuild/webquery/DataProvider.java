@@ -40,11 +40,15 @@ public abstract class DataProvider<T> {
         loadedProviders.add(name);
         if (loadedProviders.containsAll(KEYS_FOR_FULL_ATREE)) {
             loadedProviders.clear();
-            Ability.FULL_ABILITY_MAP = TreeManager.matchTrees(Providers.Atree.data(), ApiDataProvider.fullApiAtree);
+            Ability.init();
         }
     }
 
     public T data() {
+        if (data == null) {
+            WynnBuild.error("Data for {} is not loaded yet.", name);
+            throw new IllegalStateException("Data for " + name + " is not loaded yet.");
+        }
         return data;
     }
 

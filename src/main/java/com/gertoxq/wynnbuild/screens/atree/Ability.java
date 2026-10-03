@@ -1,11 +1,10 @@
 package com.gertoxq.wynnbuild.screens.atree;
 
-import com.gertoxq.wynnbuild.WynnBuild;
-import com.wynntils.core.components.Models;
-import com.wynntils.core.text.type.StyleType;
+import com.gertoxq.wynnbuild.webquery.ApiDataProvider;
+import com.gertoxq.wynnbuild.webquery.Providers;
+import com.gertoxq.wynnbuild.webquery.TreeManager;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
-import com.wynntils.utils.wynn.ItemUtils;
-import net.minecraft.item.ItemStack;
+import com.wynntils.models.character.type.ClassType;
 
 import java.util.*;
 
@@ -19,52 +18,43 @@ public record Ability(
         int archetypeReq,
         int col,
         int page,
-        int slot
+        int slot,
+        int cost
 ) {
 
-    public static Map<String, Map<Integer, Ability>> FULL_ABILITY_MAP;
+    private static Map<String, Map<Integer, Ability>> FULL_ABILITY_MAP;
 
-    private static Map<Integer, Ability> ABILITY_MAP = new HashMap<>();
-
-    private static final Map<Integer, Ability> ABILITY_MULTI_PAGE_LOOKUP = new HashMap<>();
-    private static final Map<Integer, List<Ability>> ABILITY_PAGES = new HashMap<>();
-
-    public static Map<Integer, Ability> getAbilityMap() {
-        return ABILITY_MAP;
+    public static Map<String, Map<Integer, Ability>> getFullAbilityMap() {
+        if (FULL_ABILITY_MAP == null) {
+            throw new IllegalStateException("WynnBuild: Full ability map is not loaded yet.");
+        }
+        return FULL_ABILITY_MAP;
     }
 
-    public static List<Ability> getPage(int page) {
-        return ABILITY_PAGES.getOrDefault(page, Collections.emptyList());
+    private static final Map<ClassType, Map<Integer, Ability>> ABILITY_MULTI_PAGE_LOOKUP = new HashMap<>();
+
+    public static Map<ClassType, Map<Integer, Ability>> getAbilityMultiPageLookup() {
+        if (ABILITY_MULTI_PAGE_LOOKUP.isEmpty()) {
+            throw new IllegalStateException("WynnBuild: Ability Multi Page Lookup is not loaded yet.");
+        }
+        return ABILITY_MULTI_PAGE_LOOKUP;
     }
 
-    public static Ability getById(int id) {
-        return ABILITY_MAP.get(id);
+    public static Ability getById(int id, ClassType classType) {
+        return getFullAbilityMap().get(classType.getName()).get(id);
     }
 
-    public static Optional<Ability> getFromNodeAt(ItemStack item, int slot) {
-        String name = ItemUtils.getItemName(item).getString(StyleType.NONE)
-                .replace("Unlock ", "")
-                .replace(" ability", "");
-        return getByNameSlot(name, slot);
-    }
-
-    public static Optional<Ability> getByNameSlot(String name, int slot) {
-        return ABILITY_MAP.values().stream()
-                .filter(ability -> ability.displayName().equals(name) && ability.slot == slot)
-                .findFirst();
-    }
-
-    public static int idFromNode(AbilityTreeSkillNode node) {
+    public static int idFromNode(AbilityTreeSkillNode node, ClassType classType) {
         int slot = node.location().row() * 9 + node.location().col();
-        Optional<Ability> ability = Ability.getByPageAndSlot(node.location().page(), slot);
+        Optional<Ability> ability = Ability.getByPageAndSlot(node.location().page(), slot, classType);
         if (ability.isEmpty()) {
             throw new RuntimeException("Couldn't find ability on page " + node.location().page() + " and slot " + slot);
         }
         return ability.get().id();
     }
 
-    public static Optional<Ability> getByPageAndSlot(int page, int slot) {
-        return Optional.ofNullable(ABILITY_MULTI_PAGE_LOOKUP.get(key(page, slot)));
+    public static Optional<Ability> getByPageAndSlot(int page, int slot, ClassType classType) {
+        return Optional.ofNullable(getAbilityMultiPageLookup().get(classType).get(key(page, slot)));
     }
 
     public static int key(int page, int slot) {
@@ -75,29 +65,14 @@ public record Ability(
         return key(this.page, this.slot);
     }
 
-    public static void refreshTree() {
-        WynnBuild.info("Refreshing atree, should only happen when changing class...");
-
-        String classTypeKey = Models.Character.getClassType().getName();
-        if (!FULL_ABILITY_MAP.containsKey(classTypeKey)) {
-            WynnBuild.warn("Atree loading not finished");
-            return;
-        }
-
-        ABILITY_MAP = FULL_ABILITY_MAP.get(classTypeKey);
-        ABILITY_MULTI_PAGE_LOOKUP.clear();
-        ABILITY_MAP.forEach((id, ability) -> ABILITY_MULTI_PAGE_LOOKUP.put(ability.key(), ability));
-        ABILITY_PAGES.clear();
-        ABILITY_MAP.forEach((integer, ability) ->
-                ABILITY_PAGES.merge(
-                        ability.page(),
-                        new ArrayList<>(List.of(ability)),
-                        (abilities, abilities2) -> {
-                            abilities.addAll(abilities2);
-                            return abilities;
-                        }
-                )
-        );
-        WynnBuild.debug(ABILITY_MAP.toString());
+    public static void init() {
+        FULL_ABILITY_MAP = TreeManager.matchTrees(Providers.Atree.data(), ApiDataProvider.fullApiAtree);
+        FULL_ABILITY_MAP.forEach((classTypeStr, abilityMap) -> {
+            Map<Integer, Ability> classAbilityMap = new HashMap<>();
+            abilityMap.forEach((id, ability) -> {
+                classAbilityMap.put(ability.key(), ability);
+            });
+            ABILITY_MULTI_PAGE_LOOKUP.put(ClassType.fromName(classTypeStr), classAbilityMap);
+        });
     }
 }

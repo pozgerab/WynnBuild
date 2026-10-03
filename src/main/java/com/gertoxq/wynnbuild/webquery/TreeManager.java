@@ -38,7 +38,8 @@ public class TreeManager {
                 builderAbility.archetype_req(),
                 builderAbility.col(),
                 apiAbility.pageNumber(),
-                apiAbility.slot()
+                apiAbility.slot(),
+                builderAbility.cost()
         );
     }
 

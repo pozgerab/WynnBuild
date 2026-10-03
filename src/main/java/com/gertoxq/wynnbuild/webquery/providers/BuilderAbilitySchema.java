@@ -11,6 +11,7 @@ public record BuilderAbilitySchema(
         String archetype,
         int archetype_req,
         int col,
-        int row
+        int row,
+        int cost
 ) {
 }

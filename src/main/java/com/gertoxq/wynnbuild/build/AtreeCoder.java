@@ -13,13 +13,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AtreeCoder {
 
     private final Map<Integer, Ability> classTreeMap;
+    public final ClassType classType;
+    public static final int MAX_ABILITY_POINTS = 50;
 
-    private AtreeCoder(Map<Integer, Ability> classTreeMap) {
+    private AtreeCoder(Map<Integer, Ability> classTreeMap, ClassType classType) {
         this.classTreeMap = classTreeMap;
+        this.classType = classType;
     }
 
     public static AtreeCoder getAtreeCoder(ClassType cast) {
-        return new AtreeCoder(Ability.FULL_ABILITY_MAP.get(cast.getName()));
+        return new AtreeCoder(Ability.getFullAbilityMap().get(cast.getName()), cast);
     }
 
     public BitVector encode_atree(Set<Integer> atree_state) {
@@ -59,6 +62,7 @@ public class AtreeCoder {
         if (!atree_state.contains(0)) return new HashSet<>();
         queue.add(0);
 
+        AtomicInteger usedPoints = new AtomicInteger(0);
         Map<String, Integer> archetypePoints = new HashMap<>();
         Map<String, PriorityQueue<AbilityAndReq>> pendingAbilities = new HashMap<>();
 
@@ -67,13 +71,19 @@ public class AtreeCoder {
 
         Set<Integer> visited = new HashSet<>();
 
-        while (!queue.isEmpty()) {
+        while (!queue.isEmpty() && usedPoints.get() < MAX_ABILITY_POINTS) {
             int id = queue.poll();
             WynnBuild.debug("id {}", id);
             if (!atree_state.contains(id)) continue;
             if (visited.contains(id)) continue;
-            Ability ability = Ability.getById(id);
+            Ability ability = Ability.getById(id, classType);
             WynnBuild.debug("ability found");
+
+            int cost = ability.cost();
+            if (usedPoints.get() + cost > MAX_ABILITY_POINTS) {
+                WynnBuild.debug("ability would exceed max points, skipping");
+                continue; // only skip, maybe another node has fewer cost
+            }
 
             if (!ability.dependencies().isEmpty()) {
 
@@ -96,7 +106,7 @@ public class AtreeCoder {
                 if (ability.archetypeReq() <= archetypePoints.getOrDefault(archetype, 0)) {
                     WynnBuild.debug("archetype req met, adding children, adding archetype point");
 
-                    queueChildrenCheckPendingDependants(ability, dependencyMap, visited, queue);
+                    queueChildrenCheckPendingDependants(ability, dependencyMap, visited, usedPoints, queue);
 
                     int points = archetypePoints.merge(archetype, 1, Integer::sum);
 
@@ -134,7 +144,7 @@ public class AtreeCoder {
 
             } else {
                 WynnBuild.debug("no archetype req, adding children");
-                queueChildrenCheckPendingDependants(ability, dependencyMap, visited, queue);
+                queueChildrenCheckPendingDependants(ability, dependencyMap, visited, usedPoints, queue);
             }
         }
 
@@ -143,14 +153,15 @@ public class AtreeCoder {
 
     private void queueChildrenCheckPendingDependants(
             Ability ability, Map<Integer, Set<Integer>> dependencyMap,
-            Set<Integer> visited, ArrayDeque<Integer> queue) {
+            Set<Integer> visited, AtomicInteger usedPoints, ArrayDeque<Integer> queue) {
 
         queue.addAll(ability.children());
         visited.add(ability.id());
+        usedPoints.addAndGet(ability.cost());
         if (dependencyMap.containsKey(ability.id())) {
             WynnBuild.debug("found dependant for this");
             dependencyMap.get(ability.id()).forEach(dependant -> {
-                Ability dependantAbility = Ability.getById(dependant);
+                Ability dependantAbility = Ability.getById(dependant, classType);
                 if (visited.containsAll(dependantAbility.dependencies())) {
 
                     WynnBuild.debug("all dependencies met for {}, adding to queue", dependant);

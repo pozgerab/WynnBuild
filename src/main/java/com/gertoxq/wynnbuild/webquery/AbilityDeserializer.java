@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.webquery;
 
+import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.webquery.providers.BuilderAbilitySchema;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -45,8 +46,16 @@ public class AbilityDeserializer implements JsonDeserializer<BuilderAbilitySchem
 
         int row = obj.getAsJsonObject("display").get("row").getAsInt();
 
+        int cost;
+        if (!obj.has("cost")) {
+            WynnBuild.error(id + " is missing cost");
+            cost = 1;
+        } else {
+            cost = obj.get("cost").getAsInt();
+        }
+
         return new BuilderAbilitySchema(
-                id, parents, dependencies, children, archetype, archetypeReq, col, row
+                id, parents, dependencies, children, archetype, archetypeReq, col, row, cost
         );
     }
 
@@ -69,6 +78,7 @@ public class AbilityDeserializer implements JsonDeserializer<BuilderAbilitySchem
         displayObj.addProperty("col", src.col());
         displayObj.addProperty("row", src.row());
         obj.add("display", displayObj);
+        obj.addProperty("cost", src.cost());
 
         return obj;
     }
