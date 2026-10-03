@@ -83,9 +83,7 @@ public record BuildState(
                     .append(Text.literal("     "))
                     .append(copy(url))
                     .append(space())
-                    .append(open(url))
-                    .append(space())
-                    .append(refresh(state));
+                    .append(open(url));
         }
 
         private static Text button(String text, Formatting color, String cmd, String hover) {
@@ -116,16 +114,6 @@ public record BuildState(
                             .withColor(Formatting.RED)
                             .withUnderline(true)
                             .withClickEvent(new ClickEvent.OpenUrl(URI.create(url))));
-        }
-
-        private static Text refresh(BuildState state) {
-            String label = state.hasAbilityTree() ? "REFRESH" : "GENERATE TREE";
-
-            return Text.literal(label)
-                    .styled(style -> style
-                            .withColor(Formatting.YELLOW)
-                            .withUnderline(true)
-                            .withClickEvent(new ClickEvent.RunCommand("/build withAtreeRefresh")));
         }
 
         private static Text space() {

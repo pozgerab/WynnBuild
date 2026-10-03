@@ -1,5 +1,6 @@
 package com.gertoxq.wynnbuild.base;
 
+import com.gertoxq.wynnbuild.build.Build;
 import com.wynntils.models.elements.type.Powder;
 
 import java.util.HashMap;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 public class PowderUtil {
 
-    public static final int MAX_POWDER_LEVEL = EncodeDecode.ENC.POWDER_TIERS();
+    public static final int MAX_POWDER_LEVEL = Build.ENC.POWDER_TIERS();
     private final static Map<Integer, Powder> powderMap = new HashMap<>();
 
     static {
