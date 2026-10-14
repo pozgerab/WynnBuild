@@ -10,7 +10,8 @@ import java.util.Map;
 public class MidProvider extends BuilderDataProvider<String> {
 
     public MidProvider() {
-        super("majid", new TypeToken<Map<String, String>>() {}.getType());
+        super("majid", new TypeToken<Map<String, String>>() {
+        }.getType());
     }
 
     @Override

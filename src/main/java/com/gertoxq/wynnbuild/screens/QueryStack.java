@@ -36,10 +36,13 @@ public class QueryStack {
 
     public enum ContainerType {
         ATREE(() -> {
-            Models.AbilityTree.clearUnlockedAbilitesAndRescan(s -> {}, s -> {}, s -> {});
+            Models.AbilityTree.clearUnlockedAbilitesAndRescan(s -> {
+            }, s -> {
+            }, s -> {
+            });
         }),
         SKILLPOINTS((Models.SkillPoint::populateSkillPoints), 2),
-        BUILD(() -> Build.current().display());
+        BUILD(() -> Build.current().ifPresent(Build::display));
 
         final int closeEventAmount;
         final Runnable runnable;

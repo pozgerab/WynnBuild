@@ -4,7 +4,7 @@ import com.gertoxq.wynnbuild.WynnBuild;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.Range;
 
-import java.util.*;
+import java.util.Objects;
 
 public class ConfigType {
     private String latestVersion = FabricLoader.getInstance().getModContainer(WynnBuild.MOD_ID).get().getMetadata().getVersion().getFriendlyString();

@@ -1,15 +1,12 @@
 package com.gertoxq.wynnbuild.client;
 
 import com.gertoxq.wynnbuild.WynnBuild;
-import com.gertoxq.wynnbuild.build.AtreeCoder;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.config.ConfigScreen;
 import com.gertoxq.wynnbuild.webquery.BuilderDataManager;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.sun.jdi.connect.Connector;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.character.type.ClassType;
@@ -91,7 +88,7 @@ public class CommandRegistry {
             return 0;
         }
         if (loadout.type() != LoadoutType.BUILD) {
-            WynnBuild.displayErr("Loadout " + loadoutName + " is a " + loadout.type() +" loadout, not a build loadout");
+            WynnBuild.displayErr("Loadout " + loadoutName + " is a " + loadout.type() + " loadout, not a build loadout");
             return 0;
         }
         Build.fromLoadout(loadout, precise == null ? getConfig().getPrecision() == 1 : precise).display();
@@ -101,10 +98,10 @@ public class CommandRegistry {
 
     public static void showHelpMessage() {
         WynnBuild.message(Text.literal("\tWelcome to WynnBuild! Instructions ")
-                    .append(Text.literal("HERE").styled(style -> style.withUnderline(true)
-                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Click for Modrinth page")))
-                            .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/wynnbuild")))))
-                    .styled(style -> style.withColor(Formatting.GOLD)));
+                .append(Text.literal("HERE").styled(style -> style.withUnderline(true)
+                        .withHoverEvent(new HoverEvent.ShowText(Text.literal("Click for Modrinth page")))
+                        .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/wynnbuild")))))
+                .styled(style -> style.withColor(Formatting.GOLD)));
     }
 
     public static void openConfigScreen(MinecraftClient client) {
@@ -140,39 +137,39 @@ public class CommandRegistry {
                     }
                     return builder.buildFuture();
                 }).then(argument("loadout_name", StringArgumentType.greedyString())
-                .executes(context -> {
-                    String treeCode = context.getArgument("tree_code", String.class);
-                    String classTypeStr = context.getArgument("classType", String.class);
-                    ClassType classType = ClassType.fromName(classTypeStr);
-                    if (classType == ClassType.NONE) {
-                        WynnBuild.displayErr("Invalid class type: \"" + classTypeStr + "\"");
-                        return 0;
-                    }
-                    String loadoutName = context.getArgument("loadout_name", String.class);
-                    if (Services.loadout.hasLoadout(loadoutName)) {
-                        WynnBuild.displayErr("Loadout with name \"" + loadoutName + "\" already exists.");
-                        return 0;
-                    }
-                    SavableAbilityTree abilityTree = Build.AbilityTree.decode(treeCode, classType);
-                    Services.loadout.saveAbilityTreeLoadout(loadoutName, abilityTree);
+                        .executes(context -> {
+                            String treeCode = context.getArgument("tree_code", String.class);
+                            String classTypeStr = context.getArgument("classType", String.class);
+                            ClassType classType = ClassType.fromName(classTypeStr);
+                            if (classType == ClassType.NONE) {
+                                WynnBuild.displayErr("Invalid class type: \"" + classTypeStr + "\"");
+                                return 0;
+                            }
+                            String loadoutName = context.getArgument("loadout_name", String.class);
+                            if (Services.loadout.hasLoadout(loadoutName)) {
+                                WynnBuild.displayErr("Loadout with name \"" + loadoutName + "\" already exists.");
+                                return 0;
+                            }
+                            SavableAbilityTree abilityTree = Build.AbilityTree.decode(treeCode, classType);
+                            Services.loadout.saveAbilityTreeLoadout(loadoutName, abilityTree);
 
-                    Text importMessage = Text.literal("\nImported ")
-                            .styled(style -> style.withColor(Formatting.GRAY))
-                            .append(Text.literal(classType.getName())
-                                    .styled(style -> style.withColor(Formatting.AQUA)))
-                            .append(Text.literal(" tree under the name ")
-                                    .styled(style -> style.withColor(Formatting.GRAY)))
-                            .append(Text.literal(loadoutName)
-                                    .styled(style -> style.withColor(Formatting.WHITE)))
-                            .append(Text.literal(". Check it out inside the Wynntils ")
-                                    .styled(style -> style.withColor(Formatting.GRAY)))
-                            .append(Text.literal("Ability Tree Loadouts")
-                                    .styled(style -> style.withColor(Formatting.GREEN)))
-                            .append(Text.literal(".\n")
-                                    .styled(style -> style.withColor(Formatting.GRAY)));
-                    WynnBuild.message(importMessage);
-                    return 1;
-                }))));
+                            Text importMessage = Text.literal("\nImported ")
+                                    .styled(style -> style.withColor(Formatting.GRAY))
+                                    .append(Text.literal(classType.getName())
+                                            .styled(style -> style.withColor(Formatting.AQUA)))
+                                    .append(Text.literal(" tree under the name ")
+                                            .styled(style -> style.withColor(Formatting.GRAY)))
+                                    .append(Text.literal(loadoutName)
+                                            .styled(style -> style.withColor(Formatting.WHITE)))
+                                    .append(Text.literal(". Check it out inside the Wynntils ")
+                                            .styled(style -> style.withColor(Formatting.GRAY)))
+                                    .append(Text.literal("Ability Tree Loadouts")
+                                            .styled(style -> style.withColor(Formatting.GREEN)))
+                                    .append(Text.literal(".\n")
+                                            .styled(style -> style.withColor(Formatting.GRAY)));
+                            WynnBuild.message(importMessage);
+                            return 1;
+                        }))));
     }
 
     public static ArgumentBuilder<FabricClientCommandSource, ?> exportAbilityTreeCommand(String name) {
@@ -184,23 +181,23 @@ public class CommandRegistry {
                     return builder.buildFuture();
                 })
                 .executes(
-                context -> {
-                    String loadoutName = context.getArgument("loadout_name", String.class);
-                    Loadout loadout = Services.loadout.loadouts.get().get(loadoutName);
-                    if (loadout == null) {
-                        WynnBuild.displayErr("No loadout found with name " + loadoutName);
-                        return 0;
-                    }
-                    if (loadout.type() != LoadoutType.BUILD && loadout.type() != LoadoutType.ABILITY_TREE) {
-                        WynnBuild.displayErr("Loadout " + loadoutName + " is a " + loadout.type() +" loadout, not a build loadout");
-                        return 0;
-                    }
+                        context -> {
+                            String loadoutName = context.getArgument("loadout_name", String.class);
+                            Loadout loadout = Services.loadout.loadouts.get().get(loadoutName);
+                            if (loadout == null) {
+                                WynnBuild.displayErr("No loadout found with name " + loadoutName);
+                                return 0;
+                            }
+                            if (loadout.type() != LoadoutType.BUILD && loadout.type() != LoadoutType.ABILITY_TREE) {
+                                WynnBuild.displayErr("Loadout " + loadoutName + " is a " + loadout.type() + " loadout, not a build loadout");
+                                return 0;
+                            }
 
-                    String encoded = Build.AbilityTree.encode(loadout.abilityTree()).toB64();
-                    showSuccessfulAtreeEncoding(encoded, loadoutName);
-                    return 1;
-                }
-        ));
+                            String encoded = Build.AbilityTree.encode(loadout.abilityTree()).toB64();
+                            showSuccessfulAtreeEncoding(encoded, loadoutName);
+                            return 1;
+                        }
+                ));
     }
 
     private static void showSuccessfulAtreeEncoding(String encodedStr, String loadoutName) {

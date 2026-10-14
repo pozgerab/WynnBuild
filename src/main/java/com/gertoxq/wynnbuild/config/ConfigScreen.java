@@ -1,6 +1,5 @@
 package com.gertoxq.wynnbuild.config;
 
-import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.build.Build;
 import com.gertoxq.wynnbuild.screens.Button;
 import net.minecraft.client.gui.DrawContext;
@@ -8,7 +7,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;

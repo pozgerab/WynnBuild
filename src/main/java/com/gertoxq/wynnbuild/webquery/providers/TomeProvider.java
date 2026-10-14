@@ -10,7 +10,8 @@ import java.util.Map;
 public class TomeProvider extends BuilderDataProvider<Integer> {
 
     public TomeProvider() {
-        super("tomes", "TOME", new TypeToken<Map<String, Integer>>() {}.getType());
+        super("tomes", "TOME", new TypeToken<Map<String, Integer>>() {
+        }.getType());
     }
 
     @Override
