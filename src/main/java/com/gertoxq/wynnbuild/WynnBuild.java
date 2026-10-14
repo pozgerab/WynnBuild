@@ -71,12 +71,6 @@ public class WynnBuild implements ModInitializer {
 
     public static void buildWithArgs(boolean forceRefetchAtree) {
 
-        Optional<GearItem> weapon = Models.Item.asWynnItem(McUtils.player().getStackInHand(Hand.MAIN_HAND), GearItem.class);
-        if (weapon.isEmpty()) {
-            WynnBuild.displayErr("Hold a weapon");
-            return;
-        }
-
         QueryStack.Builder query = QueryStack.builder().next(QueryStack.ContainerType.SKILLPOINTS);
 
         if (Models.AbilityTree.getUnlockedAbilities().isEmpty() || forceRefetchAtree) {

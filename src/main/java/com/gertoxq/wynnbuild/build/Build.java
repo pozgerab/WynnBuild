@@ -30,10 +30,12 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -90,16 +92,25 @@ public class Build {
     }
 
     public static Optional<List<@Nullable WynnItem>> transformCurrentEquipment() {
-        List<ItemStack> equipped = Models.Inventory.getEquippedItems();
+        List<ItemStack> equipped = new ArrayList<>(Models.Inventory.getEquippedItems());
 
         if (equipped.size() == 9) {
             return Optional.of(equipped.stream().map(itemStack -> Models.Item.getWynnItem(itemStack).orElse(null)).toList());
         }
 
-        Optional<GearItem> weaponItem = Models.Item.asWynnItem(equipped.getLast(), GearItem.class);
-        if (weaponItem.isEmpty() || !weaponItem.get().getGearType().isWeapon()) {
-            WynnBuild.displayErr("Hold a weapon");
-            return Optional.empty();
+        WynnBuild.debug("equipped size = {}", equipped.size());
+
+        Optional<WynnItem> weaponItem = Models.Item.getWynnItem(equipped.getLast());
+        if (weaponItem.isEmpty() || !(weaponItem.get() instanceof GearTypeItemProperty gearTypedItem) || !gearTypedItem.getGearType().isWeapon()) {
+
+            ItemStack handStack = McUtils.player().getStackInHand(Hand.MAIN_HAND);
+            weaponItem = Models.Item.getWynnItem(handStack);
+
+            if (weaponItem.isEmpty() || !(weaponItem.get() instanceof GearTypeItemProperty handTyped) || !handTyped.getGearType().isValidWeapon(Models.Character.getClassType())) {
+                WynnBuild.displayErr("Hold a weapon");
+                return Optional.empty();
+            }
+            equipped.add(handStack);
         }
 
         int itemCount = equipped.size();
