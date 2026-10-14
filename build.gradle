@@ -33,7 +33,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation files("libs/wynntils-4.2.6-fabric+MC-1.21.11.jar")
+    modImplementation files("libs/wynntils-${project.wynntils_version}-fabric+MC-${project.minecraft_version}.jar")
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
@@ -48,12 +48,16 @@ processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
     inputs.property "loader_version", project.loader_version
+    inputs.property "wynntils_version", project.wynntils_version
+    inputs.property "modmenu_version", project.modmenu_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
                 "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+                "loader_version": project.loader_version,
+                "wynntils_version": project.wynntils_version,
+                "modmenu_version": project.modmenu_version
     }
 }
 

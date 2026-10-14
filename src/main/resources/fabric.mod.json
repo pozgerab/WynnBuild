@@ -41,10 +41,10 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "1.21.11",
-    "wynntils": ">=4.2.6"
+    "minecraft": "${minecraft_version}",
+    "wynntils": ">=${wynntils_version}"
   },
   "suggests": {
-    "modmenu": ">=13.0.0"
+    "modmenu": ">=${modmenu_version}"
   }
 }
