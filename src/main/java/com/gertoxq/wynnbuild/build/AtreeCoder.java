@@ -2,7 +2,7 @@ package com.gertoxq.wynnbuild.build;
 
 import com.gertoxq.wynnbuild.WynnBuild;
 import com.gertoxq.wynnbuild.base.util.BitVector;
-import com.gertoxq.wynnbuild.screens.atree.Ability;
+import com.gertoxq.wynnbuild.screens.Ability;
 import com.gertoxq.wynnbuild.util.Utils;
 import com.wynntils.models.character.type.ClassType;
 import org.jetbrains.annotations.NotNull;

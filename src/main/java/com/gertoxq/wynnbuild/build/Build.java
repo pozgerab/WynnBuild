@@ -6,9 +6,8 @@ import com.gertoxq.wynnbuild.base.bitcodemaps.BaseEncoding;
 import com.gertoxq.wynnbuild.base.custom.CustomCoder;
 import com.gertoxq.wynnbuild.base.sp.Skillpoint;
 import com.gertoxq.wynnbuild.base.util.BitVector;
-import com.gertoxq.wynnbuild.base.util.BitVectorCursor;
 import com.gertoxq.wynnbuild.base.util.EncodingBitVector;
-import com.gertoxq.wynnbuild.screens.atree.Ability;
+import com.gertoxq.wynnbuild.screens.Ability;
 import com.gertoxq.wynnbuild.webquery.Providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
@@ -24,27 +23,27 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.rewards.type.TomeType;
-import com.wynntils.models.stats.type.*;
+import com.wynntils.models.stats.type.SkillStatType;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static com.gertoxq.wynnbuild.WynnBuild.*;
+import static com.gertoxq.wynnbuild.WynnBuild.getConfig;
 import static com.gertoxq.wynnbuild.base.PowderUtil.MAX_POWDER_LEVEL;
 import static com.gertoxq.wynnbuild.util.Utils.mod;
 import static com.gertoxq.wynnbuild.webquery.BuilderDataManager.WYNN_VERSION_ID;
-
-import java.util.List;
 
 public class Build {
 
@@ -67,6 +66,9 @@ public class Build {
     public static final VersionSegment Version = new VersionSegment();
     public static final AbilityTreeSegment AbilityTree = new AbilityTreeSegment();
 
+    /**
+     * not fixed length, armor is fixed, accessories can be absent, last is weapon if exists
+     */
     private final List<WynnItem> equipment;
     private final SavableTomeSet tomes;
     private final int level;
@@ -87,10 +89,65 @@ public class Build {
         this.precise = precise;
     }
 
-    public static Build current() {
+    public static Optional<List<@Nullable WynnItem>> transformCurrentEquipment() {
+        List<ItemStack> equipped = Models.Inventory.getEquippedItems();
 
-        return new Build(
-                Models.Inventory.getEquippedItems().stream().map(itemStack -> Models.Item.getWynnItem(itemStack).orElse(null)).toList(),
+        if (equipped.size() == 9) {
+            return Optional.of(equipped.stream().map(itemStack -> Models.Item.getWynnItem(itemStack).orElse(null)).toList());
+        }
+
+        Optional<GearItem> weaponItem = Models.Item.asWynnItem(equipped.getLast(), GearItem.class);
+        if (weaponItem.isEmpty() || !weaponItem.get().getGearType().isWeapon()) {
+            WynnBuild.displayErr("Hold a weapon");
+            return Optional.empty();
+        }
+
+        int itemCount = equipped.size();
+        int missingAccessory = 9 - itemCount;
+        int accessoryCount = 4 - missingAccessory;
+
+        List<GearType> accTypes = List.of(GearType.RING, GearType.RING, GearType.BRACELET, GearType.NECKLACE);
+        List<GearType> missingAccTypes = new ArrayList<>(accTypes);
+        ArrayDeque<WynnItem> existingAccs = new ArrayDeque<>();
+
+        for (int i = 0; i < accessoryCount; i++) {
+            int listIndex = i + 4;
+            Optional<WynnItem> accItem = Models.Item.getWynnItem(equipped.get(listIndex));
+            if (accItem.isEmpty() || !(accItem.get() instanceof GearTypeItemProperty gearAcc) || !gearAcc.getGearType().isAccessory()) {
+                WynnBuild.error("Equipped a non accessory item as accessory?? should be a network bug");
+                continue;
+            }
+            missingAccTypes.remove(gearAcc.getGearType());
+            existingAccs.add(accItem.get());
+        }
+
+
+        List<WynnItem> newEquipped = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Optional<WynnItem> item = Models.Item.getWynnItem(equipped.get(i));
+            newEquipped.add(item.orElse(null));
+        }
+        for (GearType accType : accTypes) {
+            if (missingAccTypes.contains(accType)) {
+                newEquipped.add(null);
+                missingAccTypes.remove(accType);
+            } else {
+                newEquipped.add(existingAccs.poll());
+            }
+        }
+
+        newEquipped.add(weaponItem.get());
+
+        return Optional.of(newEquipped);
+    }
+
+    public static Optional<Build> current() {
+
+        Optional<List<WynnItem>> equipped = transformCurrentEquipment();
+        if (equipped.isEmpty()) return Optional.empty();
+
+        Build build = new Build(
+                equipped.get(),
                 getConfig().getPrecision() == 1,
                 Arrays.stream(Skill.values()).map(Skillpoint::getTotalSkillpoints).toList(),
                 Arrays.stream(Skill.values()).map(Models.SkillPoint::getAssignedSkillPoints).toList(),
@@ -99,6 +156,8 @@ public class Build {
                 new SavableAbilityTree(Models.AbilityTree.getUnlockedAbilities(), Models.Character.getClassType()),
                 getConfig().isIncludeAspects() ? Aspect.getAspects() : new SavableAspectSet(new ArrayList<>(), Models.Character.getClassType())
         );
+
+        return Optional.of(build);
     }
 
     public static Build fromLoadout(Loadout loadout, boolean precise) {
@@ -208,9 +267,10 @@ public class Build {
             for (String aspect : aspects.aspectNames()) {
 
                 Optional<Integer> tier = Models.Aspect.getAspectTierByName(aspect);
-                if (tier.isEmpty())
-                    throw new RuntimeException("Equipped aspect couldn't be found in owned aspects: " + aspect);
-
+                if (tier.isEmpty()) {
+                    WynnBuild.error("Equipped aspect couldn't be found in owned aspects, setting tier to 3: " + aspect);
+                    tier = Optional.of(3);
+                }
                 Integer id = Providers.Aspects.getClassAspects(aspects.classType()).get(aspect);
                 if (id == null) {
                     WynnBuild.error("Cannot find aspect: " + aspect + " in class: " + aspects.classType().getName());
@@ -286,7 +346,10 @@ public class Build {
             };
         }
 
-        public List<@NotNull Integer> transform(SavableTomeSet tomes) {
+        /**
+         * @return Fixed length list of tome ids, null if empty slot
+         */
+        public List<@Nullable Integer> transform(SavableTomeSet tomes) {
             List<Integer> ids = new ArrayList<>();
             for (TomeType type : TOME_ORDER) {
                 List<SavableTome> typeTomes = tomes.getTomes(type);
@@ -297,7 +360,7 @@ public class Build {
 
                 // append remaining empty tome ids
                 for (int i = 0; i < tomeAmount(type) - typeTomes.size(); i++) {
-                    ids.add(emptyTomeId(type));
+                    ids.add(null);
                 }
 
             }
@@ -306,15 +369,15 @@ public class Build {
 
         public EncodingBitVector encode(SavableTomeSet tomeSet) {
 
-            List<@NotNull Integer> tomes = transform(tomeSet);
+            List<@Nullable Integer> tomes = transform(tomeSet);
 
             EncodingBitVector tomesVec = new EncodingBitVector(0, 0);
-            if (tomes.isEmpty()) {
+            if (tomes.stream().allMatch(Objects::isNull)) {
                 tomesVec.appendFlag(ENC.TOMES_FLAG(), ENC.TOMES_FLAG().NO_TOMES);
             } else {
                 tomesVec.appendFlag(ENC.TOMES_FLAG(), ENC.TOMES_FLAG().HAS_TOMES);
                 for (Integer tomeId : tomes) {
-                    if (tomeId == -1) {
+                    if (tomeId == null) {
                         tomesVec.appendFlag(ENC.TOME_SLOT_FLAG(), ENC.TOME_SLOT_FLAG().UNUSED);
                     } else {
                         tomesVec.appendFlag(ENC.TOME_SLOT_FLAG(), ENC.TOME_SLOT_FLAG().USED);
@@ -367,12 +430,12 @@ public class Build {
         }
 
         private static Optional<WynnItem> fromSavable(SavableGear savableGear) {
-             ErrorOr<WynnItem> errItem = Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(savableGear.encoded()), savableGear.itemName());
-             if (errItem.hasError()) return Optional.empty();
+            ErrorOr<WynnItem> errItem = Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(savableGear.encoded()), savableGear.itemName());
+            if (errItem.hasError()) return Optional.empty();
 
-             WynnItem item = errItem.getValue();
-             if (!(item instanceof GearItem) && !(item instanceof CraftedGearItem)) return Optional.empty();
-             return Optional.of(item);
+            WynnItem item = errItem.getValue();
+            if (!(item instanceof GearItem) && !(item instanceof CraftedGearItem)) return Optional.empty();
+            return Optional.of(item);
         }
 
         public EncodingBitVector encodePowders(List<Powder> powders) {
@@ -431,9 +494,7 @@ public class Build {
         }
 
         public EncodingBitVector encode(List<@Nullable WynnItem> gearItems, boolean precise) {
-            if (gearItems.size() != 9) {
-                throw new IllegalArgumentException("gearItems.size() != 9");
-            }
+
             EncodingBitVector equipmentVec = new EncodingBitVector(0, 0);
 
             for (int idx = 0; idx < gearItems.size(); idx++) {
